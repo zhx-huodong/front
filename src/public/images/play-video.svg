@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
+    <title>播放按钮</title>
+    <desc>Created with Sketch.</desc>
+    <g id="组件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="播放按钮">
+            <g>
+                <circle id="椭圆形" stroke="#FFFFFF" stroke-width="4" cx="40" cy="40" r="38"></circle>
+                <path d="M44.6959966,31.7135946 L56.0875013,49.9400021 C56.672922,50.8766752 56.3881757,52.1105759 55.4515026,52.6959966 C55.1336394,52.8946611 54.7663442,53 54.3915047,53 L31.6084953,53 C30.5039258,53 29.6084953,52.1045695 29.6084953,51 C29.6084953,50.6251606 29.7138342,50.2578653 29.9124987,49.9400021 L41.3040034,31.7135946 C41.8894241,30.7769215 43.1233248,30.4921752 44.0599979,31.0775958 C44.3175361,31.2385573 44.5350352,31.4560563 44.6959966,31.7135946 Z" id="三角形" fill="#FFFFFF" transform="translate(43.000000, 41.000000) rotate(90.000000) translate(-43.000000, -41.000000) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

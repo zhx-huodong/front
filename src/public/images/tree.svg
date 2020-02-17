@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="23px" height="27px" viewBox="0 0 23 27" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>元素2</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1" transform="translate(-141.000000, -192.000000)">
+            <g id="分组" transform="translate(116.000000, 148.000000)">
+                <g id="元素2" transform="translate(25.000000, 44.000000)">
+                    <path d="M21.0718439,27 C23.461424,22.8200951 23.8413203,17.4423461 21.0058154,13.5342065 C19.1821273,11.0195127 16.1638815,9.19505068 15.2078635,6.29131721 C14.7577538,4.9259999 14.8089027,3.41354857 14.1049088,2.14516663 C13.0014892,0.159289891 9.97487364,-0.623549729 7.93729042,0.550926074 C6.20567018,1.54840829 5.43053298,3.5459692 5.24128232,5.43923804 C5.05249666,7.33250688 5.32405042,9.24871133 5.0985306,11.1389509 C4.89161035,12.8790273 4.25922487,14.5732324 3.26228776,16.0553915 C2.50482015,17.1822651 1.54182726,18.1875367 0.892702162,19.371533 C-0.400898138,21.7295723 -0.252566544,24.6748495 1.1042723,27 L21.0718439,27 Z" id="Fill-1" fill="#FFC963"></path>
+                    <path d="M9.5002,26.6312858 L9.5002,5.15" id="Stroke-3" stroke="#FFFFFF" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M13,7.16666667 L10.5002,11.8333333" id="Stroke-5" stroke="#FFFFFF" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M6,16 L10,19" id="Stroke-7" stroke="#FFFFFF" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M14,17 L10.5002,22.8333333" id="Stroke-9" stroke="#FFFFFF" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

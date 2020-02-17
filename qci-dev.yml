@@ -1,0 +1,46 @@
+version: 1.0
+
+# 指定构建机
+worker:
+  label: jenkins
+
+# 传入环境变量
+env:
+  IMAGE_DEVELOP: ccr.ccs.tencentyun.com/edu-cloud/manage_web
+  WORKSPACE: .
+  SERVICE_NAMES: manage_web
+  USERNAME: 100004193503
+  PASSWD:
+    secret: aNc0AZzeO+1tsfFUfPYpdJ1PZIvlaf0mjwMe91A27z4WZ+gOg2/pLxC72DbQt0K+qvlN0N10AtR4frKqFhdYAaRJ/DRJbFBq2U1qnGl19yaY6lSHNXjSxEClZrP0ATOe2WtH7nLViJboNIR/MsEorRDn/DvEJIGKlO0skeDeUA4=
+  SECRET_ID:
+    secret: Gmao7DbrR2txKgZuk4vTeQL47PxVZ3RYt0IVI+NSHV44jsAHxmFMuMb7YD8EQ98SLgmP+AF0Fs6Nn1+STNwjoYKRQ5XtLh+6O6i0+CrvvqaCEnlyCeoAZpf+wx/Z6BsION+8LB9nJExegrvCfPRSrtbt3jjWaVrCTdfVYgopL8w=
+  SECRET_KEY:
+    secret: PVbihOixuggWKcYgN6vW1jb3IIIHQQ8Evl7MTFHB+/+hUbvpXxvmh+etTCRubkOdUU6laNjwOrBBkQsSGotbsbfTKs8QuixOk1e/F55V61In+H4VYX7nHyJUc7kv+M6SiVHQukVzVzrNNUVdhGDCIFp9popYbf/u5J6v/mAHG9k=
+  REGION: guangzhou
+  CLUSTER_ID_DEVELOP: cls-1robo3h6
+  NAMESPACE_DEVELOP: develop
+
+# 定义不同的构建阶段
+stages:
+- stage: init
+  cmds:
+  - echo "CLUSTER_ID=$CLUSTER_ID_DEVELOP" >> $QCI_ENV_FILE &&
+    echo "NAMESPACE=$NAMESPACE_DEVELOP" >> $QCI_ENV_FILE &&
+    echo "IMAGE=$IMAGE_DEVELOP" >> $QCI_ENV_FILE
+- stage: build
+  cmds:
+  - now=$(date "+%Y%m%d%H%M") &&
+    tag=develop-$now-${QCI_VERSION::8}-$QCI_TRIGGER &&
+    echo "tag=$tag" >> $QCI_ENV_FILE
+  - sudo docker build $WORKSPACE -f Dockerfile -t $IMAGE:$tag --build-arg HTTP_PROXY=http://devproxy.oa.com:8080 --build-arg HTTPS_PROXY=http://devproxy.oa.com:8080
+- stage: push
+  cmds:
+  - sudo docker login --username=$USERNAME -p $PASSWD ccr.ccs.tencentyun.com
+  - sudo docker push $IMAGE:$tag
+  - sudo docker logout ccr.ccs.tencentyun.com
+- stage: modify_image
+  cmds:
+  - python /data/modify_cluster_service_image/modify_image.py $IMAGE:$tag
+- stage: delete
+  cmds:
+  - sudo docker images | grep $IMAGE | awk 'NR>1 {print $1":"$2}' | xargs sudo docker rmi
