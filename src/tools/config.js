@@ -7,7 +7,6 @@ let config = {
 	protocol: protocol,
 	host: host,
 	protocolHost: `https://${host}`
-  // loginHost: 'https://eclogin.cloud.tencent.com'
 };
 
 export default config;
