@@ -1,0 +1,28 @@
+name: Huodong deployer # 当前workflow的名字
+
+# 触发的时机 当 master 分支有 push 的操作时执行
+on: 
+  push:
+    branches:
+      - dev
+
+jobs: # jobs一般都是并行执行
+  build: 
+    name: Build and publish 
+    runs-on: ubuntu-latest # 运行环境
+
+    steps:
+      # 使用 actions/checkout 这个插件 用于拉取当前仓库的dev分支
+      - uses: actions/checkout@v2 
+      
+      # 部署到应用服务器
+      - name: Deploy to Web Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          #key: ${{ secrets.SSH_PRIVATE }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ${{ secrets.WEB_PATH }} && git pull
