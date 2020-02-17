@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="44px" height="44px" viewBox="0 0 44 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
+    <title>角</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M42.4782811,38.4013325 L42.4782811,1 L42.4782811,1 L687,1 C689.209139,1 691,2.790861 691,5 L691,297 C691,299.209139 689.209139,301 687,301 L5,301 C2.790861,301 1,299.209139 1,297 L1,42.4013325 L1,42.4013325 L38.4782811,42.4013325 C40.6874201,42.4013325 42.4782811,40.6104715 42.4782811,38.4013325 Z" id="path-1"></path>
+        <path d="M42,38 L42,0 L42,0 L686,0 C688.209139,-4.05812251e-16 690,1.790861 690,4 L690,296 C690,298.209139 688.209139,300 686,300 L4,300 C1.790861,300 2.705415e-16,298.209139 0,296 L0,42 L0,42 L38,42 C40.209139,42 42,40.209139 42,38 Z" id="path-3"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="活动详情页" transform="translate(-400.000000, -208.000000)">
+            <g id="Group" transform="translate(0.000000, -3.000000)" fill="#FFFFFF">
+                <rect id="Rectangle-21" transform="translate(960.000000, 565.000000) scale(1, -1) translate(-960.000000, -565.000000) " x="0" y="50" width="1920" height="1030"></rect>
+            </g>
+            <g id="分组-2" transform="translate(400.000000, 95.000000)">
+                <polygon id="路径-7-copy-3" fill="#ABC7FF" points="42.5126135 115 1 155 39.2949077 155 41.8894274 153.114377 43 150.580212"></polygon>
+                <g id="VCG41508476375备份-Copy-7" transform="translate(0.000000, 113.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <path stroke="#2568ED" stroke-width="2" d="M2,43.4013325 L2,297 C2,298.656854 3.34314575,300 5,300 L687,300 C688.656854,300 690,298.656854 690,297 L690,5 C690,3.34314575 688.656854,2 687,2 L43.4782811,2 L43.4782811,38.4013325 C43.4782811,41.1627562 41.2397048,43.4013325 38.4782811,43.4013325 L2,43.4013325 Z"></path>
+                    <mask id="mask-4" fill="white">
+                        <use xlink:href="#path-3"></use>
+                    </mask>
+                    <path stroke="#2568ED" stroke-width="2" d="M1,43 L1,296 C1,297.656854 2.34314575,299 4,299 L686,299 C687.656854,299 689,297.656854 689,296 L689,4 C689,2.34314575 687.656854,1 686,1 L43,1 L43,38 C43,40.7614237 40.7614237,43 38,43 L1,43 Z"></path>
+                </g>
+                <path d="M42.7601541,113.687297 L0.753216229,155.668591" id="路径-4-copy-3" stroke="#2568ED" stroke-width="2"></path>
+            </g>
+        </g>
+    </g>
+</svg>
