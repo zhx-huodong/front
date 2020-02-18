@@ -9,8 +9,8 @@
     },
     watch: {
       user(val) {
-        if (val.IsPlatformAdmin) this.$router.push('/auditActivity');
-        else this.$router.push('/activityCenter');
+        if (val.IsPlatformAdmin) this.$router.push('/home');
+        else this.$router.push('/home');
       }
     }
   };

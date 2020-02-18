@@ -17,6 +17,8 @@ const myActivity = require('../pages/myActivity/index');
 const messageCenter = require('../pages/messageCenter/index');
 const workAuditDetail = require('../pages/myActivity/workAuditDetail');
 const Switch = require('../pages/switchPage');
+const home=require('../pages/home');
+const activityProject=require('../pages/homePages/activityProject');
 
 const routes = [
   {
@@ -45,7 +47,10 @@ const routes = [
       { path: '/auditActivity', components: auditActivity }, // 审核中心（审核活动）
       { path: '/auditActivity/auditDetail', components: auditDetail }, // 活动审核点击后详情
 
-      { path: '/msgcenter', components: messageCenter } // 消息中心
+      { path: '/msgcenter', components: messageCenter }, // 消息中心
+
+      { path: '/home', components: home},//首页
+      { path: '/home/activityProject', components: activityProject}//活动项目
     ]
   },
   { path: '*', redirect: '/' }

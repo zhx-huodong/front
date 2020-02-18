@@ -71,6 +71,7 @@
       return {
         tabs: [],
         normalTabs: [
+          { key: 'home', name: '首页', hide: false },
           { key: 'activityCenter', name: '活动中心', hide: false },
           { key: 'myActivity', name: '活动发布与管理', hide: false },
           { key: 'excellence', name: '优秀作品展', hide: false },
@@ -82,7 +83,7 @@
           { key: 'expertReview', name: '专家评审', hide: true },
           { key: 'expertStore', name: '专家库', hide: false }
         ],
-        activeTab: 'activityCenter',
+        activeTab: 'home',
         wxCode: '', // 微信登录后的code
         isAdmin: false, // 平台管理员
         isJudge: false, // 专家
@@ -115,7 +116,7 @@
             this.$store.dispatch('INIT_USER');
             this.getMessage();
           } else {
-            this.$router.push('/activityCenter');
+            this.$router.push('/home');
           }
         });
       } else if (token) { // 登录页短信验证码登录会跳
@@ -123,14 +124,14 @@
         await this.$store.dispatch('INIT_USER');
         if (!this.user) { // token不正确
           this.tabs = this.normalTabs;
-          if (this.$route.path == '/') this.$router.push('/activityCenter');
+          if (this.$route.path == '/') this.$router.push('/home');
         } else {
           this.activeTab = this.$route.path.split('/')[1];
           this.getMessage();
         }
       } else {
         this.tabs = this.normalTabs;
-        if (this.$route.path == '/') this.$router.push('/activityCenter');
+        if (this.$route.path == '/') this.$router.push('/home');
       }
     },
     watch: {
