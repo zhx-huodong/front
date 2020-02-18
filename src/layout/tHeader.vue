@@ -72,7 +72,7 @@
         tabs: [],
         normalTabs: [
           { key: 'home', name: '首页', hide: false },
-          { key: 'activityCenter', name: '活动中心', hide: false },
+          // { key: 'activityCenter', name: '活动中心', hide: false },
           { key: 'myActivity', name: '活动发布与管理', hide: false },
           { key: 'excellence', name: '优秀作品展', hide: false },
           { key: 'expertReview', name: '专家评审', hide: true },

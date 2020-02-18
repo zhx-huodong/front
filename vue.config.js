@@ -25,7 +25,7 @@ let config = {
 };
 
 if (process.env.NODE_ENV == 'production') {
-	config.publicPath = '/static/manage';
+	config.publicPath = '/manage';
 }
 
 module.exports = config;
