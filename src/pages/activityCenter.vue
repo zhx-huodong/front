@@ -1,8 +1,12 @@
 <template>
 	<div class="activity-center">
 		<div class="activity-wrap">
-			<div class="activity-header"></div>
-			<div class="activity-lable">
+			<!-- <div class="activity-header"></div> -->
+			 <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+						<el-tab-pane label="活动中心" name="first">
+										<div class="activity-lable">
+				
+				 
 				<type-select v-if="gradeList.length > 0 && regionList.length > 0"
 					:gradeList="gradeList" :regionList="regionList"
 					@activityObject='activityObjectMgr' @gradeGroup='gradeGroupMgr' @region='regionMgr'></type-select>
@@ -21,10 +25,37 @@
           @current-change="handleCurrentPage"
         ></el-pagination>
 			</div>
+						</el-tab-pane>
+						<el-tab-pane label="优秀作品" name="second">
+										<div class="activity-lable">
+				<!-- <sec-topic></sec-topic> -->
+				 
+				<type-select v-if="gradeList.length > 0 && regionList.length > 0"
+					:gradeList="gradeList" :regionList="regionList"
+					@activityObject='activityObjectMgr' @gradeGroup='gradeGroupMgr' @region='regionMgr'></type-select>
+			</div>
+			<div class="activity-content" v-if="activityList.length > 0">
+				<activity-list :activityList="activityList" :goToDetail="excellentWork"></activity-list>
+			</div>
+			<div class="activity-page">
+				<el-pagination
+          background
+          :current-page="currentPage"
+          :page-size="pageSize"
+          layout="prev, pager, next"
+          :total="total"
+          class="paging"
+          @current-change="handleCurrentPage"
+        ></el-pagination>
+			</div>
+						</el-tab-pane>
+			</el-tabs>
+
 		</div>
 	</div>
 </template>
 <script>
+	// import SecTopic from '../components/publishManage/SecTopic';
 	import TypeSelect from '../components/TypeSelect';
 	import ActivityList from '../components/ActivityList';
 	export default {
@@ -32,6 +63,7 @@
 		components: { TypeSelect, ActivityList },
 		data() {
 			return {
+				activeName: 'first',
 				gradeList: [],
 				subjectList: [],
 				regionList: [
@@ -57,40 +89,71 @@
 		async created() {
 			this.getGradeGroupList(); // 获取学段列表
 			this.getRegionList(); // 获取区域列表
-      this.getActivityList();
+      		this.getActivityList();
 		},
 		methods: {
+			handleClick(tab, event) {
+				console.log(tab, event);
+			},
 			async getActivityList() {
-        let res = await this.axiosGet({
-          url: '/v1/activity/GetActivityList',
-          Role: this.filter.Role,
-          GradeGroup: this.filter.GradeGroup,
-          District: this.filter.District,
-          PageSize: this.pageSize,
-          PageNum: this.currentPage
-        });
-        if (res.ErrorCode != 'OK') return this.$message.error(res.ErrorMsg);
-        this.total = res.Data.Total;
-        let list = res.Data.ActivityList || [];
-        list.forEach(item => {
-          item.StartTime = this.timeFormat(item.StartTime * 1000, 'yyyy-MM-dd');
-          item.EndTime = this.timeFormat(item.EndTime * 1000, 'yyyy-MM-dd');
-        });
-        this.activityList = list;
+        // let res = await this.axiosGet({
+        //   url: '/v1/activity/GetActivityList',
+        //   Role: this.filter.Role,
+        //   GradeGroup: this.filter.GradeGroup,
+        //   District: this.filter.District,
+        //   PageSize: this.pageSize,
+        //   PageNum: this.currentPage
+        // });
+        // if (res.ErrorCode != 'OK') return this.$message.error(res.ErrorMsg);
+        // this.total = res.Data.Total;
+        // let list = res.Data.ActivityList || [];
+        // list.forEach(item => {
+        //   item.StartTime = this.timeFormat(item.StartTime * 1000, 'yyyy-MM-dd');
+        //   item.EndTime = this.timeFormat(item.EndTime * 1000, 'yyyy-MM-dd');
+        // });
+		// this.activityList = list;
+			this.total=1
+			let list=[
+				{'ActivityLogo' : require('../assets/img2/1.png'), 'ActivityName' : '电脑绘图'},
+				{'ActivityLogo' : require('../assets/img2/2.png'), 'ActivityName' : '电脑动画'},
+				{'ActivityLogo' : require('../assets/img2/3.png'), 'ActivityName' : '电脑艺术计'},
+				{'ActivityLogo' : require('../assets/img2/4.png'), 'ActivityName' : '电子板报'},
+				{'ActivityLogo' : require('../assets/img2/5.png'), 'ActivityName' : '艺术设计'},
+				{'ActivityLogo' : require('../assets/img2/6.png'), 'ActivityName' : '创客项目'},
+			];
+			this.activityList = list;
 			},
       async getGradeGroupList() {
-        let res = await this.axiosGet({
-          url: '/v1/activity/GetGradeGroup'
-        }).catch(err => err);
-        this.gradeList = res.Data.GradeGroup;
-      },
+		  console.log("1")
+        // let res = await this.axiosGet({
+        //   url: '/v1/activity/GetGradeGroup'
+        // }).catch(err => err);
+		// this.gradeList = res.Data.GradeGroup;
+		this.gradeList=[
+		{ Id : 0, Name : '全部' },
+        { Id : 1, Name : '小学组' },
+        { Id : 2, Name : '初中组' },
+        { Id : 3, Name : '高中组' },
+      ]},
       async getRegionList() {
-        let res = await this.axiosGet({
-          url: '/v1/activity/GetAllDivision'
-        }).catch(err => err);
+        // let res = await this.axiosGet({
+        //   url: '/v1/activity/GetAllDivision'
+		// }).catch(err => err);
+		//  this.regionList = [
+        //   { DivisionId: 0, Name: '全部' }
+		// ].concat(res.Data.DivisionList);
+		let res=[
+      {Id:0, Name:'全部'},
+      {Id:1, Name:'罗湖区'},
+      {Id:2, Name:'南山区'},
+      {Id:3, Name:'宝安区'},
+      {Id:4, Name:'罗湖区'},
+      {Id:5, Name:'盐田区'},
+      {Id:6, Name:'龙岗区'},
+    	];
         this.regionList = [
           { DivisionId: 0, Name: '全部' }
-        ].concat(res.Data.DivisionList);
+		].concat(res);
       },
       async activityObjectMgr(value) {
         this.filter.Role = value;

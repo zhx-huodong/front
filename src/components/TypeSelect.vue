@@ -1,5 +1,6 @@
 <template>
   <div>
+   
     <div class="lable" v-if="!toPage">
       <div class="lable-title">活动对象:</div>
       <div class="lable-aside">
@@ -73,6 +74,24 @@ export default {
       ]
     };
   },
+  mounted(){
+    // this.gradeList=[
+    //    { Id: 0, Name: '全部' },
+    //     { Id: 1, Name: '小学组' },
+    //     { Id: 2, Name: '初中组' },
+    //     { Id: 3, Name: '高中组' },
+    // ];
+    // this.regionList=[
+    //   {Id:0,Name:"全部"},
+    //   {Id:1,Name:"罗湖区"},
+    //   {Id:2,Name:"南山区"},
+    //   {Id:3,Name:"宝安区"},
+    //   {Id:4,Name:"罗湖区"},
+    //   {Id:5,Name:"盐田区"},
+    //   {Id:6,Name:"龙岗区"},
+    // ]
+      
+  },
   methods: {
     onactivityObjectList(Id, index) {
       this.activityObjectIndex = index;
@@ -99,6 +118,7 @@ export default {
       this.region = this.regionList[index].DivisionId;
       this.$emit('region', this.region);
     }
+    
   }
 };
 </script>

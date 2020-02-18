@@ -2,24 +2,24 @@
   <div class="activity-list">
     <div class="activity-self" v-for="(item, index) in activityList" :key="index" @click="onActivityDetail(item)">
       <div class="activity-img" v-if="item.ActivityLogo"><img :src="item.ActivityLogo" alt=""></div>
-      <div class="activity-img" v-if="item.ResourceList">
+      <!-- <div class="activity-img" v-if="item.ResourceList">
         <video :id="index" :src="item.ResourceList[0].ResourceContent"
                loop="loop" x-webkit-airplay="true" webkit-playsinline="true" @click.stop="playVideo(item)"></video>
         <div class="shade" @click.stop="onShade(item, index)" v-show="item.tag"><img
           src="../public/images/play-video.svg" alt=""></div>
-      </div>
+      </div> -->
       <div class="activity-tex">
         <div class="avtive-title">
           <span style="margin-right: 10px">{{item.ActivityName}}</span>
-          <template v-if="item.Status">
+          <!-- <template v-if="item.Status">
             <el-tag v-if="item.Status == 'ACTIVITY_FINISHED'" type="danger" size="small">已结束</el-tag>
             <el-tag v-else type="success" size="small">进行中</el-tag>
-          </template>
+          </template> -->
         </div>
-        <div class="avtive-title" v-if="item.TeamName">{{item.TeamName}}</div>
+        <!-- <div class="avtive-title" v-if="item.TeamName">{{item.TeamName}}</div>
         <div class="activity-time" v-if="item.School">{{item.School}}</div>
         <div class="activity-time" v-if="item.StartTime || item.EndTime">{{item.StartTime}}至{{item.EndTime}}</div>
-        <div class="activity-time" v-if="item.Sponsor">主办方：{{item.Sponsor}}</div>
+        <div class="activity-time" v-if="item.Sponsor">主办方：{{item.Sponsor}}</div> -->
       </div>
     </div>
   </div>
