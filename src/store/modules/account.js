@@ -2,7 +2,8 @@ import { axiosGet, setCookie } from '../../tools/tools';
 
 export default {
 	state: {
-		user: ''
+		// user: ''
+		user:{Avatar:require('../../public/images/ac1.png'),Name:'陆同学',Phone:'13714264534',School:'清湖小学'}
 	},
 	mutations: {
 		SET_USER(state, val) {

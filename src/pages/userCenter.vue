@@ -87,7 +87,8 @@
         currentPage: 1, // 初始页
         pageSize: 10,
         total: 0,
-        tableData: [],
+        tableData: [{ActivityName:'创客大赛',Sponsor:'深圳创客园',Status:'ACTIVITY_RUNNING',StartTime:''},
+        {ActivityName:'动画大赛',Sponsor:'深圳',Status:'STAGE_WORK_UPLOAD',StartTime:''}],
         day: '',
         certificateList: [
           { img: '0', name: '活动名称' },
@@ -119,8 +120,13 @@
       }
     },
     mounted() {
-      this.getActivityList();
-      this.getAbility();
+      // this.getActivityList();
+      // this.getAbility();
+      let list=[{Name:'沟通能力',Value:80},{Name:'逻辑思维',Value:70},{Name:'实践创新',Value:80},{Name:'艺术',Value:60},{Name:'人文底蕴',Value:90}]
+      this.$nextTick(function(){
+        this.renderChart(list)
+      })
+      
     },
     methods: {
       async handleCurrentChange(page) {
