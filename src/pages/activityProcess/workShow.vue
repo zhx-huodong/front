@@ -2,48 +2,45 @@
   <div class="activity-work-show">
     <template v-if="workList.length > 0">
       <el-card class="work-list-item" v-for="(item, index) in workList" :key="index">
-        <div class="picleft">
-            <img :src="item.url" >
-            
-        </div>
-        <div class="jianjie">
-          <div class="name"><span>{{item.name}}</span></div>
-          <div class="activeclass">
-            <span >报名时间：{{item.avitveTiem}}</span>
-            <br/>
-            <span >活动对象：{{item.activeObject[0]}} </span>
-            <br/>
-            <span >活动组别：{{item.activeGroup[0]}} </span>
-            <br/>
-            <span >活动范围：{{item.activeLimit[0]}} </span>
-            <br/>
-            <span >活动类别：{{item.activeClass[0]}} </span>
-            <button type="button" class="baomingbutton">我要报名</button>
+        <div class="work-list-top">
+          <div class="picleft">
+              <img :src="item.url" > 
+          </div>
+          <div class="jianjie">
+            <div class="name"><p>{{item.name}}</p></div>
+            <div class="activeclass">
+              <p >报名时间：{{item.avitveTiem}}</p>
+              <p >活动对象：{{item.activeObject[0]}} </p>
+              <p >活动组别：{{item.activeGroup[0]}} </p>
+              <p >活动范围：{{item.activeLimit[0]}} </p>
+              <p >活动类别：{{item.activeClass[0]}} </p>
+              <div class="activeclass-bottom">
+                <el-button type="primary" @click="goToActivityEnroll">我要报名</el-button>
+              </div>
+              
+            </div>
           </div>
         </div>
         <!--简介-->
         <div class="count">
-           
-            <span class="title">活动详情</span>
-            <hr style="margin-top:45px;width:1092px;height:1px;background:rgba(229,229,229,1);" />
-           
-            <span class="sontitle">活动前言
-            </span>
-            <span class="soncount">{{item.activePreface}}</span>
-          
-          
-            <span class="sontitle">参赛地点
-            </span>
-            <span class="soncount">{{item.activeAddr}}</span>
-          
-           
-            <span class="sontitle">参赛要求
-            </span>
-            <span class="soncount">{{item.activeRequer}}</span>
-             <hr style="margin-buttom:75px;width:1092px;height:1px;background:rgba(229,229,229,1);" />
+            <p class="title">活动详情</p>
+            <hr style="background:rgba(229,229,229,1);" />
+            <div class="count-item">
+              <p class="sontitle">活动前言</p>
+              <p class="soncount">{{item.activePreface}}</p>
+            </div>
+            <div class="count-item">
+              <p class="sontitle">参赛地点</p>
+              <p class="soncount">{{item.activeAddr}}</p>
+            </div>
+            <div class="count-item">
+              <p class="sontitle">参赛要求</p>
+              <p class="soncount">{{item.activeRequer}}</p>
+            </div>
+            
+            <hr style="background:rgba(229,229,229,1);" />
         </div>
        
-
       </el-card>
     </template>
     <div v-else class="no-data">暂无数据</div>
@@ -69,6 +66,12 @@
       else if (this.stage == 'STAGE_EXCELLENT_WORK_SHOW') this.getExcellentWorkList();
     },
     methods: {
+      //我要报名
+      goToActivityEnroll(){
+        this.$router.push({
+          path: '/home/activityEnroll',
+        });
+      },
       async getAllWorkList() {
         // let res = await this.axiosGet({
         //   url: '/v1/activity/GetWorkList',
@@ -123,107 +126,78 @@
   };
 </script>
 <style lang="less">
-  .activity-work-show {
+  p{
+    margin: 0;
+    padding: 0;
+  }
+  .activity-work-show { 
     .work-list-item {
-      width:1200px;
-      height:1030px;
-      // width: 325px;
+      width:1180px;
       display: inline-block;
-      margin: 0 15px 15px 0;
-      text-align: center;
+      padding: 30px;
+      .work-list-top{
+        display: flex;
+        flex-direction: row;
+      }
       .picleft{
-          position: absolute;
-          margin-left: 65px;
-          padding-top: 38px;
-           img{
-            width:360px; 
-            height:270px;
-            border-radius:8px;
-          }
+          img{
+          width:360px; 
+          height:270px;
+          border-radius:8px;
+        }
       }
       .jianjie{
-          position: absolute;
-          margin-left: 492px;
-          padding-top: 38px;
+          margin-left: 60px;
+          height: 270px;
           .name{
             width:658px;
-            height:49px;
             background:rgba(244,247,249,1);
-            
-            span{
-              float:left;
-               margin-left: 27px;
-              padding-top: 13px;
+            p{
               font-size:24px;
               color:#0386FF;
+              padding: 10px;
             }
           }
           .activeclass{
-            line-height:30px;
-              span{
-                float:left;              
-              }
-            .baomingbutton{
-              float:left;
-              color:#FFFEFE;
-              font-size:16px;
-              width:163px;
-              height:45px;
-              background-color:rgba(25,138,243,1);
-              margin-top: 55px;
-              margin-left: -176px;
+            display:flex;
+            flex-direction: column;
+            justify-content: start;
+            p{
+              padding: 5px 10px;
+            }
+            .activeclass-bottom{
+              padding-left: 10px;
+              margin-top: 20px;
             }
           }
-         
-           
-        
-          
+ 
       }
-      .count{
-          position: absolute;
-          margin-left: 65px;
-          padding-top: 394px;
-          width:1074px;
-          height:619px;
-          
+      .count{ 
         .title{
-          float:left;
-          width:80px;
-          height:17px;
           font-size:16px;
           font-family:MicrosoftYaHei;
-          font-weight:400;
           color:rgba(102,102,102,1);
           line-height:43px;
+          margin: 20px 0;
         }
-        .sontitle{
-          margin-left:33px;
-          margin-top:34px;
-          float:left;
-          width:80px;
-          height:17px;
-          font-size:16px;
-          font-family:Microsoft YaHei;
-          font-weight:400;
-          color:rgba(51,51,51,1);
-          line-height:43px;
-          
-        }
+        .count-item{
+          margin: 20px 30px;
+          .sontitle{
+            font-size:16px;
+            font-family:Microsoft YaHei;
+            font-weight:400;
+            color:#333;
+            line-height:43px;
+          }
         .soncount{
-            float:left;
-            margin-bottom: 12px;
             text-indent:2em;
-            margin-top: 25px;
-            margin-left: 52px;
-            width:963px;
-            height:45px;
             font-size:14px;
             font-family:Microsoft YaHei;
             font-weight:400;
-            color:rgba(51,51,51,1);
+            color:#333;
             line-height:30px;
           }
-        
+        }  
       }
 
       .school {
