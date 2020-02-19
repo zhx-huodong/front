@@ -1,16 +1,16 @@
 <template>
   <div class="flow-steps-wrap">
-    <div class="process-title">活动流程</div>
+    <!-- <div class="process-title">活动流程</div> -->
     <div class="activity-step">
-      <el-steps :active="stageIndex" direction="vertical" process-status="finish" finish-status="success">
+      <el-steps :active="stageIndex" process-status="finish" finish-status="success">
         <el-step
           v-for="(item, index) in myStageList"
           :key="index"
           :status="index == stageIndex ? 'finish' : item.status"
           @click.native="onStep(item, index)">
-          <template slot="title">
+          <!-- <template slot="title">
             <div class="step-title">{{index + 1}}</div>
-          </template>
+          </template> -->
           <template slot="description">
             <div class="step-row">{{item.StageName}}</div>
             <div v-if="item.ShowTime">
@@ -22,7 +22,7 @@
       </el-steps>
     </div>
 
-    <div class="activity-file">
+    <!-- <div class="activity-file">
       <div class="file-title">其他活动材料</div>
       <div class="file-wrap" v-if="fileList.length > 0">
         <div class="file-name" v-for="(item, index) in fileList" :key="index" @click="downLodeFile(item)">
@@ -52,7 +52,7 @@
           <el-button @click="dialogVisible = false">取消</el-button>
         </span>
       </el-dialog>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -91,7 +91,7 @@
       });
       this.activityId = this.$route.query.ActivityId;
       this.myStage = this.stage;
-      this.getFileList();
+      // this.getFileList();
     },
     methods: {
       async getFileList() {
@@ -127,11 +127,11 @@
         }, 1000);
       },
       onStep(item, index) {
-        let stepStartTime = new Date(item.StartTime * 1000);
-        let now = this.getNowLastTime();
-        if (now < stepStartTime) return; // 当前时间未到流程的开始时间，不允许切换
-        this.myStage = item.StageId;
-        this.$emit('changeStage', this.myStage); // 告知阶段改变
+        // let stepStartTime = new Date(item.StartTime * 1000);
+        // let now = this.getNowLastTime();
+        // if (now < stepStartTime) return; // 当前时间未到流程的开始时间，不允许切换
+        // this.myStage = item.StageId;
+        // this.$emit('changeStage', this.myStage); // 告知阶段改变
       },
       getNowLastTime() {
         let now = new Date();
@@ -147,8 +147,12 @@
   .el-popup-parent--hidden {
     overflow: visible;
   }
-
   .flow-steps-wrap {
+    padding:30px;
+    width: 1180px;
+    display: inline-block;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+    border-radius:8px;
     .el-step:hover {
       cursor: pointer;
     }
@@ -182,7 +186,7 @@
       margin-bottom: 52px;
     }
     .activity-step {
-      height: 350px;
+      // height: 350px;
       .step-title {
         font-size: 45px;
         font-style: italic;

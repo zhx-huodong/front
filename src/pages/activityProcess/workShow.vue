@@ -24,7 +24,7 @@
         <!--简介-->
         <div class="count">
             <p class="title">活动详情</p>
-            <hr style="background:rgba(229,229,229,1);" />
+            <el-divider></el-divider>
             <div class="count-item">
               <p class="sontitle">活动前言</p>
               <p class="soncount">{{item.activePreface}}</p>
@@ -38,7 +38,7 @@
               <p class="soncount">{{item.activeRequer}}</p>
             </div>
             
-            <hr style="background:rgba(229,229,229,1);" />
+            <el-divider></el-divider>
         </div>
        
       </el-card>

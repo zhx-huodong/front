@@ -203,7 +203,8 @@
         this.$router.push({
           path: '/activity/process',
           query: {
-            ActivityId: item.ActivityId
+            ActivityId: item.ActivityId,
+            stage:'STAGE_WORK_LOOK_OVER'
           }
         });
       },

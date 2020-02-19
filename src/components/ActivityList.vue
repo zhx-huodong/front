@@ -57,7 +57,10 @@
         } else if (this.goToDetail == 'activityDetail') {
           this.$router.push({
             path: '/activity/process',
-            query: { ActivityId: item.ActivityId }
+            query: { 
+              ActivityId: item.ActivityId,
+              stage:'STAGE_WORK_SHOW'
+            }
           });
         } else if (this.goToDetail == 'excellentWorkDetail') {
           this.$router.push({

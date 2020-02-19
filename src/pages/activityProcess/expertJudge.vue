@@ -22,7 +22,7 @@
     },
     mounted() {
       this.activityId = this.$route.query.ActivityId;
-      this.getAward();
+      // this.getAward();
     },
     methods: {
       async getAward() {
