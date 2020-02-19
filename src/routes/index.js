@@ -19,6 +19,9 @@ const workAuditDetail = require('../pages/myActivity/workAuditDetail');
 const Switch = require('../pages/switchPage');
 const home=require('../pages/home');
 const activityProject=require('../pages/homePages/activityProject');
+const activityEnroll=require('../pages/homePages/activityEnroll');
+const userEdit=require('../pages/userCenter/userEdit');
+
 
 const routes = [
   {
@@ -50,7 +53,12 @@ const routes = [
       { path: '/msgcenter', components: messageCenter }, // 消息中心
 
       { path: '/home', components: home},//首页
-      { path: '/home/activityProject', components: activityProject}//活动项目
+      { path: '/home/activityProject', components: activityProject},//活动项目
+      { path: '/home/activityEnroll', components: activityEnroll},//活动报名
+
+      { path: '/userCenter/userEdit', components: userEdit}//个人中心编辑
+
+      
     ]
   },
   { path: '*', redirect: '/' }

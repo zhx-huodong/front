@@ -5,10 +5,11 @@
         <div class="user-left">
           <div class="block">
             <div class="user-text">我参加的活动</div>
-            <el-table :data="tableData" style="width: 100%" height="400px">
+            <el-table :data="tableData" style="width: 100%;font-size:12px" height="460px">
               <el-table-column prop="ActivityName" label="活动名称" show-overflow-tooltip>
                 <template slot-scope="scope">
-                  <el-button type="text" @click="goToActDetail(scope.row)">{{scope.row.ActivityName}}</el-button>
+                  {{scope.row.ActivityName}}
+                  <!-- <el-button type="text" @click="goToActDetail(scope.row)">{{scope.row.ActivityName}}</el-button> -->
                 </template>
               </el-table-column>
               <el-table-column prop="Sponsor" label="主办方"></el-table-column>
@@ -20,6 +21,11 @@
               <el-table-column prop="StartTime" label="报名日期">
                 <template slot-scope="scope">
                   {{ timeFormat(scope.row.StartTime * 1000, 'yyyy-MM-dd hh:mm:ss') }}
+                </template>
+              </el-table-column>
+              <el-table-column  label="操作">
+                <template slot-scope="scope">
+                  <el-button type="text" @click="goToActDetail(scope.row)">查看</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -34,6 +40,7 @@
           </div>
         </div>
         <div class="user-right">
+          <div class="user-edit"><el-button type="primary" size="mini" plain @click="goToUserEdit">编辑</el-button></div>
           <div class="user-info-wrap" v-if="user">
             <div class="user-head-left">
               <img v-if="user.Avatar" :src="user.Avatar">
@@ -199,7 +206,13 @@
             ActivityId: item.ActivityId
           }
         });
+      },
+      goToUserEdit(){
+        this.$router.push({
+          path: '/userCenter/userEdit',
+        })
       }
+      
     }
   };
 </script>
@@ -216,7 +229,7 @@
         display: flex;
         .user-left {
           width: 830px;
-          height: 560px;
+          height: 600px;
           border: 1px solid #E6E6E6;
           margin-right: 20px;
           padding: 30px 20px 20px 20px;
@@ -229,16 +242,21 @@
         }
         .user-right {
           width: 330px;
-          height: 560px;
+          height: 600px;
           border: 1px solid #E6E6E6;
+          .user-edit{
+            display: flex;
+            margin:10px 20px 0;
+            justify-content: flex-end;
+          }
           .user-info-wrap {
             display: flex;
             margin: 20px;
             padding-bottom: 20px;
             border-bottom: 1px solid #E6E6E6;
             .user-head-left {
-              width: 95px;
-              height: 95px;
+              width: 80px;
+              height: 80px;
               background: khaki;
               border-radius: 4px;
               margin-right: 20px;
@@ -249,10 +267,10 @@
             }
             .user-head-right {
               .user-name {
-                font-size: 18px;
+                font-size: 16px;
               }
               .user-tel {
-                font-size: 16px;
+                font-size: 14px;
                 color: #888888;
                 margin: 10px 0;
               }
@@ -260,7 +278,7 @@
           }
           .user-info-atlas {
             .atlas-title {
-              font-size: 16px;
+              font-size: 14px;
               text-align: center;
             }
           }
@@ -269,7 +287,7 @@
       .user-certificate {
         width: 830px;
         height: 529px;
-        margin-top: 20px;
+        margin-top: 10px;
         padding: 35px 20px 0 20px;
         border: 1px solid #E6E6E6;
         box-sizing: border-box;
