@@ -114,7 +114,7 @@
 		// this.activityList = list;
 			this.total=1
 			let list=[
-				{'ActivityLogo' : require('../assets/img2/1.png'), 'ActivityName' : '电脑绘图'},
+				{'ActivityLogo' : require('../assets/img2/1.png'), 'ActivityName' : '电脑绘图', 'ActivityId':1},
 				{'ActivityLogo' : require('../assets/img2/2.png'), 'ActivityName' : '电脑动画'},
 				{'ActivityLogo' : require('../assets/img2/3.png'), 'ActivityName' : '电脑艺术计'},
 				{'ActivityLogo' : require('../assets/img2/4.png'), 'ActivityName' : '电子板报'},

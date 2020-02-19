@@ -10,9 +10,9 @@
         <expert-jude key='expert-jude2' v-if="currentStage == 'STAGE_WORK_JUDGE'" :stage="currentStage"></expert-jude>
         <work-show key='work-show2' v-if="currentStage == 'STAGE_EXCELLENT_WORK_SHOW'" :stage="currentStage"></work-show>
       </div>
-      <div class="activity-right" v-if="stageList.length > 0">
+      <!-- <div class="activity-right" v-if="stageList.length > 0">
         <flow-steps :stage-list="stageList" :stage="currentStage" @changeStage="changeStage"></flow-steps>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -38,13 +38,16 @@
     },
     methods: {
       async getStageList() {
-        let res = await this.axiosGet({
-          url: '/v1/activity/GetStageList',
-          ActivityId: this.activityId
-        }).catch(err => err);
-        if (res.ErrorCode != 'OK') return this.$message.error(res.ErrorMsg);
-        this.currentStage = res.Data.Current;
-        this.stageList = res.Data.StageList || [];
+        // let res = await this.axiosGet({
+        //   url: '/v1/activity/GetStageList',
+        //   ActivityId: this.activityId
+        // }).catch(err => err);
+        // if (res.ErrorCode != 'OK') return this.$message.error(res.ErrorMsg);
+        // this.currentStage = res.Data.Current;
+        // this.stageList = res.Data.StageList || [];
+        this.currentStage='STAGE_WORK_SHOW';
+        console.log(this.currentStage)
+        
       },
       changeStage(val) {
         this.currentStage = val;
