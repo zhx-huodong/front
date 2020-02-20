@@ -23,6 +23,7 @@ const activityEnroll=require('../pages/homePages/activityEnroll');
 const userEdit=require('../pages/userCenter/userEdit');
 const submitEnroll=require('../pages/homePages/submitEnroll');
 const activityDetail = require('../pages/activityProcess/activityDetail');
+const workShow = require('../pages/activityProcess/workShow');
 
 
 const routes = [
@@ -61,7 +62,8 @@ const routes = [
 
       { path: '/userCenter/userEdit', components: userEdit},//个人中心编辑
 
-      { path: '/activityDetail', components: activityDetail}//查看活动详情
+      { path: '/activityDetail', components: activityDetail},//查看活动详情
+      { path: '/workShow', components: workShow}//活动详情展示
 
 
       
