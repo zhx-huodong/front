@@ -96,7 +96,12 @@
     },
     methods: {
 
-      
+      //查看活动详情
+      goToActivity(){
+        this.$router.push({
+          path: '/activityDetail',
+        })
+      }
       
     }
   };
