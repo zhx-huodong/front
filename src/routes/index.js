@@ -21,6 +21,7 @@ const home=require('../pages/home');
 const activityProject=require('../pages/homePages/activityProject');
 const activityEnroll=require('../pages/homePages/activityEnroll');
 const userEdit=require('../pages/userCenter/userEdit');
+const submitEnroll=require('../pages/homePages/submitEnroll');
 
 
 const routes = [
@@ -55,6 +56,7 @@ const routes = [
       { path: '/home', components: home},//首页
       { path: '/home/activityProject', components: activityProject},//活动项目
       { path: '/home/activityEnroll', components: activityEnroll},//活动报名
+      { path: '/home/submitEnroll', components: submitEnroll},//报名成功
 
       { path: '/userCenter/userEdit', components: userEdit}//个人中心编辑
 
