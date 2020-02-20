@@ -76,12 +76,13 @@
           { key: 'myActivity', name: '活动发布与管理', hide: false },
           { key: 'excellence', name: '优秀作品展', hide: false },
           { key: 'expertReview', name: '专家评审', hide: true },
-          { key: 'userCenter', name: '个人中心', hide: false }
+          { key: 'userCenter', name: '个人中心', hide: false },
+          { key:'activeManager',name:'活动管理',hide:false}
         ],
         adminTabs: [
           { key: 'auditActivity', name: '审核中心', hide: false },
           { key: 'expertReview', name: '专家评审', hide: true },
-          { key: 'expertStore', name: '专家库', hide: false }
+          { key: 'expertStore', name: '专家库', hide: true }
         ],
         activeTab: 'home',
         wxCode: '', // 微信登录后的code
@@ -144,6 +145,7 @@
     },
     methods: {
       switchPage(key) {
+        console.log(key)
         if (this.activeTab === key && this.$route.path == ('/' + this.activeTab)) return;
         this.activeTab = key;
         this.$router.push('/' + key);
