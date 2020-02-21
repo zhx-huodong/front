@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- <el-card style="height: 610px;"> -->
-      <quill-editor v-model="content" ref="myQuillEditor" style="height: 250px;" :options="editorOption">
+      <quill-editor v-model="content" ref="myQuillEditor" style="height: 250px;" @change="editorChange" :options="editorOption">
         <!-- 自定义toolar -->
         <div id="toolbar" slot="toolbar">
           <!-- Add a bold button -->
@@ -96,6 +96,13 @@
             }
           }
         }
+      }
+    },
+    methods:{
+      //富文本内容改变
+      editorChange(){
+        // console.log("content===",this.content)
+        this.$emit('editorChange',this.content)
       }
     }
   }

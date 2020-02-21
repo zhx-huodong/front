@@ -45,13 +45,13 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="活动介绍 :">
-                    <my-editor></my-editor>
+                    <my-editor @editorChange="editorChange"></my-editor>
                 </el-form-item>
                 <div class="upload-file">
                     <div class="annex">上传活动相关附件</div>
                     <p>支持excle、word、pdf 三种格式 </p>
                 </div>
-                <el-divider></el-divider>
+                <el-divider ></el-divider>
                 <el-form-item label="作品上传 :">
                     <el-date-picker
                     v-model="form.date2"
@@ -162,6 +162,10 @@
             handleRemove(){
 
             },
+            //富文本内容改变
+            editorChange(data){
+                console.log("data===",data)
+            }
          
         }
     }
