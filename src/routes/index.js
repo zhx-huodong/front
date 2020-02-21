@@ -4,8 +4,13 @@ const PublishManage = require('../pages/publishManage.vue'); // 活动发布与�
 const ExcellenceShow = require('../pages/excellentWork/list.vue'); // 优秀作品展
 const UserCenter = require('../pages/userCenter.vue'); // 个人中心
 const MyActivity = require('../pages/myActivity.vue'); // 我发布的活动
+<<<<<<< HEAD
 
 
+=======
+const activeManager=require('../pages/activeManager/index.vue'); // 活动管理
+const createActivity=require('../pages/activeManager/createActivity.vue'); // 创建活动
+>>>>>>> 886a27ed4f33054f8faa59b12af12577d614aeb9
 const MyActivityDetail = require('../pages/myActivityDetail.vue'); // 我发布的活动-创建活动
 const activityProcess = require('../pages/activityProcess/index');
 const excellentWork = require('../pages/excellentWork/index');
@@ -49,8 +54,14 @@ const routes = [
       { path: '/activeManager', components: activeManager }, // 活动管理
       { path: '/activity/process', components: activityProcess }, // 活动各阶段
 
+<<<<<<< HEAD
      
       { path: '/activeManager/publicActive', components: publicActive }, // 发布活动
+=======
+      { path: '/activeManager', components: activeManager }, // 活动管理
+      { path: '/activeManager/createActivity', components: createActivity }, // 创建活动
+
+>>>>>>> 886a27ed4f33054f8faa59b12af12577d614aeb9
 
       { path: '/excellentWork/index', components: excellentWork }, // 优秀作品展示
       { path: '/excellentWork/excellentWorkDetail', components: excellentWorkDetail }, // 优秀作品展示详情

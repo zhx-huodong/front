@@ -33,16 +33,14 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-
-
     .box-card {
     clear:both;
-    margin: 19px 360px 19px 360px;
-    position:;
+    margin:auto;
     text-align: center;
-    width:1200px;
+    width:1180px;
     height:1030px;
     background:rgba(255,255,255,1);
+    margin-top:30px;
   }
   .title{
         margin:76px 496px 0 497px;
