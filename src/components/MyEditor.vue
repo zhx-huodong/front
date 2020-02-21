@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="my-editer">
     <!-- <el-card style="height: 610px;"> -->
       <quill-editor v-model="content" ref="myQuillEditor" style="height: 250px;" @change="editorChange" :options="editorOption">
         <!-- 自定义toolar -->
@@ -108,16 +108,11 @@
   }
 </script>
 
-<style>
-.el-form-item__content{
-  line-height:0 !important;
-}
+<style lang='less'>
+
 .ql-container{
   height:80%;
-}
-.ql-snow .ql-picker-options .ql-picker-item{
-  padding-bottom:20px;
-  padding-top:20px;
+  
 }
 </style>
 

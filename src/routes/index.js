@@ -4,10 +4,6 @@ const PublishManage = require('../pages/publishManage.vue'); // 活动发布与�
 const ExcellenceShow = require('../pages/excellentWork/list.vue'); // 优秀作品展
 const UserCenter = require('../pages/userCenter.vue'); // 个人中心
 const MyActivity = require('../pages/myActivity.vue'); // 我发布的活动
-
-
-const activeManager=require('../pages/activeManager/index.vue'); // 活动管理
-const createActivity=require('../pages/activeManager/createActivity.vue'); // 创建活动
 const MyActivityDetail = require('../pages/myActivityDetail.vue'); // 我发布的活动-创建活动
 const activityProcess = require('../pages/activityProcess/index');
 const excellentWork = require('../pages/excellentWork/index');
@@ -31,6 +27,15 @@ const workShow = require('../pages/activityProcess/workShow');
 
 const activeManager=require('../pages/activeManager/index.vue'); // 活动管理
 const publicActive=require('../pages/activeManager/publicActive.vue'); // 活动管理
+const createActivity=require('../pages/activeManager/createActivity.vue'); // 创建活动
+
+const admin=require('../pages/admin.vue'); // 超级管理员
+const roleManage=require('../pages/adminManager/roleManage.vue'); // 角色管理
+const expertManage=require('../pages/adminManager/expertManage.vue'); // 角色管理
+const expertAssign=require('../pages/adminManager/expertAssign.vue'); // 角色管理
+const classifyManage=require('../pages/adminManager/classifyManage.vue'); // 角色管理
+const addRole=require('../pages/adminManager/addRole.vue'); // 角色管理
+
 
 
 const routes = [
@@ -77,10 +82,16 @@ const routes = [
       { path: '/userCenter/userEdit', components: userEdit},//个人中心编辑
 
       { path: '/activityDetail', components: activityDetail},//查看活动详情
-      { path: '/workShow', components: workShow}//活动详情展示
+      { path: '/workShow', components: workShow},//活动详情展示
 
 
-      
+      { path: '/admin', components: admin},//超级管理员
+      { path: '/roleManage', components: roleManage},//角色管理
+      { path: '/expertManage', components: expertManage},//专家管理
+      { path: '/expertAssign', components: expertAssign},//专家分配
+      { path: '/classifyManage', components: classifyManage},//类型管理
+      { path: '/addRole', components: addRole}//添加角色
+
     ]
   },
   { path: '*', redirect: '/' }

@@ -80,9 +80,15 @@
           { key:'activeManager',name:'活动管理',hide:false}
         ],
         adminTabs: [
-          { key: 'auditActivity', name: '审核中心', hide: false },
-          { key: 'expertReview', name: '专家评审', hide: true },
-          { key: 'expertStore', name: '专家库', hide: true }
+          // { key: 'auditActivity', name: '审核中心', hide: false },
+          // { key: 'expertReview', name: '专家评审', hide: true },
+          // { key: 'expertStore', name: '专家库', hide: true }
+          { key: 'admin', name: '用户管理', hide: true },
+          { key: 'roleManage', name: '角色管理', hide: true },
+          { key: 'expertMange', name: '专家管理', hide: true },
+          { key: 'expertAssign', name: '专家分配', hide: true },
+          { key: 'classifyManage', name: '分类管理', hide: true },
+
         ],
         activeTab: 'home',
         wxCode: '', // 微信登录后的code
@@ -134,6 +140,7 @@
         this.tabs = this.normalTabs;
         if (this.$route.path == '/') this.$router.push('/home');
       }
+      
     },
     watch: {
       $route(val) {

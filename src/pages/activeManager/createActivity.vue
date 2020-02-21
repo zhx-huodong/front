@@ -44,9 +44,11 @@
                     end-placeholder="结束日期">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="活动介绍 :">
+                <div class="my-editer">
+                    <P>活动介绍 ：</P>
                     <my-editor @editorChange="editorChange"></my-editor>
-                </el-form-item>
+                </div>
+              
                 <div class="upload-file">
                     <div class="annex">上传活动相关附件</div>
                     <p>支持excle、word、pdf 三种格式 </p>
@@ -227,6 +229,15 @@
             width:100px;
             margin-left:20px;
         }
+    }
+}
+.my-editer{
+    display:flex;
+    flex-direction:row;
+    margin-bottom:10px;
+    p{
+        font-size:14px;
+        color:#666;
     }
 }
 
