@@ -1,5 +1,6 @@
 <template>
     <div class="user-edit-center">
+        <el-card>
         <div class="user-edit-wrap">
             <div class="user-edit-top">
                 <p>个人信息</p>
@@ -67,6 +68,7 @@
                 </el-form>
             </div>
         </div>
+        </el-card>
     </div>
 </template>
 <script>
@@ -134,19 +136,14 @@ export default {
 </style>
 <style lang="less" scoped>
  .user-edit-center{
-    width: 100%;
+    width: 1180px;
+    margin: auto;
     margin-top: 20px;
     box-sizing: border-box;
     .user-edit-wrap {
-      width: 1180px;
-    //   height:600px;
-      margin: auto;
-      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.11);
-      box-sizing: border-box;
-      border-radius:8px;
       .user-edit-top{
           p{
-              padding:10px 40px;
+              padding-bottom:20px;
           }
           border-bottom:1px solid #E5E5E5;
       }

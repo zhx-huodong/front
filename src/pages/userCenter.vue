@@ -1,5 +1,6 @@
 <template>
   <div class="user-center">
+    <el-card>
     <div class="user-wrap">
       <div class="user-content">
         <div class="user-left">
@@ -81,6 +82,7 @@
         </div>
       </div> -->
     </div>
+    </el-card>
   </div>
 </template>
 <script>
@@ -219,17 +221,17 @@
 </script>
 <style lang="less" scoped>
   .user-center {
-    width: 100%;
+    width: 1180px;
+    margin: auto;
     margin-top: 20px;
     box-sizing: border-box;
     .user-wrap {
-      width: 1180px;
-      margin: auto;
+      
       .user-content {
         width: 100%;
         display: flex;
         .user-left {
-          width: 830px;
+          width: 800px;
           height: 600px;
           border: 1px solid #E6E6E6;
           margin-right: 20px;
@@ -242,7 +244,7 @@
           }
         }
         .user-right {
-          width: 330px;
+          width: 310px;
           height: 600px;
           border: 1px solid #E6E6E6;
           .user-edit{

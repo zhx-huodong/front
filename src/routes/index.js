@@ -5,10 +5,13 @@ const ExcellenceShow = require('../pages/excellentWork/list.vue'); // 优秀作�
 const UserCenter = require('../pages/userCenter.vue'); // 个人中心
 const MyActivity = require('../pages/myActivity.vue'); // 我发布的活动
 
+
 const activeManager=require('../pages/activeManager/index.vue'); // 活动管理
 const publicActive=require('../pages/activeManager/publicActive.vue'); // 活动管理
 const createActivity=require('../pages/activeManager/createActivity.vue'); // 创建活动
 const managerCenter=require('../pages/activeManager/managerCenter.vue'); // 创建活动
+
+
 
 const MyActivityDetail = require('../pages/myActivityDetail.vue'); // 我发布的活动-创建活动
 const activityProcess = require('../pages/activityProcess/index');
@@ -33,6 +36,14 @@ const workShow = require('../pages/activityProcess/workShow');
 
 
 
+const admin=require('../pages/admin.vue'); // 超级管理员
+const roleManage=require('../pages/adminManager/roleManage.vue'); // 角色管理
+const expertManage=require('../pages/adminManager/expertManage.vue'); // 角色管理
+const expertAssign=require('../pages/adminManager/expertAssign.vue'); // 角色管理
+const classifyManage=require('../pages/adminManager/classifyManage.vue'); // 角色管理
+const addRole=require('../pages/adminManager/addRole.vue'); // 角色管理
+
+
 
 
 const routes = [
@@ -54,7 +65,9 @@ const routes = [
       { path: '/activity/process', components: activityProcess }, // 活动各阶段
 
      
+
       { path: '/activeManager/publicActive', components: publicActive }, // 发布活动设置
+      { path: '/activeManager', components: activeManager }, // 活动管理
       { path: '/activeManager/createActivity', components: createActivity }, // 创建活动
       { path: '/activeManager/managerCenter', components: managerCenter }, // 活动管理中心
 
@@ -79,10 +92,16 @@ const routes = [
       { path: '/userCenter/userEdit', components: userEdit},//个人中心编辑
 
       { path: '/activityDetail', components: activityDetail},//查看活动详情
-      { path: '/workShow', components: workShow}//活动详情展示
+      { path: '/workShow', components: workShow},//活动详情展示
 
 
-      
+      { path: '/admin', components: admin},//超级管理员
+      { path: '/roleManage', components: roleManage},//角色管理
+      { path: '/expertManage', components: expertManage},//专家管理
+      { path: '/expertAssign', components: expertAssign},//专家分配
+      { path: '/classifyManage', components: classifyManage},//类型管理
+      { path: '/addRole', components: addRole}//添加角色
+
     ]
   },
   { path: '*', redirect: '/' }

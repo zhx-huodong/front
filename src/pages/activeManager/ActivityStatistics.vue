@@ -1,10 +1,18 @@
 <template>
 
-           <div class="user">
+          <div class="user">
             <p>报名统计</p>
             <high-charts :options="enrollSta"></high-charts>
           </div>
-    
+          <!-- <div class="user">
+            <p>获奖统计</p>
+            
+          </div>
+          <div class="user">
+            <p>报名统计</p>
+            <high-charts :options="enrollSta"></high-charts>
+          </div>
+     -->
 </template>
 <script>
  import HighCharts from '../../components/highcharts';
@@ -35,11 +43,11 @@
         let options = {
           show: true,
           chart: {
-            polar: true,
-            type: 'line'
+            // polar: true,
+            type: 'column'
           },
           title: {
-            text: '我的能力图谱'
+            text: ''
           },
           pane: {
             size: '65%'
@@ -47,18 +55,18 @@
           xAxis: {
             categories: xAxis,
             tickmarkPlacement: 'on',
-            lineWidth: 0
+            // lineWidth: 0
           },
           yAxis: {
-            gridLineInterpolation: 'polygon',
-            lineWidth: 0,
+            // gridLineInterpolation: 'polygon',
+            // lineWidth: 0,
             min: 0
           },
           legend: {
             enabled: false
           },
           series: [{
-            name: '能力值',
+            // name: '能力值',
             data: data,
             pointPlacement: 'on'
           }]
