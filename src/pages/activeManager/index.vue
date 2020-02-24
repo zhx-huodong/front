@@ -1,7 +1,7 @@
 <template>
     <div class="outter">
         <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="用户管理" name="first">
+            <el-tab-pane label="活动中心" name="first">
                 <div style=" clear: both;text-align: left;">
                     <el-form ref="form" :model="form">
                         <el-row :gutter="3">
@@ -44,28 +44,42 @@
                         </el-row>
                     </el-form>
                 </div>
+        <!-- <div class="jianjie">
+            <div class="name"><p>{{item.name}}</p></div>
+            <div class="activeclass">
+              <p >报名时间：{{item.avitveTiem}}</p>
+              <p >活动对象：{{item.activeObject[0]}} </p>
+              <p >活动组别：{{item.activeGroup[0]}} </p>
+              <p >活动范围：{{item.activeLimit[0]}} </p>
+              <p >活动类别：{{item.activeClass[0]}} </p>
+              <div class="activeclass-bottom">
+                <el-button type="text" @click="goToActivity">查看活动详情 》</el-button>
+              </div>
+            </div>
+          </div> -->
                
                 <div style="margin-top:36px" v-for='item in list' >
                    <div class="count" >
-                       <div class='imglogo'>
-                           <img :src="item.url" style="width:173px;height:127px;border-radius:8px;"/>
-                       </div>
-                       <div class='textclass'>
-                           <span class="font1">{{item.name}}</span>
-                           <br>
-                           <span class="font2">活动对象：{{item.object}}</span>
-                           <br>
-                           <span class="font2">活动范围：{{item.limit}}</span>
-                           <br>
-                           <span class="font2">发起时间：{{item.time}}</span>
-                       </div>
-                       <div class="butClass">
-                           <buttom  >查看详情</buttom>
-                       </div>
+                        <div class='imglogo'>
+                            <img :src="item.url" style="width:173px;height:127px;border-radius:8px;"/>
+                        </div>
+                        <div class="activeclass">
+                            <p class="font1">{{item.name}}</p>
+                            <p >活动对象：{{item.object}} </p>
+                            <p >活动范围：{{item.limit}} </p>
+                            <p >发起时间：{{item.time}} </p>
+                        </div>
+                        <div class="shenheclass">
+                            <p>{{item.status}}</p>
+                            <el-button type="text" @click="goToActivity">查看活动详情 》</el-button>
+
+                        </div>
+
+                      
                    </div>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="配置管理" name="second">
+            <el-tab-pane label="历史记录" name="second">
 
             </el-tab-pane>
         </el-tabs>
@@ -101,7 +115,8 @@ export default {
                     object:"【学生】",
                     limit:"【宝安区】【龙岗区】【南山区】【福田区】",
                     time:"2020-01-20",
-                    url:require('../../assets/img2/1.png')
+                    url:require('../../assets/img2/1.png'),
+                    status:"待审核"
                     },
                 {
                     id:2,
@@ -109,7 +124,8 @@ export default {
                     object:"【学生】",
                     limit:"【宝安区】【龙岗区】【南山区】【福田区】",
                     time:"2020-01-20",
-                    url:require('../../assets/img2/1.png')
+                    url:require('../../assets/img2/1.png'),
+                    status:"报名中",
                     },
                
             ]
@@ -132,11 +148,47 @@ export default {
  
 }
 </script>
-<style scoped>
+<style lang="less" scoped>
+    .activeclass-bottom{
+      
+    }
+    .shenheclass{
+        
+        margin:-71px 0 0 800px;
+        font-size:14px;
+        font-family:Microsoft YaHei;
+        font-weight:400;
+        color:rgba(255,198,44,1);
+        line-height:24px;
+    }
+    .activeclass{
+        
+        display:flex;
+        flex-direction: column;
+        justify-content: start;
+        p{
+            padding: 5px 10px 4px 61px;
+            font-size:14px;
+            font-family:Microsoft YaHei;
+            font-weight:400;
+            color:rgba(102,102,102,1);
+            line-height:24px;
+        }
+        .font1{
+        margin:7px 0 0 0;
+        float:left;
+        font-size:24px;
+        font-family:Microsoft YaHei;
+        font-weight:400;
+        color:rgba(51,51,51,1);
+        line-height:43px;
+    }
+    }
     .outter{
         margin:20px 360px 0 360px;
     }
     .count{
+     
     width:1200px;
     height:170px;
     background:rgba(247,248,250,1);
@@ -153,17 +205,7 @@ export default {
         margin:28px 0 0 275px;
         
     }
-    .font1{
-        margin:0 0 30px 0;
-        float:left;
-        font-size:24px;
-        font-family:Microsoft YaHei;
-        font-weight:400;
-        color:rgba(51,51,51,1);
-        line-height:43px;
-        
-        
-    }
+
     .font2{
          /* margin-top:20px; */
         float:left;
