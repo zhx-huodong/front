@@ -48,6 +48,11 @@ const addClassify=require('../pages/adminManager/addClassify.vue'); // 添加分
 const subClassify=require('../pages/adminManager/subClassify.vue'); // 子分类
 
 
+const workReview=require('../pages/workReview.vue'); // 作品评审
+const workScore=require('../pages/workReview/workScore.vue'); // 作品评分
+const importWorkList=require('../pages/workReview/importWorkList.vue'); // 导入作品评分列表
+
+
 
 const routes = [
   {
@@ -107,7 +112,11 @@ const routes = [
       { path: '/addExpert', components: addExpert},//添加专家
       { path: '/importExpert', components: importExpert},//导入专家
       { path: '/addClassify', components: addClassify},//添加分类
-      { path: '/subClassify', components: subClassify}//子分类
+      { path: '/subClassify', components: subClassify},//子分类
+
+      { path: '/workReview', components: workReview},//作品评审（专家模块）
+      { path: '/workScore', components: workScore},//作品评分（专家模块）
+      { path: '/importWorkList', components: importWorkList}//导入作品评分列表（专家模块）
 
 
     ]

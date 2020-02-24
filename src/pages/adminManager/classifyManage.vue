@@ -8,7 +8,7 @@
                             <el-button type="primary" @click="goToAddClassify">添加分类</el-button>
                         </el-col>
                     </el-row>
-                    </el-row>
+                    <el-row>
                         <el-col>
                             <div class="card">
                                 <template v-for="item in cardList">

@@ -11,14 +11,14 @@
                             
                             <el-form-item label="管理权限" prop="type">
                                 <el-checkbox-group v-model="ruleForm.type">
-                                    <template v-for="(item,index) in adminList" >
+                                    <template v-for="item in adminList" >
                                         <el-checkbox :label="item.adminName" name="type" :value="item.id"></el-checkbox>
                                     </template>
                                 </el-checkbox-group>
                             </el-form-item>
                             <el-form-item label="管理区域" >
                                 <el-checkbox-group v-model="area">
-                                    <template v-for="(item,index) in areaList" >
+                                    <template v-for="item in areaList" >
                                         <el-checkbox :label="item.areaName" name="area" :value="item.id"></el-checkbox>
                                     </template>
                                 </el-checkbox-group>

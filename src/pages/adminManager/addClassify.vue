@@ -38,8 +38,8 @@
                             </el-col>
                         </el-row>
                         <el-row>
-                            </el-col>
-                            <el-button type="primary" @click="goToSubmit">提交</el-button> 
+                            <el-col>
+                                <el-button type="primary" @click="goToSubmit">提交</el-button> 
                             </el-col>
                         </el-row>
                     </div>

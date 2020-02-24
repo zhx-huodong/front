@@ -1,0 +1,94 @@
+<template>
+    <div class="work-score-container">
+        <el-card style="min-height:600px;">
+            
+            <el-tabs v-model="activeName">
+                <el-tab-pane label="查看" name="look">
+                    <div style="width:900px">
+                        <el-row>
+                            <el-form ref="form" :model="form" label-width="100px">
+                                <el-form-item label="作品名称：">
+                                    <el-col>{{form.activityName}}</el-col>
+                                </el-form-item>
+
+                                <el-form-item label="作品简介：">
+                                    <el-col>{{form.introduction}}</el-col>
+                                </el-form-item>
+
+                                <el-form-item label="报名登记表：">
+                                    <el-col>{{form.regForm}}</el-col>
+                                </el-form-item>
+
+                                <el-form-item label="作品附件：">
+                                    <el-col>{{form.annex}}</el-col>
+                                </el-form-item>    
+                            </el-form>
+                        </el-row>
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
+
+            <el-tabs v-model="activeDetail">
+                <el-tab-pane label="评分信息" name="detail">
+                    <div style="width:900px">
+                        <el-row>
+                            <el-form ref="form" :model="form2" label-width="100px">
+                                <el-form-item label="评分：">
+                                    <el-input
+                                    placeholder="请输入评分"
+                                    v-model="form2.scope"
+                                    clearable
+                                    style="width:300px;">
+                                    </el-input>
+                                </el-form-item>
+
+                                <el-form-item label="评语：">
+                                    <el-input
+                                    type="textarea"
+                                    :rows="6"
+                                    placeholder="请输入评语"
+                                    v-model="form2.introduction">
+                                    </el-input>
+                                </el-form-item>
+
+                            </el-form>
+                        </el-row>
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
+            <el-row>
+                <el-col :span="2" :offset="11">
+                    <el-button type="primary">提交评分</el-button>
+                </el-col>
+            </el-row>
+        </el-card>
+    </div>
+</template>
+<script>
+export default {
+    data(){
+        return{
+            activeName:'look',
+            activeDetail:'detail',
+            form: {
+                activityName: '森林精灵',
+                introduction:'一般认为，从古埃及、波斯、印度和中国等东方文明古国发展起来的东方绘画，与从古希腊、古罗马发展起来的以欧洲力中心的西方绘画，是世界上的两大绘画体系。这两大绘画体系在历史上互有影响，对人类文明都作出了各自独特的重要贡献。绘画本身的可塑性决定了它具有很大的自由创造度，它既可以表现现实的空间世界，也可以表现超时空的想象世界，画家可以通过绘画来表现对生活和理想的各种独特的情感和理解，团为绘画是可视的静态艺术，可以长期对画中具有美学性的形式和内容进行欣赏、玩味、体验，所以它是人们最容易接受而且最喜爱的一种艺术。',
+                regForm:'宝安中学报名申请表.doc',
+                annex:'飞行技术家.mp4'
+            },
+            form2:{
+                scope:'',//评分
+                introduction:'',//评语
+            },
+            
+        }
+    }
+}
+</script>
+<style lang="less" scoped>
+.work-score-container{
+    width:1180px;
+    margin:auto;
+    margin-top:20px;
+}
+</style>
