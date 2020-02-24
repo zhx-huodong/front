@@ -77,7 +77,9 @@
           { key: 'excellence', name: '优秀作品展', hide: false },
           { key: 'expertReview', name: '专家评审', hide: true },
           { key: 'userCenter', name: '个人中心', hide: false },
-          { key:'activeManager',name:'活动管理',hide:false}
+          { key:'activeManager',name:'活动管理',hide:false},
+          { key:'newsBulletin',name:'消息公告',hide:false},
+          
         ],
         adminTabs: [
           // { key: 'auditActivity', name: '审核中心', hide: false },

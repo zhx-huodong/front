@@ -4,6 +4,9 @@ const PublishManage = require('../pages/publishManage.vue'); // 活动发布与�
 const ExcellenceShow = require('../pages/excellentWork/list.vue'); // 优秀作品展
 const UserCenter = require('../pages/userCenter.vue'); // 个人中心
 const MyActivity = require('../pages/myActivity.vue'); // 我发布的活动
+const newsBulletin = require('../pages/newsBulletin.vue'); // 消息公告
+const newsBulletinDetail = require('../pages/newsBulletinDetail.vue'); // 消息公告
+
 
 
 const activeManager=require('../pages/activeManager/index.vue'); // 活动管理
@@ -71,6 +74,8 @@ const routes = [
       { path: '/userCenter', components: UserCenter }, // 个人中心
       { path: '/activeManager', components: activeManager }, // 活动管理
       { path: '/activity/process', components: activityProcess }, // 活动各阶段
+      { path: '/newsBulletin', components: newsBulletin }, // 消息公告
+      { path: '/newsBulletinDetail', components: newsBulletinDetail }, // 消息公告
 
      
 

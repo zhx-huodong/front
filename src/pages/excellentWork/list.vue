@@ -17,16 +17,17 @@
       };
     },
     async created() {
-      let res = await this.axiosGet({
-        url: '/v1/activity/GetExcellentWorkCategory'
-      }).catch(err => err);
-      if (res.ErrorCode != 'OK') return this.$message.error(res.ErrorMsg);
+      // let res = await this.axiosGet({
+      //   url: '/v1/activity/GetExcellentWorkCategory'
+      // }).catch(err => err);
+      // if (res.ErrorCode != 'OK') return this.$message.error(res.ErrorMsg);
 
-      let list = res.Data.CategoryList || [];
-      list.forEach(item => {
-        item.StartTime = this.timeFormat(item.StartTime * 1000, 'yyyy-MM-dd');
-        item.EndTime = this.timeFormat(item.EndTime * 1000, 'yyyy-MM-dd');
-      });
+      // let list = res.Data.CategoryList || [];
+      // list.forEach(item => {
+      //   item.StartTime = this.timeFormat(item.StartTime * 1000, 'yyyy-MM-dd');
+      //   item.EndTime = this.timeFormat(item.EndTime * 1000, 'yyyy-MM-dd');
+      // });
+      let list=[];
       this.activityList = list;
     }
   };

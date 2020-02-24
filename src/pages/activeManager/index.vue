@@ -1,4 +1,5 @@
 <template>
+    
     <div class="outter">
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="活动中心" name="first">
@@ -44,19 +45,7 @@
                         </el-row>
                     </el-form>
                 </div>
-        <!-- <div class="jianjie">
-            <div class="name"><p>{{item.name}}</p></div>
-            <div class="activeclass">
-              <p >报名时间：{{item.avitveTiem}}</p>
-              <p >活动对象：{{item.activeObject[0]}} </p>
-              <p >活动组别：{{item.activeGroup[0]}} </p>
-              <p >活动范围：{{item.activeLimit[0]}} </p>
-              <p >活动类别：{{item.activeClass[0]}} </p>
-              <div class="activeclass-bottom">
-                <el-button type="text" @click="goToActivity">查看活动详情 》</el-button>
-              </div>
-            </div>
-          </div> -->
+    
                
                 <div style="margin-top:36px" v-for='item in list' >
                    <div class="count" >
@@ -69,9 +58,9 @@
                             <p >活动范围：{{item.limit}} </p>
                             <p >发起时间：{{item.time}} </p>
                         </div>
-                        <div class="shenheclass">
+                        <div class="shenheclass" >
                             <p>{{item.status}}</p>
-                            <el-button type="text" @click="goToActivity">查看活动详情 》</el-button>
+                            <el-button type="text" @click="toActivetyDetail()" >查看活动详情 》</el-button>
 
                         </div>
 
@@ -143,8 +132,15 @@ export default {
               path:"/activeManager/publicActive",
           })
           
-      }
+      },
+    toActivetyDetail(){
+         this.$router.push({
+              path:"/activityDetail",
+          })
+        
     }
+    },
+
  
 }
 </script>
@@ -160,6 +156,12 @@ export default {
         font-weight:400;
         color:rgba(255,198,44,1);
         line-height:24px;
+        position:relative;
+        .mybtn{
+            position:absolute;
+            right:50px;
+            top:200px;
+        }
     }
     .activeclass{
         
