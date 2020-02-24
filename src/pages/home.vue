@@ -1,11 +1,13 @@
 <template>
     <div class="home-center">
-		<div class="home-wrap">
-			<!-- <div class="home-header"></div> -->
-            <div class="home-activity-list" v-if="activityList">
-                <card-list :cardList="activityList" @toNext="toNext"></card-list>
-            </div>
-		</div>  
+        <el-card style="min-height:650px;">
+            <div class="home-wrap">
+                <!-- <div class="home-header"></div> -->
+                <div class="home-activity-list" v-if="activityList">
+                    <card-list :cardList="activityList" @toNext="toNext"></card-list>
+                </div>
+            </div> 
+        </el-card> 
 	</div>
 </template>
 <script>
@@ -34,11 +36,10 @@ export default {
 </script>
 <style lang="less" scoped>
 .home-center{
-    width: 100%;
-    margin-top: 10px;
+    width: 1180px;
+    margin: auto;
+    margin-top: 20px;
     .home-wrap{
-        width: 1180px;
-        margin: auto;
         .home-header{
             width: 100%;
             height: 120px;

@@ -105,15 +105,18 @@
       cursor: pointer;
     }
     .activity-self {
-      width: 280px;
+      width: 260px;
       padding: 10px;
-      border-radius: 4px;
+      border-radius: 8px;
       box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.11);
       box-sizing: border-box;
       .activity-img {
         width: 100%;
-        height: 139px;
+        height: 160px;
         position: relative;
+        img{
+          border-radius:8px;
+        }
         img, video {
           width: 100%;
           height: 100%;

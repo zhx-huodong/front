@@ -38,8 +38,8 @@
       align-items:center;
       padding:20px 10px;
       img{
-        width:173px;
-        height:129px;
+        width:260px;
+        height:180px;
         border-radius:4px;
       }
       p{

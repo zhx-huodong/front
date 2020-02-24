@@ -39,8 +39,8 @@
       padding:20px 10px;
       img{
         height:180px;
-        width:270px;
-        border-radius:4px;
+        width:260px;
+        border-radius:8px;
       }
       p{
         margin:0;

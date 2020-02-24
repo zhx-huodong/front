@@ -1,10 +1,12 @@
 <template>
     <div class="activityProject-center">
-		<div class="activityProject-wrap">
-            <div class="activityProject-activity-list" v-if="activityList">
-                <card-list :cardList="activityList" @toNext="toNext"></card-list>
-            </div>
-		</div>  
+        <el-card style="min-height:650px;">
+            <div class="activityProject-wrap">
+                <div class="activityProject-activity-list" v-if="activityList">
+                    <card-list :cardList="activityList" @toNext="toNext"></card-list>
+                </div>
+            </div> 
+        </el-card> 
 	</div>
 </template>
 <script>
@@ -33,11 +35,11 @@ export default {
 </script>
 <style lang="less" scoped>
 .activityProject-center{
-    width: 100%;
-    margin-top: 10px;
+    width: 1180px;
+    margin: auto;
+    margin-top: 20px;
     .activityProject-wrap{
-        width: 1180px;
-        margin: auto;
+        
         
     }
 }

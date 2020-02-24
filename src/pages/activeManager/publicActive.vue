@@ -1,15 +1,16 @@
 <template>
     <div class="home-center">
-		<div class="home-wrap">
-			<!-- <div class="home-header"></div> -->
-            <div class="home-activity-list" v-if="activityList">
-                <card-list :cardList="activityList"></card-list>
+        <el-card style="min-height:600px">
+            <div class="home-wrap">
+                <div class="home-activity-list" v-if="activityList">
+                    <card-list :cardList="activityList"></card-list>
+                </div>
+                <div class="add-activety-setting">
+                    <p style="font-size:16px;color:rgba(51,51,51,1);line-height:48px;">活动类别</p>
+                    <add-card-list :cardList="addactivityList"></add-card-list>
+                </div>
             </div>
-            <div class="add-activety-setting">
-                <p style="font-size:16px;font-family:Adobe Heiti Std;font-weight:normal;color:rgba(51,51,51,1);line-height:48px;">活动类别</p>
-                <add-card-list :cardList="addactivityList"></add-card-list>
-            </div>
-		</div>  
+        </el-card>  
 	</div>
 </template>
 <script>
@@ -41,13 +42,15 @@ export default {
 <style lang="less" scoped>
 .add-activety-setting{
     margin-top:36px;
+    p{
+        border-radius:8px;
+    }
 }
 .home-center{
-    width: 100%;
-    margin-top: 10px;
+    width: 1180px;
+    margin:auto;
+    margin-top: 20px;
     .home-wrap{
-        width: 1180px;
-        margin: auto;
         .home-header{
             width: 100%;
             height: 120px;
@@ -57,7 +60,7 @@ export default {
             color: #fff;
             background: url('../../public/images/banner.png');
             background-size: cover;
-            border-radius: 4px;
+            border-radius: 8px;
             margin-bottom: 20px;
         }
         

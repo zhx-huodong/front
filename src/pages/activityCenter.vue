@@ -1,57 +1,59 @@
 <template>
 	<div class="activity-center">
-		<div class="activity-wrap">
-			<!-- <div class="activity-header"></div> -->
-			 <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-						<el-tab-pane label="活动中心" name="first">
-										<div class="activity-lable">
-				
-				 
-				<type-select v-if="gradeList.length > 0 && regionList.length > 0"
-					:gradeList="gradeList" :regionList="regionList"
-					@activityObject='activityObjectMgr' @gradeGroup='gradeGroupMgr' @region='regionMgr'></type-select>
-			</div>
-			<div class="activity-content" v-if="activityList.length > 0">
-				<activity-list :activityList="activityList" :goToDetail="excellentWork"></activity-list>
-			</div>
-			<div class="activity-page">
-				<el-pagination
-          background
-          :current-page="currentPage"
-          :page-size="pageSize"
-          layout="prev, pager, next"
-          :total="total"
-          class="paging"
-          @current-change="handleCurrentPage"
-        ></el-pagination>
-			</div>
-						</el-tab-pane>
-						<el-tab-pane label="优秀作品" name="second">
-										<div class="activity-lable">
-				<!-- <sec-topic></sec-topic> -->
-				 
-				<type-select v-if="gradeList.length > 0 && regionList.length > 0"
-					:gradeList="gradeList" :regionList="regionList"
-					@activityObject='activityObjectMgr' @gradeGroup='gradeGroupMgr' @region='regionMgr'></type-select>
-			</div>
-			<div class="activity-content" v-if="activityList.length > 0">
-				<activity-list :activityList="activityList" :goToDetail="excellentWork"></activity-list>
-			</div>
-			<div class="activity-page">
-				<el-pagination
-          background
-          :current-page="currentPage"
-          :page-size="pageSize"
-          layout="prev, pager, next"
-          :total="total"
-          class="paging"
-          @current-change="handleCurrentPage"
-        ></el-pagination>
-			</div>
-						</el-tab-pane>
-			</el-tabs>
+		<el-card style="min-height:650px;">
+			<div class="activity-wrap">
+				<!-- <div class="activity-header"></div> -->
+				<el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+							<el-tab-pane label="活动中心" name="first">
+											<div class="activity-lable">
+					
+					
+					<type-select v-if="gradeList.length > 0 && regionList.length > 0"
+						:gradeList="gradeList" :regionList="regionList"
+						@activityObject='activityObjectMgr' @gradeGroup='gradeGroupMgr' @region='regionMgr'></type-select>
+				</div>
+				<div class="activity-content" v-if="activityList.length > 0">
+					<activity-list :activityList="activityList" :goToDetail="excellentWork"></activity-list>
+				</div>
+				<div class="activity-page">
+					<el-pagination
+					background
+					:current-page="currentPage"
+					:page-size="pageSize"
+					layout="prev, pager, next"
+					:total="total"
+					class="paging"
+					@current-change="handleCurrentPage"
+					></el-pagination>
+				</div>
+				</el-tab-pane>
+				<el-tab-pane label="优秀作品" name="second">
+					<div class="activity-lable">
+					<!-- <sec-topic></sec-topic> -->
+					
+						<type-select v-if="gradeList.length > 0 && regionList.length > 0"
+							:gradeList="gradeList" :regionList="regionList"
+							@activityObject='activityObjectMgr' @gradeGroup='gradeGroupMgr' @region='regionMgr'></type-select>
+					</div>
+					<div class="activity-content" v-if="activityList.length > 0">
+						<activity-list :activityList="activityList" :goToDetail="excellentWork"></activity-list>
+					</div>
+					<div class="activity-page">
+						<el-pagination
+							background
+							:current-page="currentPage"
+							:page-size="pageSize"
+							layout="prev, pager, next"
+							:total="total"
+							class="paging"
+							@current-change="handleCurrentPage"
+							></el-pagination>
+						</div>
+					</el-tab-pane>
+				</el-tabs>
 
-		</div>
+			</div>
+		</el-card>
 	</div>
 </template>
 <script>
@@ -189,14 +191,13 @@
 </style>
 <style lang="less" scoped>
 .activity-center{
-	width: 100%;
-	margin-top: 10px;
+	width: 1180px;
+	margin: auto;
+	margin-top: 20px;
   .activity-self {
     height: 255px;
   }
 	.activity-wrap{
-		width: 1180px;
-		margin: auto;
 		.activity-header{
 			width: 100%;
 			height: 120px;
@@ -205,7 +206,7 @@
 			text-align: center;
 			color: #fff;
 			background: url('../public/images/banner.png');
-      background-size: cover;
+      		background-size: cover;
 			border-radius: 4px;
 			margin-bottom: 20px;
 		}

@@ -46,18 +46,22 @@
     text-align:center;
     align-items:center;
     padding:20px 10px;
-          .addclass{
-        
-        width:173px;
-        height:129px;
+      .addclass{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        text-align:center;
+        border-radius:8px;
+        width:260px;
+        height:180px;
         border:1px solid rgba(201,201,201,1);
 
-          img{
-            margin-top:43px;
-            width:34px;
-            height:34px;
-            background:rgba(25,133,243,1);
-          }
+        img{
+          margin-top:60px;
+          width:34px;
+          height:34px;
+          background:rgba(25,133,243,1);
+        }
        
       }
       &:hover {
@@ -75,9 +79,9 @@
       padding:20px 10px;
 
       img{
-        width:173px;
-        height:129px;
-        border-radius:4px;
+        width:260px;
+        height:180px;
+        border-radius:8px;
       }
       p{
         font-size:14px;

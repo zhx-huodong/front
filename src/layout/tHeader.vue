@@ -73,11 +73,11 @@
         normalTabs: [
           { key: 'home', name: '首页', hide: false },
           // { key: 'activityCenter', name: '活动中心', hide: false },
-          { key: 'myActivity', name: '活动发布与管理', hide: false },
-          { key: 'excellence', name: '优秀作品展', hide: false },
+          // { key: 'myActivity', name: '活动发布与管理', hide: false },
+          // { key: 'excellence', name: '优秀作品展', hide: false },
           { key: 'expertReview', name: '专家评审', hide: true },
-          { key: 'userCenter', name: '个人中心', hide: false },
           { key:'activeManager',name:'活动管理',hide:false},
+          { key: 'userCenter', name: '个人中心', hide: false },
           { key:'newsBulletin',name:'消息公告',hide:false},
           
         ],
@@ -85,11 +85,11 @@
           // { key: 'auditActivity', name: '审核中心', hide: false },
           // { key: 'expertReview', name: '专家评审', hide: true },
           // { key: 'expertStore', name: '专家库', hide: true }
-          { key: 'admin', name: '用户管理', hide: true },
-          { key: 'roleManage', name: '角色管理', hide: true },
-          { key: 'expertMange', name: '专家管理', hide: true },
-          { key: 'expertAssign', name: '专家分配', hide: true },
-          { key: 'classifyManage', name: '分类管理', hide: true },
+          { key: 'admin', name: '用户管理', hide: false },
+          { key: 'roleManage', name: '角色管理', hide: false },
+          { key: 'expertMange', name: '专家管理', hide: false },
+          { key: 'expertAssign', name: '专家分配', hide: false },
+          { key: 'classifyManage', name: '分类管理', hide: false },
 
         ],
         activeTab: 'home',
