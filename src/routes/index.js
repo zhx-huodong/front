@@ -31,11 +31,14 @@ const createActivity=require('../pages/activeManager/createActivity.vue'); // �
 
 const admin=require('../pages/admin.vue'); // 超级管理员
 const roleManage=require('../pages/adminManager/roleManage.vue'); // 角色管理
-const expertManage=require('../pages/adminManager/expertManage.vue'); // 角色管理
-const expertAssign=require('../pages/adminManager/expertAssign.vue'); // 角色管理
-const classifyManage=require('../pages/adminManager/classifyManage.vue'); // 角色管理
-const addRole=require('../pages/adminManager/addRole.vue'); // 角色管理
-
+const expertManage=require('../pages/adminManager/expertManage.vue'); // 专家管理
+const expertAssign=require('../pages/adminManager/expertAssign.vue'); // 专家分配
+const classifyManage=require('../pages/adminManager/classifyManage.vue'); // 分类管理
+const addRole=require('../pages/adminManager/addRole.vue'); // 添加角色
+const addExpert=require('../pages/adminManager/addExpert.vue'); // 添加专家
+const importExpert=require('../pages/adminManager/importExpert.vue'); // 导入专家
+const addClassify=require('../pages/adminManager/addClassify.vue'); // 添加分类
+const subClassify=require('../pages/adminManager/subClassify.vue'); // 子分类
 
 
 const routes = [
@@ -90,7 +93,12 @@ const routes = [
       { path: '/expertManage', components: expertManage},//专家管理
       { path: '/expertAssign', components: expertAssign},//专家分配
       { path: '/classifyManage', components: classifyManage},//类型管理
-      { path: '/addRole', components: addRole}//添加角色
+      { path: '/addRole', components: addRole},//添加角色
+      { path: '/addExpert', components: addExpert},//添加专家
+      { path: '/importExpert', components: importExpert},//导入专家
+      { path: '/addClassify', components: addClassify},//添加分类
+      { path: '/subClassify', components: subClassify}//子分类
+
 
     ]
   },

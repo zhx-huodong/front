@@ -1,8 +1,8 @@
 <template>
-    <div class="classify-centainer">
+    <div class="sub-classify-centainer">
         <el-card style="min-height:600px;">
             <el-tabs v-model="activeName">
-                <el-tab-pane label="分类管理" name="classify">
+                <el-tab-pane :label="title" name="classify">
                     <el-row>
                         <el-col :span="3">
                             <el-button type="primary" @click="goToAddClassify">添加分类</el-button>
@@ -30,14 +30,12 @@
             return{
                 activeName:'classify',
                 cardList:[
-                    {id:1,imgUrl:require('../../public/images/ac1.png'),title:'深圳市中小学电脑制作大赛'},
-                    {id:2,imgUrl:require('../../public/images/ac2.png'),title:'深圳市中小学电脑机器人活动'},
-                    {id:3,imgUrl:require('../../public/images/ac3.png'),title:'深圳市中小学网络夏令营'},
-                    {id:4,imgUrl:require('../../public/images/ac4.png'),title:'深圳市中小学微课大赛'},
-                    {id:5,imgUrl:require('../../public/images/ac5.png'),title:'深圳市中小学说课大赛'},
-                    {id:6,imgUrl:require('../../public/images/ac6.png'),title:'深圳市AI知识大赛'}
-                    
-                ]
+                    {id:1,imgUrl:require('../../public/images/ac1.png'),title:'数字创作项目'},
+                    {id:2,imgUrl:require('../../public/images/ac2.png'),title:'程序设计项目'},
+                    {id:3,imgUrl:require('../../public/images/ac3.png'),title:'创客项目'}  
+                ],
+                title:this.$route.query.title,
+                id:this.$route.query.id
             }
         },
         mounted(){
@@ -53,13 +51,6 @@
              //添加
             goToAdd(val){
                 console.log("添加id==",val)
-                this.$router.push({
-                    path:'/subClassify',
-                    query: {
-                        id: val.id,
-                        title:val.title
-                    }
-                })
             },
             //编辑
             goToEdit(val){
@@ -73,7 +64,7 @@
     }
 </script>
 <style lang="less" scoped>
-.classify-centainer{
+.sub-classify-centainer{
     width:1180px;
     margin:auto;
     margin-top:20px;

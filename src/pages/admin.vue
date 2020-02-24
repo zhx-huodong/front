@@ -1,6 +1,6 @@
 <template>
     <div class="admin-centainer">
-        <el-card>
+        <el-card style="min-height:600px;">
             <el-tabs v-model="activeName" @tab-click="tabClick">
                 <el-tab-pane label="教师" name="teacher"></el-tab-pane>
                 <el-tab-pane label="学生" name="student"></el-tab-pane>

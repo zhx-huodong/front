@@ -1,6 +1,6 @@
 <template>
     <div class="role-centainer">
-        <el-card>
+        <el-card style="min-height:600px;">
             <el-row>
                 <el-col :span="12">
                     <el-button type="primary" @click="goToAddRole">添加角色</el-button>

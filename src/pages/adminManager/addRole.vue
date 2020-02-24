@@ -1,6 +1,6 @@
 <template>
     <div class="add-role-container">
-        <el-card>
+        <el-card style="min-height:600px;">
             <el-tabs v-model="activeName">
                 <el-tab-pane label="添加角色" name="addRole">
                     <div class="add-role-item">
@@ -19,7 +19,7 @@
                             <el-form-item label="管理区域" >
                                 <el-checkbox-group v-model="area">
                                     <template v-for="(item,index) in areaList" >
-                                        <el-checkbox :label="item.areaName" name="type" :value="item.id"></el-checkbox>
+                                        <el-checkbox :label="item.areaName" name="area" :value="item.id"></el-checkbox>
                                     </template>
                                 </el-checkbox-group>
                             </el-form-item>
