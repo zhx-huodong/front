@@ -4,6 +4,15 @@ const PublishManage = require('../pages/publishManage.vue'); // 活动发布与�
 const ExcellenceShow = require('../pages/excellentWork/list.vue'); // 优秀作品展
 const UserCenter = require('../pages/userCenter.vue'); // 个人中心
 const MyActivity = require('../pages/myActivity.vue'); // 我发布的活动
+
+
+const activeManager=require('../pages/activeManager/index.vue'); // 活动管理
+const publicActive=require('../pages/activeManager/publicActive.vue'); // 活动管理
+const createActivity=require('../pages/activeManager/createActivity.vue'); // 创建活动
+const managerCenter=require('../pages/activeManager/managerCenter.vue'); // 创建活动
+
+
+
 const MyActivityDetail = require('../pages/myActivityDetail.vue'); // 我发布的活动-创建活动
 const activityProcess = require('../pages/activityProcess/index');
 const excellentWork = require('../pages/excellentWork/index');
@@ -25,9 +34,7 @@ const submitEnroll=require('../pages/homePages/submitEnroll');
 const activityDetail = require('../pages/activityProcess/activityDetail');
 const workShow = require('../pages/activityProcess/workShow');
 
-const activeManager=require('../pages/activeManager/index.vue'); // 活动管理
-const publicActive=require('../pages/activeManager/publicActive.vue'); // 活动管理
-const createActivity=require('../pages/activeManager/createActivity.vue'); // 创建活动
+
 
 const admin=require('../pages/admin.vue'); // 超级管理员
 const roleManage=require('../pages/adminManager/roleManage.vue'); // 角色管理
@@ -39,6 +46,7 @@ const addExpert=require('../pages/adminManager/addExpert.vue'); // 添加专家
 const importExpert=require('../pages/adminManager/importExpert.vue'); // 导入专家
 const addClassify=require('../pages/adminManager/addClassify.vue'); // 添加分类
 const subClassify=require('../pages/adminManager/subClassify.vue'); // 子分类
+
 
 
 const routes = [
@@ -60,9 +68,11 @@ const routes = [
       { path: '/activity/process', components: activityProcess }, // 活动各阶段
 
      
-      { path: '/activeManager/publicActive', components: publicActive }, // 发布活动
+
+      { path: '/activeManager/publicActive', components: publicActive }, // 发布活动设置
       { path: '/activeManager', components: activeManager }, // 活动管理
       { path: '/activeManager/createActivity', components: createActivity }, // 创建活动
+      { path: '/activeManager/managerCenter', components: managerCenter }, // 活动管理中心
 
 
       { path: '/excellentWork/index', components: excellentWork }, // 优秀作品展示
