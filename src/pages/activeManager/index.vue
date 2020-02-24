@@ -58,7 +58,7 @@
                             <p >活动范围：{{item.limit}} </p>
                             <p >发起时间：{{item.time}} </p>
                         </div>
-                        <div class="shenheclass" >
+                        <div class="shenheclass" style="" >
                             <p>{{item.status}}</p>
                             <el-button type="text" @click="toActivetyDetail()" >查看活动详情 》</el-button>
 
