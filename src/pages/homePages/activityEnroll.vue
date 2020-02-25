@@ -107,7 +107,6 @@ export default {
     margin-top: 20px;
   }
   .box-card {
-    display: inline-block;
     min-height: 650px;
   }
 

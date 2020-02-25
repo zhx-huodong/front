@@ -1,9 +1,9 @@
 <template>
   <div class="news-bulletin">
     <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span style="float:left;margin-left:30px;" class="title">消息公告</span>
-      </div>
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="消息公告" name="first">
+      
       <el-form ref="form" :model="form" :inline="true">
         <el-form-item label="作者：">
             <el-input v-model="form.name"  placeholder="请输入"> </el-input>
@@ -54,6 +54,8 @@
       </template>
  
     </div>
+    </el-tab-pane>
+    </el-tabs>
   </el-card>
   </div>
 </template>
@@ -61,6 +63,7 @@
  export default {
     data() {
        return{
+         activeName:'first',
             form:{
                 name:"",
             },

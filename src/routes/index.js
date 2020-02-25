@@ -63,65 +63,63 @@ const routes = [
     components: Content,
     children: [
       { path: '/', components: Switch },
-      { path: '/myActivity', components: MyActivity }, // 已审核的活动列表
-      { path: '/myActivityDetail', components: MyActivityDetail }, // 动管理与发布详情（未发布）
-      { path: '/myActivity/index', components: myActivity }, // 活动管理与发布详情（已发布）
-      { path: '/myActivity/workAuditDetail', components: workAuditDetail }, // 活动管理作品审核点击后详情
+      { path: '/myActivity',name:"已审核的活动列表", components: MyActivity,meta: { title: '已审核的活动列表' } }, // 已审核的活动列表
+      { path: '/myActivityDetail',name:"动管理与未发布详情", components: MyActivityDetail,meta: { title: '动管理与未发布详情' } }, // 动管理与发布详情（未发布）
+      { path: '/myActivity/index',name:"活动管理与已发布详情", components: myActivity,meta: { title: '活动管理与已发布详情' } }, // 活动管理与发布详情（已发布）
+      { path: '/myActivity/workAuditDetail',name:"活动管理作品审核点击后详情", components: workAuditDetail,meta: { title: '活动管理作品审核点击后详情' } }, // 活动管理作品审核点击后详情
 
-      { path: '/activityCenter', components: ActivityCenter }, // 活动中心
-      { path: '/publishManage', components: PublishManage }, // 活动发布编辑页
-      { path: '/excellence', components: ExcellenceShow }, // 优秀作品展示
-      { path: '/userCenter', components: UserCenter }, // 个人中心
-      { path: '/activeManager', components: activeManager }, // 活动管理
-      { path: '/activity/process', components: activityProcess }, // 活动各阶段
-      { path: '/newsBulletin', components: newsBulletin }, // 消息公告
-      { path: '/newsBulletinDetail', components: newsBulletinDetail }, // 消息公告
+      { path: '/activityCenter',name:"活动中心", components: ActivityCenter ,meta: { title: '活动中心' }}, // 活动中心
+      { path: '/publishManage',name:"活动发布编辑页", components: PublishManage ,meta: { title: '活动发布编辑页' }}, // 活动发布编辑页
+      { path: '/excellence',name:"优秀作品展示", components: ExcellenceShow ,meta: { title: '优秀作品展示' }}, // 优秀作品展示
+      { path: '/userCenter',name:"个人中心", components: UserCenter ,meta: { title: '个人中心' }}, // 个人中心
+      { path: '/activeManager',name:"活动管理", components: activeManager,meta: { title: '活动管理' } }, // 活动管理
+      { path: '/activity/process',name:"活动各阶段", components: activityProcess,meta: { title: '活动各阶段' } }, // 活动各阶段
+      { path: '/newsBulletin',name:"消息公告", components: newsBulletin ,meta: { title: '消息公告' }}, // 消息公告
+      { path: '/newsBulletinDetail',name:"消息公告详情", components: newsBulletinDetail,meta: { title: '消息公告详情' } }, // 消息公告
 
      
 
-      { path: '/activeManager/publicActive', components: publicActive }, // 发布活动设置
-      { path: '/activeManager', components: activeManager }, // 活动管理
-      { path: '/activeManager/createActivity', components: createActivity }, // 创建活动
-      { path: '/activeManager/managerCenter', components: managerCenter }, // 活动管理中心
+      { path: '/activeManager/publicActive',name:"发布活动设置", components: publicActive,meta: { title: '发布活动设置' } }, // 发布活动设置
+      { path: '/activeManager',name:"活动管理", components: activeManager,meta: { title: '活动管理' } }, // 活动管理
+      { path: '/activeManager/createActivity',name:"创建活动", components: createActivity,meta: { title: '创建活动' } }, // 创建活动
+      { path: '/activeManager/managerCenter',name:"活动管理中心", components: managerCenter,meta: { title: '活动管理中心' } }, // 活动管理中心
 
 
-      { path: '/excellentWork/index', components: excellentWork }, // 优秀作品展示
-      { path: '/excellentWork/excellentWorkDetail', components: excellentWorkDetail }, // 优秀作品展示详情
+      { path: '/excellentWork/index',name:"优秀作品展示", components: excellentWork,meta: { title: '优秀作品展示' } }, // 优秀作品展示
+      { path: '/excellentWork/excellentWorkDetail',name:"优秀作品展示详情", components: excellentWorkDetail,meta: { title: '优秀作品展示详情' } }, // 优秀作品展示详情
 
-      { path: '/expertReview', components: expertReview }, // 专家评审（评审作品）
-      { path: '/expertReview/workDetail', components: expertReviewDetail }, // 专家评审点击后详情
+      { path: '/expertReview',name:"专家评审", components: expertReview ,meta: { title: '专家评审' }}, // 专家评审（评审作品）
+      { path: '/expertReview/workDetail', name:"专家评审点击后详情",components: expertReviewDetail,meta: { title: '专家评审点击后详情' } }, // 专家评审点击后详情
 
-      { path: '/expertStore', components: expertStore }, // 专家库
-      { path: '/auditActivity', components: auditActivity }, // 审核中心（审核活动）
-      { path: '/auditActivity/auditDetail', components: auditDetail }, // 活动审核点击后详情
+      { path: '/expertStore',name:"专家库", components: expertStore,meta: { title: '专家库' } }, // 专家库
+      { path: '/auditActivity',name:"审核中心", components: auditActivity,meta: { title: '审核中心' } }, // 审核中心（审核活动）
+      { path: '/auditActivity/auditDetail', name:"活动审核点击后详情",components: auditDetail,meta: { title: '活动审核点击后详情' } }, // 活动审核点击后详情
+      { path: '/msgcenter',name:"消息中心", components: messageCenter,meta: { title: '消息中心' } }, // 消息中心
 
-      { path: '/msgcenter', components: messageCenter }, // 消息中心
+      { path: '/home', name: "首页", components: home,meta: { title: '首页' }},//首页
+      { path: '/home/activityProject',name:"活动项目", components: activityProject,meta: { title: '活动项目' }},//活动项目
+      { path: '/home/activityEnroll',name:"活动报名", components: activityEnroll,meta: { title: '活动报名' }},//活动报名
+      { path: '/home/submitEnroll',name:"报名成功", components: submitEnroll,meta: { title: '报名成功' }},//报名成功
+      { path: '/userCenter/userEdit',name:"个人中心编辑", components: userEdit,meta: { title: '个人中心编辑' }},//个人中心编辑
 
-      { path: '/home', components: home},//首页
-      { path: '/home/activityProject', components: activityProject},//活动项目
-      { path: '/home/activityEnroll', components: activityEnroll},//活动报名
-      { path: '/home/submitEnroll', components: submitEnroll},//报名成功
-
-      { path: '/userCenter/userEdit', components: userEdit},//个人中心编辑
-
-      { path: '/activityDetail', components: activityDetail},//查看活动详情
-      { path: '/workShow', components: workShow},//活动详情展示
+      { path: '/activityDetail',name:"查看活动详情", components: activityDetail,meta: { title: '查看活动详情' }},//查看活动详情
+      { path: '/workShow',name:"活动详情展示", components: workShow,meta: { title: '活动详情展示' }},//活动详情展示
 
 
-      { path: '/admin', components: admin},//超级管理员
-      { path: '/roleManage', components: roleManage},//角色管理
-      { path: '/expertManage', components: expertManage},//专家管理
-      { path: '/expertAssign', components: expertAssign},//专家分配
-      { path: '/classifyManage', components: classifyManage},//类型管理
-      { path: '/addRole', components: addRole},//添加角色
-      { path: '/addExpert', components: addExpert},//添加专家
-      { path: '/importExpert', components: importExpert},//导入专家
-      { path: '/addClassify', components: addClassify},//添加分类
-      { path: '/subClassify', components: subClassify},//子分类
+      { path: '/admin',name:"超级管理员", components: admin,meta: { title: '超级管理员' }},//超级管理员
+      { path: '/roleManage',name:"角色管理", components: roleManage,meta: { title: '角色管理' }},//角色管理
+      { path: '/expertManage',name:"专家管理", components: expertManage,meta: { title: '角色管理' }},//专家管理
+      { path: '/expertAssign',name:"专家分配", components: expertAssign,meta: { title: '专家分配' }},//专家分配
+      { path: '/classifyManage',name:"类型管理", components: classifyManage,meta: { title: '类型管理' }},//类型管理
+      { path: '/addRole',name:"添加角色", components: addRole,meta: { title: '添加角色' }},//添加角色
+      { path: '/addExpert',name:"添加专家", components: addExpert,meta: { title: '添加专家' }},//添加专家
+      { path: '/importExpert',name:"导入专家", components: importExpert,meta: { title: '导入专家' }},//导入专家
+      { path: '/addClassify',name:"添加分类", components: addClassify,meta: { title: '添加分类' }},//添加分类
+      { path: '/subClassify',name:"子分类", components: subClassify,meta: { title: '子分类' }},//子分类
 
-      { path: '/workReview', components: workReview},//作品评审（专家模块）
-      { path: '/workScore', components: workScore},//作品评分（专家模块）
-      { path: '/importWorkList', components: importWorkList}//导入作品评分列表（专家模块）
+      { path: '/workReview',name:"作品评审", components: workReview,meta: { title: '作品评审' }},//作品评审（专家模块）
+      { path: '/workScore',name:"作品评分", components: workScore,meta: { title: '作品评分' }},//作品评分（专家模块）
+      { path: '/importWorkList',name:"导入作品评分列表", components: importWorkList,meta: { title: '导入作品评分列表' }}//导入作品评分列表（专家模块）
 
 
     ]

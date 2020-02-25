@@ -1,7 +1,7 @@
 <template>
 
     <div class="outter">
-        <el-card style="min-height:600px">
+        <el-card style="min-height:650px">
             <div style="position:relative">
                 <el-tabs v-model="activeName" @tab-click="handleClick">
                     <el-tab-pane label="活动中心" name="first">

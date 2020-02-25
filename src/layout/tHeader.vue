@@ -1,62 +1,68 @@
 <template>
-  <div class="uni-header">
-    <a class="uni-title" href="/">
-      <img class="logo" src="../public/images/logo.png">
-      <span>中小学信息化活动平台</span>
-    </a>
-    <div class="header-menu">
-      <div v-for="t in tabs" :key="t.key" @click="switchPage(t.key)" v-if="!t.hide"
-           :class="'menu-item ' + (activeTab === t.key ? 'active' : '')">{{t.name}}
+  <div class="header-container">
+    <div class="uni-header">
+      <a class="uni-title" href="/">
+        <img class="logo" src="../public/images/logo.png">
+        <span>中小学信息化活动平台</span>
+      </a>
+      <div class="header-menu">
+        <div v-for="t in tabs" :key="t.key" @click="switchPage(t.key)" v-if="!t.hide"
+            :class="'menu-item ' + (activeTab === t.key ? 'active' : '')">{{t.name}}
+        </div>
       </div>
-    </div>
-    <div class="header-user">
-      <div class="message" @click="goToMessage">
-        <img src="../public/images/message.svg" v-if="messageList.length == 0">
-        <img src="../public/images/message2.svg" v-else>
-      </div>
-      <div class="divider">|</div>
-      <template v-if="user">
-        <div class="name">{{user.Name || '未知用户'}}</div>
+      <div class="header-user">
+        <div class="message" @click="goToMessage">
+          <img src="../public/images/message.svg" v-if="messageList.length == 0">
+          <img src="../public/images/message2.svg" v-else>
+        </div>
         <div class="divider">|</div>
-        <div class="logout" @click="logout">退出</div>
-      </template>
-      <template v-else>
-        <el-dropdown @command="loginClick">
-          <span class="name">未登录</span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="wx" v-if="!isPro">微信扫码登录</el-dropdown-item>
-            <el-dropdown-item command="phone">短信验证码登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </template>
+        <template v-if="user">
+          <div class="name">{{user.Name || '未知用户'}}</div>
+          <div class="divider">|</div>
+          <div class="logout" @click="logout">退出</div>
+        </template>
+        <template v-else>
+          <el-dropdown @command="loginClick">
+            <span class="name">未登录</span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="wx" v-if="!isPro">微信扫码登录</el-dropdown-item>
+              <el-dropdown-item command="phone">短信验证码登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </template>
+      </div>
+      <w-x-login ref="wxLogin"></w-x-login>
+      <el-dialog
+        class="login-dialog"
+        :visible.sync="showMpCode"
+        width="400px"
+        :modal-append-to-body="false">
+        <img src="../public/images/test-code.png" v-if="isTest">
+        <img src="../public/images/code.png" v-else>
+        <div class="info">
+          请前往小程序端完成身份认证
+          <br/>认证完成后，重新登录
+        </div>
+      </el-dialog>
+      <el-dialog
+        class="choose-dialog"
+        title="选择身份"
+        width="400px"
+        :visible.sync="showChooseRole"
+        :show-close="false"
+        :close-on-click-modal="false">
+        <div class="choose-role">
+          <el-button type="primary" size="medium" v-for="(role, index) in roles" :key="index" @click="chooseRole(role.Role)">
+            {{ role.RoleName }}
+          </el-button>
+        </div>
+      </el-dialog>
     </div>
-    <w-x-login ref="wxLogin"></w-x-login>
-    <el-dialog
-      class="login-dialog"
-      :visible.sync="showMpCode"
-      width="400px"
-      :modal-append-to-body="false">
-      <img src="../public/images/test-code.png" v-if="isTest">
-      <img src="../public/images/code.png" v-else>
-      <div class="info">
-        请前往小程序端完成身份认证
-        <br/>认证完成后，重新登录
+    <div class="my-bread">
+      <div class="my-bread-main">
+        <my-bread-crumb></my-bread-crumb>
       </div>
-    </el-dialog>
-    <el-dialog
-      class="choose-dialog"
-      title="选择身份"
-      width="400px"
-      :visible.sync="showChooseRole"
-      :show-close="false"
-      :close-on-click-modal="false">
-      <div class="choose-role">
-        <el-button type="primary" size="medium" v-for="(role, index) in roles" :key="index" @click="chooseRole(role.Role)">
-          {{ role.RoleName }}
-        </el-button>
-      </div>
-    </el-dialog>
-    
+    </div>
   </div>
 </template>
 <script>
@@ -64,9 +70,10 @@
   import UuniV4 from 'uuid/v4';
   import { setCookie, getCookie } from '../tools/tools';
   import WXLogin from '../components/WXLogin';
+  import MyBreadCrumb from '../components/MyBreadCrumb'
   export default {
     name: 'uni-header',
-    components: { WXLogin },
+    components: { WXLogin,MyBreadCrumb },
     data() {
       return {
         tabs: [],
@@ -411,6 +418,18 @@
           margin: 0 20px;
         }
       }
+    }
+  }
+  .my-bread{
+    height:36px;
+    width:100%;
+    background:rgba(247,248,250,1);
+    .my-bread-main{
+      display:flex;
+      width:1180px;
+      margin:auto;
+      height:36px;
+      align-items:center;
     }
   }
 </style>

@@ -57,7 +57,7 @@
               </el-table>
               </div>
             </div> 
-            <div class="left" style='margin-left:260px;'>
+            <div class="left">
                 <img :src="url2"></img>
                 <span>获奖学校</span>
                 <div style='margin-left:30px'>
@@ -185,6 +185,8 @@
   .buttom{
     margin-top:100px;
     margin-bottom:20px;
+    display:flex;
+    justify-content:space-between;
     .left{
       width:460px;
      float:left;
