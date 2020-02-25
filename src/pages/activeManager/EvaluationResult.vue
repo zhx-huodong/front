@@ -1,42 +1,31 @@
 <template>
       <div style=" clear: both;text-align: left;">
-          <el-form ref="form" :model="form">
-              <el-row :gutter="3">
-                  <el-col style="margin-top:5px" :xs="12" :sm="12" :md="5" :span="8">
-                      <span style="float:left;width:40%;   text-align: right;">所在地区：</span>
-                      <el-select v-model="form.addr" placeholder="请选择" size="mini"  class="filterinput" style="width:50%">
-                          <el-option v-for="item in AddrList" :key="item.id" :label="item.name" :value="item.id">
-                          </el-option>
-                      </el-select>
-                  </el-col>
-                  <el-col style="margin-top:5px" :xs="12" :sm="12" :md="5" :span="8">
-                      <span style="float:left;width:40%;   text-align: right;">所在学校：</span>
-                      <el-select v-model="form.schoolname" placeholder="请选择" size="mini" class="filterinput" style="width:50%">
-                          <el-option v-for="item in SchoolList" :key="item.id" :label="item.name" :value="item.id">
-                          </el-option>
-                      </el-select>
-                  </el-col>
-                    <el-col style="margin-top:5px" :xs="12" :sm="12" :md="10" :span="8">
-                      <span style="float:left;width:40%;text-align: right;">作品名称：</span>
-                      <el-input v-model="form.workname" size="mini" class="filterinput" style="width:55%" placeholder="请输入作品名称"> </el-input>
-                  </el-col>
-              </el-row>
-              <div class="secendROw">
-              <el-row style="margin-left:100px;margin-top:20px" :gutter="3">
-                  <el-col style="margin-top:5px" :xs="12" :sm="12" :md="5" :span="8">
-                       <span style="float:left;width:40%;   text-align: right;">电话：</span>
-                      <el-input v-model="form.phone" size="mini" class="filterinput" style="width:55%" placeholder="请输入电话"> </el-input>
-                  </el-col>
-                   <el-col style="margin-top:5px" :xs="12" :sm="12" :md="5" :span="8">
-                       <span style="float:left;width:40%;   text-align: right;">作者：</span>
-                      <el-input v-model="form.author" size="mini" class="filterinput" style="width:55%" placeholder="请输入"> </el-input>
-                  </el-col>
-                  <el-col style="margin-top:5px" :xs="24" :sm="24" :md="2">
-                      <el-button style="float:left; width:100%" type="primary" @click="onSubmit()" size="mini">查询</el-button>
-                  </el-col>
-              </el-row>
-             </div> 
-          </el-form>
+          <el-form ref="form" :model="form" :inline="true">
+            <el-form-item label="所在地区：">
+              <el-select v-model="form.addr" placeholder="请选择" >
+                <el-option v-for="item in AddrList" :key="item.id" :label="item.name" :value="item.id">
+                  </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="所在学校：">
+              <el-select v-model="form.schoolname" placeholder="请选择" >
+                <el-option v-for="item in SchoolList" :key="item.id" :label="item.name" :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="作品名称：">
+              <el-input v-model="form.workname" placeholder="请输入作品名称"> </el-input>
+            </el-form-item>
+            <el-form-item label="电话：">
+              <el-input v-model="form.phone" placeholder="请输入电话"> </el-input>
+            </el-form-item>
+            <el-form-item label="作者：">
+               <el-input v-model="form.author" placeholder="请输入"> </el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="onSubmit()">查询</el-button>
+            </el-form-item> 
+          </el-form> 
           <!--展示内容-->
           <div class="buttonenum">
              <el-button size="medium" type="primary" >设置奖项</el-button>

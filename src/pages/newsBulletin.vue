@@ -1,72 +1,61 @@
 <template>
+  <div class="news-bulletin">
     <el-card class="box-card">
-  <div slot="header" class="clearfix">
-    <span style="float:left;margin-left:30px;" class="title">消息公告</span>
-  </div>
-  <div>
-      <el-form ref="form" :model="form">
-          <el-row>
-                   <el-col style="margin-top:5px" :xs="12" :sm="12" :md="5" :span="8">
-                       <span style="float:left;width:40%;   text-align: right;">作者：</span>
-                      <el-input v-model="form.name" size="mini" class="filterinput" style="width:55%" placeholder="请输入"> </el-input>
-                  </el-col>
-                   <el-col style="margin-top:5px" :xs="12" :sm="12" :md="10" :span="8">
-                      <span style="float:left;width:40%;text-align: right;">报名时间：</span>
-                          <el-date-picker
-                              format="yyyy-MM-dd"
-                              v-model="form.enrolltime"
-                              type="daterange"
-                              range-separator="至"
-                              start-placeholder="开始日期"
-                              end-placeholder="结束日期"
-                              size="mini"
-                              style="width:50%">
-                              
-                          </el-date-picker>
-                  </el-col>
-                  <el-col style="margin-top:5px" :xs="24" :sm="24" :md="2">
-                      <el-button style="float:left; width:100%" type="primary" @click="onSubmit()" size="mini">查询</el-button>
-                  </el-col>
-            </el-row>
-          </el-form>
-  </div>
- 
-<div style="margin-top:16px;">
-            <template>
-              
-              <el-table :data="tableData" stripe style="width: 100%" :header-cell-style="{background:'rgba(243,243,244,1)'}">
-                <!-- <el-table-column
-                  label="序号"
-                  type="index"
-                   width="180"
-                  align="center">
-                </el-table-column> -->
-                <el-table-column
-                  prop="name"
-                  label="名称"
-                  >
-                </el-table-column>
-                <el-table-column
-                  prop="time"
-                  label="提交时间"
-                  >
-                </el-table-column>
-                <el-table-column
-                    fixed="right"
-                    label="操作"
-                    >
-                    <template slot-scope="scope">
-                        <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-                    </template>
-                </el-table-column>
-                </el-table-column>
-
-
-              </el-table>
-            </template>
+      <div slot="header" class="clearfix">
+        <span style="float:left;margin-left:30px;" class="title">消息公告</span>
+      </div>
+      <el-form ref="form" :model="form" :inline="true">
+        <el-form-item label="作者：">
+            <el-input v-model="form.name"  placeholder="请输入"> </el-input>
+        </el-form-item>
+        <el-form-item label="报名时间：">
+            <el-date-picker
+              format="yyyy-MM-dd"
+              v-model="form.enrolltime"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
+        </el-form-item>
+        <el-form-item >
+          <el-button type="primary" @click="onSubmit()">查询</el-button>
+        </el-form-item>
+      </el-form> 
+    <div style="margin-top:16px;">
+      <template> 
+        <el-table :data="tableData" stripe style="width: 100%" :header-cell-style="{background:'rgba(243,243,244,1)'}">
+          <!-- <el-table-column
+            label="序号"
+            type="index"
+              width="180"
+            align="center">
+          </el-table-column> -->
+          <el-table-column
+            prop="name"
+            label="名称"
+            >
+          </el-table-column>
+          <el-table-column
+            prop="time"
+            label="提交时间"
+            >
+          </el-table-column>
+          <el-table-column
+              fixed="right"
+              label="操作"
+              >
+              <template slot-scope="scope">
+                  <el-button @click="handleClick(scope.row)" type="text" >查看</el-button>
+              </template>
+          </el-table-column>
+          
+        </el-table>
+      </template>
  
     </div>
-</el-card>
+  </el-card>
+  </div>
 </template>
 <script>
  export default {
@@ -91,7 +80,12 @@
     }
     
 </script>
-<style  lang="less">
+<style  lang="less" scoped>
+.news-bulletin{
+  width: 1180px;
+  margin: auto;
+  margin-top: 20px;
+}
   .text {
     font-size: 14px;
   }
@@ -110,7 +104,7 @@
   }
 
   .box-card {
-    width: 1200px;
+    min-height: 650px;
   }
   .title{
       font-size:16px;

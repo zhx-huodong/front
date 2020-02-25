@@ -1,6 +1,7 @@
 <template>
     <div class="home-center">
-		<div class="home-wrap">
+      <el-card style="min-height:650px;">
+		    <div class="home-wrap">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="活动设置" name="first">活动设置</el-tab-pane>
                 <el-tab-pane label="报名信息" name="second">
@@ -17,6 +18,7 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
+      </el-card>
     </div>
 </template>
 <script>
@@ -39,17 +41,18 @@ import ActivityStatistics from './ActivityStatistics';
   };
 </script>
 <style lang="less" scoped>
-.add-activety-setting{
-    margin-top:36px;
-}
+
 .home-center{
-    width: 100%;
-    margin-top: 10px;
+    width: 1180px;
+    margin: auto;
+    margin-top: 20px;
     .home-wrap{
-        width: 1180px;
-        margin: auto;
+        
 
     }
+}
+.add-activety-setting{
+    margin-top:36px;
 }
 
 </style>

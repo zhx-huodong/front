@@ -1,68 +1,70 @@
 <template>
+  <div class="activity-enroll">
    <el-card class="box-card">
-        <div slot="header" class="clearfix">
-            <span>活动报名</span>
-            
-        </div>
-        
-          <div class="textitem">
-              <span class="fontclass">作品名称：</span>
-              <input type="text" class="text1" placeholder="请输入">
-          </div>
-          <div class="textitem">
-            <div style="height:222px;float:left;">
-              <span class="fontclass">作品简介：</span>
-            </div>
-            <div style="height:222px;float:left;">
-              <textarea  class="text2" placeholder="请输入作品简介"> </textarea>
-            </div>
-          </div>
-          <div class="textitem">
-              <span class="fontclass">报名登记：</span>
-            <button @click="updata(1)" class='dianji1' >点击上传</button>
-          </div>
-          <div class="textitem">
-              <span class="fontclass">作品附件：</span>
-              <button @click="updata(2)" class='dianji2' >点击上传</button>
-          </div>
-          <div class="textitem">
-          <span class="fontclass">报名信息</span>
-         
-          </div>
-         <div class="textitem">
-            <hr style="width:1092px;height:1px;background:rgba(229,229,229,1);"/>
-          </div>
-           <div class="textitem">
-              <span class="fontclass">作品名称：</span>
-              <input type="text" class="text1" placeholder="请输入">
-          </div>
-           <div class="textitem">
-              <span class="fontclass">指导老师：</span>
-              <input type="text" class="text1" placeholder="请输入">
-          </div>
-           <div class="textitem">
-              <span class="fontclass">电子邮箱：</span>
-              <input type="text" class="text1" placeholder="请输入">
-          </div>
-          <div class="buttom">
-          <el-button type="primary" @click="submitEnroll()">提交报名</el-button>
-          </div>
+        <el-tabs v-model="activeName">
+          <el-tab-pane label="活动报名" name="first">
+            <el-form ref="form" :model="form" label-width="90px">
+              <el-form-item label="作品名称：">
+                <el-input v-model="form.name" placeholder="请输入作品名称" style="width:500px;"></el-input>
+              </el-form-item>
+              <el-form-item label="作品简介：">
+                <el-input
+                  type="textarea"
+                  :rows="6"
+                  placeholder="请输入作品简介"
+                  v-model="form.name"
+                  style="width:800px;">
+                </el-input>
+              </el-form-item>
+              <el-form-item label="报名登记：">
+                <el-button type="primary" plain  @click="updata(1)">点击上传</el-button>
+              </el-form-item>
+              <el-form-item label="作品附件：">
+                <el-button type="primary" plain  @click="updata(2)">点击上传</el-button>
+              </el-form-item>
+            </el-form>
+          </el-tab-pane>
+        </el-tabs>
+
+        <el-tabs v-model="activeName2">
+          <el-tab-pane label="报名信息" name="two">
+            <el-form ref="form" :model="form" label-width="90px">
+              <el-form-item label="作品人：">
+                <el-input v-model="form.name" placeholder="请输入作品人" style="width:500px;"></el-input>
+              </el-form-item>
+              <el-form-item label="指导老师：">
+                <el-input v-model="form.name" placeholder="请输入指导老师" style="width:500px;"></el-input>
+              </el-form-item>
+              <el-form-item label="电子邮箱：">
+                <el-input v-model="form.name" placeholder="请输入电子邮箱" style="width:500px;"></el-input>
+              </el-form-item>
+            </el-form>
+          </el-tab-pane>
+        </el-tabs>
+        <el-row>
+          <el-col :span="2" :offset="11">
+            <el-button type="primary" @click="submitEnroll()">提交报名</el-button>
+          </el-col>
+        </el-row>
     </el-card>
+  </div>
 </template>
 <script>
 export default {
     data(){
         return{
-             form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        }
+          activeName:'first',
+          activeName2:'two',
+            form: {
+            name: '',
+            region: '',
+            date1: '',
+            date2: '',
+            delivery: false,
+            type: [],
+            resource: '',
+            desc: ''
+          }
         }
     },
     methods:{
@@ -80,106 +82,15 @@ export default {
     }
 }
 </script>
-<style lang="less">
-  .buttom{
-     float:left;
-     margin-top: 70px;
-    //  margin:0 0 38px 0;
-  }
-  .textitem{
-    clear:both;
-    float:left;
-    margin:0 0 38px 0;
-    .fontclass{
-      
-      width:63px;
-      height:15px;
-      font-size:14px;
-      font-family:Microsoft YaHei;
-      font-weight:400;
-      color:rgba(51,51,51,1);
-      line-height:43px;
-   }
-   .text1{
-      width:547px;
-      height:45px;
-      background:rgba(255,255,255,1);
-      border:1px solid rgba(229,229,229,1);
-      
-   }
-
-   .text2{
-      
-      width:1008px;
-      height:222px;
-      background:rgba(255,255,255,1);
-      border:1px solid rgba(229,229,229,1);
-   }
-   .dianji1{
-     
-      width:106px;
-      height:33px;
-      background:rgba(255,255,255,1);
-      border:1px solid rgba(25,138,243,1);
-      border-radius:4px;
-      
-   }
-   .dianji2{
-      width:106px;
-      height:33px;
-      background:rgba(255,255,255,1);
-      border:1px solid rgba(25,138,243,1);
-      border-radius:4px;
-   }
-  }
-  
-  .header{
-        width:67px;
-        height:18px;
-        font-size:18px;
-        font-family:Microsoft YaHei;
-        font-weight:400;
-        color:rgba(51,51,51,1);
-        line-height:43px;
-  }
-
-  .box-card {
-    clear:both;
-    display: inline-block;
-    text-align: center;
+<style lang="less" scoped>  
+  .activity-enroll{
     width:1180px;
-    height:1030px;
     margin: auto;
-    background:rgba(255,255,255,1);
-    margin-top: 30px;
+    margin-top: 20px;
   }
- 
-    .file {
-    position: relative;
+  .box-card {
     display: inline-block;
-    background: #D0EEFF;
-    border: 1px solid #99D3F5;
-    border-radius: 4px;
-    padding: 4px 12px;
-    overflow: hidden;
-    color: #1E88C7;
-    text-decoration: none;
-    text-indent: 0;
-    line-height: 20px;
-}
-.file input {
-    position: absolute;
-    font-size: 100px;
-    right: 0;
-    top: 0;
-    opacity: 0;
-}
-.file:hover {
-    background: #AADFFD;
-    border-color: #78C3F3;
-    color: #004974;
-    text-decoration: none;
-}
- 
+    min-height: 650px;
+  }
 
 </style>
