@@ -58,7 +58,7 @@
             </el-tabs>
             <el-row>
                 <el-col :span="2" :offset="11">
-                    <el-button type="primary">提交评分</el-button>
+                    <el-button type="primary" @click="goToScope">提交评分</el-button>
                 </el-col>
             </el-row>
         </el-card>
@@ -81,6 +81,34 @@ export default {
                 introduction:'',//评语
             },
             
+        }
+    },
+    mounted(){
+
+    },
+    methods:{
+        //评分
+        goToScope(){
+            this.open()
+        },
+        //弹窗提示
+        open() {
+            this.$confirm('评分成功', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '下一份',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '评分成功!'
+                });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '下一份'
+                });
+            });
         }
     }
 }
