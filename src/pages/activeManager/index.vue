@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="shenheclass" >
                                     <p>{{item.status}}</p>
-                                    <el-button type="text" @click="toActivetyDetail()" >查看活动详情 》</el-button>
+                                    <el-button type="text" @click="goToManagerCenter()" >查看活动详情 》</el-button>
                                 </div>
                             </div>
                         </div>
@@ -128,9 +128,9 @@ export default {
           })
           
       },
-    toActivetyDetail(){
+    goToManagerCenter(){
          this.$router.push({
-              path:"/activityDetail",
+              path:"/activeManager/managerCenter",
           })
         
     }

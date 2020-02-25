@@ -56,6 +56,7 @@
         </el-button>
       </div>
     </el-dialog>
+    
   </div>
 </template>
 <script>
@@ -63,7 +64,6 @@
   import UuniV4 from 'uuid/v4';
   import { setCookie, getCookie } from '../tools/tools';
   import WXLogin from '../components/WXLogin';
-
   export default {
     name: 'uni-header',
     components: { WXLogin },
