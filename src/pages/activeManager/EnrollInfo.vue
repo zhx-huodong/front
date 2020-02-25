@@ -54,21 +54,22 @@
                   label="报名人"
                   width="180">
                 </el-table-column>
-                <el-table-column
-                  prop="address"
+                 <el-table-column
+                  prop="phone"
                   label="联系电话"
-                  width="180">>
+                  width="180">
                 </el-table-column>
-                <el-table-column
+                 <el-table-column
                   prop="address"
                   label="所在地区"
-                  width="180">>
+                  width="180">
                 </el-table-column>
-                <el-table-column
-                  prop="address"
+                 <el-table-column
+                  prop="schoolname"
                   label="所在学校"
-                  width="180">>
+                  width="180">
                 </el-table-column>
+               
               </el-table>
             </template>
           </div>
@@ -77,11 +78,11 @@
               <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-                :current-page="currentPage4"
-                :page-sizes="[100, 200, 300, 400]"
+                :current-page="currentPage1"
+                :page-sizes="[10]"
                 :page-size="100"
                 layout="total, sizes, prev, pager, next, jumper"
-                :total="400">
+                :total="10">
               </el-pagination>
             </div>
       </div>
@@ -110,13 +111,27 @@
                 {id:2,name:"二中"},
                 {id:3,name:"三中"},
             ],
+            
             tableData:[],
-              currentPage1: 5,
-              currentPage2: 5,
-              currentPage3: 5,
-              currentPage4: 4
+              currentPage1:1,
+
             
       };
+    },
+    created(){
+      this.tableData=[
+          {date:'2019-12-20',name:'赵四',phone:'133131655',address:'罗湖区',schoolname:'罗湖中学'},
+          {date:'2019-12-20',name:'赵四',phone:'133131655',address:'罗湖区',schoolname:'罗湖中学'},
+          {date:'2019-12-20',name:'赵四',phone:'133131655',address:'罗湖区',schoolname:'罗湖中学'},
+          {date:'2019-12-20',name:'赵四',phone:'133131655',address:'罗湖区',schoolname:'罗湖中学'},
+          {date:'2019-12-20',name:'赵四',phone:'133131655',address:'罗湖区',schoolname:'罗湖中学'},
+          {date:'2019-12-20',name:'赵四',phone:'133131655',address:'罗湖区',schoolname:'罗湖中学'},
+          {date:'2019-12-20',name:'赵四',phone:'133131655',address:'罗湖区',schoolname:'罗湖中学'},
+          {date:'2019-12-20',name:'赵四',phone:'133131655',address:'罗湖区',schoolname:'罗湖中学'},
+          {date:'2019-12-20',name:'赵四',phone:'133131655',address:'罗湖区',schoolname:'罗湖中学'},
+          {date:'2019-12-20',name:'赵四',phone:'133131655',address:'罗湖区',schoolname:'罗湖中学'},       
+      ]
+             
     },
     methods: {
       handleSizeChange(val) {

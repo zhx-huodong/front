@@ -17,10 +17,26 @@
                 </el-input>
               </el-form-item>
               <el-form-item label="报名登记：">
-                <el-button type="primary" plain  @click="updata(1)">点击上传</el-button>
+                <div class="dianji1">
+                 <el-upload
+                class="upload-demo"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :limit="1"
+                list-type="picture" >
+                <el-button size="small" type="primary">点击上传</el-button>
+              </el-upload>
+              </div>
               </el-form-item>
               <el-form-item label="作品附件：">
-                <el-button type="primary" plain  @click="updata(2)">点击上传</el-button>
+                <div class="dianji2">
+                  <el-upload
+                  class="upload-demo"
+                  action="https://jsonplaceholder.typicode.com/posts/"
+                  :limit="1"
+                  list-type="picture" >
+                  <el-button size="small" type="primary" >点击上传</el-button>
+                </el-upload>
+              </div>
               </el-form-item>
             </el-form>
           </el-tab-pane>
@@ -50,7 +66,9 @@
   </div>
 </template>
 <script>
+import UploadFile from '../../components/UploadFile';
 export default {
+     components: { UploadFile },
     data(){
         return{
           activeName:'first',

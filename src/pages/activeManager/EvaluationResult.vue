@@ -45,39 +45,40 @@
                   align="center">
                 </el-table-column>
                 <el-table-column
-                  prop="date"
+                  prop="name"
                   label="作品名称"
                   width="140">
                 </el-table-column>
                 <el-table-column
-                  prop="name"
+                  prop="athuor"
                   label="作者"
                   width="140">
                 </el-table-column>
+
                 <el-table-column
                   prop="address"
                   label="所在地区"
-                  width="140">>
+                  width="140">
                 </el-table-column>
                 <el-table-column
-                  prop="address"
+                  prop="schoolname"
                   label="所在学校"
-                  width="140">>
+                  width="140">
                 </el-table-column>
                 <el-table-column
-                  prop="address"
+                  prop="score"
                   label="得分"
-                  width="140">>
+                  width="140">
                 </el-table-column>
                  <el-table-column
-                  prop="address"
+                  prop="getHonor"
                   label="获奖"
-                  width="140">>
+                  width="140">
                 </el-table-column>
                  <el-table-column
-                  prop="address"
+                  prop="tuijian"
                   label="推荐"
-                  width="140">>
+                  width="140">
                 </el-table-column>
               </el-table>
             </template>
@@ -87,11 +88,11 @@
               <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-                :current-page="currentPage4"
-                :page-sizes="[100, 200, 300, 400]"
-                :page-size="100"
+                :current-page="currentPage1"
+                :page-sizes="[10]"
+                :page-size="10"
                 layout="total, sizes, prev, pager, next, jumper"
-                :total="400">
+                :total="10">
               </el-pagination>
             </div>
 
@@ -128,11 +129,20 @@
                 {id:2,name:"二中"},
                 {id:3,name:"三中"},
             ],
-            tableData:[],
-              currentPage1: 5,
-              currentPage2: 5,
-              currentPage3: 5,
-              currentPage4: 4,
+            
+            tableData:[
+                {name:"森林精灵" , athuor:"赵四", address:"罗湖区",schoolname:"罗湖中学",score:"95", getHonor:"一等奖",tuijian:"推荐省级"},
+                {name:"森林精灵" , athuor:"赵四", address:"罗湖区",schoolname:"罗湖中学",score:"95", getHonor:"一等奖",tuijian:"推荐省级"},
+                {name:"森林精灵" , athuor:"赵四", address:"罗湖区",schoolname:"罗湖中学",score:"95", getHonor:"一等奖",tuijian:"推荐省级"},
+                {name:"森林精灵" , athuor:"赵四", address:"罗湖区",schoolname:"罗湖中学",score:"95", getHonor:"一等奖",tuijian:"推荐省级"},
+                {name:"森林精灵" , athuor:"赵四", address:"罗湖区",schoolname:"罗湖中学",score:"95", getHonor:"一等奖",tuijian:"推荐省级"},
+                {name:"森林精灵" , athuor:"赵四", address:"罗湖区",schoolname:"罗湖中学",score:"95", getHonor:"一等奖",tuijian:"推荐省级"},
+                {name:"森林精灵" , athuor:"赵四", address:"罗湖区",schoolname:"罗湖中学",score:"95", getHonor:"一等奖",tuijian:"推荐省级"},
+                {name:"森林精灵" , athuor:"赵四", address:"罗湖区",schoolname:"罗湖中学",score:"95", getHonor:"一等奖",tuijian:"推荐省级"},
+                {name:"森林精灵" , athuor:"赵四", address:"罗湖区",schoolname:"罗湖中学",score:"95", getHonor:"一等奖",tuijian:"推荐省级"},
+                {name:"森林精灵" , athuor:"赵四", address:"罗湖区",schoolname:"罗湖中学",score:"95", getHonor:"一等奖",tuijian:"推荐省级"},
+            ],
+              currentPage1:1,
               
             
       };

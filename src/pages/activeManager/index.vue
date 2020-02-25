@@ -1,4 +1,5 @@
 <template>
+
     <div class="outter">
         <el-card style="min-height:600px">
             <div style="position:relative">
@@ -67,6 +68,7 @@
             </div>
         </el-card>
     </div>
+    
 </template>
 <script>
 export default {
@@ -199,6 +201,15 @@ export default {
             line-height:43px;
         }
     }
+ .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+
 
 
     
