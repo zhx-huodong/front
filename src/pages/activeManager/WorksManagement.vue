@@ -99,32 +99,24 @@
                 :total="10">
               </el-pagination>
             </div>
-
-                <el-dialog
-                  :visible.sync="dialogVisible"
-                  width="40%"
-                  :before-close="handleClose">
+             
+                  <div v-if="dialogVisible" class="mask">
+                    <div class="box">
+                      <my-transfer @edit="edit" @Noedit="Noedit"></my-transfer>
+                    </div>
+                  </div>
                   
-                  <el-transfer
-                    filterable
-                    :filter-method="filterMethod"
-                    filter-placeholder="请输入城市拼音"
-                    v-model="value"
-                    :data="data">
-                  </el-transfer>
-                    
-                  <span slot="footer" class="dialog-footer">
-                    <el-button @click="dialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-                  </span>
-                </el-dialog>
+              
      
       </div>
       
     
 </template>
 <script>
+import MyTransfer from '../../components/MyTransfer';
+
   export default {
+    components:{MyTransfer},
     data() {
         const generateData = _ => {
         const data = [];
@@ -186,6 +178,12 @@
       };
     },
     methods: {
+      edit(item){
+        this.dialogVisible=item;
+      },
+      Noedit(item){
+        this.dialogVisible=item;
+      },
         handleClose(done) {
           this.$confirm('确认关闭？')
             .then(_ => {
@@ -224,4 +222,26 @@
     float:left;
     margin:20px 0 10px 0;
   }
+  .mask{
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 3;
+  }
+  .box{
+    background: #ffffff;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: -250px;
+    margin-left: -400px;
+    width:782px;
+    height:500px;
+    background:rgba(255,255,255,1);
+    border-radius:6px;
+  }
+
 </style>
