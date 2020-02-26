@@ -86,6 +86,11 @@
           { key:'activeManager',name:'活动管理',hide:false},
           { key: 'userCenter', name: '个人中心', hide: false },
           { key:'newsBulletin',name:'消息公告',hide:false},
+          { key: 'admin', name: '用户管理', hide: false },
+          { key: 'roleManage', name: '角色管理', hide: false },
+          { key: 'expertManage', name: '专家管理', hide: false },
+          { key: 'expertAssign', name: '专家分配', hide: false },
+          { key: 'classifyManage', name: '分类管理', hide: false },
           
         ],
         adminTabs: [
@@ -374,7 +379,7 @@
       .menu-item {
         opacity: 0.5;
         display: inline-block;
-        margin-right: 48px;
+        margin-right: 20px;
       }
       .active {
         opacity: 1;
