@@ -18,14 +18,23 @@ export default {
         /**
         * 生成面包屑的方法
         */
-        getBreadcrumb() {
+        getBreadcrumb(to) {
             let matched = this.$route.matched.filter(item => item.name)
+            if(to!=undefined){
+              matched[0].path=to.fullPath
+            }
             const first = matched[0]
             if (first && first.name !== '首页') {
-                // matched = [{path: '/home', meta: { title: '首页' }}].concat(matched)
+              var index=this.levelList.findIndex((item)=>{
+                return item.name==first.name
+              })
+              if(index!=-1){
+                matched =this.levelList.slice(0,(index+1))
+              }else{
                 matched =this.levelList.concat(matched)
+              }
             }else{
-                matched=[{path: '/home', meta: { title: '首页' }}]
+              matched=[{path: '/home', meta: { title: '首页' }}]
             }
             this.levelList = matched;
             console.log("levelList==",this.levelList)
@@ -36,7 +45,7 @@ export default {
   },
   watch: {
     $route(to, from) {
-      this.getBreadcrumb();
+      this.getBreadcrumb(to);
     }
   }
 }

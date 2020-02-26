@@ -11,7 +11,7 @@
       :limit="10"
       :on-exceed="handleExceed"
       :file-list="fileList">
-      <el-button size="small" type="primary">点击上传作品</el-button>
+      <el-button size="small" type="primary">点击上传</el-button>
     </el-upload>
   </div>
 </template>
