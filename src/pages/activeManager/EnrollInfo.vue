@@ -1,5 +1,7 @@
 <template>
+
       <div style=" clear: both;text-align: left;">
+
           <el-form ref="form" :model="form" :inline="true">
             <el-form-item label="所在地区：">
               <el-select v-model="form.addr" placeholder="请选择" >
@@ -90,9 +92,12 @@
     
 </template>
 <script>
+
   export default {
+   
     data() {
       return {
+      
             form:{
               addr:'',
               schoolname:'',

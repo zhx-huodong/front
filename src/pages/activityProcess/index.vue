@@ -34,7 +34,8 @@
         activityId: 1,
         currentStage: '', // 当前阶段
         // stageList: []
-        stageList:[{StageName:'作品报名',StartTime:'',EndTime:'',status:''},{StageName:'专家评审',StartTime:'',EndTime:'',status:''},{StageName:'市级评审'},{StageName:'查看结果',StartTime:'',EndTime:'',status:''}]
+
+        stageList:[{StageName:'作品报名',StartTime:'',EndTime:'',status:''},{StageName:'区域推荐',StartTime:'',EndTime:'',status:''},{StageName:'市级审批'},{StageName:'查看结果',StartTime:'',EndTime:'',status:''}]
 
       };
     },

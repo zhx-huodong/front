@@ -22,8 +22,10 @@
                 class="upload-demo"
                 action="https://jsonplaceholder.typicode.com/posts/"
                 :limit="1"
-                list-type="picture" >
-                <el-button size="small" type="primary">点击上传</el-button>
+                list-type="picture"
+                :before-upload="beforeAvatarUpload"
+                 >
+                <el-button size="small" type="primary" @click="upload()">点击上传</el-button>
               </el-upload>
               </div>
               </el-form-item>
@@ -33,8 +35,9 @@
                   class="upload-demo"
                   action="https://jsonplaceholder.typicode.com/posts/"
                   :limit="1"
-                  list-type="picture" >
-                  <el-button size="small" type="primary" >点击上传</el-button>
+                  list-type="picture"
+                  :before-upload="beforeAvatarUpload" >
+                  <el-button size="small" type="primary"  @click="upload()">点击上传</el-button>
                 </el-upload>
               </div>
               </el-form-item>
@@ -45,14 +48,17 @@
         <el-tabs v-model="activeName2">
           <el-tab-pane label="报名信息" name="two">
             <el-form ref="form" :model="form" label-width="90px">
-              <el-form-item label="作品人：">
+              <el-form-item label="作者：">
                 <el-input v-model="form.name" placeholder="请输入作品人" style="width:500px;"></el-input>
               </el-form-item>
               <el-form-item label="指导老师：">
                 <el-input v-model="form.name" placeholder="请输入指导老师" style="width:500px;"></el-input>
               </el-form-item>
-              <el-form-item label="电子邮箱：">
+              <el-form-item label="作者邮箱：">
                 <el-input v-model="form.name" placeholder="请输入电子邮箱" style="width:500px;"></el-input>
+              </el-form-item>
+               <el-form-item label="作者人数：">
+                <el-input v-model="form.name" placeholder="请输入（限制）人数" style="width:500px;"></el-input>
               </el-form-item>
             </el-form>
           </el-tab-pane>
@@ -86,6 +92,23 @@ export default {
         }
     },
     methods:{
+      beforeAvatarUpload(file){
+           var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
+            const extension =
+              testmsg === "jpg" ||
+              testmsg === "JPG" ||
+              testmsg === "png" ||
+              testmsg === "PNG" ||
+              testmsg === "bpm" ||
+              testmsg === "BPM";
+      if (!extension) {
+        this.$message({
+          message: "上传图片只能是jpg / png / bpm格式!",
+          type: "error"
+        });
+        return false; //必须加上return false; 才能阻止
+      }
+      },
       submitEnroll(){
         this.$router.push({
           path:"/home/submitEnroll",

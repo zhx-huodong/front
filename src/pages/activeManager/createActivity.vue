@@ -34,7 +34,7 @@
                                     </el-upload>
                                 </template>
                             </el-form-item>
-                            <el-form-item label="活动预热 :">
+                            <!-- <el-form-item label="活动预热 :">
                                 <el-date-picker
                                 v-model="form.date2"
                                 type="daterange"
@@ -42,14 +42,14 @@
                                 start-placeholder="开始日期"
                                 end-placeholder="结束日期">
                                 </el-date-picker>
-                            </el-form-item>
+                            </el-form-item> -->
                             <div class="my-editer">
                                 <P>活动介绍 ：</P>
                                 <my-editor @editorChange="editorChange"></my-editor>
                             </div>
                         
                             <div class="upload-file">
-                                <div class="annex">上传活动相关附件</div>
+                                <div class="annex">上传活动指南</div>
                                 <p>支持excle、word、pdf 三种格式 </p>
                             </div>
                             <el-divider ></el-divider>
@@ -89,7 +89,7 @@
                                 end-placeholder="结束日期">
                                 </el-date-picker>
                             </el-form-item>
-                            <div class="prize-set">
+                            <!-- <div class="prize-set">
                                 <div class="prize-title">市设置作品奖项 </div>
                                 <div class="prize-input">
                                     <div class="left">奖品名称</div>
@@ -105,7 +105,7 @@
                                     </div>
                                     <div class="option"></div>
                                 </div>
-                            </div>
+                            </div> -->
                             <el-form-item label="作品展示 :">
                                 <el-date-picker
                                 v-model="form.date2"
@@ -115,8 +115,13 @@
                                 end-placeholder="结束日期">
                                 </el-date-picker>
                             </el-form-item>
+                            <el-form-item label="作者人数 :">
+                                <el-col :span="9">
+                              <el-input placeholder="请输入限制人数" v-model="form.date2"></el-input>
+                               </el-col>
+                            </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" @click="onSubmit">保存并发布</el-button>
+                                <el-button type="primary" @click="onSubmit" >保存并发布</el-button>
                                 <el-button>保存草稿</el-button>
                                 <el-button>取消</el-button>
                             </el-form-item>

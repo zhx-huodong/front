@@ -5,7 +5,7 @@
 				<!-- <div class="activity-header"></div> -->
 				<el-tabs v-model="activeName" type="card" @tab-click="handleClick">
 							<el-tab-pane label="活动中心" name="first">
-											<div class="activity-lable">
+				<div class="activity-lable">
 					
 					
 					<type-select v-if="gradeList.length > 0 && regionList.length > 0"

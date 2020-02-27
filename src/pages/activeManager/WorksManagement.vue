@@ -39,34 +39,39 @@
                 <el-table-column
                   label="序号"
                   type="index"
-                   width="180"
+                   width="150"
                   align="center">
                 </el-table-column>
                 <!-- name author address shcoolname private -->
                 <el-table-column
                   prop="name"
                   label="作品名称"
-                  width="180">
+                  width="150">
                 </el-table-column>
                 <el-table-column
                   prop="author"
                   label="作者"
-                  width="180">
+                  width="150">
+                </el-table-column>
+                <el-table-column
+                  prop="didaolaos"
+                  label="指导老师"
+                  width="150">
                 </el-table-column>
                 <el-table-column
                   prop="address"
                   label="所在地区"
-                  width="180">
+                  width="150">
                 </el-table-column>
                 <el-table-column
                   prop="shcoolname"
                   label="所在学校"
-                  width="180">
+                  width="150">
                 </el-table-column>
                 <el-table-column
                   prop="private"
                   label="分配专家"
-                  width="180">
+                  width="150">
                 </el-table-column>
                 
                 <!-- <el-table-column

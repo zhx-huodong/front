@@ -51,13 +51,7 @@
                 </el-table-column>
                 <el-table-column
                   prop="athuor"
-                  label="作者"
-                  width="140">
-                </el-table-column>
-
-                <el-table-column
-                  prop="address"
-                  label="所在地区"
+                  label="指导老师"
                   width="140">
                 </el-table-column>
                 <el-table-column
@@ -65,6 +59,12 @@
                   label="所在学校"
                   width="140">
                 </el-table-column>
+                <el-table-column
+                  prop="address"
+                  label="所在地区"
+                  width="140">
+                </el-table-column>
+                
                 <el-table-column
                   prop="score"
                   label="得分"

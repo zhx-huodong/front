@@ -3,6 +3,11 @@
         <el-card style="min-height:600px;">
             <el-tabs v-model="activeName">
                 <el-tab-pane label="专家管理" name="expertManage">
+                    <div class="activity-lable">
+                        <type-select v-if="gradeList.length > 0 && regionList.length > 0"
+                          :gradeList="gradeList" :regionList="regionList"
+                        ></type-select>
+                    </div>
                     <el-row>
                         <el-col :span="3">
                             <el-button type="primary" @click="goToAddExpert">添加专家</el-button>
@@ -84,9 +89,26 @@
     </div>
 </template>
 <script>
+import TypeSelect from '../../components/TypeSelect';
     export default{
+        components: {TypeSelect},
         data(){
             return{
+                   	gradeList:[
+		    { Id : 0, Name : '全部' },
+        { Id : 1, Name : '小学组' },
+        { Id : 2, Name : '初中组' },
+        { Id : 3, Name : '高中组' },
+      ],
+      regionList:[
+      {Id:0, Name:'全部'},
+      {Id:1, Name:'罗湖区'},
+      {Id:2, Name:'南山区'},
+      {Id:3, Name:'宝安区'},
+      {Id:4, Name:'罗湖区'},
+      {Id:5, Name:'盐田区'},
+      {Id:6, Name:'龙岗区'},
+    	],
                 activeName:'expertManage',
                 searchVal:'',//搜索
                 tableData: [{
