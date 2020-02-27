@@ -7,10 +7,15 @@ import routes from './routes/index'; // 全局路由
 import App from './App.vue';
 import store from './store';
 
+import VideoPlayer from 'vue-video-player';
+import 'vue-video-player/src/custom-theme.css';
+import 'video.js/dist/video-js.css';
+
 Vue.config.productiontip = true;
 
 Vue.use(VueRouter);
 Vue.use(ElementUI);
+Vue.use(VideoPlayer);
 
 // 全局注册tools方法
 import * as funcs from './tools/tools';

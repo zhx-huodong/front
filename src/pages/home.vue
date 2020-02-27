@@ -6,17 +6,20 @@
                 <div class="home-activity-list" v-if="activityList">
                     <card-list :cardList="activityList" @toNext="toNext"></card-list>
                 </div>
+                <!-- <my-video-player :videoSrc="videoSrc"></my-video-player> -->
             </div> 
         </el-card> 
 	</div>
 </template>
 <script>
 import CardList from '../components/CardList';
+import MyVideoPlayer from '../components/MyVideoPlayer'
 export default {
     name: 'home-center',
-    components: { CardList },
+    components: { CardList ,MyVideoPlayer},
     data() {
         return {
+            // videoSrc:'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4',
             activityList: [{ id: 1, name: '深圳市中小学电脑制作大赛', imgUrl: require('../public/images/ac1.png') }, { id: 2, name: '深圳市中小学电脑机器人活动', imgUrl: require('../public/images/ac2.png') }, { id: 3, name: '深圳市中小学网络夏令营', imgUrl: require('../public/images/ac3.png') }, { id: 4, name: '深圳市中小学微课大赛', imgUrl: require('../public/images/ac4.png') }, { id: 5, name: '深圳市中小学说课大赛', imgUrl: require('../public/images/ac5.png') }, { id: 6, name: '深圳市AI知识大赛', imgUrl: require('../public/images/ac6.png') }] // 活动列表
         };
     },
