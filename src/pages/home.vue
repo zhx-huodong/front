@@ -7,16 +7,20 @@
                     <card-list :cardList="activityList" @toNext="toNext"></card-list>
                 </div>
                 <!-- <my-video-player :videoSrc="videoSrc"></my-video-player> -->
+                <!-- <upload-file></upload-file> -->
             </div> 
+            <!-- <file-preview></file-preview> -->
         </el-card> 
 	</div>
 </template>
 <script>
 import CardList from '../components/CardList';
 import MyVideoPlayer from '../components/MyVideoPlayer'
+import UploadFile from '../components/UploadFile'
+import FilePreview from '../components/FilePreview'
 export default {
     name: 'home-center',
-    components: { CardList ,MyVideoPlayer},
+    components: { CardList ,MyVideoPlayer,UploadFile,FilePreview},
     data() {
         return {
             // videoSrc:'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4',

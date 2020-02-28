@@ -2,7 +2,7 @@
   <div>
     <el-upload
       class="upload-demo"
-      action="/mock/5d5e38de8e8b976dfe909bef//v1/activity/UploadWork"
+      action="https://jsonplaceholder.typicode.com/posts/"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
       :before-remove="beforeRemove"
