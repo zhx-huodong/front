@@ -37,7 +37,6 @@ export default {
               matched=[{path: '/home', meta: { title: '首页' }}]
             }
             this.levelList = matched;
-            console.log("levelList==",this.levelList)
         }
   },
   mounted() {

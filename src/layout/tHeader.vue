@@ -17,21 +17,23 @@
         </div>
         <div class="divider">|</div>
         <template v-if="user">
-          <div class="name">{{user.Name || '未知用户'}}</div>
+          <div class="name">{{user.name || '未知用户'}}</div>
           <div class="divider">|</div>
           <div class="logout" @click="logout">退出</div>
         </template>
         <template v-else>
-          <el-dropdown @command="loginClick">
+          <span class="name" @click="loginClick">未登录</span>
+          <!-- <el-dropdown @command="loginClick">
             <span class="name">未登录</span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="wx" v-if="!isPro">微信扫码登录</el-dropdown-item>
               <el-dropdown-item command="phone">短信验证码登录</el-dropdown-item>
             </el-dropdown-menu>
-          </el-dropdown>
+          </el-dropdown> -->
         </template>
       </div>
       <w-x-login ref="wxLogin"></w-x-login>
+      <login ref="allLogin"></login>
       <el-dialog
         class="login-dialog"
         :visible.sync="showMpCode"
@@ -70,10 +72,11 @@
   import UuniV4 from 'uuid/v4';
   import { setCookie, getCookie } from '../tools/tools';
   import WXLogin from '../components/WXLogin';
+  import Login from '../components/Login'
   import MyBreadCrumb from '../components/MyBreadCrumb'
   export default {
     name: 'uni-header',
-    components: { WXLogin,MyBreadCrumb },
+    components: { WXLogin,MyBreadCrumb,Login },
     data() {
       return {
         tabs: [],
@@ -85,13 +88,7 @@
           { key: 'expertReview', name: '专家评审', hide: true },
           { key:'activeManager',name:'活动管理',hide:false},
           { key: 'userCenter', name: '个人中心', hide: false },
-          { key:'newsBulletin',name:'消息公告',hide:false},
-          { key: 'admin', name: '用户管理', hide: false },
-          { key: 'roleManage', name: '角色管理', hide: false },
-          { key: 'expertManage', name: '专家管理', hide: false },
-          { key: 'expertAssign', name: '专家分配', hide: false },
-          { key: 'classifyManage', name: '分类管理', hide: false },
-          
+          { key:'newsBulletin',name:'消息公告',hide:false},   
         ],
         adminTabs: [
           // { key: 'auditActivity', name: '审核中心', hide: false },
@@ -112,7 +109,7 @@
         showMpCode: false, // 展示小程序码
         isTest: location.hostname == '127.0.0.1' ||
           location.hostname == 'api.huodong.eduinspector.com',
-        isPro: location.hostname == 'cxyy.educloud.tencent.com' || location.hostname == 'cxyy.szdj.edu.cn',
+        isPro: location.hostname == 'api.huodong.eduinspector.com' || location.hostname == 'huodong.eduinspector.com',
         showMul: false, // 多重身份选择弹框
         roles: [
           { Role: 'TEACHER', RoleName: '教师' },
@@ -125,6 +122,7 @@
     computed: {
       user() {
         return this.$store.state.account.user;
+        console.log("user====",this.$store.state.account.user)
       }
     },
     async mounted() {
@@ -191,18 +189,8 @@
         if (this.$route.path.indexOf('msgcenter') > -1) return;
         this.$router.push('/msgcenter');
       },
-      loginClick(type) {
-        if (type == 'wx') {
-          this.$refs.wxLogin.login();
-        } else {
-          if (location.hostname === '127.0.0.1') {
-            let redirectUrl = location.protocol + '//' + location.host;
-            location.href = `https://api.huodong.eduinspector.com/edulogin?redirectUrl=${redirectUrl}&from=activity`;
-          } else {
-            let redirectUrl = location.protocol + '//' + location.host;
-            location.href = `${redirectUrl}/edulogin/?redirectUrl=${redirectUrl}&from=activity`;
-          }
-        }
+      loginClick() {
+        this.$refs.allLogin.showDialog();
       },
       logout() {
         setCookie('Authorization', '');
@@ -379,7 +367,7 @@
       .menu-item {
         opacity: 0.5;
         display: inline-block;
-        margin-right: 20px;
+        margin-right: 45px;
       }
       .active {
         opacity: 1;

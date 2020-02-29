@@ -1,6 +1,6 @@
 const HttpsProxyAgent = require('https-proxy-agent');
-const proxy = 'http://api.huodong.eduinspector.com';
-let agent = new HttpsProxyAgent(proxy);
+// const proxy = 'http:localhost:8003';
+// let agent = new HttpsProxyAgent(proxy);
 
 let config = {
 	productionSourceMap: true,
@@ -9,14 +9,15 @@ let config = {
     port: 8003,
 		disableHostCheck: true,
 		proxy: {
-			'/v1': {
+			'/api': {
 				target: 'http://api.huodong.eduinspector.com',
-        agent: agent
+        		// agent: agent
+				changeOrigin:true,
+				secure:false,
+				pathRewrite:{
+					"^/api":""
+				}
 			},
-      '/idaasproxy': {
-        target: 'http://api.huodong.eduinspector.com',
-        agent: agent
-      }
 		}
 	},
   transpileDependencies: [
