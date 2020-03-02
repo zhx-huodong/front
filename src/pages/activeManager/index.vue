@@ -5,41 +5,29 @@
             <div style="position:relative">
                 <el-tabs v-model="activeName" @tab-click="handleClick">
                     <el-tab-pane label="活动中心" name="first">
-                       <el-row>
+                      
                             <el-form ref="form" :inline="true" :model="form" class="demo-form-inline">
-                                <el-form-item label="活动对象：">
-                                    <el-select v-model="form.object" placeholder="请选择">
-                                        <el-option v-for="item in AOList" :key="item.id" :label="item.name" :value="item.id">
-                                        </el-option>
-                                    </el-select>
-                                </el-form-item>
                                 
-                                <el-form-item label="活动范围：">
-                                    <el-select v-model="form.limit" placeholder="请选择">
-                                        <el-option v-for="item in AlList" :key="item.id" :label="item.name" :value="item.id">
-                                        </el-option>
-                                    </el-select>
-                                </el-form-item>
-
-                                <el-form-item label="活动时间：">
-                                    <el-date-picker
-                                        format="yyyy-MM-dd"
-                                        v-model="form.time"
-                                        type="daterange"
-                                        range-separator="至"
-                                        start-placeholder="开始日期"
-                                        end-placeholder="结束日期">
-                                        
-                                    </el-date-picker>
-                                </el-form-item>
-                                <el-form-item >
-                                    <el-input v-model="form.acitvename" placeholder="请输入活动名称"> </el-input>
-                                </el-form-item>
-                                <el-form-item >
-                                    <el-button  type="primary" @click="onSubmit()">查询</el-button>
-                                </el-form-item>
+                                        <el-form-item label="报名时间：">
+                                           
+                                                <el-date-picker format="yyyy-MM-dd" v-model="form.time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">   
+                                                </el-date-picker>
+                                            
+                                        </el-form-item>
+                                          
+                                        <el-form-item label="活动名称：">
+                                            
+                                            <el-input v-model="form.acitvename" placeholder="请输入活动名称"> </el-input>
+                                            
+                                        </el-form-item>
+                                   
+                                        <el-form-item >
+                                            <el-button  type="primary" @click="onSubmit()">查询</el-button>
+                                        </el-form-item>
+                               
                             </el-form>
-                        </el-row>
+                      
+                        
                         <div v-for='item in list' >
                             <div class="count" >
                                 <div>
@@ -55,7 +43,13 @@
                                 </div>
                                 <div class="shenheclass" >
                                     <p>{{item.status}}</p>
-                                    <el-button type="text" @click="goToManagerCenter()" >查看活动详情 》</el-button>
+                                   
+                                </div>
+                                <div class="shenheclass2" >
+                                   
+                                    <el-button type="text" @click="goToManagerCenter()"  style="display:block;margin-left:9px;">管理</el-button>
+                                    <el-button type="text" @click="goToManagerCenter()"  style="display:block">查看详情></el-button>
+                                    <el-button type="text" @click="goToManagerCenter()"  style="display:block;margin-top:20px;color:red;">删除</el-button>
                                 </div>
                             </div>
                         </div>
@@ -167,16 +161,16 @@ export default {
     }
     .shenheclass{
         margin-left:100px;
-        width:350px;
+        width:150px;
         display:flex;
         justify-content:space-between;
         align-items:center;
         font-size:14px;
         font-weight:400;
         color:rgba(255,198,44,1);
-        .mybtn{
-           
-        }
+    }
+    .shenheclass2{
+            margin: 20px 60px 0 0;
     }
     .activeclass{
         

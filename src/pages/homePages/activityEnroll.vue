@@ -21,6 +21,8 @@
                  <el-upload
                 class="upload-demo"
                 action="https://jsonplaceholder.typicode.com/posts/"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
                 :limit="1"
                 list-type="picture"
                 :before-upload="beforeAvatarUpload"
@@ -92,6 +94,12 @@ export default {
         }
     },
     methods:{
+    handlePreview(file) {
+      console.log(file);
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
       beforeAvatarUpload(file){
            var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
             const extension =
