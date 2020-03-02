@@ -54,7 +54,7 @@
 </template>
 <script>
     import api from '../service/api'
-
+    import { setCookie, getCookie } from '../tools/tools';
     export default {
         name: 'login',
         data() {
@@ -133,6 +133,9 @@
                 }else{
                     this.$store.dispatch('INIT_USER', res);
                     this.$store.dispatch('INIT_SHOW', false);
+                    setCookie('Authorization', res.token);
+                    let userInfo=JSON.stringify(res)
+                    localStorage.setItem('user',userInfo);
                     const loading = this.$loading({
                     lock: true,
                     text: '登录中。。',

@@ -7,7 +7,6 @@ export default {
 	mutations: {
 		SET_USER(state, val) {
 			state.user = val;
-			console.log("state.suer===",val)
 		}
 	},
 	actions: {

@@ -122,37 +122,14 @@
     computed: {
       user() {
         return this.$store.state.account.user;
-        console.log("user====",this.$store.state.account.user)
       }
     },
     async mounted() {
-      let token = this.$route.query.token || getCookie('Authorization');
-      this.wxCode = this.$route.query.code || '';
-      if (this.wxCode) { // 微信扫码登录
-        this.idaasLogin(loginSuccess => {
-          this.tabs = this.normalTabs;
-          if (loginSuccess) {
-            this.$store.dispatch('INIT_USER');
-            this.getMessage();
-          } else {
-            this.$router.push('/home');
-          }
-        });
-      } else if (token) { // 登录页短信验证码登录会跳
-        setCookie('Authorization', token);
-        await this.$store.dispatch('INIT_USER');
-        if (!this.user) { // token不正确
-          this.tabs = this.normalTabs;
-          if (this.$route.path == '/') this.$router.push('/home');
-        } else {
-          this.activeTab = this.$route.path.split('/')[1];
-          this.getMessage();
-        }
-      } else {
-        this.tabs = this.normalTabs;
-        if (this.$route.path == '/') this.$router.push('/home');
+      if(getCookie('Authorization')){
+        this.$store.dispatch('INIT_USER', JSON.parse(localStorage.getItem('user')));
       }
-      
+      this.tabs = this.normalTabs;
+      if (this.$route.path == '/') this.$router.push('/home');
     },
     watch: {
       $route(val) {
@@ -197,142 +174,7 @@
         localStorage.removeItem('user');
         location.href = '/';
       },
-      idaasLogin(cb) {
-        this.loginCb = cb;
-        return new Promise(async (resolve, reject) => {
-          let codeRes = await this.idassCode();
-          if (!codeRes) return cb(false);
-
-          let loginRes = await this.axiosPost({
-            url: '/idaasproxy/v1/account/oauth2/login'
-          }).catch(err => err);
-          if (loginRes.code == 12008) { // 未注册
-            this.showMpCode = true;
-            return cb(false);
-          } else if (loginRes.code != 0) {
-            this.$message.error(loginRes.message);
-            return cb(false);
-          }
-
-          this.stateAuthLogin();
-        });
-      },
-      async stateAuthLogin(role) {
-        return new Promise(async (resolve, reject) => {
-          let stateInfo = await this.axiosGet({
-            url: '/v1/users/state',
-            loginType: 'IDAAS',
-            callback: location.protocol + '//' + location.host
-          }).catch(err => err);
-          if (stateInfo.ErrorCode != 'OK') {
-            this.$message.error(stateInfo.ErrorMsg);
-            return resolve(false);
-          }
-
-          let url = stateInfo.Data.redirectUrl;
-          if (location.hostname == 'api.huodong.eduinspector.com') { // 测试环境
-            url = url.replace('https://login.educloud.tencent.com', 'https://api.huodong.eduinspector.com/idaasproxy');
-          }
-
-          let authRes = await this.axiosGet({
-            url: url
-          }, false, { 'x-client': 'true' });
-          if (!authRes || !authRes.code) {
-            this.$message.error('获取code失败');
-            return resolve(false);
-          }
-
-          let params = {
-            url: '/v1/users/login',
-            code: authRes.code,
-            loginType: 'IDAAS',
-            state: authRes.state
-          };
-          if (role) params.LoginRoles = [role];
-          let userLoginRes = await this.axiosPost(params).catch(err => err);
-          if (userLoginRes.ErrorCode == 'OK') {
-            if (userLoginRes.Data.status == 'LOGIN_MULTIROLE') { // 多重身份，进行身份选择
-              this.getRoles(userLoginRes.Data.token);
-            } else {
-              setCookie('Authorization', userLoginRes.Data.token);
-              this.loginCb(true);
-            }
-          } else if (userLoginRes.ErrorCode == 'User.UserNotExists') { // 用户不存在（注册）
-            this.showMpCode = true;
-            return this.loginCb(false);
-          } else if (userLoginRes.ErrorCode == 'User.NoRole') { // 用户未认证身份
-            this.showMpCode = true;
-            return this.loginCb(false);
-          } else if (userLoginRes.ErrorCode != 'OK') {
-            this.$message.error(userLoginRes.ErrorMsg);
-            return this.loginCb(false);
-          }
-        });
-      },
-      async idassCode() {
-        let stateRes = await this.getIdaasId();
-        let idaasId = stateRes.Data.idaasId;
-        let randomToken = UuniV4();
-        setCookie('XSRF-TOKEN', randomToken); // 设置cookie，发请求带上
-        return new Promise((resolve, reject) => {
-          axios.post('/idaasproxy/v1/account/oauth2/code', {
-            code: this.wxCode,
-            registrationId: idaasId
-          }, {
-            headers: {
-              CompanyID: 1,
-              'X-XSRF-TOKEN': randomToken
-            }
-          }).then(res => {
-            if (res.data.code != 0) {
-              this.$message.error(res.data.message);
-              resolve(false);
-            } else {
-              resolve(true);
-            }
-          }).catch(() => {
-            resolve(false);
-          });
-        });
-      },
-      getIdaasId() {
-        let callBackUrl = location.hostname == '127.0.0.1' ? 'api.huodong.eduinspector.com' : location.hostname;
-        return new Promise((resolve, reject) => {
-          axios.get('/v1/users/state', {
-            params: {
-              callback: callBackUrl,
-              loginType: 'IDAAS'
-            }
-          }).then(res => {
-            resolve(res.data);
-          }).catch(err => {
-            resolve(err);
-          });
-        });
-      },
-      getRoles(token) { // 获取多重身份
-        axios.get('/v1/users/getroles', {
-          headers: {
-            Authorization: token
-          }
-        }).then(res => {
-          let roles = res.data.Data.UserRole || [];
-          this.showChooseRole = true;
-          this.roles = roles;
-        });
-      },
-      chooseRole(key) {
-        this.stateAuthLogin(key);
-        this.showChooseRole = false;
-      },
-      async getMessage() {
-        let res = await this.axiosGet({
-          url: '/v1/message/GetUserMessageList',
-          AppId: 1567654633 // 此系统固定用这个appid
-        }, false).catch(err => err);
-        if (res.ErrorCode != 'OK') return this.$message.error(res.ErrorMsg);
-        this.messageList = res.Data.MessageList || [];
-      }
+      
     }
   };
 </script>

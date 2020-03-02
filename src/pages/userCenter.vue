@@ -48,8 +48,8 @@
               <div class="head-img" v-else></div>
             </div>
             <div class="user-head-right">
-              <div class="user-name">{{user.Name}}</div>
-              <div class="user-tel">{{user.Phone}}</div>
+              <div class="user-name">{{user.name}}</div>
+              <div class="user-tel">{{user.mobile}}</div>
               <div class="user-tel">{{user.School}}</div>
             </div>
           </div>
