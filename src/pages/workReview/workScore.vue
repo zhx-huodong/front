@@ -38,7 +38,8 @@
                                     placeholder="请输入评分"
                                     v-model="form2.scope"
                                     clearable
-                                    style="width:300px;">
+                                    style="width:300px;"
+                                    size="small">
                                     </el-input>
                                 </el-form-item>
 
@@ -94,14 +95,14 @@ export default {
         //弹窗提示
         open() {
             this.$confirm('评分成功', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '下一份',
+                confirmButtonText: '下一份',
                 type: 'warning',
-                center: true
+                center: true,
+                showCancelButton:false,
             }).then(() => {
                 this.$message({
                     type: 'success',
-                    message: '评分成功!'
+                     message: '下一份'
                 });
             }).catch(() => {
                 this.$message({

@@ -125,53 +125,53 @@
 			];
 			this.activityList = list;
 			},
-      async getGradeGroupList() {
-		  console.log("1")
-        // let res = await this.axiosGet({
-        //   url: '/v1/activity/GetGradeGroup'
-        // }).catch(err => err);
-		// this.gradeList = res.Data.GradeGroup;
-		this.gradeList=[
-		{ Id : 0, Name : '全部' },
-        { Id : 1, Name : '小学组' },
-        { Id : 2, Name : '初中组' },
-        { Id : 3, Name : '高中组' },
-      ]},
-      async getRegionList() {
-        // let res = await this.axiosGet({
-        //   url: '/v1/activity/GetAllDivision'
-		// }).catch(err => err);
-		//  this.regionList = [
-        //   { DivisionId: 0, Name: '全部' }
-		// ].concat(res.Data.DivisionList);
-		let res=[
-      {Id:0, Name:'全部'},
-      {Id:1, Name:'罗湖区'},
-      {Id:2, Name:'南山区'},
-      {Id:3, Name:'宝安区'},
-      {Id:4, Name:'罗湖区'},
-      {Id:5, Name:'盐田区'},
-      {Id:6, Name:'龙岗区'},
-    	];
-        this.regionList = [
-          { DivisionId: 0, Name: '全部' }
-		].concat(res);
-      },
-      async activityObjectMgr(value) {
-        this.filter.Role = value;
-        this.currentPage = 1;
-        this.getActivityList();
-      },
-      async gradeGroupMgr(value) {
-        this.filter.GradeGroup = value;
-        this.currentPage = 1;
-        this.getActivityList();
-      },
-      async regionMgr(value) {
-        this.filter.District = value;
-        this.currentPage = 1;
-        this.getActivityList();
-      },
+			async getGradeGroupList() {
+				console.log("1")
+				// let res = await this.axiosGet({
+				//   url: '/v1/activity/GetGradeGroup'
+				// }).catch(err => err);
+				// this.gradeList = res.Data.GradeGroup;
+				this.gradeList=[
+				{ Id : 0, Name : '全部' },
+				{ Id : 1, Name : '小学组' },
+				{ Id : 2, Name : '初中组' },
+				{ Id : 3, Name : '高中组' },
+			]},
+			async getRegionList() {
+			// let res = await this.axiosGet({
+			//   url: '/v1/activity/GetAllDivision'
+			// }).catch(err => err);
+			//  this.regionList = [
+			//   { DivisionId: 0, Name: '全部' }
+			// ].concat(res.Data.DivisionList);
+				let res=[
+					{Id:0, Name:'全部'},
+					{Id:1, Name:'罗湖区'},
+					{Id:2, Name:'南山区'},
+					{Id:3, Name:'宝安区'},
+					{Id:4, Name:'罗湖区'},
+					{Id:5, Name:'盐田区'},
+					{Id:6, Name:'龙岗区'},
+				];
+				this.regionList = [
+				{ DivisionId: 0, Name: '全部' }
+				].concat(res);
+			},
+			async activityObjectMgr(value) {
+				this.filter.Role = value;
+				this.currentPage = 1;
+				this.getActivityList();
+			},
+			async gradeGroupMgr(value) {
+				this.filter.GradeGroup = value;
+				this.currentPage = 1;
+				this.getActivityList();
+			},
+			async regionMgr(value) {
+				this.filter.District = value;
+				this.currentPage = 1;
+				this.getActivityList();
+			},
 			handleCurrentPage(page) {
 				this.currentPage = page;
 				this.getActivityList();

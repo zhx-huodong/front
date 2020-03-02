@@ -1,39 +1,45 @@
 <template>
   <div>
-   
-    <div class="lable" v-if="!toPage">
+    <div class="lable" v-if="activityObjectList.length>0">
       <div class="lable-title">活动对象:</div>
       <div class="lable-aside">
         <div class="lable-self" v-for="(item, index) in activityObjectList" :key="index"
-        @click="onactivityObjectList(item.Id, index)" :class="{'type-active':activityObjectIndex == index}">{{item.Name}}</div>
+        @click="anActivityObjectList(item.id, index)" :class="{'type-active':activityObjectIndex == index}">{{item.name}}</div>
       </div>
     </div>
-    <div class="lable">
+    <div class="lable" v-if="activityNameList.length>0">
+      <div class="lable-title">活动名称:</div>
+      <div class="lable-aside">
+        <div class="lable-self" v-for="(item, index) in activityNameList" :key="index"
+        @click="onActivityNameList(item.id, index)" :class="{'type-active':activityNameIndex == index}">{{item.name}}</div>
+      </div>
+    </div>
+    <div class="lable" v-if="gradeList.length>0">
       <div class="lable-title">学段:</div>
       <div class="lable-aside">
         <div class="lable-self" v-for="(item, index) in gradeList" :key="index"
-        @click="ongradeList(item.Id, index)" :class="{'type-active':gradeIndex == index}">{{item.Name}}</div>
+        @click="onGradeList(item.id, index)" :class="{'type-active':gradeIndex == index}">{{item.name}}</div>
       </div>
     </div>
-    <div class="lable" v-if="subjectList">
-      <div class="lable-title">科目:</div>
+    <div class="lable" v-if="activityTypleList.length>0">
+      <div class="lable-title">活动分类:</div>
       <div class="lable-aside">
-        <div class="lable-self" v-for="(item, index) in subjectList" :key="index"
-        @click="onsubjectList(item.Id, index)" :class="{'type-active':subjectIndex == index}">{{item.Name}}</div>
+        <div class="lable-self" v-for="(item, index) in activityTypleList" :key="index"
+        @click="onActivityTypleList(item.id, index)" :class="{'type-active':activityTypleIndex == index}">{{item.name}}</div>
       </div>
     </div>
-    <div class="lable" v-if="!hideRegion">
+    <div class="lable" v-if="activityProjectList.length>0">
+      <div class="lable-title">活动项目:</div>
+      <div class="lable-aside">
+        <div class="lable-self" v-for="(item, index) in activityProjectList" :key="index"
+        @click="onActivityProjectList(item.id, index)" :class="{'type-active':activityProjectIndex == index}">{{item.name}}</div>
+      </div>
+    </div>
+    <div class="lable" v-if="regionList.length>0">
       <div class="lable-title">区域:</div>
       <div class="lable-aside">
         <div class="lable-self" v-for="(item, index) in regionList" :key="index"
-        @click="onregionList(item.DivisionId, index)" :class="{'type-active':regionIndex == index}">{{item.Name}}</div>
-      </div>
-    </div>
-    <div class="lable" v-if="!hideAward && toPage && toPage=='elcellent'">
-      <div class="lable-title">奖项:</div>
-      <div class="lable-aside">
-        <div class="lable-self" v-for="(item, index) in awardList" :key="index"
-             @click="onawardList(item.Id, index)" :class="{'type-active':awardIndex == index}">{{item.Name}}</div>
+        @click="onRegionList(item.id, index)" :class="{'type-active':regionIndex == index}">{{item.name}}</div>
       </div>
     </div>
   </div>
@@ -41,88 +47,73 @@
 <script>
 export default {
   props: {
-    gradeList: { type: Array },
-    subjectList: { type: Array },
-    regionList: { type: Array },
-    toPage: String,
-    hideRegion: { type: Boolean, default: false },
-    hideAward: { type: Boolean, default: false }
+    activityObjectList:{ type:Array,default:[]},
+    activityNameList: { type: Array,default:[] },
+    activityTypleList: { type: Array,default:[] },
+    activityProjectList:{type:Array,default:[]},
+    regionList:{ type:Array,default:[]}
   },
   data() {
     return {
-      activityObjectIndex: 0,
-      awardIndex: 0,
+      activityObjectIndex:0,
+      activityNameIndex: 0,
       gradeIndex: 0,
-      subjectIndex: 0,
-      regionIndex: 0,
-      activityObject: 0,
-      award: '', // 奖项
-      gradeGroup: '', // 学段
-      subject: '', // 科目
-      region: '', // 区域
-      activityObjectList: [
-        { Id: 0, Name: '全部' },
-        { Id: 12, Name: '老师' },
-        { Id: 11, Name: '学生' }
+      activityTypleIndex: 0,
+      activityProjectIndex:0,
+      regionIndex:0,
+      gradeList:[
+        { id: 0, name: '全部' },
+        { id: 1, name: '小学组' },
+        { id: 2, name: '初中组' },
+        { id: 3, name: '高中组' }
       ],
-      awardList: [
-        { Id: 0, Name: '全部' },
-        { Id: 1, Name: '一等奖' },
-        { Id: 2, Name: '二等奖' },
-        { Id: 3, Name: '三等奖' },
-        { Id: 4, Name: '优秀奖' }
-      ]
+      activityNameObject:{},//活动名称
+      activityTypleObject: {}, // 活动类型
+      gradeObject: {}, // 学段
+      activityProjectObject:{},//活动项目
+      activityObject:{},//活动对象
+      regionObject:{},//区域
     };
   },
   mounted(){
-    // this.gradeList=[
-    //    { Id: 0, Name: '全部' },
-    //     { Id: 1, Name: '小学组' },
-    //     { Id: 2, Name: '初中组' },
-    //     { Id: 3, Name: '高中组' },
-    // ];
-    // this.regionList=[
-    //   {Id:0,Name:"全部"},
-    //   {Id:1,Name:"罗湖区"},
-    //   {Id:2,Name:"南山区"},
-    //   {Id:3,Name:"宝安区"},
-    //   {Id:4,Name:"罗湖区"},
-    //   {Id:5,Name:"盐田区"},
-    //   {Id:6,Name:"龙岗区"},
-    // ]
-      
+    
   },
   methods: {
-    onactivityObjectList(Id, index) {
+    anActivityObjectList(id, index) {
       this.activityObjectIndex = index;
-      this.activityObject = this.activityObjectList[index].Id;
+      this.activityObject = this.activityObjectList[index].id;
       this.$emit('activityObject', this.activityObject);
     },
-    onawardList(Id, index) {
-      this.awardIndex = index;
-      this.award = this.awardList[index].Id;
-      this.$emit('award', this.award);
+    onActivityNameList(id, index) {
+      this.activityNameIndex = index;
+      this.activityNameObject = this.activityNameList[index].id;
+      this.$emit('activityNameObject', this.activityNameObject);
     },
-    ongradeList(Id, index) {
+    onGradeList(id, index) {
       this.gradeIndex = index;
-      this.gradeGroup = this.gradeList[index].Id;
-      this.$emit('gradeGroup', this.gradeGroup);
+      this.gradeObject = this.gradeList[index].id;
+      this.$emit('gradeObject', this.gradeObject);
     },
-    onsubjectList(Id, index) {
-      this.subjectIndex = index;
-      this.subject = this.subjectList[index].Id;
-      this.$emit('subject', this.subject);
+    onActivityTypleList(id, index) {
+      this.activityTypleIndex = index;
+      this.activityTypleObject = this.activityTypleList[index].id;
+      this.$emit('activityTypleObject', this.activityTypleObject);
     },
-    onregionList(Id, index) {
+    onActivityProjectList(id, index) {
+      this.activityProjectIndex = index;
+      this.activityProjectObject = this.activityProjectList[index].id;
+      this.$emit('activityProjectObject', this.activityProjectObject);
+    },
+    onRegionList(id,index){
       this.regionIndex = index;
-      this.region = this.regionList[index].DivisionId;
-      this.$emit('region', this.region);
+      this.regionObject = this.regionList[index].id;
+      this.$emit('regionObject', this.regionObject);
     }
     
   }
 };
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .lable{
   margin-bottom: 10px;
   .lable-title{
@@ -143,15 +134,17 @@ export default {
   .lable-aside{
     margin-left: 90px;
     .lable-self{
-      width: 110px;
-      height: 40px;
-      line-height: 40px;
+      padding:0 10px;
+      width:auto !important;
+      margin-top: 5px;
+      height: 30px;
+      line-height: 30px;
       display: inline-block;
       font-size: 14px;
       text-align: center;
       color: #888888;
       border-radius: 4px;
-      margin-right: 20px;
+      margin-right: 10px;
       &:hover {
         cursor: pointer;
       }
@@ -159,11 +152,12 @@ export default {
   }
 }
 .type-active{
-	width: 110px;
-	height: 40px;
-	line-height: 40px;
+  padding:0 10px;
+  width:auto !important;
+	height: 30px;
+	line-height: 30px;
 	text-align: center;
 	color: #fff !important;
-	background: #2568ED;
+	background: #409EFF !important;
 }
 </style>

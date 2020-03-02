@@ -5,10 +5,7 @@
                 <el-tab-pane label="导入评分" name="importWork">
                     <el-row>
                         <el-col :span="3">
-                           <el-button type="primary" plain>下载评分表</el-button> 
-                        </el-col>
-                        <el-col :span="3">
-                           <el-button type="primary" >导入评分表</el-button> 
+                           <el-button type="primary" size="small">导入评分表</el-button> 
                         </el-col>
                     </el-row>
                     <el-row>

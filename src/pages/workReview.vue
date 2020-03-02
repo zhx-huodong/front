@@ -1,30 +1,33 @@
 <template>
     <div class="work-review-container">
-        <el-card style="min-height:600px;">
+        <el-card style="min-height:600px;"> 
             <el-tabs v-model="workReview">
                 <el-tab-pane label="作品评审" name="workReview">
                     <el-row>
                         <el-col>
-                            <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                                <el-form-item label="活动类别：">
-                                    <el-input v-model="formInline.activityType" placeholder="请输入活动名称"></el-input>
-                                </el-form-item>
-                                
-                                <el-form-item label="">
-                                    <el-input v-model="formInline.activityName" placeholder="输入姓名"></el-input>
-                                </el-form-item>
-                                <el-form-item>
-                                    <el-button type="primary" @click="goToSearch">查找</el-button>
-                                </el-form-item>
-                            </el-form>
+                            <type-select :activityNameList="activityNameList" :activityTypleList="activityTypleList" :activityProjectList="activityProjectList" 
+							@activityNameObject='activityNameObject' @gradeObject='gradeObject' @activityTypleObject='activityTypleObject' @activityProjectObject="activityProjectObject"></type-select>
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="3">
-                            <el-button type="primary" plain>下载作品</el-button>
+                        <el-col :span="2">
+                            <el-button type="primary" plain size="small">下载作品</el-button>
                         </el-col>
                         <el-col :span="3">
-                            <el-button type="primary" plain @click="goToImport">导入评分表</el-button>
+                            <el-button type="primary" plain @click="goToImport" size="small">导入评分表</el-button>
+                        </el-col>
+                        <el-col :span="2">
+                            <el-button type="primary" plain @click="goToDownload" size="small">下载评分表</el-button>
+                        </el-col>
+                        <el-col :span="8" :offset="6">
+                            <el-form :inline="true" :model="formInline" class="demo-form-inline" style="width:900px">
+                                <el-form-item label="作品名称：" >
+                                    <el-input v-model="formInline.activityName" placeholder="输入作品姓名" style="width:350px" size="small"></el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-button type="primary" @click="goToSearch" size="small">查找</el-button>
+                                </el-form-item>
+                            </el-form>
                         </el-col>
                     </el-row>
                     <el-row>
@@ -43,13 +46,31 @@
                             <el-table-column
                             label="序号"
                             type="index"
-                            width="160"
-                            >
+                            width="100">
                             </el-table-column>
+
                             <el-table-column
-                            prop="name"
-                            label="姓名"
-                            >
+                            prop="activityName"
+                            label="活动名称"
+                            show-overflow-tooltip>
+                            </el-table-column>
+
+                            <el-table-column
+                            prop="activityType"
+                            label="活动类型"
+                            show-overflow-tooltip>
+                            </el-table-column>
+
+                            <el-table-column
+                            prop="activityProject"
+                            label="活动项目"
+                            show-overflow-tooltip>
+                            </el-table-column>
+
+                            <el-table-column
+                            prop="workName"
+                            label="作品名称"
+                            show-overflow-tooltip>
                             </el-table-column>
                             
                             <el-table-column
@@ -89,47 +110,76 @@
     </div>
 </template>
 <script>
+import TypeSelect from '../components/TypeSelect';
 export default {
+    components: {TypeSelect},
     data(){
         return{
             workReview:'workReview',
+            activityNameList:[{id:0,name:'全部'},{id:1,name:'深圳中小学数字创作大赛'},{id:2,name:'深圳中小学图文大赛'},{id:3,name:'深圳电脑创作大赛'}],
+            activityTypleList:[{id:0,name:'全部'},{id:1,name:'数字创作'},{id:2,name:'程序设计'},{id:3,name:'电脑绘画'}],
+            activityProjectList:[{id:0,name:'全部'},{id:1,name:'数字创作'},{id:2,name:'程序设计'},{id:3,name:'电脑绘画'},{id:4,name:'手绘插画'}],
             formInline: {
                 activityName: '',
                 activityType:''
             },
             tableData: [{
-                name: '森林精',
+                activityName:'深圳市中小学电脑制作大赛',
+                activityType:'电脑制作类',
+                activityProject:'程序设计项目',
+                workName: '森林精',
                 score: '70',
                 comment:' 思想家，自由主义大师，国学大师，中国近代史学者 ，时事批评家，台湾作家，历史学家，诗人'
                 }, {
+                activityName:'深圳市中小学电脑制作大赛',
+                activityType:'电脑制作类',
+                activityProject:'程序设计项目',
                 score: '80',
-                name: '森林精',
+                workName: '森林精',
                 comment:' 思想家，自由主义大师，国学大师，中国近代史学者 ，时事批评家，台湾作家，历史学家，诗人'
                 }, {
+                activityName:'深圳市中小学电脑制作大赛',
+                activityType:'电脑制作类',
+                activityProject:'程序设计项目',
                 score: '75',
-                name: '森林精',
+                workName: '森林精',
                 comment:' 思想家，自由主义大师，国学大师，中国近代史学者 ，时事批评家，台湾作家，历史学家，诗人'
                 }, {
+                activityName:'深圳市中小学电脑制作大赛',
+                activityType:'电脑制作类',
+                activityProject:'程序设计项目',
                 score: '90',
-                name: '森林精',
+                workName: '森林精',
                 comment:' 思想家，自由主义大师，国学大师，中国近代史学者 ，时事批评家，台湾作家，历史学家，诗人'
                 }, {
+                activityName:'深圳市中小学电脑制作大赛',
+                activityType:'电脑制作类',
+                activityProject:'程序设计项目',
                 score: '85',
-                name: '森林精',
+                workName: '森林精',
                 comment:' 思想家，自由主义大师，国学大师，中国近代史学者 ，时事批评家，台湾作家，历史学家，诗人'
                 }, {
+                activityName:'深圳市中小学电脑制作大赛',
+                activityType:'电脑制作类',
+                activityProject:'程序设计项目',
                 score: '78',
-                name: '森林精',
+                workName: '森林精',
                 comment:' 思想家，自由主义大师，国学大师，中国近代史学者 ，时事批评家，台湾作家，历史学家，诗人'
                 }, {
+                activityName:'深圳市中小学电脑制作大赛',
+                activityType:'电脑制作类',
+                activityProject:'程序设计项目',
                 score: '59',
-                name: '森林精',
+                workName: '森林精',
                 comment:' 思想家，自由主义大师，国学大师，中国近代史学者 ，时事批评家，台湾作家，历史学家，诗人'
                 }
             ],
             multipleSelection: [],
             currentPage:1,//当前页
         }
+    },
+    async created() {
+        
     },
     mounted(){
 
@@ -144,6 +194,10 @@ export default {
             this.$router.push({
                 path:'/importWorkList'
             })
+        },
+        //下载评分表
+        goToDownload(){
+
         },
         //查看
         goToLook(){
@@ -178,7 +232,28 @@ export default {
                     message: '已取消删除'
                 });          
             });
+        },
+        //活动名称
+        async activityNameObject(value) {
+            console.log(value)
+        },
+        //活动类型
+        async activityTypleObject(value) {
+            console.log(value)
+        },
+        //学段
+        async gradeObject(value) {
+            console.log(value)
+        },
+        //活动项目
+        async activityProjectObject(value){
+            console.log(value)
+        },
+        //表格选择
+        async tableSelectionChange(){
+
         }
+			
     }
 }
 </script>
