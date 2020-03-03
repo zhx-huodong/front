@@ -42,6 +42,13 @@
         @click="onRegionList(item.id, index)" :class="{'type-active':regionIndex == index}">{{item.name}}</div>
       </div>
     </div>
+       <div class="lable" v-if="inRegionList.length>0">
+      <div class="lable-title">所在区域:</div>
+      <div class="lable-aside">
+        <div class="lable-self" v-for="(item, index) in inRegionList" :key="index"
+        @click="onInRegionList(item.id, index)" :class="{'type-active':inRegionIndex == index}">{{item.name}}</div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -51,7 +58,9 @@ export default {
     activityNameList: { type: Array,default:[] },
     activityTypleList: { type: Array,default:[] },
     activityProjectList:{type:Array,default:[]},
-    regionList:{ type:Array,default:[]}
+    regionList:{ type:Array,default:[]},
+    inRegionList:{type:Array,default:[]},
+    gradeList:{type:Array,default:[]}
   },
   data() {
     return {
@@ -61,18 +70,16 @@ export default {
       activityTypleIndex: 0,
       activityProjectIndex:0,
       regionIndex:0,
-      gradeList:[
-        { id: 0, name: '全部' },
-        { id: 1, name: '小学组' },
-        { id: 2, name: '初中组' },
-        { id: 3, name: '高中组' }
-      ],
+      inRegionIndex:0,
+    
+      
       activityNameObject:{},//活动名称
       activityTypleObject: {}, // 活动类型
       gradeObject: {}, // 学段
       activityProjectObject:{},//活动项目
       activityObject:{},//活动对象
       regionObject:{},//区域
+      inRegionObject:{},//所在区域
     };
   },
   mounted(){
@@ -108,7 +115,12 @@ export default {
       this.regionIndex = index;
       this.regionObject = this.regionList[index].id;
       this.$emit('regionObject', this.regionObject);
-    }
+    },
+     onInRegionList(id,index){
+      this.inRegionIndex = index;
+      this.inRegionObject = this.inRegionList[index].id;
+      this.$emit('inRegionObject', this.inRegionObject);
+    },
     
   }
 };
