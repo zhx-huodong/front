@@ -29,7 +29,9 @@ const myActivity = require('../pages/myActivity/index');
 const messageCenter = require('../pages/messageCenter/index');
 const workAuditDetail = require('../pages/myActivity/workAuditDetail');
 const Switch = require('../pages/switchPage');
-const home=require('../pages/home');
+
+const home=require('../pages/home');//首页
+const activityIntroduction=require('../pages/homePages/activityIntroduction');//活动介绍
 const activityProject=require('../pages/homePages/activityProject');
 const activityEnroll=require('../pages/homePages/activityEnroll');
 const userEdit=require('../pages/userCenter/userEdit');
@@ -97,6 +99,7 @@ const routes = [
       { path: '/msgcenter',name:"消息中心", components: messageCenter,meta: { title: '消息中心' } }, // 消息中心
 
       { path: '/home', name: "首页", components: home,meta: { title: '首页' }},//首页
+      { path: '/home/activityIntroduction',name:"活动介绍", components: activityIntroduction,meta: { title: '活动介绍' }},//活动介绍
       { path: '/home/activityProject',name:"活动项目", components: activityProject,meta: { title: '活动项目' }},//活动项目
       { path: '/home/activityEnroll',name:"活动报名", components: activityEnroll,meta: { title: '活动报名' }},//活动报名
       { path: '/home/submitEnroll',name:"报名成功", components: submitEnroll,meta: { title: '报名成功' }},//报名成功

@@ -38,9 +38,8 @@ export default {
     methods: {
         // 下一步
         toNext(id){
-            console.log('id==',id)
             this.$router.push({
-                path: '/home/activityProject',
+                path: '/home/activityIntroduction',
                 query: {
                 id: id
                 }
