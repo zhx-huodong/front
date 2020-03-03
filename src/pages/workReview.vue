@@ -5,7 +5,7 @@
                 <el-tab-pane label="作品评审" name="workReview">
                     <el-row>
                         <el-col>
-                            <type-select :activityNameList="activityNameList" :activityTypleList="activityTypleList" :activityProjectList="activityProjectList" 
+                            <type-select :gradeList="gradeList" :activityNameList="activityNameList" :activityTypleList="activityTypleList" :activityProjectList="activityProjectList" 
 							@activityNameObject='activityNameObject' @gradeObject='gradeObject' @activityTypleObject='activityTypleObject' @activityProjectObject="activityProjectObject"></type-select>
                         </el-col>
                     </el-row>
@@ -116,9 +116,31 @@ export default {
     data(){
         return{
             workReview:'workReview',
-            activityNameList:[{id:0,name:'全部'},{id:1,name:'深圳中小学数字创作大赛'},{id:2,name:'深圳中小学图文大赛'},{id:3,name:'深圳电脑创作大赛'}],
-            activityTypleList:[{id:0,name:'全部'},{id:1,name:'数字创作'},{id:2,name:'程序设计'},{id:3,name:'电脑绘画'}],
-            activityProjectList:[{id:0,name:'全部'},{id:1,name:'数字创作'},{id:2,name:'程序设计'},{id:3,name:'电脑绘画'},{id:4,name:'手绘插画'}],
+            activityNameList:[
+                {id:0,name:'全部'},
+                {id:1,name:'深圳中小学数字创作大赛'},
+                {id:2,name:'深圳中小学图文大赛'},
+                {id:3,name:'深圳电脑创作大赛'}
+            ],
+            activityTypleList:[
+                {id:0,name:'全部'},
+                {id:1,name:'数字创作'},
+                {id:2,name:'程序设计'},
+                {id:3,name:'电脑绘画'}
+            ],
+            activityProjectList:[
+                {id:0,name:'全部'},
+                {id:1,name:'数字创作'},
+                {id:2,name:'程序设计'},
+                {id:3,name:'电脑绘画'},
+                {id:4,name:'手绘插画'}
+            ],
+            gradeList:[
+                { id: 0, name: '全部' },
+                { id: 1, name: '小学组' },
+                { id: 2, name: '初中组' },
+                { id: 3, name: '高中组' }
+            ],
             formInline: {
                 activityName: '',
                 activityType:''

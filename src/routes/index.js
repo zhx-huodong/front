@@ -32,6 +32,8 @@ const Switch = require('../pages/switchPage');
 
 const home=require('../pages/home');//首页
 const activityIntroduction=require('../pages/homePages/activityIntroduction');//活动介绍
+const choiceActivity=require('../pages/homePages/choiceActivity');//选择活动
+const seeInformation=require('../pages/homePages/seeInformation');//查看公告
 const activityProject=require('../pages/homePages/activityProject');
 const activityEnroll=require('../pages/homePages/activityEnroll');
 const userEdit=require('../pages/userCenter/userEdit');
@@ -100,6 +102,8 @@ const routes = [
 
       { path: '/home', name: "首页", components: home,meta: { title: '首页' }},//首页
       { path: '/home/activityIntroduction',name:"活动介绍", components: activityIntroduction,meta: { title: '活动介绍' }},//活动介绍
+      { path: '/home/choiceActivity',name:"选择活动", components: choiceActivity,meta: { title: '选择活动' }},//选择活动
+      { path: '/home/seeInformation',name:"查看信息", components: seeInformation,meta: { title: '查看信息' }},//查看信息
       { path: '/home/activityProject',name:"活动项目", components: activityProject,meta: { title: '活动项目' }},//活动项目
       { path: '/home/activityEnroll',name:"活动报名", components: activityEnroll,meta: { title: '活动报名' }},//活动报名
       { path: '/home/submitEnroll',name:"报名成功", components: submitEnroll,meta: { title: '报名成功' }},//报名成功

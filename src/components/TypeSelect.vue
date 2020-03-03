@@ -14,7 +14,7 @@
         @click="onActivityNameList(item.id, index)" :class="{'type-active':activityNameIndex == index}">{{item.name}}</div>
       </div>
     </div>
-    <div class="lable" v-if="gradeList.length>0">
+    <div class="lable" v-if="gradeList.length>0&&otherList.length<=0">
       <div class="lable-title">学段:</div>
       <div class="lable-aside">
         <div class="lable-self" v-for="(item, index) in gradeList" :key="index"
@@ -42,16 +42,26 @@
         @click="onRegionList(item.id, index)" :class="{'type-active':regionIndex == index}">{{item.name}}</div>
       </div>
     </div>
+    <div class="lable" v-if="otherList.length>0">
+      <div class="lable-title" v-if="otherName!=''&&otherName!=undefined">{{otherName}}:</div>
+      <div class="lable-aside">
+        <div class="lable-self" v-for="(item, index) in otherList" :key="index"
+        @click="onOtherList(item.id, index)" :class="{'type-active':otherIndex == index}">{{item.name}}</div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 export default {
   props: {
-    activityObjectList:{ type:Array,default:[]},
-    activityNameList: { type: Array,default:[] },
-    activityTypleList: { type: Array,default:[] },
-    activityProjectList:{type:Array,default:[]},
-    regionList:{ type:Array,default:[]}
+    activityObjectList:{ type:Array,default:function(){return []}},
+    activityNameList: { type: Array,default:function(){return []} },
+    activityTypleList: { type: Array,default:function(){return []} },
+    activityProjectList:{type:Array,default:function(){return []}},
+    regionList:{ type:Array,default:function(){return []}},
+    otherList:{ type:Array,default:function(){return []}},
+    otherName:{ type:String,default:function(){return ''}},
+    gradeList:{ type:Array,default:function(){return []}}
   },
   data() {
     return {
@@ -61,18 +71,14 @@ export default {
       activityTypleIndex: 0,
       activityProjectIndex:0,
       regionIndex:0,
-      gradeList:[
-        { id: 0, name: '全部' },
-        { id: 1, name: '小学组' },
-        { id: 2, name: '初中组' },
-        { id: 3, name: '高中组' }
-      ],
+      otherIndex:0,
       activityNameObject:{},//活动名称
       activityTypleObject: {}, // 活动类型
       gradeObject: {}, // 学段
       activityProjectObject:{},//活动项目
       activityObject:{},//活动对象
       regionObject:{},//区域
+      otherObject:{},//其他
     };
   },
   mounted(){
@@ -108,6 +114,11 @@ export default {
       this.regionIndex = index;
       this.regionObject = this.regionList[index].id;
       this.$emit('regionObject', this.regionObject);
+    },
+    onOtherList(id,index){
+      this.otherIndex = index;
+      this.otherObject = this.otherList[index].id;
+      this.$emit('otherObject', this.otherObject);
     }
     
   }
