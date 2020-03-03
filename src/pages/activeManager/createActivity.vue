@@ -67,7 +67,7 @@
             <div style="font-size: 14px">作品限额设置:</div>
             <el-button
               type="primary"
-              @click="onSubmit"
+              @click="limitSetting()"
               style="margin-left: 95px;float: left;margin-top: -25px;"
               size="small"
             >点击进入设置</el-button>
@@ -78,7 +78,7 @@
               <div class="myTitle">
                 <span>计算机制作</span>
                 <div class="myBtns">
-                  <a href="javascript:void(0);" style="color:#198AF3">编辑</a>
+                  <a href="javascript:void(0);" style="color:#198AF3" @click="edit()">编辑</a>
                   <a href="javascript:void(0);" style="color:#FE5426">删除</a>
                 </div>
               </div>
@@ -103,7 +103,7 @@
                 <el-checkbox v-for="city in list1" :label="city" :key="city">{{city.name}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item><el-form-item label="活动对象 :">
-             <el-checkbox-group v-model="object" @change="handleCheckedCitiesChange" max='1'>
+             <el-checkbox-group v-model="object" @change="handleCheckedCitiesChange2" max='1'>
                <el-checkbox v-for="city in list2" :label="city.id" :key="city.id">{{city.name}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
@@ -157,7 +157,8 @@
       <!-- </el-tab-pane>
       </el-tabs>-->
     </el-card>
-    <!-- <div class="myBox">
+    
+    <div class="myBox" v-show="limitSet">
       <p>根据所选活动范围列出下级区域</p>
       <div class="myList" style="margin:20px;0px">
         <span>地区名称:</span>
@@ -190,9 +191,9 @@
                   </tr>
               </table>
           </div>
-          <el-button class="sure">确定</el-button>
+          <el-button class="sure" @click="limitSetting()">确定</el-button>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 <script>
@@ -206,6 +207,8 @@ export default {
         actLimit:[],
          checkAll: false,
          isIndeterminate: true,
+         checkAll2: false,
+         isIndeterminate2: true,
         list2:[
             {name:"老师",id:1},
             {name:"学生",id:2},
@@ -254,12 +257,26 @@ export default {
         }
       ],
       number:2000,
-      list:[1,1,1,1,1,1,1,1,1,1,1]
+      list:[1,1,1,1,1,1,1,1,1,1,1],
+      limitSet:false,
     };
   },
   computed: {},
   mounted() {},
   methods: {
+      edit(){
+          this.$router.push({
+              path:"/activeManager/createActivity/activeEdit",
+          })
+      },
+      limitSetting(){
+          console.log(this.limitSetting)
+          if(this.limitSet==false){
+              this.limitSet=true;
+          }else{
+               this.limitSet=false;
+          }
+      },
     back() {
       this.$router.go(-1);
     },
@@ -272,6 +289,12 @@ export default {
         this.checkAll = checkedCount === this.list1.length;
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.list1.length;
       },
+    handleCheckedCitiesChange2(value) {
+        let checkedCount = value.length;
+        this.checkAll = checkedCount === this.list2.length;
+        this.isIndeterminate2 = checkedCount > 0 && checkedCount < this.list2.length;
+      },
+    
     
     //提交
 
