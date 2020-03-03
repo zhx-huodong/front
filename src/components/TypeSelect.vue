@@ -42,19 +42,11 @@
         @click="onRegionList(item.id, index)" :class="{'type-active':regionIndex == index}">{{item.name}}</div>
       </div>
     </div>
-<<<<<<< HEAD
     <div class="lable" v-if="otherList.length>0">
       <div class="lable-title" v-if="otherName!=''&&otherName!=undefined">{{otherName}}:</div>
       <div class="lable-aside">
         <div class="lable-self" v-for="(item, index) in otherList" :key="index"
         @click="onOtherList(item.id, index)" :class="{'type-active':otherIndex == index}">{{item.name}}</div>
-=======
-       <div class="lable" v-if="inRegionList.length>0">
-      <div class="lable-title">所在区域:</div>
-      <div class="lable-aside">
-        <div class="lable-self" v-for="(item, index) in inRegionList" :key="index"
-        @click="onInRegionList(item.id, index)" :class="{'type-active':inRegionIndex == index}">{{item.name}}</div>
->>>>>>> 001a23831d9471e542dbc1ca4aac4ae8be1a05f6
       </div>
     </div>
   </div>
@@ -62,7 +54,6 @@
 <script>
 export default {
   props: {
-<<<<<<< HEAD
     activityObjectList:{ type:Array,default:function(){return []}},
     activityNameList: { type: Array,default:function(){return []} },
     activityTypleList: { type: Array,default:function(){return []} },
@@ -71,15 +62,7 @@ export default {
     otherList:{ type:Array,default:function(){return []}},
     otherName:{ type:String,default:function(){return ''}},
     gradeList:{ type:Array,default:function(){return []}}
-=======
-    activityObjectList:{ type:Array,default:[]},
-    activityNameList: { type: Array,default:[] },
-    activityTypleList: { type: Array,default:[] },
-    activityProjectList:{type:Array,default:[]},
-    regionList:{ type:Array,default:[]},
-    inRegionList:{type:Array,default:[]},
-    gradeList:{type:Array,default:[]}
->>>>>>> 001a23831d9471e542dbc1ca4aac4ae8be1a05f6
+ 
   },
   data() {
     return {
@@ -89,24 +72,15 @@ export default {
       activityTypleIndex: 0,
       activityProjectIndex:0,
       regionIndex:0,
-<<<<<<< HEAD
       otherIndex:0,
-=======
-      inRegionIndex:0,
     
-      
->>>>>>> 001a23831d9471e542dbc1ca4aac4ae8be1a05f6
       activityNameObject:{},//活动名称
       activityTypleObject: {}, // 活动类型
       gradeObject: {}, // 学段
       activityProjectObject:{},//活动项目
       activityObject:{},//活动对象
       regionObject:{},//区域
-<<<<<<< HEAD
       otherObject:{},//其他
-=======
-      inRegionObject:{},//所在区域
->>>>>>> 001a23831d9471e542dbc1ca4aac4ae8be1a05f6
     };
   },
   mounted(){
@@ -143,19 +117,11 @@ export default {
       this.regionObject = this.regionList[index].id;
       this.$emit('regionObject', this.regionObject);
     },
-<<<<<<< HEAD
     onOtherList(id,index){
       this.otherIndex = index;
       this.otherObject = this.otherList[index].id;
       this.$emit('otherObject', this.otherObject);
     }
-=======
-     onInRegionList(id,index){
-      this.inRegionIndex = index;
-      this.inRegionObject = this.inRegionList[index].id;
-      this.$emit('inRegionObject', this.inRegionObject);
-    },
->>>>>>> 001a23831d9471e542dbc1ca4aac4ae8be1a05f6
     
   }
 };
