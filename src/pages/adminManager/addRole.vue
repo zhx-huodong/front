@@ -75,6 +75,7 @@
     margin-top:20px;
     
     .add-role-item{
+        margin-left:150px;
         margin-top:60px;
         width:600px;
         height:500px;

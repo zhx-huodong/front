@@ -85,6 +85,66 @@
               </div>
             </div>
           </div>
+           <div class='buttom2' >
+            <div class="left">
+              
+             
+               <span style="color:#AA76FE;line-height:48px;font-size:16px">TOP5</span>
+              <span style="color:#666666;line-height:48px;font-size:16px;margin-left:10px">获奖学校</span>
+               <div style='margin-left:30px'>
+               <el-table :data="tableData2" stripe style="width: 100%" :header-cell-style="{background:'rgba(185,223,255,1)'}">
+                <el-table-column
+                  
+                  type="index"
+                  label="序号"
+                 >
+                </el-table-column>
+                <el-table-column
+                  prop="Name"
+                  label="学校"
+                 >
+                </el-table-column>
+                <el-table-column
+                  prop="addr"
+                  label="所在区">
+                </el-table-column>
+                <el-table-column
+                  prop="peopNum"
+                  label="报名人数">
+                </el-table-column>
+              </el-table>
+              </div>
+            </div> 
+                        <div class="left">
+              
+              <span style="color:#66B9FF;line-height:48px;font-size:16px">TOP5</span>
+              
+              <span style="color:#666666;line-height:48px;font-size:16px;margin-left:10px">获奖学校</span>
+               <div style='margin-left:30px'>
+               <el-table :data="tableData2" stripe style="width: 100%" :header-cell-style="{background:'rgba(185,223,255,1)'}">
+                <el-table-column
+                  
+                  type="index"
+                  label="序号"
+                 >
+                </el-table-column>
+                <el-table-column
+                  prop="Name"
+                  label="学校"
+                 >
+                </el-table-column>
+                <el-table-column
+                  prop="addr"
+                  label="所在区">
+                </el-table-column>
+                <el-table-column
+                  prop="peopNum"
+                  label="报名人数">
+                </el-table-column>
+              </el-table>
+              </div>
+            </div> 
+          </div>
         
         </div>
 </template>
@@ -206,8 +266,34 @@
         line-height:48px;
       }
     }
+    
 
   }
+   .buttom2{
+   
+    margin-bottom:20px;
+    display:flex;
+    justify-content:space-between;
+   
+    
+    .left{
+      width:460px;
+      float:left;
+     
+      span{
+        width:118px;
+        height:15px;
+        font-size:16px;
+        font-family:Adobe Heiti Std;
+        font-weight:normal;
+        // color:rgba(102,185,255,1);
+        line-height:48px;
+      }
+    }
+    
+
+  }
+
 
 
 </style>

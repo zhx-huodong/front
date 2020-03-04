@@ -7,10 +7,13 @@
                         <el-col :span="3">
                             <el-button type="primary" plain>下载模板</el-button>
                         </el-col>
+                    </el-row>
+                    <el-row>
                         <el-col :span="8">
                             <el-button type="primary">导入专家</el-button>
                         </el-col>
                     </el-row>
+                    <p style="margin-bottom:20px;color:#999999">上传文件，导入专家信息</p>
                     <el-row>
                         <el-table
                             ref="multipleTable"

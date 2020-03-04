@@ -55,6 +55,7 @@ const addExpert=require('../pages/adminManager/addExpert.vue'); // 添加专家
 const importExpert=require('../pages/adminManager/importExpert.vue'); // 导入专家
 const addClassify=require('../pages/adminManager/addClassify.vue'); // 添加分类
 const subClassify=require('../pages/adminManager/subClassify.vue'); // 子分类
+const prizeManagement=require('../pages/adminManager/prizeManagement.vue'); // 子分类
 
 
 const workReview=require('../pages/workReview.vue'); // 作品评审
@@ -120,6 +121,8 @@ const routes = [
       { path: '/roleManage',name:"角色管理", components: roleManage,meta: { title: '角色管理' }},//角色管理
       { path: '/expertManage',name:"专家管理", components: expertManage,meta: { title: '角色管理' }},//专家管理
       { path: '/expertAssign',name:"专家分配", components: expertAssign,meta: { title: '专家分配' }},//专家分配
+      { path: '/prizeManagement',name:"专家分配", components: prizeManagement,meta: { title: '奖品管理' }},//奖品管理
+
       { path: '/classifyManage',name:"类型管理", components: classifyManage,meta: { title: '类型管理' }},//类型管理
       { path: '/addRole',name:"添加角色", components: addRole,meta: { title: '添加角色' }},//添加角色
       { path: '/addExpert',name:"添加专家", components: addExpert,meta: { title: '添加专家' }},//添加专家
