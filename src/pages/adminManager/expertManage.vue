@@ -3,11 +3,11 @@
         <el-card style="min-height:600px;">
             <el-tabs v-model="activeName">
                 <el-tab-pane label="专家管理" name="expertManage">
-                    <div class="activity-lable">
+                    <!-- <div class="activity-lable">
                         <type-select v-if="gradeList.length > 0 && regionList.length > 0"
                           :gradeList="gradeList" :regionList="regionList"
                         ></type-select>
-                    </div>
+                    </div> -->
                     <el-row>
                         <el-col :span="3">
                             <el-button type="primary" @click="goToAddExpert">添加专家</el-button>
@@ -16,7 +16,7 @@
                             <el-button type="primary" plain @click="goToImportExpert">导入专家</el-button>
                         </el-col>
                         <el-col :span="6">
-                            <el-button type="danger" plain @click="goToDeleteExpert">删除专家</el-button>
+                            <el-button type="danger" plain @click="goToDeleteExpert">删除</el-button>
                         </el-col>
                         <el-col :span="8">
                             <el-input placeholder="请输入搜索内容" v-model="searchVal"></el-input>
