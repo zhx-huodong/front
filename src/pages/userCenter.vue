@@ -58,29 +58,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="user-certificate">
-        <div class="certificate-title">我获得的证书</div>
-        <div class="certificate-wrap">
-          <div class="certificate-self" v-for="(item, index) in certificateList" :key="index">
-            <div class="certificate-img">
-              <div class="ranking">一等奖</div>
-              <div class="qr"><img src="../public/images/qr-code.svg" alt=""></div>
-              <div class="user-info">
-                <div class="activity-title">青年文采大赛</div>
-                <div class="english-title">Youth Literary Competition</div>
-                <div class="name">向前进</div>
-                <div class="id-cad">身份证号：430626199912096226</div>
-                <div class="school">学校：深圳实验中学</div>
-                <div class="grade">年级：高二</div>
-                <div class="classroom">班级：708班</div>
-                <div class="sponsor">主办方：腾讯智趣</div>
-                <div class="activ-name">活动名称：青年文采大赛</div>
-              </div>
-            </div>
-            <div class="activity-name">{{item.name}}</div>
-          </div>
-        </div>
-      </div> -->
     </div>
     </el-card>
   </div>
@@ -96,8 +73,10 @@
         currentPage: 1, // 初始页
         pageSize: 10,
         total: 0,
-        tableData: [{ActivityName:'创客大赛',Sponsor:'深圳创客园',Status:'ACTIVITY_RUNNING',StartTime:''},
-        {ActivityName:'动画大赛',Sponsor:'深圳',Status:'STAGE_WORK_UPLOAD',StartTime:''}],
+        tableData: [
+          {ActivityName:'创客大赛',Sponsor:'深圳创客园',Status:'ACTIVITY_RUNNING',StartTime:''},
+          {ActivityName:'动画大赛',Sponsor:'深圳',Status:'STAGE_WORK_UPLOAD',StartTime:''}
+        ],
         day: '',
         certificateList: [
           { img: '0', name: '活动名称' },
@@ -201,12 +180,11 @@
         this.abilityOpt = options;
       },
       goToActDetail(item) { // 跳转活动详情页
-        if (item.Status == 'ACTIVITY_WAITING_AUDIT') return;
         this.$router.push({
-          path: '/activity/process',
+          path: '/home/activityDetail',
           query: {
             ActivityId: item.ActivityId,
-            stage:'STAGE_WORK_LOOK_OVER'
+            
           }
         });
       },

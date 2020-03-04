@@ -40,7 +40,8 @@ const activityProject=require('../pages/homePages/activityProject');
 const activityEnroll=require('../pages/homePages/activityEnroll');
 const userEdit=require('../pages/userCenter/userEdit');
 const submitEnroll=require('../pages/homePages/submitEnroll');
-const activityDetail = require('../pages/activityProcess/activityDetail');
+const activityDetail = require('../pages/homePages/activityDetail');
+// const activityDetail = require('../pages/activityProcess/activityDetail');
 const workShow = require('../pages/activityProcess/workShow');
 
 
@@ -111,9 +112,10 @@ const routes = [
       { path: '/home/activityProject',name:"活动项目", components: activityProject,meta: { title: '活动项目' }},//活动项目
       { path: '/home/activityEnroll',name:"活动报名", components: activityEnroll,meta: { title: '活动报名' }},//活动报名
       { path: '/home/submitEnroll',name:"报名成功", components: submitEnroll,meta: { title: '报名成功' }},//报名成功
+      { path: '/home/activityDetail',name:"活动详情", components: activityDetail,meta: { title: '活动详情' }},//活动详情
       { path: '/userCenter/userEdit',name:"个人中心编辑", components: userEdit,meta: { title: '个人中心编辑' }},//个人中心编辑
 
-      { path: '/activityDetail',name:"查看活动详情", components: activityDetail,meta: { title: '查看活动详情' }},//查看活动详情
+      // { path: '/activityDetail',name:"查看活动详情", components: activityDetail,meta: { title: '查看活动详情' }},//查看活动详情
       { path: '/workShow',name:"活动详情展示", components: workShow,meta: { title: '活动详情展示' }},//活动详情展示
 
 

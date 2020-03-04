@@ -91,27 +91,53 @@
         </el-form-item>
         <el-form-item label="作者：">
           <el-row>
-            <el-col :span="8">
-              <el-input v-model="form.name" placeholder="请添加作者" size="small"></el-input>
-            </el-col>
-            <el-col :span="2">
-              <el-button type="primary" size="small" plain>添加</el-button>
-            </el-col>
-            <el-col :span="2">
-              <p>限制2人</p>
+            <el-col :span="16">
+             <el-tag
+                :key="tag"
+                v-for="tag in authorTags"
+                closable
+                :disable-transitions="false"
+                @close="authorClose(tag)">
+                {{tag}}
+              </el-tag>
+              <el-input
+                class="input-new-tag"
+                v-if="authorInputVisible"
+                v-model="authorInputValue"
+                ref="authorSaveTagInput"
+                size="small"
+                @keyup.enter.native="authorInputConfirm"
+                @blur="authorInputConfirm"
+              >
+              </el-input>
+              <el-button v-else class="button-new-tag" size="small" @click="showAuthorInput" type="primary">添加作者</el-button>
+              <el-tag type="info">限制2人</el-tag>
             </el-col>
           </el-row>
         </el-form-item>
         <el-form-item label="指导老师：">
           <el-row>
-            <el-col :span="8">
-              <el-input v-model="form.name" placeholder="请输入指导老师" size="small"></el-input>
-            </el-col>
-            <el-col :span="2">
-              <el-button type="primary" size="small" plain>添加</el-button>
-            </el-col>
-            <el-col :span="2">
-              <p>限制2人</p>
+            <el-col :span="16">
+             <el-tag
+                :key="tag"
+                v-for="tag in teacherTags"
+                closable
+                :disable-transitions="false"
+                @close="teacherClose(tag)">
+                {{tag}}
+              </el-tag>
+              <el-input
+                class="input-new-tag"
+                v-if="teacherInputVisible"
+                v-model="teacherInputValue"
+                ref="teacherSaveTagInput"
+                size="small"
+                @keyup.enter.native="teacherInputConfirm"
+                @blur="teacherInputConfirm"
+              >
+              </el-input>
+              <el-button v-else class="button-new-tag" type="primary" size="small" @click="showTeacherInput" >添加指导老师</el-button>
+              <el-tag type="info">限制2人</el-tag>
             </el-col>
           </el-row>
         </el-form-item>
@@ -141,7 +167,13 @@ export default {
             activityProject:'电脑绘画',
             name: '',
             desc: ''
-          }
+          },
+          authorTags: ['陆同学', '刘同学'],
+          authorInputVisible: false,
+          authorInputValue: '',
+          teacherTags: ['吴老师', '陈老师'],
+          teacherInputVisible: false,
+          teacherInputValue: '',
         }
     },
     methods:{
@@ -151,22 +183,22 @@ export default {
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
-      beforeAvatarUpload(file){
-           var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-            const extension =
-              testmsg === "jpg" ||
-              testmsg === "JPG" ||
-              testmsg === "png" ||
-              testmsg === "PNG" ||
-              testmsg === "bpm" ||
-              testmsg === "BPM";
-      if (!extension) {
-        this.$message({
-          message: "上传图片只能是jpg / png / bpm格式!",
-          type: "error"
-        });
-        return false; //必须加上return false; 才能阻止
-      }
+    beforeAvatarUpload(file){
+      var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
+      const extension =
+        testmsg === "jpg" ||
+        testmsg === "JPG" ||
+        testmsg === "png" ||
+        testmsg === "PNG" ||
+        testmsg === "bpm" ||
+        testmsg === "BPM";
+        if (!extension) {
+          this.$message({
+            message: "上传图片只能是jpg / png / bpm格式!",
+            type: "error"
+          });
+          return false; //必须加上return false; 才能阻止
+        }
       },
       submitEnroll(){
         this.$router.push({
@@ -184,6 +216,46 @@ export default {
       },
       editorChange(){
 
+      },
+      //作者
+      authorClose(tag) {
+        this.authorTags.splice(this.authorTags.indexOf(tag), 1);
+      },
+
+      showAuthorInput() {
+        this.authorInputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.authorSaveTagInput.$refs.input.focus();
+        });
+      },
+
+      authorInputConfirm() {
+        let authorInputValue = this.authorInputValue;
+        if (authorInputValue) {
+          this.authorTags.push(authorInputValue);
+        }
+        this.authorInputVisible = false;
+        this.authorInputValue = '';
+      },
+      //作者
+      teacherClose(tag) {
+        this.teacherTags.splice(this.teacherTags.indexOf(tag), 1);
+      },
+
+      showTeacherInput() {
+        this.teacherInputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.teacherSaveTagInput.$refs.input.focus();
+        });
+      },
+
+      teacherInputConfirm() {
+        let teacherInputValue = this.teacherInputValue;
+        if (teacherInputValue) {
+          this.teacherTags.push(teacherInputValue);
+        }
+        this.teacherInputVisible = false;
+        this.teacherInputValue = '';
       }
     }
 }

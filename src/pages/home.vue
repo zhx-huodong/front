@@ -3,12 +3,7 @@
         <el-card style="min-height:650px;">
             <div class="home-wrap">
                 <div>
-<<<<<<< HEAD
                     <type-select :gradeList="gradeList" :activityObjectList="activityObjectList" :regionList="regionList" @gradeObject='gradeObject' @regionObject="regionObject"></type-select>
-=======
-                    <type-select :activityObjectList="activityObjectList" :regionList="regionList" :gradeList='gradeList2' @regionObject="regionObject"></type-select>
-
->>>>>>> 9274e9ae1dd07b12248a699df7277f2d349a9658
                 </div>
                 <!-- <div class="home-header"></div> -->
                 <div class="home-activity-list" v-if="activityList">
@@ -34,15 +29,31 @@ export default {
     data() {
         return {
             // videoSrc:'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4',
-            gradeList2:[
-                    { id: 0, name: '全部' },
-                    { id: 1, name: '小学组' },
-                    { id: 2, name: '初中组' },
-                    { id: 3, name: '高中组' }
+           
+            activityObjectList:[
+                {id:0,name:'全部'},
+                {id:1,name:'老师'},
+                {id:2,name:'学生'}
             ],
-            activityObjectList:[{id:0,name:'全部'},{id:1,name:'老师'},{id:2,name:'学生'}],
-            regionList:[{id:0,name:'全部'},{id:1,name:'罗湖区'},{id:2,name:'宝安区'},{id:3,name:'南山区'},{id:4,name:'福田区'},{id:5,name:'盐田区'},{id:6,name:'龙华区'},{id:7,name:'光明区'},{id:8,name:'大鹏新区'}],
-            activityList: [{ id: 1, name: '深圳市中小学电脑制作大赛', imgUrl: require('../public/images/ac1.png') }, { id: 2, name: '深圳市中小学电脑机器人活动', imgUrl: require('../public/images/ac2.png') }, { id: 3, name: '深圳市中小学网络夏令营', imgUrl: require('../public/images/ac3.png') }, { id: 4, name: '深圳市中小学微课大赛', imgUrl: require('../public/images/ac4.png') }, { id: 5, name: '深圳市中小学说课大赛', imgUrl: require('../public/images/ac5.png') }, { id: 6, name: '深圳市AI知识大赛', imgUrl: require('../public/images/ac6.png') }], // 活动列表
+            regionList:[
+                {id:0,name:'全部'},
+                {id:1,name:'罗湖区'},
+                {id:2,name:'宝安区'},
+                {id:3,name:'南山区'},
+                {id:4,name:'福田区'},
+                {id:5,name:'盐田区'},
+                {id:6,name:'龙华区'},
+                {id:7,name:'光明区'},
+                {id:8,name:'大鹏新区'}
+            ],
+            activityList: [
+                { id: 1, name: '深圳市中小学电脑制作大赛', imgUrl: require('../public/images/ac1.png') }, 
+                { id: 2, name: '深圳市中小学电脑机器人活动', imgUrl: require('../public/images/ac2.png') }, 
+                { id: 3, name: '深圳市中小学网络夏令营', imgUrl: require('../public/images/ac3.png') }, 
+                { id: 4, name: '深圳市中小学微课大赛', imgUrl: require('../public/images/ac4.png') }, 
+                { id: 5, name: '深圳市中小学说课大赛', imgUrl: require('../public/images/ac5.png') }, 
+                { id: 6, name: '深圳市AI知识大赛', imgUrl: require('../public/images/ac6.png') }
+            ], // 活动列表
             gradeList:[
                 { id: 0, name: '全部' },
                 { id: 1, name: '小学组' },
