@@ -3,11 +3,8 @@
         <el-card style="min-height:650px;">
             <div class="home-wrap">
                 <div>
-<<<<<<< HEAD
-                    <type-select :gradeList="gradeList" :activityObjectList="activityObjectList" :regionList="regionList" @gradeObject='gradeObject' @regionObject="regionObject"></type-select>
-=======
                     <type-select :activityObjectList="activityObjectList" :regionList="regionList" :gradeList='gradeList2' @regionObject="regionObject"></type-select>
->>>>>>> 001a23831d9471e542dbc1ca4aac4ae8be1a05f6
+
                 </div>
                 <!-- <div class="home-header"></div> -->
                 <div class="home-activity-list" v-if="activityList">

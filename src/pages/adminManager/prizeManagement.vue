@@ -171,12 +171,8 @@
         }
     };
 </script>
-<style lang="less" >
-.el-input__inner{
-    width: 50%;
-    margin-left:150px;
-    margin-top:30px;
-}
+<style lang="less" scope >
+
 .import-expert-container{
     width:1180px;
     margin:auto;
