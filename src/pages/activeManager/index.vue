@@ -10,25 +10,25 @@
                                 
                                         <el-form-item label="报名时间：">
                                            
-                                                <el-date-picker format="yyyy-MM-dd" v-model="form.time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">   
+                                                <el-date-picker format="yyyy-MM-dd" v-model="form.time" size="small" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">   
                                                 </el-date-picker>
                                             
                                         </el-form-item>
                                           
                                         <el-form-item label="活动名称：">
                                             
-                                            <el-input v-model="form.acitvename" placeholder="请输入活动名称"> </el-input>
+                                            <el-input v-model="form.acitvename" placeholder="请输入活动名称" size="small"> </el-input>
                                             
                                         </el-form-item>
                                    
                                         <el-form-item >
-                                            <el-button  type="primary" @click="onSubmit()">查询</el-button>
+                                            <el-button  type="primary" @click="onSubmit()" size="small">查询</el-button>
                                         </el-form-item>
                                
                             </el-form>
                       
                         
-                        <div v-for='item in list' >
+                        <div v-for='(item,index) in list' :key="index">
                             <div class="count" >
                                 <div>
                                     <div class='imglogo'>
@@ -118,7 +118,7 @@ export default {
       },
       fabuActive(){
           this.$router.push({
-              path:"/activeManager/publicActive",
+              path:"/activeManager/createActivity",
           })
           
       },

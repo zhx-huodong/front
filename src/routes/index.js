@@ -87,7 +87,7 @@ const routes = [
 
      
 
-      { path: '/activeManager/publicActive',name:"发布活动设置", components: publicActive,meta: { title: '发布活动设置' } }, // 发布活动设置
+      // { path: '/activeManager/publicActive',name:"发布活动设置", components: publicActive,meta: { title: '发布活动设置' } }, // 发布活动设置
       { path: '/activeManager',name:"活动管理", components: activeManager,meta: { title: '活动管理' } }, // 活动管理
       { path: '/activeManager/createActivity',name:"创建活动", components: createActivity,meta: { title: '创建活动' } }, // 创建活动
       { path: '/activeManager/managerCenter',name:"活动管理中心", components: managerCenter,meta: { title: '活动管理中心' } }, // 活动管理中心

@@ -3,7 +3,7 @@
     <el-card style="min-height:650px">
   
       <el-page-header @back="back()" content="项目编辑"></el-page-header>
-      <hr />
+      <el-divider></el-divider>
 
       <div class="create-activity-body">
         <el-form ref="form" :model="form" label-width="100px">
@@ -41,7 +41,7 @@
           </el-form-item>
 
          <el-form-item label="作品上传格式:">
-                <el-select v-model="value" filterable placeholder="请选择">
+                <el-select v-model="value" filterable placeholder="请选择" size="small">
                     <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -49,7 +49,7 @@
                     :value="item.value">
                     </el-option>
                 </el-select>
-                <el-select v-model="value" filterable placeholder="请选择">
+                <el-select v-model="value" filterable placeholder="请选择" size="small">
                     <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -58,7 +58,7 @@
                     </el-option>
                 </el-select>
                 <span>大小限制：</span>
-                <el-select v-model="value" filterable placeholder="请选择">
+                <el-select v-model="value" filterable placeholder="请选择" size="small">
                     <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -72,8 +72,8 @@
          
           <el-form-item>
            
-            <el-button type="primary"  @click="back()">确定</el-button>
-            <el-button @click="back()">取消</el-button>
+            <el-button type="primary"  @click="back()" size="small">确定</el-button>
+            <el-button @click="back()" size="small">取消</el-button>
           </el-form-item>
         </el-form>
       </div>

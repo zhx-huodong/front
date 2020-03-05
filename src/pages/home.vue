@@ -29,7 +29,6 @@ export default {
     data() {
         return {
             // videoSrc:'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4',
-           
             activityObjectList:[
                 {id:0,name:'全部'},
                 {id:1,name:'老师'},
