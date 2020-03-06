@@ -1,3 +1,4 @@
+
 <template>
     <div class="user-edit-center">
         <el-card>
@@ -13,10 +14,17 @@
                                 <img src="../../public/images/ac1.png"></img>
                                 <div class="upload-icon">
                                     <el-upload
-                                        class="upload-demo"
-                                        action="https://jsonplaceholder.typicode.com/posts/"
+                                        :before-upload="beforeupload"
+                                        :on-success="upsuccess"
+                                        :on-preview="handlePreview"
+                                        :on-remove="handleRemove"
+                                        :headers="headers"
+                                        :action="action"
+                                        :name="filename"
+                                       
                                         :limit="1"
                                         list-type="picture">
+                                        <!-- {'x-api-key':headerkey} -->
                                         <el-button size="small" type="primary">上传头像</el-button>
                                     </el-upload>
                                 </div>
@@ -72,14 +80,23 @@
     </div>
 </template>
 <script>
+// import axios from 'axios';
+import api from '../../service/api';
 import UploadFile from '../../components/UploadFile';
+import { setCookie, getCookie } from '../../tools/tools';
 export default {
     components: { UploadFile },
     data(){
         return{
+            filename:"upFile",
+            datas:{},
+            headers:{
+                'x-api-key':JSON.parse(localStorage.getItem("user")).token,
+            },
+            action:api.uploadPic,
             form: {
                 userIcon:'',
-                userName: '陆同学',
+                userName: '',
                 unitName: '清湖小学',
                 areaName: '龙华区',
                 className: '一年级（1）班',
@@ -87,10 +104,44 @@ export default {
             },
             identityTags: ['老师', '家长', '学生'],
             identityVisible: false,
-            identityValue: ''
+            identityValue: '',
+            
+        }
+    },
+    created(){
+        console.log(localStorage.user!="")
+        if(localStorage.user!=""){
+            this.form.userName=JSON.parse(localStorage.getItem("user")).name;
         }
     },
     methods: {
+        beforeupload(file){
+            // this.datas={upFile:file.name} 
+            console.log(file.name)
+            console.log(file)
+        },
+        upsuccess(response, file, fileList) {
+            console.log(file)
+            
+        },
+        handleRemove(file, fileList) {
+            console.log(file, fileList);
+        },
+        handlePreview(file) {
+            console.log(file);
+        },
+        //图片上传
+     async uplaod(fileurl){
+             console.log(1)
+             let params = {
+                url:api.uploadPic,
+                upFile:fileurl,
+            };
+        let res = await this.axiosPostPIC(params).catch(err => err);
+        console.log(res)
+       },
+       
+     
         handleClose(tag) {
         this.identityTags.splice(this.identityTags.indexOf(tag), 1);
       },

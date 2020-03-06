@@ -88,7 +88,7 @@ export function removeClass(dom, className) {
   dom.className = newClassName.join(' ');
 }
 
-function axiosGetParam(param) {
+ function axiosGetParam(param) {
   let url = param.url;
   let options = param;
   delete options.url;
@@ -101,6 +101,7 @@ function axiosGetParam(param) {
     headers: headers
   };
 }
+
 
 export function axiosGet(param, isExpire = true, headers_) {
   let options = axiosGetParam(param);
@@ -144,6 +145,32 @@ export function axiosPost(param, isExpire = true, headers_) {
   let options = axiosPostParam(param);
   let headers = Object.assign(options.headers, headers_);
   delete options.headers;
+  store.dispatch('INIT_SHOW', false);
+  return new Promise((resolve, reject) => {
+    axios.post(options.url, options.param, {
+      headers: headers
+    }).then(res => {
+      let data = res.data;
+      resolve(data);
+    }).catch(err => {
+      let resp = err.response;
+      if (resp &&
+        (resp.statusText == 'Unauthorized' || resp.data.ErrorCode == 'UserNotLogin' ||
+          resp.data.ErrorCode == 'User.SessionError') && isExpire) {
+        expire();
+        reject(resp.data || err);
+      } else {
+        reject(resp.data || err);
+      }
+    });
+  });
+}
+
+export function axiosPostPIC(param, isExpire = true, ) {
+  let options = axiosPostParam(param);
+  let headers = {
+    'x-api-key':JSON.parse(localStorage.getItem("user")).token,
+  }
   store.dispatch('INIT_SHOW', false);
   return new Promise((resolve, reject) => {
     axios.post(options.url, options.param, {

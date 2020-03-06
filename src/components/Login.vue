@@ -36,6 +36,7 @@
                     <el-col >
                         <el-button type="primary" style="width:100%" :disabled="login" @click="goToLogin">登录</el-button>
                     </el-col>
+                    <el-button type="primary" style="width:100%"  @click="goToLogintest">登录test</el-button>
                 </el-row>
                 <p>请使用电话号码获取验证码登录</p>
             </div>
@@ -90,6 +91,7 @@
             //获取验证码
             async goToGetCode(){
                 let params={}
+               
                 params.url=api.captcha
                 params.account=this.phoneNum
                 let res = await this.axiosGet(params).catch(err => err);
@@ -116,6 +118,30 @@
                         clearInterval(this.timer); 
                     }
                 },1000);
+            },
+            //登录测试
+            async goToLogintest(){
+                let params={}
+                params.url=api.testLogin
+                params.mobile=this.phoneNum
+                let res = await this.axiosGet(params).catch(err => err);
+                console.log(res,"testlogin")
+                this.$store.dispatch('INIT_USER', res);
+                    this.$store.dispatch('INIT_SHOW', false);
+                    setCookie('Authorization', res.token);
+                    let userInfo=JSON.stringify(res)
+                    localStorage.setItem('user',userInfo);
+                    const loading = this.$loading({
+                    lock: true,
+                    text: '登录中。。',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                    });
+                    setTimeout(() => {
+                        loading.close();
+                        this.show=false
+                    }, 2000);
+
             },
             //登录
             async goToLogin(){
