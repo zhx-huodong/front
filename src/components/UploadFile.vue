@@ -1,28 +1,30 @@
 <template>
   <div>
     <el-upload
-      class="upload-demo"
-      action="https://jsonplaceholder.typicode.com/posts/"
-      :on-preview="handlePreview"
-      :on-remove="handleRemove"
-      :before-remove="beforeRemove"
-      :on-success="handleSuccess"
-      multiple
-      :limit="10"
-      :on-exceed="handleExceed"
-      :file-list="fileList">
-      <el-button size="small" type="primary">点击上传</el-button>
-    </el-upload>
+    :before-upload="beforeupload"
+    :on-success="upsuccess"
+    :on-preview="handlePreview"
+    :on-remove="handleRemove"
+    :headers="headers"
+    :action="action"
+    :name="filename"
+    
+    :limit="1"
+    list-type="picture">
+   
+    <el-button size="small" type="primary">上传头像</el-button>
+</el-upload>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      fileList: [
-        // { name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' },
-        // { name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' }
-      ]
+       filename:"upFile",
+        headers:{
+                'x-api-key':JSON.parse(localStorage.getItem("user")).token,
+            },
+        action:api.uploadPic,
     };
   },
   methods: {
