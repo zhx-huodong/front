@@ -11,10 +11,20 @@
         </div>
       </div>
       <div class="header-user">
-        <div class="message" @click="goToMessage">
+        <!-- <div class="message" @click="goToMessage">
           <img src="../public/images/message.svg" v-if="messageList.length == 0">
           <img src="../public/images/message2.svg" v-else>
-        </div>
+        </div> -->
+        <template >
+          <span class="name" @click="roleClick"></span>
+          <el-dropdown @command="roleClick">
+            <span class="name">角色切换</span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="wx">超级管理员</el-dropdown-item>
+              <el-dropdown-item command="phone">市管理员</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </template>
         <div class="divider">|</div>
         <template v-if="user">
           <div class="name">{{user.name || '未知用户'}}</div>
@@ -23,13 +33,6 @@
         </template>
         <template v-else>
           <span class="name" @click="loginClick">未登录</span>
-          <!-- <el-dropdown @command="loginClick">
-            <span class="name">未登录</span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="wx" v-if="!isPro">微信扫码登录</el-dropdown-item>
-              <el-dropdown-item command="phone">短信验证码登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown> -->
         </template>
       </div>
       <w-x-login ref="wxLogin"></w-x-login>
@@ -87,9 +90,9 @@
           // { key: 'excellence', name: '优秀作品展', hide: false },
           { key: 'expertReview', name: '专家评审', hide: true },
           { key:'activeManager',name:'活动管理',hide:false},
-          { key: 'userCenter', name: '个人中心', hide: false },
           { key: 'workReview', name: '专家评审', hide: false },
-          { key:'newsBulletin',name:'消息公告',hide:false},   
+          { key: 'userCenter', name: '个人中心', hide: false },
+          // { key:'newsBulletin',name:'消息公告',hide:false},   
         ],
         adminTabs: [
           // { key: 'auditActivity', name: '审核中心', hide: false },

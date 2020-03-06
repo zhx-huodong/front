@@ -145,6 +145,7 @@
                     setTimeout(() => {
                         loading.close();
                         this.show=false
+                        this.getRole()
                     }, 2000);
                     
                 }
@@ -169,6 +170,13 @@
             onClose() {
                 this.$store.dispatch('INIT_SHOW', false);
             },
+            //获取角色
+            async getRole(){
+                let params={}
+                params.url=api.role
+                let res = await this.axiosGet(params).catch(err => err);
+                console.log("res==",res)
+            }
             
         }
   };
