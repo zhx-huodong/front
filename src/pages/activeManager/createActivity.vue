@@ -1,25 +1,38 @@
 <template>
   <div class="create-activity-container">
     <el-card style="min-height:650px">
-      <el-page-header @back="back()" content="发布活动"></el-page-header>
-      <el-divider></el-divider>
+      <!-- <div>
+                <el-button style="margin-bottom:10px;" size="mini" @click="back()"> <返回</el-button>
+             
+                <p style="text-align: center;" >发布活动</p>
+                <hr>
+      </div>-->
+      <el-page-header @back="back()" title="发布活动"></el-page-header>
+      <hr />
 
+      <!-- <el-tabs v-model="activeName" >
+      <el-tab-pane label="创建活动" name="first">-->
       <div class="create-activity-body">
-        <el-form ref="form" :model="form" label-width="80px">
-          <el-form-item label="活动对象:">
+        <el-form ref="form" :model="form.title" label-width="80px">
+          <el-form-item label="活动名称:">
             <el-col :span="9">
-              <el-input placeholder="请输入" v-model="form.date2" size="small"></el-input>
+              <el-input placeholder="请输入" v-model="form.title" size="small"></el-input>
             </el-col>
           </el-form-item>
 
-          <el-form-item label="活动图片:">
+          <el-form-item label="活动图:">
             <div>
               <template>
                 <el-upload
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  list-type="picture-card"
-                  :on-preview="handlePictureCardPreview"
+                  :before-upload="beforeupload"
+                  :on-success="upsuccess"
+                  :on-preview="handlePreview"
                   :on-remove="handleRemove"
+                  :headers="headers"
+                  :action="action"
+                  :name="filename"
+                  list-type="picture-card"
+                  :file-list="form.attachment"
                 >
                   <i class="el-icon-plus"></i>
                   <span
@@ -32,10 +45,15 @@
           <el-form-item label="banner图:">
             <template>
               <el-upload
-                action="https://jsonplaceholder.typicode.com/posts/"
-                list-type="picture-card"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove"
+              :before-upload="beforeupload"
+              :on-success="upsuccess"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :headers="headers"
+              :action="action"
+              :name="filename" 
+              :file-list="form.banner" 
+              list-type="picture-card"
               >
                 <i class="el-icon-plus"></i>
                 <span
@@ -45,38 +63,42 @@
               </el-upload>
             </template>
           </el-form-item>
+
           <div class="my-editer">
             <P>活动介绍 ：</P>
             <my-editor @editorChange="editorChange"></my-editor>
           </div>
-          <el-form-item label="">
-            <el-row>
-              <el-col :span="3">
-                <el-button type="primary" size="small">上传活动指南</el-button>
-              </el-col>
-              <el-col :span="8">
-              <p>支持excle、word、pdf 三种格式</p>
-              </el-col>
-            </el-row>
-          </el-form-item>
-          <el-form-item label="作品设置:">
-            <el-button type="primary" @click="limitSetting()" size="small">点击进入设置</el-button>
-          </el-form-item>
+
+          <div class="upload-file">
+            <div class="annex">上传活动指南</div>
+            <p>支持excle、word、pdf 三种格式</p>
+          </div>
+          <!-- 暂时不做 -->
+          <!-- <div style="clear:both;margin-top:20px;margin-bottom:20px;">
+            <div style="font-size: 14px">作品限额设置:</div>
+            <el-button
+              type="primary"
+              @click="limitSetting()"
+              style="margin-left: 95px;float: left;margin-top: -25px;"
+              size="small"
+            >点击进入设置</el-button>
+          </div> -->
           <el-form-item label="活动类型 :">
-            <span class="mybtn">+添加类别</span>
-            <div class="myOut">
-              <div class="myTitle">
-                <span>计算机制作</span>
+            <span class="mybtn" @click="addclassFlag=true" >+添加类别</span>
+            <div class="myOut" v-for="(item,index) in classList" >
+              <div class="myTitle" >
+                <span>{{item.classname}}</span>
                 <div class="myBtns">
                   <a href="javascript:void(0);" style="color:#198AF3" @click="edit()">编辑</a>
                   <a href="javascript:void(0);" style="color:#FE5426">删除</a>
                 </div>
               </div>
+              <div >
 
               <div class="content">
                 <span>电脑绘制</span>
                 <div class="myBtns">
-                  <a href="javascript:void(0);" style="color:#198AF3" @click="goToEdit()">编辑</a>
+                  <a href="javascript:void(0);" style="color:#198AF3">编辑</a>
                   <a href="javascript:void(0);" style="color:#FE5426">删除</a>
                 </div>
               </div>
@@ -84,17 +106,18 @@
                 <span>+</span>添加题目
               </p>
             </div>
+              </div>
           </el-form-item>
 
             <el-form-item label="活动范围 :">
             <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
            
             <el-checkbox-group v-model="actLimit" @change="handleCheckedCitiesChange">
-                <el-checkbox v-for="(item,index) in list1" :label="item.name" :key="index">{{item.name}}</el-checkbox>
+                <el-checkbox v-for="city in list1" :label="city" :key="city.id">{{city.name}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item><el-form-item label="活动对象 :">
-             <el-checkbox-group v-model="object" @change="handleCheckedCitiesChange2" >
-               <el-checkbox v-for="(item,index) in list2" :label="item.id" :key="index">{{item.name}}</el-checkbox>
+             <el-checkbox-group v-model="form.target" @change="handleCheckedCitiesChange2" >
+               <el-checkbox v-for="city in list2" :label="city.id" :key="city.id">{{city.name}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
 
@@ -106,7 +129,6 @@
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              size="small"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="区域推荐 :">
@@ -116,7 +138,6 @@
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              size="small"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="市级评审 :">
@@ -126,7 +147,6 @@
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              size="small"
             ></el-date-picker>
           </el-form-item>
 
@@ -137,35 +157,51 @@
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              size="small"
             ></el-date-picker>
           </el-form-item>
          
           <el-form-item>
-            <el-button type="primary" @click="onSubmit" size="small">保存并发布</el-button>
-            <el-button size="small">保存草稿</el-button>
-            <el-button size="small">取消</el-button>
+            <el-button type="primary" @click="onSubmit">保存并发布</el-button>
+            <el-button>保存草稿</el-button>
+            <el-button>取消</el-button>
           </el-form-item>
         </el-form>
       </div>
+      <!-- </el-tab-pane>
+      </el-tabs>-->
     </el-card>
+    <el-dialog
+      :center="true"
+      title="添加类别"
+      :visible.sync="addclassFlag"
+      width="30%"
+     >
+      <div style=":display: inline-block;">
+           <span>类别名称：</span>
+           <el-input v-model="cname" placeholder="请输出"></el-input>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addclassFlag = false">取 消</el-button>
+        <el-button type="primary" @click="addclassFlag = false,addclassL() ">确 定</el-button>
+      </span>
+    </el-dialog>
     
-    <div class="myBox" v-show="limitSet">
+    <!-- <div class="myBox" v-show="limitSet">
       <p>根据所选活动范围列出下级区域</p>
       <div class="myList" style="margin:20px;0px">
-        <span>地区名称：</span>
-        <el-select v-model="value" placeholder="请选择"  size="small">
+        <span>地区名称:</span>
+        <el-select v-model="RegionIndex" placeholder="请选择" style="width:150px;" id="mySelect"  @change="selectRegion(RegionIndex)" >
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="(item,index) in options"
+            :key="item.id"
+            :label="item.name"
+            :value="index"
           ></el-option>
         </el-select>
       </div>
       <div class="myList" style="margin:20px;0px">
-        <span>作品限额：</span>
-        <el-input v-model="number" style="width:215px" size="small"></el-input>
+        <span>作品限额:</span>
+        <el-input v-model="number" style="width:150px" id="myInput" @input="LimitSet(number)"></el-input>
       </div>
       <div class="mtBoxList">
           <el-button size="mini">设置</el-button>
@@ -177,271 +213,166 @@
                       <td>市/区</td>
                       <td>作品限额</td>
                   </tr>
-                  <tr style="height:40px" v-for="(item,index) in list" :key="index">
-                      <td>深圳</td>
-                      <td>200</td>
+                  <tr style="height:40px" v-for="(item,index) in options" :key="index">
+                      <td>{{item.name}}</td>
+                      <td>{{item.val}}</td>
                   </tr>
               </table>
           </div>
-          <el-button class="sure" @click="limitSetting()" size="small">确定</el-button>
+          <el-button class="sure" @click="limitSetting()">确定</el-button>
       </div>
-    </div>
-
-    <el-dialog
-      title="项目编辑"
-      :visible.sync="editDialogVisible"
-      width="900px"
-      center>
-      <div class="create-activity-body">
-        <el-form ref="form" :model="editForm" label-width="100px">
-          <el-form-item label="项目名称:">
-            <el-col :span="9">
-              <el-input placeholder="请输入项目名称" v-model="editForm.activityName" size="small"></el-input>
-            </el-col>
-          </el-form-item>
-          
-          <el-form-item label="项目图片:">
-            <div>
-              <template>
-                <el-upload
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  list-type="picture-card"
-                  :on-preview="handlePictureCardPreview"
-                  :on-remove="handleRemove"
-                >
-                  <i class="el-icon-plus"></i>
-                  <span
-                    style="font-size: 14px;position: absolute;top: 26%;left: 25%;color:#ccc"
-                  >添加活动项目展示图片</span>
-                </el-upload>
-              </template>
-            </div>
-          </el-form-item>
-
-          <el-form-item label="项目介绍:">
-            <el-col :span="22">
-              <el-input placeholder="请输入项目介绍" type="textarea" :rows="6"></el-input>
-            </el-col>
-          </el-form-item>
-          <!-- <div class="my-editer">
-            <P>项目介绍 ：</P>
-            <my-editor @editorChange="editorChangeTwo" v-if="editDialogVisible"></my-editor>
-          </div> -->
-
-          <el-form-item label="学生人数上限:" >
-            <el-input-number v-model="editForm.stuLimit" controls-position="right" @change="handleChange" :min="1" :max="20"></el-input-number>
-          </el-form-item>
-
-          <el-form-item label="指导老师上限:">
-            <el-input-number v-model="editForm.teacherLimit" controls-position="right" @change="handleChange" :min="1" :max="20"></el-input-number>
-          </el-form-item>
-
-          <el-form-item label="学段设置:">
-            <el-checkbox-group v-model="gradeList" @change="editCheckedChange">
-                <el-checkbox v-for="(item,index) in gradeList" :label="item.label" :key="index">{{item.label}}</el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-
-          <el-form-item label="作品上传格式:">
-            <el-select v-model="editForm.format" filterable placeholder="请选择" size="small">
-                <el-option
-                v-for="item in formatList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-                </el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item label="大小限制:">
-            <el-select v-model="editForm.sizeLimit" filterable placeholder="请选择" size="small">
-                <el-option
-                v-for="item in sizeList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-                </el-option>
-            </el-select>
-          </el-form-item>
-          
-          <el-form-item label="备注:">
-            <el-input
-              type="textarea"
-              :rows="2"
-              placeholder="请输入备注"
-              v-model="editForm.remarks">
-            </el-input>
-          </el-form-item >
-
-          <el-form-item label="文件上传入口:">
-            <el-checkbox-group v-model="entryList">
-                <el-checkbox v-for="(item,index) in entryList" :label="item.label" :key="index">{{item.label}}</el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-        </el-form>
-
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="editDialogVisible = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="editDialogVisible = false" size="small">确 定</el-button>
-      </span>
-    </el-dialog>
+    </div> -->
   </div>
 </template>
 <script>
+import api from '../../service/api';
 import MyEditor from "../../components/MyEditor";
-
 export default {
-  components: {MyEditor},
+  components: {
+    MyEditor
+  },
   data() {
     return {
-      actLimit:[],
-      checkAll: false,
-      isIndeterminate: true,
-      checkAll2: false,
-      isIndeterminate2: true,
-      list2:[
-          {name:"老师",id:1},
-          {name:"学生",id:2},
-          {name:"学校",id:3},
-      ],
-        list1:[
-          {name:"南山",id:1},
-          {name:"宝安",id:2},
-          {name:"西乡",id:3},
-      ],
-      object:[],
+      cname:"",
+      addclassFlag:false,
+        RegionIndex:"",
+        actLimit:[],
+         checkAll: false,
+         isIndeterminate: true,
+         checkAll2: false,
+         isIndeterminate2: true,
+        list2:[
+            {name:"老师",id:1},
+            {name:"学生",id:2},
+            {name:"家长",id:4},
+        ],
+         list1:[
+            {name:"南山",id:1},
+            {name:"宝安",id:2},
+            {name:"西乡",id:3},
+        ],
+        object:[],
+      activeName: "first",
       form: {
-        name: "",
+        title: "",
+        banner:[],
+        target:[],
+        attachment:[],
         region: "",
         date1: "",
         date2: "",
+        delivery: false,
+        type: [],
+        resource: "",
+        desc: ""
       },
       content: null,
       editorOption: {},
       value: "",
       options: [
-        {
-          value: "选项1",
-          label: "黄金糕"
-        },
-        {
-          value: "选项2",
-          label: "双皮奶"
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎"
-        },
-        {
-          value: "选项4",
-          label: "龙须面"
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭"
-        }
+        {"id":"77","pid":"6","type":"2","name":"深圳","val":200},
+        {"id":"726","pid":"77","type":"3","name":"福田区","val":200},
+        {"id":"727","pid":"77","type":"3","name":"罗湖区","val":200},
+        {"id":"728","pid":"77","type":"3","name":"南山区","val":200},
+        {"id":"729","pid":"77","type":"3","name":"宝安区","val":200},
+        {"id":"730","pid":"77","type":"3","name":"龙岗区","val":200},
+        {"id":"731","pid":"77","type":"3","name":"盐田区","val":200},
+        {"id":"732","pid":"77","type":"3","name":"市辖区","val":200},
+        {"id":"733","pid":"77","type":"3","name":"龙华区","val":200},
+        {"id":"734","pid":"77","type":"3","name":"坪山区","val":200},
+        {"id":"735","pid":"77","type":"3","name":"光明区","val":200},
+        {"id":"736","pid":"77","type":"3","name":"大鹏区","val":200}
       ],
-      number:2000,
-      list:[1,1,1,1,1,1,1,1,1,1,1],
+      
+      
       limitSet:false,
-      editDialogVisible:false,//项目编辑弹窗
-      editForm:{
-        activityName:'',
-        stuLimit:'',
-        teacherLimit:'',
-        grade:'',
-        format:'',
-        sizeLimit:'',
-        remarks:''
-      },//项目编辑
-      gradeList:[
-        {value: 1,label: "幼教组"},
-        {value: 2,label: "小学组"},
-        {value: 3,label: "初中组"},
-        {value: 4,label: "高中组"},
-        {value: 5,label: "特教组"},
-        {value: 6,label: "中职组"},
-        {value: 7,label: "高职组"},
-      ],
-      formatList:[
-        {value: 1,label: "视频"},
-        {value: 2,label: "图片"},
-        {value: 3,label: "文档"},
-      ],
-      sizeList:[
-        {value: 1,label: "5MB"},
-        {value: 2,label: "10MB"},
-        {value: 3,label: "50MB"},
-        {value: 4,label: "100MB"},
-        {value: 5,label: "200MB"},
-      ],
-      entryList:[
-        {value: 1,label: "视频"},
-        {value: 2,label: "图片"},
-        {value: 3,label: "文档"},
-        {value: 4,label: "附件"}
-      ]
+      classList:[],
+      filename:"upFile",
+      url:"",
+      datas:{},
+      headers:{
+          'x-api-key':JSON.parse(localStorage.getItem("user")).token,
+      },
+      action:api.uploadPic,
     };
   },
   computed: {},
-  mounted() {
-    
-  },
+  mounted() {},
   methods: {
-    //项目编辑
-    goToEdit(){
-      this.editDialogVisible=true
+   
+    // 添加图片
+      beforeupload(file){
+            // this.datas={upFile:file.name} 
+            console.log(file.name)
+            console.log(file)
+        },
+        upsuccess(response, file, fileList) {
+            console.log(file)
+            
+        },
+        handleRemove(file, fileList) {
+            console.log(file, fileList);
+        },
+        handlePreview(file) {
+            console.log(file);
+        },
+    //
+    addclassL(){
+    
+        this.classList.push({"classname":this.cname});
+      console.log(this.classList,1111111)
     },
-    editCheckedChange(){
-
+    LimitSet(num){
+        this.options[this.RegionIndex].val=num
     },
-    edit(){
-        this.$router.push({
-            path:"/activeManager/createActivity/activeEdit",
-        })
+    selectRegion(index){
+      console.log(index)
+       this.number=this.options[index].val
     },
-    limitSetting(){
-        console.log(this.limitSetting)
-        if(this.limitSet==false){
-            this.limitSet=true;
-        }else{
-              this.limitSet=false;
-        }
+    limitSeting(){
+        this.limitSet=true;
     },
+      edit(){
+          this.$router.push({
+              path:"/activeManager/createActivity/activeEdit",
+          })
+      },
+      limitSetting(){
+          console.log(this.limitSetting)
+          if(this.limitSet==false){
+              this.limitSet=true;
+          }else{
+               this.limitSet=false;
+          }
+      },
     back() {
       this.$router.go(-1);
     },
-    handleCheckAllChange(val) {
-      this.actLimit = val ? this.list1 : [];
-      this.isIndeterminate = false;
-    },
-    handleCheckedCitiesChange(value) {
-      let checkedCount = value.length;
-      this.checkAll = checkedCount === this.list1.length;
-      this.isIndeterminate = checkedCount > 0 && checkedCount < this.list1.length;
-    },
+     handleCheckAllChange(val) {
+        this.actLimit = val ? this.list1 : [];
+        this.isIndeterminate = false;
+      },
+      handleCheckedCitiesChange(value) {
+        let checkedCount = value.length;
+        this.checkAll = checkedCount === this.list1.length;
+        this.isIndeterminate = checkedCount > 0 && checkedCount < this.list1.length;
+      },
     handleCheckedCitiesChange2(value) {
-      let checkedCount = value.length;
-      this.checkAll = checkedCount === this.list2.length;
-      this.isIndeterminate2 = checkedCount > 0 && checkedCount < this.list2.length;
-    },
+        let checkedCount = value.length;
+        this.checkAll = checkedCount === this.list2.length;
+        this.isIndeterminate2 = checkedCount > 0 && checkedCount < this.list2.length;
+      },
+    
+    
     //提交
+
     onSubmit() {
       console.log("submit!");
     },
-    handlePictureCardPreview() {
-
-    },
-    handleRemove() {
-
-    },
+    handlePictureCardPreview() {},
+    handleRemove() {},
     //富文本内容改变
     editorChange(data) {
-      console.log("data===", data);
-    },
-    //编辑富文本内容改变
-    editorChangeTwo(data) {
       console.log("data===", data);
     }
   }

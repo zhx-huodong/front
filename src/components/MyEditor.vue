@@ -103,6 +103,7 @@
       editorChange(){
         // console.log("content===",this.content)
         this.$emit('editorChange',this.content)
+        console.log(this.content)
       }
     }
   }

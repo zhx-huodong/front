@@ -35,15 +35,20 @@ export default {
                 {id:2,name:'学生'}
             ],
             regionList:[
-                {id:0,name:'全部'},
-                {id:1,name:'罗湖区'},
-                {id:2,name:'宝安区'},
-                {id:3,name:'南山区'},
-                {id:4,name:'福田区'},
-                {id:5,name:'盐田区'},
-                {id:6,name:'龙华区'},
-                {id:7,name:'光明区'},
-                {id:8,name:'大鹏新区'}
+               
+                    {"id":"77","pid":"6","type":"2","name":"深圳"},
+                    {"id":"726","pid":"77","type":"3","name":"福田区"},
+                    {"id":"727","pid":"77","type":"3","name":"罗湖区"},
+                    {"id":"728","pid":"77","type":"3","name":"南山区"},
+                    {"id":"729","pid":"77","type":"3","name":"宝安区"},
+                    {"id":"730","pid":"77","type":"3","name":"龙岗区"},
+                    {"id":"731","pid":"77","type":"3","name":"盐田区"},
+                    {"id":"732","pid":"77","type":"3","name":"市辖区"},
+                    {"id":"733","pid":"77","type":"3","name":"龙华区"},
+                    {"id":"734","pid":"77","type":"3","name":"坪山区"},
+                    {"id":"735","pid":"77","type":"3","name":"光明区"},
+                    {"id":"736","pid":"77","type":"3","name":"大鹏区"}
+                
             ],
             activityList: [
                 { id: 1, name: '深圳市中小学电脑制作大赛', imgUrl: require('../public/images/ac1.png') }, 

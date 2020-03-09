@@ -89,6 +89,7 @@ export default {
     data(){
         return{
             filename:"upFile",
+            url:"",
             datas:{},
             headers:{
                 'x-api-key':JSON.parse(localStorage.getItem("user")).token,
