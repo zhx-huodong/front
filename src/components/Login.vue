@@ -91,11 +91,9 @@
             //获取验证码
             async goToGetCode(){
                 let params={}
-               
                 params.url=api.captcha
                 params.account=this.phoneNum
                 let res = await this.axiosGet(params).catch(err => err);
-                console.log("res==",res)
                 if(res==='已发送'){
                     this.code=true
                     this.countDownNum=60
@@ -150,7 +148,6 @@
                 params.account=this.phoneNum
                 params.code=this.phoneCode
                 let res = await this.axiosGet(params).catch(err => err);
-                console.log("res==",res)
                 if(res.code==-1){
                     this.$message({
                         message: res.message,
@@ -159,7 +156,7 @@
                 }else{
                     this.$store.dispatch('INIT_USER', res);
                     this.$store.dispatch('INIT_SHOW', false);
-                    setCookie('Authorization', res.token);
+                    setCookie('x-api-key', res.token);
                     let userInfo=JSON.stringify(res)
                     localStorage.setItem('user',userInfo);
                     const loading = this.$loading({
@@ -201,7 +198,12 @@
                 let params={}
                 params.url=api.role
                 let res = await this.axiosGet(params).catch(err => err);
-                console.log("res==",res)
+                let roles=JSON.stringify(res.items)
+                localStorage.setItem('roles',roles);
+                let nowRole=JSON.stringify(res.items[0])
+                localStorage.setItem('nowRole',nowRole);
+                this.$store.dispatch('INIT_ROLES', res.items);
+                this.$store.dispatch('INIT_NOWROLE', res.items[0]);
             }
             
         }

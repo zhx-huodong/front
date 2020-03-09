@@ -93,7 +93,7 @@ export function removeClass(dom, className) {
   let options = param;
   delete options.url;
   let headers = {};
-  if (getCookie('Authorization')) headers['Authorization'] = getCookie('Authorization');
+  if (getCookie('x-api-key')) headers['x-api-key'] = getCookie('x-api-key');
   // headers['Authorization'] = defaultToken;
   return {
     url: url,
@@ -132,7 +132,7 @@ function axiosPostParam(param) {
   let headers = {
     'Content-type': 'application/json'
   };
-  if (getCookie('Authorization')) headers['Authorization'] = getCookie('Authorization');
+  if (getCookie('x-api-key')) headers['x-api-key'] = getCookie('x-api-key');
   delete param.url;
   return {
     url: url,

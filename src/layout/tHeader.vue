@@ -6,22 +6,17 @@
         <span>中小学信息化活动平台</span>
       </a>
       <div class="header-menu">
-        <div v-for="t in tabs" :key="t.key" @click="switchPage(t.key)" v-if="!t.hide"
-            :class="'menu-item ' + (activeTab === t.key ? 'active' : '')">{{t.name}}
+        <div v-for="item in tabs" :key="item.key" @click="switchPage(item.key)" v-if="!item.hide"
+            :class="'menu-item ' + (activeTab === item.key ? 'active' : '')">{{item.name}}
         </div>
       </div>
       <div class="header-user">
-        <!-- <div class="message" @click="goToMessage">
-          <img src="../public/images/message.svg" v-if="messageList.length == 0">
-          <img src="../public/images/message2.svg" v-else>
-        </div> -->
-        <template >
+        <template v-if="roles.length>0">
           <span class="name" @click="roleClick"></span>
           <el-dropdown @command="roleClick">
-            <span class="name">角色切换</span>
+            <span class="name">{{nowRole.name}}<i class="el-icon-arrow-down el-icon--right"></i></span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="wx">超级管理员</el-dropdown-item>
-              <el-dropdown-item command="phone">市管理员</el-dropdown-item>
+              <el-dropdown-item :command="item.id" v-for="(item,index) in roles" :key="index">{{item.name}}</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -37,35 +32,11 @@
       </div>
       <w-x-login ref="wxLogin"></w-x-login>
       <login ref="allLogin"></login>
-      <el-dialog
-        class="login-dialog"
-        :visible.sync="showMpCode"
-        width="400px"
-        :modal-append-to-body="false">
-        <img src="../public/images/test-code.png" v-if="isTest">
-        <img src="../public/images/code.png" v-else>
-        <div class="info">
-          请前往小程序端完成身份认证
-          <br/>认证完成后，重新登录
-        </div>
-      </el-dialog>
-      <el-dialog
-        class="choose-dialog"
-        title="选择身份"
-        width="400px"
-        :visible.sync="showChooseRole"
-        :show-close="false"
-        :close-on-click-modal="false">
-        <div class="choose-role">
-          <el-button type="primary" size="medium" v-for="(role, index) in roles" :key="index" @click="chooseRole(role.Role)">
-            {{ role.RoleName }}
-          </el-button>
-        </div>
-      </el-dialog>
+     
     </div>
     <div class="my-bread">
       <div class="my-bread-main">
-        <my-bread-crumb></my-bread-crumb>
+        <my-bread-crumb :levelList="levelList"></my-bread-crumb>
       </div>
     </div>
   </div>
@@ -85,42 +56,22 @@
         tabs: [],
         normalTabs: [
           { key: 'home', name: '首页', hide: false },
-          // { key: 'activityCenter', name: '活动中心', hide: false },
-          // { key: 'myActivity', name: '活动发布与管理', hide: false },
-          // { key: 'excellence', name: '优秀作品展', hide: false },
-          // { key: 'expertReview', name: '专家评审', hide: true },
-          { key:'activeManager',name:'活动管理',hide:false},
-          { key: 'workReview', name: '专家评审', hide: false },
-          { key: 'userCenter', name: '个人中心', hide: false },
-          // { key:'newsBulletin',name:'消息公告',hide:false},   
+          { key: 'activeManager',name:'活动管理',hide:true},
+          { key: 'workReview', name: '专家评审', hide: true },
+          { key: 'userCenter', name: '个人中心', hide: false },   
         ],
         adminTabs: [
-          // { key: 'auditActivity', name: '审核中心', hide: false },
-          // { key: 'expertReview', name: '专家评审', hide: true },
-          // { key: 'expertStore', name: '专家库', hide: true }
           { key: 'admin', name: '用户管理', hide: false },
           { key: 'roleManage', name: '角色管理', hide: false },
-          { key: 'expertMange', name: '专家管理', hide: false },
+          { key: 'expertManage', name: '专家管理', hide: false },
           { key: 'expertAssign', name: '专家分配', hide: false },
           { key: 'classifyManage', name: '分类管理', hide: false },
 
         ],
         activeTab: 'home',
-        wxCode: '', // 微信登录后的code
-        isAdmin: false, // 平台管理员
-        isJudge: false, // 专家
-        messageList: [],
-        showMpCode: false, // 展示小程序码
-        isTest: location.hostname == '127.0.0.1' ||
-          location.hostname == 'api.huodong.eduinspector.com',
-        isPro: location.hostname == 'api.huodong.eduinspector.com' || location.hostname == 'huodong.eduinspector.com',
-        showMul: false, // 多重身份选择弹框
-        roles: [
-          { Role: 'TEACHER', RoleName: '教师' },
-          { Role: 'PARENT', RoleName: '家长' }
-        ], // 角色列表
-        showChooseRole: false,
-        loginCb: ''
+        roles: [], // 角色列表
+        nowRole:{},//当前角色
+        levelList:[],//面包屑
       };
     },
     computed: {
@@ -129,64 +80,138 @@
       }
     },
     async mounted() {
-      if(getCookie('Authorization')){
+      if(getCookie('x-api-key')){
         this.$store.dispatch('INIT_USER', JSON.parse(localStorage.getItem('user')));
+        this.$store.dispatch('INIT_ROLES', JSON.parse(localStorage.getItem('roles')));
+        this.$store.dispatch('INIT_NOWROLE', JSON.parse(localStorage.getItem('nowRole')));
+        this.nowRole=this.$store.state.account.nowRole
+        this.roles=this.$store.state.account.roles
+        this.checkRole()
+      }else{
+        this.tabs = this.normalTabs;
+        this.$router.push('/home');
+        this.activeTab='home'
+        this.levelList=[{path: '/home',name:'首页', meta: { title: '首页' }}]
       }
-      this.tabs = this.normalTabs;
-      if (this.$route.path == '/') this.$router.push('/home');
+      
     },
     watch: {
       $route(val) {
         this.activeTab = val.path.split('/')[1];
+        this.getBreadcrumb(val);
       },
       user() {
-        this.checkRole();
+        
       }
     },
     methods: {
+      //导航栏跳转
       switchPage(key) {
-        console.log(key)
         if (this.activeTab === key && this.$route.path == ('/' + this.activeTab)) return;
         this.activeTab = key;
         this.$router.push('/' + key);
       },
-      async checkRole() {
-        this.isAdmin = this.user.IsPlatformAdmin;
-        this.isJudge = this.user.IsJudge;
-        if (this.isAdmin) this.tabs = this.adminTabs;
-        else this.tabs = this.normalTabs;
-        if (this.isJudge) {
-          let tab = this.getTabByKey('expertReview', this.tabs);
-          tab.hide = false;
-        }
-      },
-      getTabByKey(key, tabs) {
-        for (let item of tabs) {
-          if (item.key == key) return item;
-        }
-        return {};
-      },
-      goToMessage() {
-        if (this.$route.path.indexOf('msgcenter') > -1) return;
-        this.$router.push('/msgcenter');
-      },
+      //登录
       loginClick() {
         this.$refs.allLogin.showDialog();
       },
+      //退出登录
       logout() {
-        setCookie('Authorization', '');
+        setCookie('x-api-key', '');
         localStorage.removeItem('user');
+        localStorage.removeItem('roles');
+        localStorage.removeItem('nowRole');
         location.href = '/';
       },
-      //角色切换
-      roleClick(data){
-        console.log("data===",data)
+      //检查角色类型
+      checkRole(){
+        if(this.nowRole.type==0){
+          this.tabs=this.adminTabs
+          this.activeTab='admin'
+          this.$router.push('/admin');
+          this.levelList=[{path: '/admin',name:'用户管理', meta: { title: '用户管理' }}]
+        }else{
+          if(this.nowRole.type==1||this.nowRole.type==2||this.nowRole.type==3){
+            for(let i in this.normalTabs){
+              if(this.normalTabs[i].key=='activeManager'){
+                this.normalTabs[i].hide=false
+              }else if(this.normalTabs[i].key=='workReview'){
+                this.normalTabs[i].hide=true
+              }
+            }
+          }else if(this.nowRole.type==4){
+            for(let i in this.normalTabs){
+              if(this.normalTabs[i].key=='workReview'){
+                this.normalTabs[i].hide=false
+              }else if(this.normalTabs[i].key=='activeManager'){
+                this.normalTabs[i].hide=true
+              }
+            }
+          }
+          this.tabs = this.normalTabs;
+          console.log("nowRole===",this.nowRole,"tabs===",this.tabs)
+          this.$router.push('/home');
+          this.activeTab='home'
+          this.levelList=[{path: '/home',name:'首页', meta: { title: '首页' }}]
+        }
       },
+      //角色切换
+      roleClick(id){
+        for(let i in this.roles){
+          if(this.roles[i].id==id){
+            this.nowRole=this.roles[i]
+            let nowRole=JSON.stringify(this.roles[i])
+            localStorage.setItem('nowRole',nowRole);
+            this.$store.dispatch('INIT_NOWROLE', this.roles[i]);
+          }
+        }
+        this.checkRole()
+        
+      },
+      /**
+      * 生成面包屑的方法
+      */
+      getBreadcrumb(to) {
+        let matched = this.$route.matched.filter(item => item.name)
+        if(to!=undefined){
+          matched[0].path=to.fullPath
+          const first = matched[0]
+          if (first && first.name !== '首页'&&first.name!=='活动管理'&&first.name!=='专家评审'
+          &&first.name!=='个人中心'&&first.name!=='用户管理'&&first.name!=='角色管理'
+          &&first.name!=='专家管理'&&first.name!=='专家分配'&&first.name!=='分类管理') {
+            var index=this.levelList.findIndex((item)=>{
+              return item.name==first.name
+            })
+            if(index!=-1){
+              matched =this.levelList.slice(0,(index+1))
+            }else{
+              matched =this.levelList.concat(matched)
+            }
+          }else if(first.name == '首页'||first.name=='活动管理'||first.name=='专家评审'
+          ||first.name=='个人中心'||first.name=='用户管理'||first.name=='角色管理'
+          ||first.name=='专家管理'||first.name=='专家分配'||first.name=='分类管理'){
+            matched =matched
+          } else{
+            matched=[{path: '/home',name:'首页', meta: { title: '首页' }}]
+          }
+          this.levelList = matched;
+        }
+        
+      }
       
     }
   };
 </script>
 <style lang="less">
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #409EFF;
+  }
+  .el-icon-arrow-down {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+  }
   .uni-header {
     background-color: #2568ED;
     box-shadow: rgba(0, 21, 41, 0.08) 0 1px 4px;

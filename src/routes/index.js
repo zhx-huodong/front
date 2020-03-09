@@ -119,9 +119,9 @@ const routes = [
       { path: '/workShow',name:"活动详情展示", components: workShow,meta: { title: '活动详情展示' }},//活动详情展示
 
 
-      { path: '/admin',name:"超级管理员", components: admin,meta: { title: '超级管理员' }},//超级管理员
+      { path: '/admin',name:"用户管理", components: admin,meta: { title: '用户管理' }},//超级管理员
       { path: '/roleManage',name:"角色管理", components: roleManage,meta: { title: '角色管理' }},//角色管理
-      { path: '/expertManage',name:"专家管理", components: expertManage,meta: { title: '角色管理' }},//专家管理
+      { path: '/expertManage',name:"专家管理", components: expertManage,meta: { title: '专家管理' }},//专家管理
       { path: '/expertAssign',name:"专家分配", components: expertAssign,meta: { title: '专家分配' }},//专家分配
       { path: '/prizeManagement',name:"专家分配", components: prizeManagement,meta: { title: '奖品管理' }},//奖品管理
 
@@ -132,7 +132,7 @@ const routes = [
       { path: '/addClassify',name:"添加分类", components: addClassify,meta: { title: '添加分类' }},//添加分类
       { path: '/subClassify',name:"子分类", components: subClassify,meta: { title: '子分类' }},//子分类
 
-      { path: '/workReview',name:"作品评审", components: workReview,meta: { title: '作品评审' }},//作品评审（专家模块）
+      { path: '/workReview',name:"专家评审", components: workReview,meta: { title: '专家评审' }},//作品评审（专家模块）
       { path: '/workScore',name:"作品评分", components: workScore,meta: { title: '作品评分' }},//作品评分（专家模块）
       { path: '/importWorkList',name:"导入作品评分列表", components: importWorkList,meta: { title: '导入作品评分列表' }}//导入作品评分列表（专家模块）
 
