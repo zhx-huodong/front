@@ -82,7 +82,12 @@
   export default {
     name: 'FuncFormsEdit',
     components: {
-      quillEditor
+      quillEditor,
+      
+    },
+    props:{
+      required: true,
+      inputtext:String
     },
     data() {
       return {
@@ -97,6 +102,10 @@
           }
         }
       }
+    },
+    created(){
+      console.log(this.inputtext)
+      this.content=this.inputtext
     },
     methods:{
       //富文本内容改变
