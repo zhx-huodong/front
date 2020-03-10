@@ -30,7 +30,7 @@
           <span class="name" @click="loginClick">未登录</span>
         </template>
       </div>
-      <w-x-login ref="wxLogin"></w-x-login>
+      <!-- <w-x-login ref="wxLogin"></w-x-login> -->
       <login ref="allLogin"></login>
      
     </div>
@@ -45,12 +45,11 @@
   import axios from 'axios';
   import UuniV4 from 'uuid/v4';
   import { setCookie, getCookie } from '../tools/tools';
-  import WXLogin from '../components/WXLogin';
   import Login from '../components/Login'
   import MyBreadCrumb from '../components/MyBreadCrumb'
   export default {
     name: 'uni-header',
-    components: { WXLogin,MyBreadCrumb,Login },
+    components: {MyBreadCrumb,Login },
     data() {
       return {
         tabs: [],
@@ -66,7 +65,7 @@
           { key: 'expertManage', name: '专家管理', hide: false },
           { key: 'expertAssign', name: '专家分配', hide: false },
           { key: 'classifyManage', name: '分类管理', hide: false },
-
+          { key: 'prizeManagement', name: '奖品管理', hide: false },
         ],
         activeTab: 'home',
         roles: [], // 角色列表
@@ -178,7 +177,7 @@
           const first = matched[0]
           if (first && first.name !== '首页'&&first.name!=='活动管理'&&first.name!=='专家评审'
           &&first.name!=='个人中心'&&first.name!=='用户管理'&&first.name!=='角色管理'
-          &&first.name!=='专家管理'&&first.name!=='专家分配'&&first.name!=='分类管理') {
+          &&first.name!=='专家管理'&&first.name!=='专家分配'&&first.name!=='分类管理'&&first.name!=='奖品管理') {
             var index=this.levelList.findIndex((item)=>{
               return item.name==first.name
             })
@@ -189,7 +188,7 @@
             }
           }else if(first.name == '首页'||first.name=='活动管理'||first.name=='专家评审'
           ||first.name=='个人中心'||first.name=='用户管理'||first.name=='角色管理'
-          ||first.name=='专家管理'||first.name=='专家分配'||first.name=='分类管理'){
+          ||first.name=='专家管理'||first.name=='专家分配'||first.name=='分类管理'||first.name=='奖品管理'){
             matched =matched
           } else{
             matched=[{path: '/home',name:'首页', meta: { title: '首页' }}]

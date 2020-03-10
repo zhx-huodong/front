@@ -5,7 +5,7 @@
                 <el-tab-pane label="分类管理" name="classify">
                     <el-row>
                         <el-col :span="3">
-                            <el-button type="primary" @click="goToAddClassify">添加分类</el-button>
+                            <el-button type="primary" @click="goToAddClassify" size="small">添加分类</el-button>
                         </el-col>
                     </el-row>
                     <el-row>

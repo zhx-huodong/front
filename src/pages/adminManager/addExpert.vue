@@ -6,16 +6,16 @@
                     <div class="add-expert-item">
                         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                             <el-form-item label="姓名" prop="name">
-                                <el-input v-model="ruleForm.name" placeholder="请输入姓名"></el-input>
+                                <el-input v-model="ruleForm.name" placeholder="请输入姓名" size="small"></el-input>
                             </el-form-item>
                             <el-form-item label="电话号码" prop="phoneNum">
-                                <el-input v-model="ruleForm.phoneNum" placeholder="请输入电话号码"></el-input>
+                                <el-input v-model="ruleForm.phoneNum" placeholder="请输入电话号码" size="small"></el-input>
                             </el-form-item>
                             <el-form-item label="专家介绍" prop="des">
                                 <el-input v-model="ruleForm.des" type="textarea" :rows="4" placeholder="请输填写专家介绍"></el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+                                <el-button type="primary" @click="submitForm('ruleForm')" size="small">保存</el-button>
                             </el-form-item>
                         </el-form>
                     </div>

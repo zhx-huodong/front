@@ -123,8 +123,7 @@ const routes = [
       { path: '/roleManage',name:"角色管理", components: roleManage,meta: { title: '角色管理' }},//角色管理
       { path: '/expertManage',name:"专家管理", components: expertManage,meta: { title: '专家管理' }},//专家管理
       { path: '/expertAssign',name:"专家分配", components: expertAssign,meta: { title: '专家分配' }},//专家分配
-      { path: '/prizeManagement',name:"专家分配", components: prizeManagement,meta: { title: '奖品管理' }},//奖品管理
-
+      { path: '/prizeManagement',name:"奖品管理", components: prizeManagement,meta: { title: '奖品管理' }},//奖品管理
       { path: '/classifyManage',name:"类型管理", components: classifyManage,meta: { title: '类型管理' }},//类型管理
       { path: '/addRole',name:"添加角色", components: addRole,meta: { title: '添加角色' }},//添加角色
       { path: '/addExpert',name:"添加专家", components: addExpert,meta: { title: '添加专家' }},//添加专家

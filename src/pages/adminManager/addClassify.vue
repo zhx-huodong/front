@@ -14,7 +14,8 @@
                                 <el-input
                                 placeholder="请输入分类标题"
                                 v-model="title"
-                                clearable>
+                                clearable
+                                size="small">
                                 </el-input>
                             </el-col>
                         </el-row>
@@ -39,7 +40,7 @@
                         </el-row>
                         <el-row>
                             <el-col>
-                                <el-button type="primary" @click="goToSubmit">提交</el-button> 
+                                <el-button type="primary" @click="goToSubmit" size="small">提交</el-button> 
                             </el-col>
                         </el-row>
                     </div>
