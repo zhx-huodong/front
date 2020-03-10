@@ -6,73 +6,63 @@
       <el-divider></el-divider>
 
       <div class="create-activity-body">
-        <el-form ref="form" :model="form" label-width="100px">
-          <el-form-item label="项目名称:">
+        <el-form ref="form" :model="form" label-width="100px" :rules="rules">
+          <el-form-item label="项目名称:" prop="title">
             <el-col :span="9">
-              <el-input placeholder="请输入项目名称" v-model="form.date2" size="small"></el-input>
+              <el-input placeholder="请输入项目名称" v-model="form.title" size="small" type="text"></el-input>
             </el-col>
           </el-form-item>
 
         <div class="my-editer" style="margin-left: 23px;">
             <P>项目介绍 ：</P>
-            <my-editor @editorChange="editorChange"></my-editor>
+            <my-editor @editorChange="editorChange" :inputtext="inputtext"></my-editor>
         </div>
-         <el-form-item label="学生人数上限:" >
+         <el-form-item label="学生人数上限:" prop="author_limit" >
             <el-col :span="9">
-              <el-input placeholder="" v-model="form.date2" size="small"></el-input>
+              <el-input placeholder="" v-model="form.author_limit" size="small" type="number"></el-input>
             </el-col>
           </el-form-item>
 
-        <el-form-item label="指导老师上限:">
+        <el-form-item label="指导老师上限:" prop="mentor_limit">
             <el-col :span="9">
-              <el-input placeholder="" v-model="form.date2" size="small"></el-input>
+              <el-input placeholder="" v-model="form.mentor_limit" size="small" type="number"></el-input>
             </el-col>
           </el-form-item>
-         
-
-        
-
-            <el-form-item label="学段设置 :">
+            <el-form-item label="学段设置 :" prop="actLimit">
             <!-- <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox> -->
            
-            <el-checkbox-group v-model="actLimit" @change="handleCheckedCitiesChange">
-                <el-checkbox v-for="city in list1" :label="city" :key="city">{{city.name}}</el-checkbox>
+            <el-checkbox-group v-model="form.actLimit" @change="handleCheckedCitiesChange">
+                <el-checkbox v-for="(city,index) in list1" :label="city" :key="index">{{city.name}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
 
-         <el-form-item label="作品上传格式:">
-                <el-select v-model="value" filterable placeholder="请选择" size="small">
+         <el-form-item label="作品上传格式:" prop="formats">
+                <el-select v-model="form.type" filterable placeholder="请选择" size="small" @change="ChangeFormatsType(form.type)" >
                     <el-option
-                    v-for="item in options"
-                    :key="item.value"
+                    v-for="(item,index) in uploadFormatons"
+                    :key="index"
                     :label="item.label"
-                    :value="item.value">
+                    :value="index">
                     </el-option>
                 </el-select>
-                <el-select v-model="value" filterable placeholder="请选择" size="small">
-                    <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                    </el-option>
-                </el-select>
+                
                 <span>大小限制：</span>
-                <el-select v-model="value" filterable placeholder="请选择" size="small">
+                <el-select v-model="form.size" filterable placeholder="请选择" size="small" @change="ChangeFormatsSize(form.size)">
                     <el-option
-                    v-for="item in options"
-                    :key="item.value"
+                    v-for="(item,index) in sizeRestriction"
+                    :key="index"
                     :label="item.label"
-                    :value="item.value">
+                    :value="index">
                     </el-option>
                 </el-select>
-            
           </el-form-item >
-         
+          <el-form-item prop="remark">
+            <el-input v-model="form.remark" placeholder="输入备注" @input="ChangeFormatsRemark(form.remark)"></el-input>
+          </el-form-item>
          
           <el-form-item>
            
-            <el-button type="primary"  @click="back()" size="small">确定</el-button>
+            <el-button type="primary"  @click="onSubmit()" size="small">确定</el-button>
             <el-button @click="back()" size="small">取消</el-button>
           </el-form-item>
         </el-form>
@@ -90,76 +80,194 @@ export default {
     MyEditor
   },
   data() {
+    var validateTitle=(rule,value,callback)=>{
+      if(!value){
+        return callback(new Error("标题必填，不能为空"))
+      }
+    }
+
+    
     return {
-        actLimit:[],
+        rules:{
+            title:[
+               { required: true, message: '标题必填，不能为空', trigger: 'blur' },
+            ],
+            author_limit:[
+               { required: true, message: '学生上限必填', trigger: 'blur' },
+            ],
+            mentor_limit:[
+               { required: true, message: '指导老师上限必填', trigger: 'blur' },
+            ],
+            actLimit:[
+               { type: 'array', required: true, message: '请至少选择一个', trigger: 'change' }
+            ],
+         
+        },
+        
          checkAll: false,
          isIndeterminate: true,
          checkAll2: false,
          isIndeterminate2: true,
-        list2:[
-            {name:"老师",id:1},
-            {name:"学生",id:2},
-            {name:"学校",id:3},
-        ],
+       
          list1:[
             {name:"幼教组",id:1},
             {name:"小学组",id:2},
-            {name:"初中组",id:3},
-             {name:"高中组",id:4},
-            {name:"特教组",id:5},
-            {name:"中职组",id:6},
-            {name:"高教组",id:7},
+            {name:"初中组",id:4},
+            {name:"高中组",id:8},
+            {name:"特教组",id:16},
+            {name:"中职组",id:32},
+            {name:"高教组",id:64},
         ],
-        object:[],
-      activeName: "first",
+      
+     
       form: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: ""
+        title: "",//标题
+        content:"",//内容
+        author_limit:"",//作者上限
+        mentor_limit: "",//指导老师限制
+        period:"",//学段设置
+        formats:[],
+        type:"",
+        remark:"",
+        size:"",
+        actLimit:[],
       },
       content: null,
       editorOption: {},
       value: "",
-      options: [
+      uploadFormatons: [
         {
-          value: "选项1",
-          label: "黄金糕"
+          value: 1,
+          label: "图片"
         },
         {
-          value: "选项2",
-          label: "双皮奶"
+          value: 2,
+          label: "视频"
         },
         {
-          value: "选项3",
-          label: "蚵仔煎"
+          value: 3,
+          label: "普通文件"
         },
-        {
-          value: "选项4",
-          label: "龙须面"
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭"
-        }
       ],
-      number:2000,
-      list:[1,1,1,1,1,1,1,1,1,1,1],
+      sizeRestriction:[
+        {
+          value: 1024,
+          label: "1MB"
+
+        },
+        {
+          value: 5*1024,
+          label: "5MB"
+        },
+        {
+          value: 10*1024,
+          label: "10MB"
+        },
+         {
+          value: 20*1024,
+          label: "50MB"
+        },
+         {
+          value: 100*1024,
+          label: "100MB"
+        },
+         {
+          value: 500*1024,
+          label: "500MB"
+        },
+      ],
+     
+      flag:"",
       limitSet:false,
+      idnex:"",
+      idnex2:"",
+      inputtext:"",
+      sos:[],
     };
+  },
+  watch:{
+    'flag': function(newval){
+
+    }
+  },
+  //  title:this.form.title,
+  //         type:2,
+  //         content:this.content,
+  //         author_limit:Number(this.form.author_limit) ,
+  //         mentor_limit:Number(this.form.mentor_limit),
+  //         period:Number(this.form.period),
+  //         formats:this.form.formats
+  created(){
+    console.log(typeof(this.index2))
+    this.index=this.$route.query.id
+    this.index2=this.$route.query.id2
+      if(typeof(this.index2)!=undefined){
+            var ativeEdit=JSON.parse(localStorage.getItem("ativeEdit"))
+            console.log(ativeEdit)
+            var list=ativeEdit[this.index].child[this.index2]
+            console.log(list)
+            this.form.title=list.title
+            this.content=list.content
+            this.inputtext=this.content
+            this.form.author_limit=list.author_limit
+            this.form.mentor_limit=list.mentor_limit
+            var period=(list.period).toString(2)
+            console.log(period.length)
+            for(var i=0;i<period.length;i++){
+                if(period[i]==1){
+                  this.form.actLimit.push(this.list1[i])
+                }
+            }
+            this.form.formats=list.formats
+            this.form.type=list.formats[0].type;
+            this.sizeRestriction.forEach((item,index)=>{
+
+              if(item.value==list.formats[0].size){
+                console.log(item.value)
+                  this.form.size=index
+              }
+            })
+            this.form.remark=list.formats[0].remark;
+            this.sos=list
+          }
+  
+  
   },
   computed: {},
   mounted() {},
   methods: {
-      edit(){
-          this.$router.push({
-              path:"/activeManager/createActivity/activeEdit",
+    ChangeFormatsType(item){
+     
+      this.form.formats.push({type:this.uploadFormatons[item].value})
+      console.log(this.form)
+       if(typeof(this.index2)!=undefined){
+         var list=this.sos;
+          this.form.type=list.formats[item].type;
+          this.sizeRestriction.forEach((ite,index)=>{
+
+            if(ite.value==list.formats[item].size){
+              console.log(ite.value)
+                this.form.size=index
+            }
           })
-      },
+          this.form.remark=list.formats[item].remark;
+       }
+    },
+     ChangeFormatsSize(item){
+     
+         this.form.formats[this.form.type].size=this.sizeRestriction[item].value
+        console.log(this.form)
+      
+    },
+     ChangeFormatsRemark(item){
+       this.form.formats[this.form.type].remark=this.form.remark
+        console.log(this.form)
+    },
+
+    editorChange(data) {
+      console.log("data===", data);
+      this.content=data;
+    },
       limitSetting(){
           console.log(this.limitSetting)
           if(this.limitSet==false){
@@ -179,26 +287,83 @@ export default {
         let checkedCount = value.length;
         this.checkAll = checkedCount === this.list1.length;
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.list1.length;
+       
+        var count=0;
+        this.form.actLimit.forEach(item=>{
+          console.log(item.id)
+          count=count+item.id
+        })
+        console.log(count)
+        this.form.period=count
+        console.log(this.form.period)
       },
-    handleCheckedCitiesChange2(value) {
-        let checkedCount = value.length;
-        this.checkAll = checkedCount === this.list2.length;
-        this.isIndeterminate2 = checkedCount > 0 && checkedCount < this.list2.length;
-      },
-    
+
     
     //提交
 
     onSubmit() {
-      console.log("submit!");
+       
+        if(this.form.title==""){
+          this.$message({
+            message:"标题不能为空",
+            type:"error"
+          })
+          return
+        }
+         if(this.form.author_limit==""){
+          this.$message({
+            message:"学生上限未填写",
+            type:"error"
+          })
+          return
+        }
+         if(this.form.mentor_limit==""){
+          this.$message({
+            message:"指导老师未填写",
+            type:"error"
+          })
+          return
+        }
+         if(this.form.actLimit.length==0){
+          this.$message({
+            message:"至少选择一个组",
+            type:"error"
+          })
+          return
+        }
+         if(this.form.formats.length==0){
+          this.$message({
+            message:"项目作品附件要求必填",
+            type:"error"
+          })
+          return
+        }
+        let pramrs={};
+        pramrs={
+          title:this.form.title,
+          type:2,
+          content:this.content,
+          author_limit:Number(this.form.author_limit) ,
+          mentor_limit:Number(this.form.mentor_limit),
+          period:Number(this.form.period),
+          formats:this.form.formats
+        }
+        var ativeEdits=JSON.parse(localStorage.getItem('ativeEdit'))
+       ativeEdits[this.index].child.push(pramrs)
+        localStorage.setItem("ativeEdit",JSON.stringify(ativeEdits) )
+       
+        
+        
+
     },
     handlePictureCardPreview() {},
     handleRemove() {},
     //富文本内容改变
-    editorChange(data) {
-      console.log("data===", data);
-    }
+    // editorChange(data) {
+    //   console.log("data===", data);
+    // }
   }
+
 };
 </script>
 <style lang="less" >
