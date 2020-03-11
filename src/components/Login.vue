@@ -36,7 +36,7 @@
                     <el-col >
                         <el-button type="primary" style="width:100%" :disabled="login" @click="goToLogin">登录</el-button>
                     </el-col>
-                    <el-button type="primary" style="width:100%"  @click="goToLogintest">登录test</el-button>
+                    <!-- <el-button type="primary" style="width:100%"  @click="goToLogintest">登录test</el-button> -->
                 </el-row>
                 <p>请使用电话号码获取验证码登录</p>
             </div>
@@ -204,6 +204,12 @@
                 localStorage.setItem('nowRole',nowRole);
                 this.$store.dispatch('INIT_ROLES', res.items);
                 this.$store.dispatch('INIT_NOWROLE', res.items[0]);
+            },
+            //获取用户信息
+            async getUser(params){
+                params.url=api.user
+                let res=await this.axiosGet(params).catch(err=>err)
+                console.log("userInfo===",res)
             }
             
         }

@@ -1,16 +1,15 @@
 <template>
     <div class="import-expert-container">
         <el-dialog
-            center="true"
+            center
             title="奖项"
             :visible.sync="dialogVisible"
             width="30%"
             :before-close="handleClose">
-            <hr style="margin-top:-27px;">
-            <el-input v-model="input" size="mini" placeholder="请输入内容"></el-input>
+            <el-input v-model="input" size="small" placeholder="请输入奖项" ></el-input>
             <span slot="footer" class="dialog-footer">
                 <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="addPrize" size="small">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -20,7 +19,7 @@
                    
                     <el-row>
                         <el-col :span="8">
-                            <el-button type="primary" @click="dialogVisible=true">添加奖项</el-button>
+                            <el-button type="primary" @click="dialogVisible=true" size="small">添加奖项</el-button>
                         </el-col>
                     </el-row>
                    
@@ -33,25 +32,25 @@
                             tooltip-effect="dark"
                             style="width: 100%">
                             <el-table-column
-                                type="index"
-                                label="序号"
-                               
-                                >
+                            type="index"
+                            label="序号"
+                            width="100"
+                            >
                             </el-table-column>
                             <el-table-column
-                                prop="status"
+                                prop="title"
                                 label="奖项"
-                               
                                 >
                             </el-table-column>
                             <el-table-column
                                 fixed="right"
                                 label="操作"
+                                width="100"
                                >
-                                    <template slot-scope="scope">
-                                        <el-button @click="goToExport(scope.row)" type="text" size="small">导出</el-button>
-                                        <el-button @click="goToDelete(scope.$index, tableData)" type="text" size="small" style="color:red;">删除</el-button>
-                                    </template>
+                                <template slot-scope="scope">
+                                    <el-button @click="goToEdit(scope.row)" type="text" size="small">编辑</el-button>
+                                    <el-button @click="goToDelete(scope.$index, scope.row)" type="text" size="small" style="color:red;">删除</el-button>
+                                </template>
                             </el-table-column>
                         </el-table>
                     </el-row>
@@ -72,82 +71,61 @@
     </div>
 </template>
 <script>
+    import api from '../../service/api';
     export default{
         data(){
             return{
                 dialogVisible:false,
                 activeName:'importExpert',
-                tableData: [{
-                fileName: '龙华区专家组',
-                status: '上传完成',
-                finishStatus:'完成',
-                operPeple:'陆同学',
-                importTime:'2019-11-18 16:26:35'
-                }, {
-                fileName: '龙华区专家组',
-                status: '上传完成',
-                finishStatus:'完成',
-                operPeple:'陆同学',
-                importTime:'2019-11-18 16:26:35'
-                }, {
-                fileName: '龙华区专家组',
-                status: '上传完成',
-                finishStatus:'完成',
-                operPeple:'陆同学',
-                importTime:'2019-11-18 16:26:35'
-                }, {
-                fileName: '龙华区专家组',
-                status: '上传完成',
-                finishStatus:'完成',
-                operPeple:'陆同学',
-                importTime:'2019-11-18 16:26:35'
-                }, {
-                fileName: '龙华区专家组',
-                status: '上传完成',
-                finishStatus:'完成',
-                operPeple:'陆同学',
-                importTime:'2019-11-18 16:26:35'
-                }, {
-                fileName: '龙华区专家组',
-                status: '上传完成',
-                finishStatus:'完成',
-                operPeple:'陆同学',
-                importTime:'2019-11-18 16:26:35'
-                }, {
-                fileName: '龙华区专家组',
-                status: '上传完成',
-                finishStatus:'完成',
-                operPeple:'陆同学',
-                importTime:'2019-11-18 16:26:35'
-                }],
+                tableData: [],
                 multipleSelection: [],
                 currentPage:1,//当前页
                 input:"",
             }
         },
         mounted(){
-
+            let params={}
+            this.getAward(params)
         },
         methods:{
-            addPrize(){
-
+            //获取奖项
+            async getAward(params){
+                params.url=api.award
+                let res = await this.axiosGet(params).catch(err => err);
+                this.tableData=res.items
+                console.log("award===",res.items)
             },
-            //导出
-            goToExport(){
+            async addPrize(){
+                let params={}
+                if(this.input==''){
+                    this.$message({
+                        type: 'warning',
+                        message: '请输入奖项名称'
+                    });
+                    return
+                }else{
+                    params.url=api.award
+                    params.title=this.input
+                    let res=await this.axiosPost(params).catch(err=>err)
+                }
+            },
+            //编辑
+            goToEdit(){
 
             },
             //删除
-            goToDelete(index,rows){
-                this.open(index,rows)
+            goToDelete(index,row){
+                this.open(index,row)
             },
             //提示框
-            open(index,rows) {
+            open(index,row) {
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    rows.splice(index, 1);
+                    // rows.splice(index, 1);
+                    this.deleteItem(row.id)
                     this.$message({
                         type: 'success',
                         message: '删除成功!'
@@ -160,6 +138,14 @@
                     });          
                 });
             },
+            //删除
+            async deleteItem(id){
+                let params={}
+                params.url=api.award
+                params.id=id
+                let res=await this.axiosDelete(params).catch(err=>err)
+
+            },
             //每页数量改变
             pageSizeChange(val){
 
@@ -168,6 +154,9 @@
             pageCurrentChange(val){
 
             },
+            handleClose(){
+                this.dialogVisible=false
+            }
         }
     };
 </script>
@@ -177,7 +166,6 @@
     width:1180px;
     margin:auto;
     margin-top:20px;
-    
     .import-expert-item{
         margin-top:60px;
         width:600px;

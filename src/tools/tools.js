@@ -88,13 +88,13 @@ export function removeClass(dom, className) {
   dom.className = newClassName.join(' ');
 }
 
- function axiosGetParam(param) {
-  let url = param.url;
+function axiosGetParam(param) {
+  let url = param.id===undefined? param.url : `${param.url}/${param.id}`;
   let options = param;
+  delete options.id;
   delete options.url;
   let headers = {};
   if (getCookie('x-api-key')) headers['x-api-key'] = getCookie('x-api-key');
-  // headers['Authorization'] = defaultToken;
   return {
     url: url,
     param: options,
@@ -178,6 +178,82 @@ export function axiosPostPIC(param, isExpire = true, ) {
     }).then(res => {
       let data = res.data;
       resolve(data);
+    }).catch(err => {
+      let resp = err.response;
+      if (resp &&
+        (resp.statusText == 'Unauthorized' || resp.data.ErrorCode == 'UserNotLogin' ||
+          resp.data.ErrorCode == 'User.SessionError') && isExpire) {
+        expire();
+        reject(resp.data || err);
+      } else {
+        reject(resp.data || err);
+      }
+    });
+  });
+}
+
+function axiosDeleteParam(param) {
+  let url = param.url;
+  let headers = {
+    'Content-type': 'application/json'
+  };
+  if (getCookie('x-api-key')) headers['x-api-key'] = getCookie('x-api-key');
+  delete param.url;
+  return {
+    url: url,
+    param: param,
+    headers: headers
+  };
+}
+
+export function axiosDelete(param, isExpire = true, headers_) {
+  let options = axiosDeleteParam(param);
+  let headers = Object.assign(options.headers, headers_);
+  store.dispatch('INIT_SHOW', false);
+  return new Promise((resolve, reject) => {
+    axios.delete(options.url, {
+      params: options.param,
+      headers: headers
+    }).then(res => {
+      resolve(res.data);
+    }).catch(err => {
+      let resp = err.response;
+      if (resp &&
+        (resp.statusText == 'Unauthorized' || resp.data.ErrorCode == 'UserNotLogin' ||
+          resp.data.ErrorCode == 'User.SessionError') && isExpire) {
+        expire();
+        reject(resp.data || err);
+      } else {
+        reject(resp.data || err);
+      }
+    });
+  });
+}
+
+function axiosPutParam(param) {
+  let url = param.id===undefined? param.url : `${param.url}/${param.id}`;
+  let headers = {
+    'Content-type': 'application/json'
+  };
+  if (getCookie('x-api-key')) headers['x-api-key'] = getCookie('x-api-key');
+  delete param.url;
+  delete param.id
+  return {
+    url: url,
+    param: param,
+    headers: headers
+  };
+}
+
+export function axiosPut(param, isExpire = true, headers_) {
+  let options = axiosPutParam(param);
+  let headers = Object.assign(options.headers, headers_);
+  store.dispatch('INIT_SHOW', false);
+  return new Promise((resolve, reject) => {
+    axios.put(options.url, 
+    options.param,
+    {headers: headers}).then(res => {
+      resolve(res.data);
     }).catch(err => {
       let resp = err.response;
       if (resp &&

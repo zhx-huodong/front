@@ -10,19 +10,19 @@
                     </div> -->
                     <el-row>
                         <el-col :span="3">
-                            <el-button type="primary" @click="goToAddExpert">添加专家</el-button>
+                            <el-button type="primary" @click="goToAddExpert" size="small">添加专家</el-button>
                         </el-col>
                         <el-col :span="3">
-                            <el-button type="primary" plain @click="goToImportExpert">导入专家</el-button>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-button type="danger" plain @click="goToDeleteExpert">删除</el-button>
+                            <el-button type="primary" plain @click="goToImportExpert" size="small">导入专家</el-button>
                         </el-col>
                         <el-col :span="8">
-                            <el-input placeholder="请输入搜索内容" v-model="searchVal"></el-input>
+                            <el-button type="danger" plain @click="goToDeleteExpert" size="small">删除</el-button>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-input placeholder="请输入搜索内容" v-model="searchVal" size="small"></el-input>
                         </el-col>
                         <el-col :span="2">
-                            <el-button icon="el-icon-search" type="primary" @click="goToSearch">搜索</el-button>
+                            <el-button icon="el-icon-search" type="primary" @click="goToSearch" size="small">搜索</el-button>
                         </el-col>
                     </el-row>
                     <el-row>
@@ -94,21 +94,21 @@ import TypeSelect from '../../components/TypeSelect';
         components: {TypeSelect},
         data(){
             return{
-                   	gradeList:[
-		    { Id : 0, Name : '全部' },
-        { Id : 1, Name : '小学组' },
-        { Id : 2, Name : '初中组' },
-        { Id : 3, Name : '高中组' },
-      ],
-      regionList:[
-      {Id:0, Name:'全部'},
-      {Id:1, Name:'罗湖区'},
-      {Id:2, Name:'南山区'},
-      {Id:3, Name:'宝安区'},
-      {Id:4, Name:'罗湖区'},
-      {Id:5, Name:'盐田区'},
-      {Id:6, Name:'龙岗区'},
-    	],
+                gradeList:[
+                    { Id : 0, Name : '全部' },
+                    { Id : 1, Name : '小学组' },
+                    { Id : 2, Name : '初中组' },
+                    { Id : 3, Name : '高中组' },
+                ],
+                regionList:[
+                    {Id:0, Name:'全部'},
+                    {Id:1, Name:'罗湖区'},
+                    {Id:2, Name:'南山区'},
+                    {Id:3, Name:'宝安区'},
+                    {Id:4, Name:'罗湖区'},
+                    {Id:5, Name:'盐田区'},
+                    {Id:6, Name:'龙岗区'},
+                ],
                 activeName:'expertManage',
                 searchVal:'',//搜索
                 tableData: [{

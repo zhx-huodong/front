@@ -6,16 +6,16 @@
                     <el-row>
                         <el-form :inline="true" :model="formInline" class="demo-form-inline">
                             <el-form-item label="活动名称：">
-                                <el-input v-model="formInline.activityName" placeholder="请输入活动名称"></el-input>
+                                <el-input v-model="formInline.activityName" placeholder="请输入活动名称" size="small"></el-input>
                             </el-form-item>
                             <el-form-item label="活动组别：">
-                                <el-input v-model="formInline.activityGroup" placeholder="请输入活动组别"></el-input>
+                                <el-input v-model="formInline.activityGroup" placeholder="请输入活动组别" size="small"></el-input>
                             </el-form-item>
                             <el-form-item label="">
-                                <el-input v-model="formInline.name" placeholder="输入姓名"></el-input>
+                                <el-input v-model="formInline.name" placeholder="输入姓名" size="small"></el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" @click="goToSearch">查找</el-button>
+                                <el-button type="primary" @click="goToSearch" size="small">查找</el-button>
                             </el-form-item>
                         </el-form>
                     </el-row>

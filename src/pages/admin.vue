@@ -10,55 +10,55 @@
                 <el-row class="teacher-top">
                         <el-col :span="2">所在地区</el-col>
                         <el-col :span="6">
-                            <el-select v-model="areaVal" placeholder="请选择">
+                            <el-select v-model="areaVal" placeholder="请选择" size="small" @change="areaChange">
                                 <el-option
                                 v-for="item in areaList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                                 </el-option>
                             </el-select>
                         </el-col>
                         <el-col :span="2" v-if="index!=2">所在学校</el-col>
                         <el-col :span="6" v-if="index!=2">
-                            <el-select v-model="schoolVal" placeholder="请选择">
+                            <el-select v-model="schoolVal" placeholder="请选择" size="small" @change="schoolChange">
                                 <el-option
                                 v-for="item in schoolList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.title"
+                                :value="item.id">
                                 </el-option>
                             </el-select>
                         </el-col>
                         <el-col :span="2" v-if="index==1">关联家长</el-col>
                         <el-col :span="6" v-if="index==1">
-                            <el-input v-model="input" placeholder="请输入内容"></el-input>
+                            <el-input v-model="input" placeholder="请输入内容" size="small"></el-input>
                         </el-col>
                         <el-col :span="2" v-if="index==2">关联学生</el-col>
                         <el-col :span="6" v-if="index==2">
-                            <el-input v-model="input" placeholder="请输入内容"></el-input>
+                            <el-input v-model="input" placeholder="请输入内容" size="small"></el-input>
                         </el-col>
                     </el-row>
                     <el-row class="teacher-top">
                         <el-col :span="1">电话</el-col>
                         <el-col :span="6">
-                            <el-input v-model="input" placeholder="请输入内容"></el-input>
+                            <el-input v-model="input" placeholder="请输入内容" size="small"></el-input>
                         </el-col>
                         <el-col :span="1" :offset="1">姓名</el-col>
                         <el-col :span="6">
-                            <el-input v-model="input" placeholder="请输入内容"></el-input>
+                            <el-input v-model="input" placeholder="请输入内容" size="small"></el-input>
                         </el-col>
                         <el-col :span="2" :offset="1">
-                            <el-button type="primary">查询</el-button>
+                            <el-button type="primary" size="small">查询</el-button>
                         </el-col>
                         <el-col :span="2">
-                            <el-button type="danger" plain>删除</el-button>
+                            <el-button type="danger" plain size="small">删除</el-button>
                         </el-col>
                     </el-row>
                     <el-row>
                         <el-table
                             ref="multipleTable"
-                            :data="tableData"
+                            :data="userList"
                             border
                             :header-cell-style="{background:'#EEEEEE',color:'#323232'}"
                             tooltip-effect="dark"
@@ -94,7 +94,7 @@
                             <el-table-column
                             label="手机号"
                             >
-                            <template slot-scope="scope">{{ scope.row.phoneNum }}</template>
+                            <template slot-scope="scope">{{ scope.row.mobile }}</template>
                             </el-table-column>
                             <el-table-column
                             fixed="right"
@@ -123,111 +123,81 @@
     </div>
 </template>
 <script>
+    import api from '../service/api';
     export default{
         data(){
             return{
                 index:0,
                 activeName: 'teacher',
-                areaList: [{
-                value: '1',
-                label: '南山区'
-                }, {
-                value: '2',
-                label: '龙华区'
-                }, {
-                value: '3',
-                label: '宝安区'
-                }, {
-                value: '4',
-                label: '龙岗区'
-                }, {
-                value: '5',
-                label: '福田区'
-                }],
-                schoolList:[{
-                value: '1',
-                label: '附属第三小学'
-                }, {
-                value: '2',
-                label: '龙华第三中学'
-                }, {
-                value: '3',
-                label: '附属小学'
-                }, {
-                value: '4',
-                label: '观澜中学'
-                }, {
-                value: '5',
-                label: '清湖小学'
-                }],
+                areaList: [
+                    {"id":"77","pid":"6","type":"2","name":"深圳"},
+                    {"id":"726","pid":"77","type":"3","name":"福田区"},
+                    {"id":"727","pid":"77","type":"3","name":"罗湖区"},
+                    {"id":"728","pid":"77","type":"3","name":"南山区"},
+                    {"id":"729","pid":"77","type":"3","name":"宝安区"},
+                    {"id":"730","pid":"77","type":"3","name":"龙岗区"},
+                    {"id":"731","pid":"77","type":"3","name":"盐田区"},
+                    {"id":"732","pid":"77","type":"3","name":"市辖区"},
+                    {"id":"733","pid":"77","type":"3","name":"龙华区"},
+                    {"id":"734","pid":"77","type":"3","name":"坪山区"},
+                    {"id":"735","pid":"77","type":"3","name":"光明区"},
+                    {"id":"736","pid":"77","type":"3","name":"大鹏区"}
+                ],
+                schoolList:[],
                 areaVal: '',
                 schoolVal:'',
                 input:'',
-                tableData: [{
-                phoneNum: '13714264534',
-                name: '陆同学',
-                area: '深圳市龙华区龙华街道清湖小学',
-                school:'清湖小学'
-                }, {
-                phoneNum: '13714264534',
-                name: '陆同学',
-                area: '深圳市龙华区龙华街道清湖小学',
-                school:'清湖小学'
-                }, {
-                phoneNum: '13714264534',
-                name: '陆同学',
-                area: '深圳市龙华区龙华街道清湖小学',
-                school:'清湖小学'
-                }, {
-                phoneNum: '13714264534',
-                name: '陆同学',
-                area: '深圳市龙华区龙华街道清湖小学',
-                school:'清湖小学'
-                }, {
-                phoneNum: '13714264534',
-                name: '陆同学',
-                area: '深圳市龙华区龙华街道清湖小学',
-                school:'清湖小学'
-                }, {
-                phoneNum: '13714264534',
-                name: '陆同学',
-                area: '深圳市龙华区龙华街道清湖小学',
-                school:'清湖小学'
-                }, {
-                phoneNum: '13714264534',
-                name: '陆同学',
-                area: '深圳市龙华区龙华街道清湖小学',
-                school:'清湖小学'
-                }, {
-                phoneNum: '13714264534',
-                name: '陆同学',
-                area: '深圳市龙华区龙华街道清湖小学',
-                school:'清湖小学'
-                }, {
-                phoneNum: '13714264534',
-                name: '陆同学',
-                area: '深圳市龙华区龙华街道清湖小学',
-                school:'清湖小学'
-                }, {
-                phoneNum: '13714264534',
-                name: '陆同学',
-                area: '深圳市龙华区龙华街道清湖小学',
-                school:'清湖小学'
-                }],
+                userList: [],
                 multipleSelection: [],
                 currentRow: null,
                 currentPage:1,//当前页
-                
             };
         },
         mounted(){
-
+            let params={}
+            params.mtype=parseInt(this.index)+1
+            this.getUserList(params) 
+            params={}
+            this.getSchoolList(params)
         },
         methods:{
+            //获取用户列表
+            async getUserList(params){
+                params.url=api.user
+                let res = await this.axiosGet(params).catch(err => err);
+                console.log("userlist===",res.items)
+                this.userList=res.items
+            },
+            async getSchoolList(params){
+                params.url=api.school
+                let res=await this.axiosGet(params).catch(err=>err);
+                console.log("schoolList===",res.items)
+                this.schoolList=res.items
+            },
+            //区域改变
+            async areaChange(id){
+                console.log("area===",id)
+                this.areaVal=id
+                this.schoolVal=''
+                let params={'filter[areaid]':this.areaVal}
+                this.getSchoolList(params)
+            },
+            //学校改变
+            schoolChange(id){
+                console.log("school===",id)
+                this.schoolVal=id
+                let params={}
+                params.school=this.schoolVal
+                this.getUserList(params)
+            },
+            
             //导航栏
             tabClick(tab, event) {
                 console.log(tab.index, event);
                 this.index=tab.index
+                let params={}
+                params.mtype=parseInt(this.index)+1
+                this.getUserList(params)
             },
             //每页数量改变
             pageSizeChange(val){
