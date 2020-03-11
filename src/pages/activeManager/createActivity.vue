@@ -183,7 +183,7 @@
           </el-form-item>
          
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">保存并发布</el-button>
+            <el-button type="primary" @click="onSubmit()">保存并发布</el-button>
             <el-button>保存草稿</el-button>
             <el-button>取消</el-button>
           </el-form-item>
@@ -356,6 +356,7 @@ export default {
         }
     }
   },
+  
   computed: {
   
   },
@@ -598,12 +599,11 @@ export default {
     
     //提交
 
-    onSubmit() {
-        // upload:{},
-        // recommend:{},
-        // review:{},
-        // exhibit:{},
+     async onSubmit() {
+        console.log(1,"-------------------------")
         var activedata=JSON.parse(sessionStorage.getItem("activedata"))
+        var ativeEdit=JSON.parse(localStorage.getItem("ativeEdit"))
+        console.log(ativeEdit)
         activedata.upload={
           stime:this.form.upload[0],
           etime:this.form.upload[1],
@@ -620,7 +620,14 @@ export default {
       stime:this.form.exhibit[0],
       etime:this.form.exhibit[1],
     }
+    activedata.category=ativeEdit
+    activedata.url=api.activity
     sessionStorage.setItem("activedata",JSON.stringify(activedata))
+    
+    console.log(activedata)
+    let res = await this.axiosPost(activedata).catch(err => err);
+    console.log(res);
+
     },
     handlePictureCardPreview() {},
    
