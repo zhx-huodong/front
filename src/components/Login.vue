@@ -154,21 +154,23 @@
                         type: 'warning'
                     });
                 }else{
-                    this.$store.dispatch('INIT_USER', res);
+                    
                     this.$store.dispatch('INIT_SHOW', false);
                     setCookie('x-api-key', res.token);
-                    let userInfo=JSON.stringify(res)
-                    localStorage.setItem('user',userInfo);
+                    
                     const loading = this.$loading({
-                    lock: true,
-                    text: '登录中。。',
-                    spinner: 'el-icon-loading',
-                    background: 'rgba(0, 0, 0, 0.7)'
+                        lock: true,
+                        text: '登录中。。',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
                     });
                     setTimeout(() => {
                         loading.close();
                         this.show=false
-                        this.getRole()
+                        let params={}
+                        params.id=res.id
+                        params.expand='roleInfo'
+                        this.getUserInfo(params)
                     }, 2000);
                     
                 }
@@ -193,24 +195,21 @@
             onClose() {
                 this.$store.dispatch('INIT_SHOW', false);
             },
-            //获取角色
-            async getRole(){
-                let params={}
-                params.url=api.role
-                let res = await this.axiosGet(params).catch(err => err);
-                let roles=JSON.stringify(res.items)
-                localStorage.setItem('roles',roles);
-                let nowRole=JSON.stringify(res.items[0])
-                localStorage.setItem('nowRole',nowRole);
-                this.$store.dispatch('INIT_ROLES', res.items);
-                this.$store.dispatch('INIT_NOWROLE', res.items[0]);
-            },
             //获取用户信息
-            async getUser(params){
+            async getUserInfo(params){
                 params.url=api.user
                 let res=await this.axiosGet(params).catch(err=>err)
-                console.log("userInfo===",res)
-            }
+                console.log("userInfo===",res) 
+                this.$store.dispatch('INIT_USER', res);
+                let userInfo=JSON.stringify(res)
+                localStorage.setItem('user',userInfo);
+                let roles=JSON.stringify(res.roleInfo)
+                localStorage.setItem('roles',roles);
+                let nowRole=JSON.stringify(res.roleInfo[0])
+                localStorage.setItem('nowRole',nowRole);
+                this.$store.dispatch('INIT_ROLES', res.roleInfo);
+                this.$store.dispatch('INIT_NOWROLE', res.roleInfo[0]);  
+            },
             
         }
   };

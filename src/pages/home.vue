@@ -82,7 +82,7 @@ export default {
         },
         //区域
         async regionObject(value){
-            cnsole.log(value)
+            console.log(value)
         }
     }
 };

@@ -11,12 +11,12 @@
         </div>
       </div>
       <div class="header-user">
-        <template v-if="roles.length>0">
+        <template v-if="$store.state.account.roles.length>0">
           <span class="name" @click="roleClick"></span>
           <el-dropdown @command="roleClick">
-            <span class="name">{{nowRole.name}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+            <span class="name">{{$store.state.account.nowRole.name}}<i class="el-icon-arrow-down el-icon--right"></i></span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item :command="item.id" v-for="(item,index) in roles" :key="index">{{item.name}}</el-dropdown-item>
+              <el-dropdown-item :command="item.id" v-for="(item,index) in $store.state.account.roles" :key="index">{{item.name}}</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -68,23 +68,31 @@
           { key: 'prizeManagement', name: '奖品管理', hide: false },
         ],
         activeTab: 'home',
-        roles: [], // 角色列表
-        nowRole:{},//当前角色
+        // roles: [], // 角色列表
+        // nowRole:{},//当前角色
         levelList:[],//面包屑
       };
     },
     computed: {
       user() {
         return this.$store.state.account.user;
+      },
+      getRoles(){
+        return this.$store.state.account.roles;
+      },
+      getNowRole(){
+        return this.$store.state.account.nowRole
       }
+      
     },
-    async mounted() {
+    created(){
+      
+    },
+    mounted() {
       if(getCookie('x-api-key')){
         this.$store.dispatch('INIT_USER', JSON.parse(localStorage.getItem('user')));
         this.$store.dispatch('INIT_ROLES', JSON.parse(localStorage.getItem('roles')));
         this.$store.dispatch('INIT_NOWROLE', JSON.parse(localStorage.getItem('nowRole')));
-        this.nowRole=this.$store.state.account.nowRole
-        this.roles=this.$store.state.account.roles
         this.checkRole()
       }else{
         this.tabs = this.normalTabs;
@@ -92,14 +100,26 @@
         this.activeTab='home'
         this.levelList=[{path: '/home',name:'首页', meta: { title: '首页' }}]
       }
-      
     },
     watch: {
       $route(val) {
         this.activeTab = val.path.split('/')[1];
         this.getBreadcrumb(val);
       },
-      user() {
+      getNowRole(newval,oldval) {
+        if(newval.type!==oldval.type){
+          if(getCookie('x-api-key')){
+            this.$store.dispatch('INIT_USER', JSON.parse(localStorage.getItem('user')));
+            this.$store.dispatch('INIT_ROLES', JSON.parse(localStorage.getItem('roles')));
+            this.$store.dispatch('INIT_NOWROLE', JSON.parse(localStorage.getItem('nowRole')));
+            this.checkRole()
+          }else{
+            this.tabs = this.normalTabs;
+            this.$router.push('/home');
+            this.activeTab='home'
+            this.levelList=[{path: '/home',name:'首页', meta: { title: '首页' }}]
+          }
+        }
         
       }
     },
@@ -124,13 +144,13 @@
       },
       //检查角色类型
       checkRole(){
-        if(this.nowRole.type==0){
+        if(this.$store.state.account.nowRole.type==0){
           this.tabs=this.adminTabs
           this.activeTab='admin'
           this.$router.push('/admin');
           this.levelList=[{path: '/admin',name:'用户管理', meta: { title: '用户管理' }}]
         }else{
-          if(this.nowRole.type==1||this.nowRole.type==2||this.nowRole.type==3){
+          if(this.$store.state.account.nowRole.type==1||this.$store.state.account.nowRole.type==2||this.$store.state.account.nowRole.type==3){
             for(let i in this.normalTabs){
               if(this.normalTabs[i].key=='activeManager'){
                 this.normalTabs[i].hide=false
@@ -138,7 +158,7 @@
                 this.normalTabs[i].hide=true
               }
             }
-          }else if(this.nowRole.type==4){
+          }else if(this.$store.state.account.nowRole.type==4){
             for(let i in this.normalTabs){
               if(this.normalTabs[i].key=='workReview'){
                 this.normalTabs[i].hide=false
@@ -148,7 +168,6 @@
             }
           }
           this.tabs = this.normalTabs;
-          console.log("nowRole===",this.nowRole,"tabs===",this.tabs)
           this.$router.push('/home');
           this.activeTab='home'
           this.levelList=[{path: '/home',name:'首页', meta: { title: '首页' }}]
@@ -156,16 +175,13 @@
       },
       //角色切换
       roleClick(id){
-        for(let i in this.roles){
-          if(this.roles[i].id==id){
-            this.nowRole=this.roles[i]
-            let nowRole=JSON.stringify(this.roles[i])
+        for(let i in this.$store.state.account.roles){
+          if(this.$store.state.account.roles[i].id==id){
+            let nowRole=JSON.stringify(this.$store.state.account.roles[i])
             localStorage.setItem('nowRole',nowRole);
-            this.$store.dispatch('INIT_NOWROLE', this.roles[i]);
+            this.$store.dispatch('INIT_NOWROLE', this.$store.state.account.roles[i]);
           }
         }
-        this.checkRole()
-        
       },
       /**
       * 生成面包屑的方法

@@ -82,14 +82,15 @@
                             </el-table-column>
 
                             <el-table-column
-                            prop="area"
                             label="所在区域"
                             show-overflow-tooltip>
+                                <template slot-scope="scope">{{ scope.row.memberInfo[0].school.areaInfo.areaName }}</template>
                             </el-table-column>
                             <el-table-column
                             label="所在学校"
+                            show-overflow-tooltip
                             >
-                            <template slot-scope="scope">{{ scope.row.school }}</template>
+                                <template slot-scope="scope">{{ scope.row.memberInfo[0].school.title }}</template>
                             </el-table-column>
                             <el-table-column
                             label="手机号"
@@ -99,10 +100,17 @@
                             <el-table-column
                             fixed="right"
                             label="操作"
-                            width="100">
+                            width="150">
                             <template slot-scope="scope">
-                                <el-button @click="goToDetail(scope.row)" type="text" size="small">查看</el-button>
-                                <el-button @click="goToDelete(scope.$index, tableData)" type="text" size="small" style="color:red;">删除</el-button>
+                                <template v-if="scope.row.status==1">
+                                    <el-button @click="goToDetail(scope.row.id)" type="text" size="small">查看</el-button>
+                                    <el-button @click="goToForbidden(scope.row.id)" type="text" size="small" style="color:red;">禁用</el-button>
+                                </template>
+                                <template v-if="scope.row.status==0">
+                                    <el-button  type="text" size="small" style="color:#999;">已禁用</el-button>
+                                    <el-button @click="goToRelieve(scope.row.id)" type="text" size="small">解禁</el-button>
+                                </template>
+                                <el-button @click="goToDelete(scope.row.id)" type="text" size="small" style="color:red;">删除</el-button>
                             </template>
                             </el-table-column>
                         </el-table>
@@ -112,10 +120,10 @@
                         @size-change="pageSizeChange"
                         @current-change="pageCurrentChange"
                         :current-page="currentPage"
-                        :page-sizes="[10, 20, 30, 40]"
-                        :page-size="10"
+                        :page-sizes="[20, 30, 40, 50, 100]"
+                        :page-size="perPage"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="40">
+                        :total="totalCount">
                         </el-pagination>
                     </el-row>
             </div>
@@ -147,14 +155,19 @@
                 areaVal: '',
                 schoolVal:'',
                 input:'',
+                searchVal:'',
                 userList: [],
                 multipleSelection: [],
-                currentRow: null,
+                perPage: 20,//每页数据条数
                 currentPage:1,//当前页
+                totalCount:0,//总条数
             };
         },
         mounted(){
-            let params={}
+            let params={
+                'per-page':this.perPage
+            }
+            params.page=this.currentPage
             params.mtype=parseInt(this.index)+1
             this.getUserList(params) 
             params={}
@@ -164,48 +177,74 @@
             //获取用户列表
             async getUserList(params){
                 params.url=api.user
-                let res = await this.axiosGet(params).catch(err => err);
-                console.log("userlist===",res.items)
-                this.userList=res.items
+                params.expand='memberInfo'
+                await this.axiosGet(params).then(res=>{
+                    this.userList=res.items
+                    this.totalCount=res._meta.totalCount
+                }).catch(err => err);
             },
+            //获取学校列表
             async getSchoolList(params){
                 params.url=api.school
-                let res=await this.axiosGet(params).catch(err=>err);
-                console.log("schoolList===",res.items)
-                this.schoolList=res.items
+                params.ball=1
+                await this.axiosGet(params).then(res=>{
+                    this.schoolList=res.items
+                }).catch(err=>err);
+                
             },
             //区域改变
             async areaChange(id){
                 console.log("area===",id)
-                this.areaVal=id
+                let params={}
+                if(id!=77){
+                    params={'filter[areaid]':this.areaVal}
+                }
                 this.schoolVal=''
-                let params={'filter[areaid]':this.areaVal}
                 this.getSchoolList(params)
             },
             //学校改变
             schoolChange(id){
-                console.log("school===",id)
                 this.schoolVal=id
-                let params={}
+                let params={
+                    'per-page':this.perPage
+                }
+                params.page=this.currentPage
                 params.school=this.schoolVal
+                params.mtype=parseInt(this.index)+1
                 this.getUserList(params)
             },
             
             //导航栏
             tabClick(tab, event) {
                 console.log(tab.index, event);
+                this.currentPage=1
                 this.index=tab.index
-                let params={}
+                let params={
+                    'per-page':this.perPage
+                }
+                params.page=this.currentPage
                 params.mtype=parseInt(this.index)+1
                 this.getUserList(params)
             },
             //每页数量改变
             pageSizeChange(val){
-
+                this.perPage=val
+                let params={
+                    'per-page':this.perPage
+                }
+                params.mtype=parseInt(this.index)+1
+                params.page=this.currentPage
+                this.getUserList(params) 
             },
             //页码改变
             pageCurrentChange(val){
-
+                this.currentPage=val
+                let params={
+                    'per-page':this.perPage
+                }
+                params.mtype=parseInt(this.index)+1
+                params.page=this.currentPage
+                this.getUserList(params)
             },
             //列表选择
             tableSelectionChange(val){
@@ -215,32 +254,82 @@
             goToDetail(val){
 
             },
+            //禁用
+            goToForbidden(id){
+                let status=0
+                this.open(id,status)
+            },
             //删除
-            goToDelete(index,rows){
-                console.log(index, rows);
-                
-                this.open(index, rows)
+            goToDelete(id){
+                let status=-1
+                this.open(id,status)
             },
             //提示框
-            open(index,rows) {
-                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            open(id,status) {
+                let tag=''
+                if(status==0){
+                    tag='禁止该用户使用改系统'
+                }else if(status==-1){
+                    tag='永久删除该用户'
+                }
+                this.$confirm(`此操作将${tag}, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    rows.splice(index, 1);
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                    });
-                    
+                    let params={}
+                    params.id=id
+                    params.status=status
+                    this.updateUser(params) 
                 }).catch(() => {
                     this.$message({
                         type: 'info',
-                        message: '已取消删除'
+                        message: '已取消！'
                     });          
                 });
-            }
+            },
+            //修改角色权限
+            async updateUser(params){
+                params.url=api.user
+                let msg=''
+                if(params.status==0){
+                    msg='禁用成功！'
+                }else if(params.status==-1){
+                    msg='删除成功！'
+                }
+                await this.axiosPut(params).then(res=>{
+                    this.$message({
+                        type: 'success',
+                        message: msg
+                    });
+                    let params={
+                        'per-page':this.perPage
+                    }
+                    params.page=this.currentPage
+                    params.mtype=parseInt(this.index)+1
+                    this.getUserList(params)
+                }).catch(err => err);
+                
+            },
+            //解禁
+            async goToRelieve(id){
+                let params={}
+                params.id=id
+                params.status=1
+                params.url=api.user
+                await this.axiosPut(params).then(res=>{
+                    this.$message({
+                        type: 'success',
+                        message: '解禁成功！'
+                    });
+                    params={
+                        'per-page':this.perPage
+                    }
+                    params.page=this.currentPage
+                    params.mtype=parseInt(this.index)+1
+                    this.getUserList(params)
+                }).catch(err => err);
+            },
         }
     }
 </script>
