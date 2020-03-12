@@ -8,8 +8,8 @@
             </el-tabs>
             <div>
                 <el-row class="teacher-top">
-                        <el-col :span="2">所在地区</el-col>
-                        <el-col :span="6">
+                        <el-col :span="2" v-if="index!=2">所在地区</el-col>
+                        <el-col :span="6" v-if="index!=2">
                             <el-select v-model="areaVal" placeholder="请选择" size="small" @change="areaChange">
                                 <el-option
                                 v-for="item in areaList"
@@ -32,27 +32,30 @@
                         </el-col>
                         <el-col :span="2" v-if="index==1">关联家长</el-col>
                         <el-col :span="6" v-if="index==1">
-                            <el-input v-model="input" placeholder="请输入内容" size="small"></el-input>
+                            <el-input v-model="parent" placeholder="请输入关联家长" size="small"></el-input>
                         </el-col>
                         <el-col :span="2" v-if="index==2">关联学生</el-col>
                         <el-col :span="6" v-if="index==2">
-                            <el-input v-model="input" placeholder="请输入内容" size="small"></el-input>
+                            <el-input v-model="student" placeholder="请输入关联学生" size="small"></el-input>
                         </el-col>
                     </el-row>
                     <el-row class="teacher-top">
                         <el-col :span="1">电话</el-col>
                         <el-col :span="6">
-                            <el-input v-model="input" placeholder="请输入内容" size="small"></el-input>
+                            <el-input v-model="mobile" placeholder="请输入电话" size="small"></el-input>
                         </el-col>
                         <el-col :span="1" :offset="1">姓名</el-col>
                         <el-col :span="6">
-                            <el-input v-model="input" placeholder="请输入内容" size="small"></el-input>
+                            <el-input v-model="name" placeholder="请输入姓名" size="small"></el-input>
                         </el-col>
                         <el-col :span="2" :offset="1">
-                            <el-button type="primary" size="small">查询</el-button>
+                            <el-button type="primary" size="small" icon="el-icon-search" @click="goToSearch">查询</el-button>
                         </el-col>
                         <el-col :span="2">
-                            <el-button type="danger" plain size="small">删除</el-button>
+                            <el-button type="danger" plain size="small" @click="goToBatchForbidden">批量禁用</el-button>
+                        </el-col>
+                        <el-col :span="2">
+                            <el-button type="danger" plain size="small" @click="goToBatchDelete">批量删除</el-button>
                         </el-col>
                     </el-row>
                     <el-row>
@@ -154,8 +157,10 @@
                 schoolList:[],
                 areaVal: '',
                 schoolVal:'',
-                input:'',
-                searchVal:'',
+                name:'',
+                mobile:'',
+                parent:'',
+                student:'',
                 userList: [],
                 multipleSelection: [],
                 perPage: 20,//每页数据条数
@@ -178,6 +183,21 @@
             async getUserList(params){
                 params.url=api.user
                 params.expand='memberInfo'
+                if(this.name!=''){
+                    params.name=this.name
+                }
+                if(this.mobile!=''){
+                    params.mobile=this.mobile
+                }
+                if(this.schoolVal!=''){
+                    params.school=this.schoolVal
+                }
+                if(this.parent!=''){
+                    params.parent=this.parent
+                }
+                if(this.student!=''){
+                    params.student=this.student
+                }
                 await this.axiosGet(params).then(res=>{
                     this.userList=res.items
                     this.totalCount=res._meta.totalCount
@@ -209,7 +229,6 @@
                     'per-page':this.perPage
                 }
                 params.page=this.currentPage
-                params.school=this.schoolVal
                 params.mtype=parseInt(this.index)+1
                 this.getUserList(params)
             },
@@ -219,6 +238,12 @@
                 console.log(tab.index, event);
                 this.currentPage=1
                 this.index=tab.index
+                if(this.index==0){
+                    this.parent=''
+                }else if(this.index==2){
+                    this.schoolVal=''
+                    this.parent=''
+                }
                 let params={
                     'per-page':this.perPage
                 }
@@ -330,6 +355,89 @@
                     this.getUserList(params)
                 }).catch(err => err);
             },
+            //查询
+            async goToSearch(){
+                let params={
+                    'per-page':this.perPage
+                }
+                params.page=this.currentPage
+                params.mtype=parseInt(this.index)+1
+                this.getUserList(params)
+            },
+            //批量禁用
+            async goToBatchForbidden(){
+                let ids=[]
+                for(let i in this.multipleSelection){
+                    ids.push(this.multipleSelection[i].id)
+                }
+                let params={}
+                params.ids=ids
+                params.url=api.disableUsers
+                this.$confirm(`此操作将批量禁用用户使用该系统, 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                     this.batchForbidden(params)
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消！'
+                    });          
+                });
+            },
+            //批量禁用
+            async batchForbidden(params){
+                await this.axiosPost(params).then(res=>{
+                    this.$message({
+                        type: 'success',
+                        message: '批量禁用成功！'
+                    });
+                    let params={
+                        'per-page':this.perPage
+                    }
+                    params.page=this.currentPage
+                    params.mtype=parseInt(this.index)+1
+                    this.getUserList(params) 
+                }).catch(err=>err)
+            },
+            //批量删除
+            goToBatchDelete(){
+                let ids=[]
+                for(let i in this.multipleSelection){
+                    ids.push(this.multipleSelection[i].id)
+                }
+                let params={}
+                params.ids=ids
+                params.url=api.deleteUsers
+                this.$confirm(`此操作将批量删除用户, 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.batchDelete(params)
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消！'
+                    });          
+                });
+            },
+            //批量删除
+            async batchDelete(params){
+                await this.axiosPost(params).then(res=>{
+                    this.$message({
+                        type: 'success',
+                        message: '批量删除成功！'
+                    });
+                    let params={
+                        'per-page':this.perPage
+                    }
+                    params.page=this.currentPage
+                    params.mtype=parseInt(this.index)+1
+                    this.getUserList(params) 
+                }).catch(err=>err)
+            }
         }
     }
 </script>

@@ -2,8 +2,14 @@
     <div class="role-centainer">
         <el-card style="min-height:600px;">
             <el-row>
-                <el-col :span="14">
+                <el-col :span="2">
                     <el-button type="primary" @click="goToAddRole" size="small">添加角色</el-button>
+                </el-col>
+                <el-col :span="2">
+                    <el-button type="danger" plain @click="goToBatchForbidden" size="small">批量禁用</el-button>
+                </el-col>
+                <el-col :span="10">
+                    <el-button type="danger" plain @click="goToBatchDelete" size="small">批量删除</el-button>
                 </el-col>
                 <el-col :span="8">
                     <el-input placeholder="请输入搜索姓名" v-model="searchVal" size="small" clearable @clear="clearInput"></el-input>
@@ -19,7 +25,12 @@
                     border
                     :header-cell-style="{background:'#EEEEEE',color:'#323232'}"
                     tooltip-effect="dark"
+                    @selection-change="tableSelectionChange"
                     style="width: 100%">
+                    <el-table-column
+                    type="selection"
+                    width="55">
+                    </el-table-column>
                     <el-table-column
                     prop="name"
                     label="姓名"
@@ -109,8 +120,11 @@
         methods:{
             //获取角色管理列表
             async getUserList(params){
+                if(this.searchVal!=''){
+                    params.name=this.searchVal
+                }
                 params.url=api.user
-                params.role_id='1,3,4'
+                params.role_id='1,3,4,5'
                 params.expand='roleInfo'
                 let res=await this.axiosGet(params).catch(err=>err)
                 this.userList=res.items
@@ -138,7 +152,7 @@
                 let params={
                     'per-page':this.perPage
                 }
-                params.name=this.searchVal
+                params.page=this.currentPage
                 this.getUserList(params)
             },
             clearInput(){
@@ -146,7 +160,7 @@
                 let params={
                     'per-page':this.perPage
                 }
-                params.name=this.searchVal
+                params.page=this.currentPage
                 this.getUserList(params)
             },
             //编辑
@@ -210,7 +224,6 @@
                         'per-page':this.perPage
                     }
                     params.page=this.currentPage
-                    params.name=this.searchVal
                     this.getUserList(params)
                 }).catch(err => err);
                 
@@ -230,9 +243,12 @@
                         'per-page':this.perPage
                     }
                     params.page=this.currentPage
-                    params.name=this.searchVal
                     this.getUserList(params)
                 }).catch(err => err);
+            },
+            //列表选择
+            tableSelectionChange(val){
+                this.multipleSelection = val;
             },
             
             //每页数量改变
@@ -242,7 +258,6 @@
                     'per-page':this.perPage
                 }
                 params.page=this.currentPage
-                params.name=this.searchVal
                 this.getUserList(params)
             },
             
@@ -253,9 +268,80 @@
                     'per-page':this.perPage
                 }
                 params.page=this.currentPage
-                params.name=this.searchVal
                 this.getUserList(params)
             },
+            //批量禁用
+            async goToBatchForbidden(){
+                let ids=[]
+                for(let i in this.multipleSelection){
+                    ids.push(this.multipleSelection[i].id)
+                }
+                let params={}
+                params.ids=ids
+                params.url=api.disableUsers
+                this.$confirm(`此操作将批量禁用用户使用该系统, 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                     this.batchForbidden(params)
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消！'
+                    });          
+                });
+            },
+            //批量禁用
+            async batchForbidden(params){
+                await this.axiosPost(params).then(res=>{
+                    this.$message({
+                        type: 'success',
+                        message: '批量禁用成功！'
+                    });
+                    let params={
+                        'per-page':this.perPage
+                    }
+                    params.page=this.currentPage
+                    this.getUserList(params) 
+                }).catch(err=>err)
+            },
+            //批量删除
+            goToBatchDelete(){
+                let ids=[]
+                for(let i in this.multipleSelection){
+                    ids.push(this.multipleSelection[i].id)
+                }
+                let params={}
+                params.ids=ids
+                params.url=api.deleteUsers
+                this.$confirm(`此操作将批量删除用户, 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.batchDelete(params)
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消！'
+                    });          
+                });
+            },
+            //批量删除
+            async batchDelete(params){
+                await this.axiosPost(params).then(res=>{
+                    this.$message({
+                        type: 'success',
+                        message: '批量删除成功！'
+                    });
+                    let params={
+                        'per-page':this.perPage
+                    }
+                    params.page=this.currentPage
+                    this.getUserList(params) 
+                }).catch(err=>err)
+            }
             
         }
     }

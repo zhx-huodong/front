@@ -4,22 +4,21 @@
             center
             title="奖项"
             :visible.sync="dialogVisible"
-            width="30%"
+            width="400px"
             :before-close="handleClose">
             <el-input v-model="input" size="small" placeholder="请输入奖项" ></el-input>
             <span slot="footer" class="dialog-footer">
-                <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
-                <el-button type="primary" @click="addPrize" size="small">确 定</el-button>
+                <el-button type="primary" @click="addPrize" size="small" v-if="operate=='add'">确 定</el-button>
+                <el-button type="primary" @click="editPrize" size="small" v-if="operate=='edit'">确 定</el-button>
             </span>
         </el-dialog>
 
         <el-card style="min-height:600px;">
             <el-tabs v-model="activeName">
                 <el-tab-pane label="奖品设置" name="importExpert">
-                   
                     <el-row>
                         <el-col :span="8">
-                            <el-button type="primary" @click="dialogVisible=true" size="small">添加奖项</el-button>
+                            <el-button type="primary" @click="dialogVisible=true;operate='add'" size="small">添加奖项</el-button>
                         </el-col>
                     </el-row>
                    
@@ -49,7 +48,7 @@
                                >
                                 <template slot-scope="scope">
                                     <el-button @click="goToEdit(scope.row)" type="text" size="small">编辑</el-button>
-                                    <el-button @click="goToDelete(scope.$index, scope.row)" type="text" size="small" style="color:red;">删除</el-button>
+                                    <el-button @click="goToDelete(scope.row.id)" type="text" size="small" style="color:red;">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -59,10 +58,10 @@
                         @size-change="pageSizeChange"
                         @current-change="pageCurrentChange"
                         :current-page="currentPage"
-                        :page-sizes="[10, 20, 30, 40]"
-                        :page-size="10"
+                        :page-sizes="[20, 30, 40, 50, 100]"
+                        :page-size="perPage"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="40">
+                        :total="totalCount">
                         </el-pagination>
                     </el-row>
                 </el-tab-pane>
@@ -79,21 +78,29 @@
                 activeName:'importExpert',
                 tableData: [],
                 multipleSelection: [],
+                perPage: 20,//每页数据条数
                 currentPage:1,//当前页
-                input:"",
+                totalCount:0,//总条数
+                input:"",//输入框
+                id:'',
+                operate:'add',
             }
         },
         mounted(){
-            let params={}
+            let params={
+                'per-page':this.perPage
+            }
+            params.page=this.currentPage
             this.getAward(params)
         },
         methods:{
             //获取奖项
             async getAward(params){
                 params.url=api.award
-                let res = await this.axiosGet(params).catch(err => err);
-                this.tableData=res.items
-                console.log("award===",res.items)
+                await this.axiosGet(params).then(res=>{
+                    this.tableData=res.items
+                    this.totalCount=res._meta.totalCount
+                }).catch(err => err); 
             },
             async addPrize(){
                 let params={}
@@ -106,31 +113,58 @@
                 }else{
                     params.url=api.award
                     params.title=this.input
-                    let res=await this.axiosPost(params).catch(err=>err)
+                    await this.axiosPost(params).then(err=>{
+                        this.$message({
+                            type: 'success',
+                            message: '添加成功！'
+                        });
+                        this.handleClose()
+                        let params={
+                            'per-page':this.perPage
+                        }
+                        params.page=this.currentPage
+                        this.getAward(params)
+                    }).catch(err=>err)
                 }
             },
             //编辑
-            goToEdit(){
-
+            goToEdit(data){
+                this.dialogVisible=true
+                this.input=data.title
+                this.operate='edit'
+                this.id=data.id 
+            },
+            //编辑
+            async editPrize(){
+                let params={}
+                params.id=this.id
+                params.title=this.input
+                params.url=api.award
+                await this.axiosPut(params).then(res=>{
+                    this.$message({
+                            type: 'success',
+                            message: '编辑成功！'
+                        });
+                        this.handleClose()
+                        let params={
+                            'per-page':this.perPage
+                        }
+                        params.page=this.currentPage
+                        this.getAward(params)
+                }).catch(err=>err)
             },
             //删除
-            goToDelete(index,row){
-                this.open(index,row)
+            goToDelete(id){
+                this.open(id)
             },
             //提示框
-            open(index,row) {
-                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            open(id) {
+                this.$confirm('此操作将永久删除该奖项, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
-                }).then(() => {
-                    // rows.splice(index, 1);
-                    this.deleteItem(row.id)
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                    });
-                    
+                }).then(() => { 
+                    this.deleteItem(id)   
                 }).catch(() => {
                     this.$message({
                         type: 'info',
@@ -143,18 +177,39 @@
                 let params={}
                 params.url=api.award
                 params.id=id
-                let res=await this.axiosDelete(params).catch(err=>err)
+                await this.axiosDelete(params).then(res=>{
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    });
+                    let params={
+                        'per-page':this.perPage
+                    }
+                    params.page=this.currentPage
+                    this.getAward(params)
+                }).catch(err=>err)
 
             },
             //每页数量改变
             pageSizeChange(val){
-
+                this.perPage=val
+                let params={
+                    'per-page':this.perPage
+                }
+                params.page=this.currentPage
+                this.getAward(params)
             },
             //页码改变
             pageCurrentChange(val){
-
+                this.currentPage=val
+                let params={
+                    'per-page':this.perPage
+                }
+                params.page=this.currentPage
+                this.getAward(params)
             },
             handleClose(){
+                this.input=''
                 this.dialogVisible=false
             }
         }

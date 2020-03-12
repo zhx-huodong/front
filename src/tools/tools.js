@@ -203,12 +203,13 @@ export function axiosPostPIC(param, isExpire = true, ) {
 }
 
 function axiosDeleteParam(param) {
-  let url = param.url;
+  let url = param.id===undefined? param.url : `${param.url}/${param.id}`;
   let headers = {
     'Content-type': 'application/json'
   };
   if (getCookie('x-api-key')) headers['x-api-key'] = getCookie('x-api-key');
   delete param.url;
+  delete param.id
   return {
     url: url,
     param: param,

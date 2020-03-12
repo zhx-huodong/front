@@ -7,6 +7,8 @@ const role=`${base}/role`;//读取所有角色
 const user=`${base}/user`;//用户
 const award=`${base}/award`;//奖项
 const school=`${base}/school`;//学校
+const deleteUsers=`${base}/common/delete-users`;//批量删除用户
+const disableUsers=`${base}/common/disable-users`;//批量禁用用户
 
 const testLogin=`${base}/login/test`;//测试登录
 const uploadPic=`${base}/upload/image`;//图片上传
@@ -22,6 +24,8 @@ export default {
     user,
     award,
     school,
+    deleteUsers,
+    disableUsers,
     testLogin,
     uploadPic,
     uploadKey,
