@@ -1,9 +1,9 @@
 <template>
   <div class="card-list">
       <div class="card-item" v-for="(item,index) in cardList" :key="index" @click="toNext(item.id)">
-          <img :src="item.imgUrl"></img>
+          <img :src="item.cover" />
           <div class="card-name" v-if="!isExcellent">
-            <p>{{item.name}}</p>
+            <p>{{item.title}}</p>
           </div>
           <div class="excellent-tag" v-if="isExcellent">
               <div class="title">

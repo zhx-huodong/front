@@ -7,7 +7,7 @@
                 </div>
                 <!-- <div class="home-header"></div> -->
                 <div class="home-activity-list" v-if="activityList">
-                    <card-list :cardList="activityList" @toNext="toNext"></card-list>
+                    <card-list :cardList="list" @toNext="toNext"></card-list>
                 </div>
                 <!-- <my-video-player :videoSrc="videoSrc"></my-video-player> -->
                 <!-- <upload-file></upload-file> -->
@@ -22,7 +22,7 @@ import MyVideoPlayer from '../components/MyVideoPlayer';
 import UploadFile from '../components/UploadFile';
 import FilePreview from '../components/FilePreview';
 import TypeSelect from '../components/TypeSelect';
-
+import api from '../service/api';
 export default {
     name: 'home-center',
     components: { CardList ,MyVideoPlayer,UploadFile,FilePreview,TypeSelect},
@@ -64,9 +64,26 @@ export default {
                 { id: 2, name: '初中组' },
                 { id: 3, name: '高中组' }
             ],
+            list:[]
         };
     },
+    created(){
+        this.selectActive()
+    },
     methods: {
+        //查询活动
+        // {{uri}}/activity?expand=detail,region,node,attachment,banner
+        
+        async selectActive(){
+            console.log(1)
+                let params={}
+                params.url=api.activityDetail,
+                params.expand=""
+             
+             let res = await this.axiosGet(params).catch(err => err);
+             this.list=res.items
+        },
+
         // 下一步
         toNext(id){
             this.$router.push({

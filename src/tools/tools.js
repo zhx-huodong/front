@@ -302,6 +302,23 @@ export function dateFormate(str) {
   return year + '-' + month + '-' + date;
 }
 
+
+//获取当前时间戳 yyyy-dd-mm===>>>>1581552000十位
+export function getTimestamp(){
+ 
+  let date = new Date();
+  let y= date .getFullYear();
+  let D= date .getMonth();
+   D = D < 10 ? '0' + D : D;
+   let M= date .getDate(); 
+   let data2=new Date(y+"-"+D+"-"+M);
+   console.log(data2)
+   let TIME = new Date(data2);
+   let time3 = Number(Date.parse(TIME).toString().substring(0,10)) ;
+  return time3;
+}
+
+
 // 交换数组元素位置
 export function swapItems(arr, index1, index2) {
   arr[index1] = arr.splice(index2, 1, arr[index1])[0];

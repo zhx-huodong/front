@@ -103,7 +103,7 @@
           </div> -->
           <el-form-item label="活动类型 :">
             <span class="mybtn" @click="addclassFlag=true" >+添加类别</span>
-            <div class="myOut" v-for="(item,index) in classList" >
+            <div class="myOut" v-for="(item,index) in classList">
               <div class="myTitle" >
                 <span>{{item.title}}</span>
                 <div class="myBtns">

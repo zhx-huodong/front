@@ -12,7 +12,9 @@ const testLogin=`${base}/login/test`;//测试登录
 const uploadPic=`${base}/upload/image`;//图片上传
 const uploadKey=`${base}/upload/cos-key`;//图片上传
 const uploadFile=`${base}/upload/file`;//文件上传
-const activity=`${base}/activity`;//文件上传
+const activity=`${base}/activity`;//文件发布
+const activityDetail=`${base}/activity`;//活动获取
+// {{uri}}/activity?expand=detail,region,node,attachment,banner
 // const testLogin=`${base}/test/login`; 
 
 export default {
@@ -27,4 +29,5 @@ export default {
     uploadKey,
     uploadFile,
     activity,
+    activityDetail,
 }
