@@ -134,9 +134,11 @@ export default {
             //         },
                
             // ]
+            userid:"",//用户id
         }
     },
     created(){
+        this.userid=JSON.parse(localStorage.getItem("user")).id
         this.selectActive();
     },
      methods: {
@@ -188,6 +190,7 @@ export default {
             let params={}
             params.url=api.activityDetail,
             params.expand="detail,region,node,attachment,banner,category,categoryDetail,process"
+            params.created_by=this.userid;
             let res = await this.axiosGet(params).catch(err => err);
             this.list=res.items
             this.list.forEach(item=>{

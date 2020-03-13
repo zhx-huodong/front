@@ -3,7 +3,8 @@
         <el-card style="min-height:650px;">
             <div class="home-wrap">
                 <div>
-                    <type-select :gradeList="gradeList" :activityObjectList="activityObjectList" :regionList="regionList" @gradeObject='gradeObject' @regionObject="regionObject"></type-select>
+                    <type-select :gradeList="gradeList" :activityObjectList="activityObjectList" :regionList="regionList" @gradeObject='gradeObject' 
+                    @regionObject="regionObject" @activityObject="activityObject" ></type-select>
                 </div>
                 <!-- <div class="home-header"></div> -->
                 <div class="home-activity-list" v-if="activityList">
@@ -32,7 +33,8 @@ export default {
             activityObjectList:[
                 {id:0,name:'全部'},
                 {id:1,name:'老师'},
-                {id:2,name:'学生'}
+                {id:2,name:'学生'},
+                {id:4,name:'家长'}
             ],
             regionList:[
                
@@ -58,16 +60,32 @@ export default {
                 { id: 5, name: '深圳市中小学说课大赛', imgUrl: require('../public/images/ac5.png') }, 
                 { id: 6, name: '深圳市AI知识大赛', imgUrl: require('../public/images/ac6.png') }
             ], // 活动列表
+            // gradeList:[
+            //     { id: 0, name: '全部' },
+            //     { id: 1, name: '小学组' },
+            //     { id: 2, name: '初中组' },
+            //     { id: 3, name: '高中组' }
+            // ],
+            list:[],
             gradeList:[
-                { id: 0, name: '全部' },
-                { id: 1, name: '小学组' },
-                { id: 2, name: '初中组' },
-                { id: 3, name: '高中组' }
-            ],
-            list:[]
+            { id: 0, name: '全部' },
+            {name:"幼教组",id:1},
+            {name:"小学组",id:2},
+            {name:"初中组",id:4},
+            {name:"高中组",id:8},
+            {name:"特教组",id:16},
+            {name:"中职组",id:32},
+            {name:"高教组",id:64},
+        ],
+        userid:'',
+        activityObjectid:0,
+        gradeObjectid:0,
+        regionObjectid:'77',
         };
+        
     },
     created(){
+        this.userid=JSON.parse(localStorage.getItem("user")).id
         this.selectActive()
     },
     methods: {
@@ -76,10 +94,22 @@ export default {
         
         async selectActive(){
             console.log(1)
+            console.log(this.activityObjectid,this.gradeObjectid,this.regionObjectid)
                 let params={}
                 params.url=api.activityDetail,
-                params.expand=""
-             
+                
+                params.created_by=this.userid;
+                if(this.activityObjectid!=0){
+                     params.target=this.activityObjectid;
+                }
+                console.log()
+                if(this.gradeObjectid!=0){
+                     params.period=this.gradeObjectid;
+                }
+                if(this.regionObjectid!="77"){
+                     params.region=this.regionObjectid;
+                }
+
              let res = await this.axiosGet(params).catch(err => err);
              this.list=res.items
         },
@@ -93,13 +123,21 @@ export default {
                 }
             });
         },
+        //
+        async activityObject(value){
+            this.activityObjectid=value
+            this.selectActive();
+           
+        },
         //学段
         async gradeObject(value) {
-            console.log(value)
+            this.gradeObjectid=value
+             this.selectActive();
         },
         //区域
         async regionObject(value){
-            console.log(value)
+             this.regionObjectid=value
+            this.selectActive();
         }
     }
 };

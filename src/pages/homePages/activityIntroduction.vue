@@ -21,16 +21,16 @@
                             </div>
                             <el-divider></el-divider>
                             <div class="activity-introduction-main">
-                                <div class="activity-title">
+                                <!-- <div class="activity-title">
                                     <p>活动介绍：</p>
-                                </div>
+                                </div> -->
                                 <div class="activity-int-item">
                                     <!-- <div class="sub-title">
                                         <p>一、活动背景</p>
                                     </div> -->
-                                    <div class="activity-int-content">
+                                    <div class="activity-int-content" v-html="object_.detail.content">
                                         <p>
-                                            {{object_.detail.content}}
+                                            <!-- {{object_.detail.content}} -->
                                             <!-- 自 2000 年起，全国中小学电脑制作活动（学生信息素养提升实践活动，以下简称“电脑制作活动”）始终坚持以“实践、探索、创新”为主题、以形式多样的活动项目为载体，为基础教育领域培养信息技术人才起到了重要的推动作用。《教育信息化 2.0 行动计划》明确提出要从提升师生信息技术应用能力向全面提升其信息素养转变、从融合应用向创新发展转变。在这样的历史机遇下，电脑制作活动也在努力寻求新发展。根据教育部对评审评比评估和竞赛的管理要求，不再举办全国性评比和竞赛，全国活动以交流展示的形式开展，旨在通过充分的互动分享，促进各地师生信息技术水平的提升；提供丰富的现场实践，培养学生创造思维和动手能力；给予优质的展示平台，锻炼学生的表达能力和协作意识，全方位助力师生的信息素养提升，更好地培养具有创新精神和实践能力的高端人才。各地基于本项活动组织开展省内活动，组织方式自定。 -->
                                         </p>
                                     </div>
