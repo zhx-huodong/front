@@ -63,13 +63,11 @@
           { key: 'admin', name: '用户管理', hide: false },
           { key: 'roleManage', name: '角色管理', hide: false },
           { key: 'expertManage', name: '专家管理', hide: false },
-          { key: 'expertAssign', name: '专家分配', hide: false },
-          { key: 'classifyManage', name: '分类管理', hide: false },
+          // { key: 'expertAssign', name: '专家分配', hide: false },
+          // { key: 'classifyManage', name: '分类管理', hide: false },
           { key: 'prizeManagement', name: '奖品管理', hide: false },
         ],
         activeTab: 'home',
-        // roles: [], // 角色列表
-        // nowRole:{},//当前角色
         levelList:[],//面包屑
       };
     },
