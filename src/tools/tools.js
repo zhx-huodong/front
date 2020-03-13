@@ -65,6 +65,16 @@ export function formatDate(date) {
   if (day.length < 2) day = '0' + day;
   return [year, month, day].join('');
 }
+// Date对象转标准年月日'2019年06月01日';
+export function formatDateChar(date) {
+  let d = new Date(date),
+    month = '' + (d.getMonth() + 1)+'月',
+    day = '' + d.getDate()+'日',
+    year = d.getFullYear()+'年';
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+  return [year, month, day].join('');
+}
 
 export function getQuery(name) {
   let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
@@ -193,12 +203,13 @@ export function axiosPostPIC(param, isExpire = true, ) {
 }
 
 function axiosDeleteParam(param) {
-  let url = param.url;
+  let url = param.id===undefined? param.url : `${param.url}/${param.id}`;
   let headers = {
     'Content-type': 'application/json'
   };
   if (getCookie('x-api-key')) headers['x-api-key'] = getCookie('x-api-key');
   delete param.url;
+  delete param.id
   return {
     url: url,
     param: param,

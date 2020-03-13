@@ -98,6 +98,11 @@
                     this.ruleForm.mobile=res.mobile
                     for(let i in res.roleInfo){
                         this.ruleForm.type.push(parseInt(res.roleInfo[i].id))
+                        if(res.roleInfo[i].areas!=undefined){
+                            for(let j in res.roleInfo[i].areas){
+                                this.area.push(parseInt(res.roleInfo[i].areas[j].id))
+                            }
+                        }
                     }
                 }    
             },
@@ -111,11 +116,11 @@
             },
             //管理权限改变
             async typeChange(data){
-                console.log("权限===",this.ruleForm.type)
+                
             },
             //管理区域改变
             async areaChange(data){
-                console.log("区域===",this.area)
+                
             },
             //保存
             async submitForm(){
