@@ -182,7 +182,7 @@
           </el-row>
         </el-form-item>
         <el-form-item label="作者邮箱：">
-          <el-input v-model="form.name" placeholder="请输入电子邮箱" style="width:400px;" size="small"></el-input>
+          <el-input v-model="form.addrs" placeholder="请输入电子邮箱" style="width:400px;" size="small"></el-input>
         </el-form-item>
       </el-form>
       <el-row>
@@ -197,7 +197,7 @@
 import api from '../../service/api.js';
 import UploadFile from '../../components/UploadFile';
 import MyEditor from '../../components/MyEditor';
-import { getCookie, axiosGet } from '../../tools/tools';
+import { getCookie, axiosGet, axiosPost } from '../../tools/tools';
 export default {
     components: { UploadFile,MyEditor },
     data(){
@@ -242,6 +242,30 @@ export default {
       this.handle();
     },
     methods:{
+        async postData(){
+          let params={
+            "category_id":19,
+              "title":"大闹天宫",
+              "cover":"https://edu-cloud-dev-1255701415.cos.ap-guangzhou.myqcloud.com/activity_platform/20190930180753.jpg",
+              "content":"大闹天宫动漫",
+              "registration":"https://edu-cloud-dev-1255701415.cos.ap-guangzhou.myqcloud.com/activity_platform/20190930180753.jpg",
+              "author":[7],
+              "mentor":[5],
+              "email":"77288022@qq.com",
+              "attachment":{
+                "19":[
+                  "https://edu-cloud-dev-1255701415.cos.ap-guangzhou.myqcloud.com/activity_platform/20190930180753.jpg",
+                  "https://edu-cloud-dev-1255701415.cos.ap-guangzhou.myqcloud.com/activity_platform/20190930180753.jpg"
+                ],
+                "20":[
+                  "https://edu-cloud-dev-1255701415.cos.ap-guangzhou.myqcloud.com/activity_platform/20190930180753.jpg",
+                  "https://edu-cloud-dev-1255701415.cos.ap-guangzhou.myqcloud.com/activity_platform/20190930180753.jpg"
+                ]
+              }
+          }
+          params.url=api.works
+          let res=await axiosPost(params).catch(err=>err)
+        },
 
          upsuccess(response, file, fileList) {
            
@@ -393,6 +417,7 @@ export default {
 
 
       submitEnroll(){
+        this.postData();
         this.$router.push({
           path:"/home/submitEnroll",
         })

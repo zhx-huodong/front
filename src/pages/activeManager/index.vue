@@ -227,7 +227,7 @@ export default {
          this.$router.push({
               path:"/activeManager/managerCenter",
               query: {
-                    name: 'second',
+                    name: 'third',
                     id: item,
                 }
           })

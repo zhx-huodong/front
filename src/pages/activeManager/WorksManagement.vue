@@ -1,18 +1,7 @@
 <template>
       <div style=" clear: both;text-align: left;">
           <el-form ref="form" :model="form" :inline="true">
-            <!-- <el-form-item label="所在地区：">
-              <el-select v-model="form.addr" placeholder="请选择" >
-                <el-option v-for="item in AddrList" :key="item.id" :label="item.name" :value="item.id">
-                  </el-option>
-                </el-select>
-            </el-form-item> -->
-            <!-- <el-form-item label="所在学校：">
-              <el-select v-model="form.schoolname" placeholder="请选择" >
-                <el-option v-for="item in SchoolList" :key="item.id" :label="item.name" :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item> -->
+           
             <el-row :gutter="12">
               <el-col :span="8">
                    <el-form-item label="所在学校：">
@@ -56,6 +45,9 @@
              <el-button size="medium" type="primary" @click="fenpeiwork()">分配作品</el-button>
              <el-button size="medium">下载作品</el-button>
              <el-button size="medium">导出excel</el-button>
+             <div>
+               ------------{{id1}},{{id2}},{{id3}},{{id4}}-------
+             </div>
           </div>
           <div style="margin-top:16px;">
             <template>
@@ -64,39 +56,49 @@
                 <el-table-column
                   label="序号"
                   type="index"
-                   width="150"
+                   width="116"
                   align="center">
                 </el-table-column>
                 <!-- name author address shcoolname private -->
                 <el-table-column
-                  prop="name"
+                  prop="works.title"
                   label="作品名称"
-                  width="150">
+                  width="116">
                 </el-table-column>
                 <el-table-column
-                  prop="author"
+                  prop="author_"
                   label="作者"
-                  width="150">
+                  width="116">
                 </el-table-column>
                 <el-table-column
-                  prop="didaolaos"
+                  prop="mentor_"
                   label="指导老师"
-                  width="150">
+                  width="116">
                 </el-table-column>
                 <el-table-column
-                  prop="address"
+                  prop="areaName"
                   label="所在地区"
-                  width="150">
+                  width="116">
                 </el-table-column>
                 <el-table-column
-                  prop="shcoolname"
+                  prop="title_"
                   label="所在学校"
-                  width="150">
+                  width="116">
+                </el-table-column>
+                 <el-table-column
+                  prop="info.category"
+                  label="活动分类"
+                  width="116">
+                </el-table-column>
+                 <el-table-column
+                  prop="info.project"
+                  label="活动项目"
+                  width="116">
                 </el-table-column>
                 <el-table-column
                   prop="private"
                   label="分配专家"
-                  width="150">
+                  width="116">
                 </el-table-column>
                 
                 <!-- <el-table-column
@@ -122,11 +124,11 @@
               <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-                :current-page="currentPage1"
-                :page-sizes="[10,20]"
-                :page-size="10"
+                :current-page="currentPage"
+                :page-sizes="[perPage]"
+                :page-size="perPage"
                 layout="total, sizes, prev, pager, next, jumper"
-                :total="10">
+                :total="totalCount">
               </el-pagination>
             </div>
              
@@ -136,7 +138,11 @@
                     </div>
                   </div>
                   
-              
+                   <!-- totalCount:'',
+          pageCount: "",
+          currentPage: "",
+          perPage: "",
+               -->
      
       </div>
       
@@ -144,9 +150,19 @@
 </template>
 <script>
 import MyTransfer from '../../components/MyTransfer';
+import api from '../../service/api';
+import { axiosGet } from '../../tools/tools';
 
   export default {
     components:{MyTransfer},
+     
+    props:['id1',"id2","id3","id4"],
+    // props:{
+    //     id1:Number,
+    //     id2:Number,
+    //     id3:Number,
+    //     id4:String,
+    // },
     data() {
         const generateData = _ => {
         const data = [];
@@ -164,6 +180,7 @@ import MyTransfer from '../../components/MyTransfer';
         return data;
       };
       return {
+       
             data: generateData(),
             value: [],
             filterMethod(query, item) {
@@ -188,26 +205,86 @@ import MyTransfer from '../../components/MyTransfer';
                 {id:3,name:"三中"},
             ],
             // 森林精灵 赵四 罗湖区 罗湖中学 张老师、朱老师
-            tableData:[
-                {name:'森林精灵',author:'赵四', address:'罗湖区', shcoolname:"罗湖中学",private:"张老师、朱老师"},
-                {name:'森林精灵',author:'赵四', address:'罗湖区', shcoolname:"罗湖中学",private:"张老师、朱老师"},
-                {name:'森林精灵',author:'赵四', address:'罗湖区', shcoolname:"罗湖中学",private:"张老师、朱老师"},
-                {name:'森林精灵',author:'赵四', address:'罗湖区', shcoolname:"罗湖中学",private:"张老师、朱老师"},
-                {name:'森林精灵',author:'赵四', address:'罗湖区', shcoolname:"罗湖中学",private:"张老师、朱老师"},
-                {name:'森林精灵',author:'赵四', address:'罗湖区', shcoolname:"罗湖中学",private:"张老师、朱老师"},
-                {name:'森林精灵',author:'赵四', address:'罗湖区', shcoolname:"罗湖中学",private:"张老师、朱老师"},
-                {name:'森林精灵',author:'赵四', address:'罗湖区', shcoolname:"罗湖中学",private:"张老师、朱老师"},
-                {name:'森林精灵',author:'赵四', address:'罗湖区', shcoolname:"罗湖中学",private:"张老师、朱老师"},
-                {name:'森林精灵',author:'赵四', address:'罗湖区', shcoolname:"罗湖中学",private:"张老师、朱老师"},
-                {name:'森林精灵',author:'赵四', address:'罗湖区', shcoolname:"罗湖中学",private:"张老师、朱老师"},
-            ],
-              currentPage1: 1,
+            tableData:[],
+            
               
               dialogVisible:false,
+
+          totalCount:'',
+          pageCount: "",
+          currentPage: 1,
+          perPage: "",
             
       };
     },
+    watch:{
+        id1:function(val){
+        console.log(val,"watch1")
+        },
+        id2:function(val){
+            console.log(val,"watch2")
+        },
+        id3:function(val){
+            console.log(val,"watch3")
+        },
+        id4:function(val){
+            console.log(val,"watch4")
+        }
+    },
+    created(){
+      this.enrollSelect()
+
+    },
+    mounted(){
+      
+      
+    },
     methods: {
+      
+     async enrollSelect(){
+
+        
+          let parmas={}
+          parmas.url=api.enroll
+          parmas.expand='info,works,school'
+          parmas.page=this.currentPage
+          parmas.activity_id=sessionStorage.getItem("workid")
+          let res=await axiosGet(parmas).catch(err=>err)
+         
+          this.tableData=res.items
+         
+          this.tableData.forEach(ite=>{
+             var title=""
+             var areaName=""
+             var author_=""
+             var mentor_=""
+            ite.school.forEach(item=>{
+           title==""?title=item.title:title=title+","+item.title
+            areaName=item.areaInfo.areaName
+          })
+          ite.works.member.author.forEach(item=>{
+            author_==""?author_=item.name:author_=author_+","+item.name
+          })
+          ite.works.member.mentor.forEach(item=>{
+            mentor_==""?mentor_=item.name:mentor=mentor_+","+item.name
+          })
+          ite.mentor_=mentor_
+          ite.author_=author_
+          ite.areaName=areaName
+          ite.title_=title
+          })
+          // totalCount: 22
+          // pageCount: 2
+          // currentPage: 1
+          // perPage: 20
+          this.totalCount=res._meta.totalCount
+          this.pageCount=res._meta.pageCount
+          this.currentPage=res._meta.currentPage
+          this.perPage=res._meta.perPage
+         
+         
+           console.log(this.tableData)
+      },
       edit(item){
         this.dialogVisible=item;
       },
@@ -234,10 +311,13 @@ import MyTransfer from '../../components/MyTransfer';
         console.log(`每页 ${val} 条`);
       },
       handleCurrentChange(val) {
+        this.currentPage=val
         console.log(`当前页: ${val}`);
+        this.enrollSelect()
       }
-
+      
     }
+    
   };
 </script>
 <style lang="less" scoped>
