@@ -1,6 +1,8 @@
 
 const base='/api';
 // const base='';
+// const base='/api';
+const base='/api';
 
 const captcha=`${base}/login/captcha`;//获取短信验证码
 const account=`${base}/login/account`;//手机验证码登录
@@ -17,6 +19,10 @@ const uploadKey=`${base}/upload/cos-key`;//图片上传
 const uploadFile=`${base}/upload/file`;//文件上传
 const activity=`${base}/activity`;//文件发布
 const activityDetail=`${base}/activity`;//活动获取
+const activityCategory=`${base}/activity-category`;//读取活动项目详情
+const enroll=`${base}/enroll`;//读取报名记录
+const works=`${base}/works`;//读取报名记录
+
 // {{uri}}/activity?expand=detail,region,node,attachment,banner
 // const testLogin=`${base}/test/login`; 
 
@@ -35,4 +41,7 @@ export default {
     uploadFile,
     activity,
     activityDetail,
+    activityCategory,
+    enroll,
+    works
 }

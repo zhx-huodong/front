@@ -249,6 +249,7 @@
 <script>
 import api from '../../service/api';
 import MyEditor from "../../components/MyEditor";
+import { getCookie } from '../../tools/tools';
 export default {
   components: {
     MyEditor
@@ -322,7 +323,7 @@ export default {
       url:"",
       datas:{},
       headers:{
-          'x-api-key':JSON.parse(localStorage.getItem("user")).token,
+          'x-api-key':getCookie("x-api-key")
       },
       action:api.uploadPic,
       action2:api.uploadFile,

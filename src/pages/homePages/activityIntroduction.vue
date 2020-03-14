@@ -111,7 +111,7 @@
                                 <div class="list-project-title">
                                     <p>{{item.title}}</p>
                                 </div>
-                                <type-select :otherList="item.child"  @otherObject='otherObjectOne'></type-select>
+                                <type-select :otherList="item.child"  @otherObject='otherObjectOne' ></type-select>
                                 </div>
                             </div>
                             
@@ -282,6 +282,7 @@ import { getTimestamp } from '../../tools/tools';
                     { id: 5, name: '深圳市中小学说课大赛', imgUrl: require('../../public/images/ac5.png') }, 
                     { id: 6, name: '深圳市AI知识大赛', imgUrl: require('../../public/images/ac6.png') }
                 ], // 活动列表
+                gradeObjectid:"",
             };
         },
         created(){
@@ -296,6 +297,9 @@ import { getTimestamp } from '../../tools/tools';
           
         },
         methods:{
+            categoryDetail(value){
+                console.log(value,"sssssssssssssssss")
+            },
             async selectActive(){
             console.log(1)
             let params={}
@@ -306,15 +310,19 @@ import { getTimestamp } from '../../tools/tools';
             this.object_=res
             console.log(res,"11111111")
             
-
+                var baomingdata=[];
                  var Str5='';//活动对象数据处理
                 console.log(this.object_.target,"item.target")
                 var ii=this.object_.target.toString(2)
                 for(let i=0;i<ii.length;i++){
                   if(ii[i]==1){
                       Str5=Str5+"【"+this.activityObject[i].name+"】"
+                      baomingdata.push(i+1)
                   }
                 }
+                sessionStorage.setItem("baomingdata",JSON.stringify(baomingdata) )
+                sessionStorage.setItem("cover",this.object_.cover)
+                sessionStorage.setItem("object_",JSON.stringify(this.object_))
                 this.object_.targetList=Str5 //活动对象数据处理
 
                 var Str=[];//学段数据处理
@@ -366,7 +374,7 @@ import { getTimestamp } from '../../tools/tools';
                         ite.name=ite.title
                     })
                 })
-               
+               this.gradeObjectid=this.object_.periodList[0].id
                 console.log(this.object_)
            
             
@@ -374,7 +382,7 @@ import { getTimestamp } from '../../tools/tools';
 
             //学段
             gradeObject(value) {
-                console.log(value)
+                this.gradeObjectid=value
             },
             //活动类型
             activityTypleObject(value){
@@ -385,18 +393,24 @@ import { getTimestamp } from '../../tools/tools';
                 console.log(value)
             },
             //其他
-            otherObjectOne(value){
-                console.log(value,"111111111111111")
+            otherObjectOne(value,value2){
+                console.log(this.object_,"222222222")
+                console.log(value,value2,"111111111111111")
+                sessionStorage.setItem("OneObject",JSON.stringify(value2))
                 this.$router.push({
-                    path:'/home/choiceActivity'
+                    path:'/home/choiceActivity',
+                    query:{
+                        gradeListid:this.gradeObjectid,
+                        otherObjectid:value
+                    }
                 })
             },
-            otherObjectTwo(value){
-                console.log(value)
-                this.$router.push({
-                    path:'/home/choiceActivity'
-                })
-            },
+            // otherObjectTwo(value){
+            //     console.log(value,",,,,,,,,,,")
+            //     this.$router.push({
+            //         path:'/home/choiceActivity'
+            //     })
+            // },
             //表格选择
             tableSelectionChange(){
 

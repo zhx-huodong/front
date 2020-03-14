@@ -24,20 +24,7 @@
                                         </el-form-item>
                                
                             </el-form>
-                        <!-- id: 4
-                        title: "11111"
-                        cover: "http://api.huodong.eduinspector.com/uploads/20200310/23a6cba284f3f7a15058d887a26e2d51.png"
-                        upload_stime: 4294967295
-                        upload_etime: 4294967295
-                        finish_etime: 4294967295
-                        target: 1
-                        period: 1
-                        process: 1
-                        status: 1
-                        created_at: 1583906560
-                        created_by: 4
-                        updated_at: 1583906560
-                        updated_by: 4 -->
+
                         
                         <div v-for='(item,index) in list' :key="index">
                             <div class="count" >
@@ -60,8 +47,8 @@
                                 </div>
                                 <div class="shenheclass2" >
         
-                                    <el-button type="text" @click="goToManagerCenter()"  style="display:block;margin-left:9px;">管理</el-button>
-                                    <el-button type="text" @click="goToManagerCenter()"  style="display:block">查看详情></el-button>
+                                    <el-button type="text" @click="goToManagerCenter2(item.id)"  style="display:block;margin-left:9px;">管理</el-button>
+                                    <el-button type="text" @click="goToManagerCenter(item.id)"  style="display:block">查看详情></el-button>
                                     <el-button type="text" style="display:block;margin-top:20px;color:red;" @click="deleteOne(item.id)">删除</el-button>
                                 </div>
                             </div>
@@ -227,9 +214,22 @@ export default {
           })
           
       },
-    goToManagerCenter(){
+    goToManagerCenter2(item){
+          this.$router.push({
+                path: '/home/activityIntroduction',
+                query: {
+                id: item
+                }
+            });
+    },
+    goToManagerCenter(item){
+        
          this.$router.push({
               path:"/activeManager/managerCenter",
+              query: {
+                    name: 'third',
+                    id: item,
+                }
           })
         
     }
