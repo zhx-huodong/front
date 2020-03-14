@@ -99,6 +99,10 @@ import NewsBulletin from '../newsBulletin';
         activeName: 'first'
       };
     },
+    created(){
+      console.log(this.$route.query.name,this.$route.query.id)
+      this.activeName=this.$route.query.name
+    },
     methods: {
         async gradeObject(value) {
             console.log(value)

@@ -16,6 +16,7 @@ const uploadKey=`${base}/upload/cos-key`;//图片上传
 const uploadFile=`${base}/upload/file`;//文件上传
 const activity=`${base}/activity`;//文件发布
 const activityDetail=`${base}/activity`;//活动获取
+const activityCategory=`${base}activity-category`;//读取活动项目详情
 // {{uri}}/activity?expand=detail,region,node,attachment,banner
 // const testLogin=`${base}/test/login`; 
 
@@ -34,4 +35,5 @@ export default {
     uploadFile,
     activity,
     activityDetail,
+    activityCategory
 }

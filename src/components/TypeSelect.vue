@@ -120,7 +120,8 @@ export default {
     onOtherList(id,index){
       this.otherIndex = index;
       this.otherObject = this.otherList[index].id;
-      this.$emit('otherObject', this.otherObject);
+      
+      this.$emit('otherObject', this.otherObject,this.otherList[index]);
     }
     
   }

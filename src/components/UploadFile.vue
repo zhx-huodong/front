@@ -17,12 +17,13 @@
   </div>
 </template>
 <script>
+import { getCookie } from '../tools/tools';
 export default {
   data() {
     return {
        filename:"upFile",
         headers:{
-                'x-api-key':JSON.parse(localStorage.getItem("user")).token,
+                'x-api-key':getCookie("x-api-key"),
             },
         action:api.uploadPic,
     };

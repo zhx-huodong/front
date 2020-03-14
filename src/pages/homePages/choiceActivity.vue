@@ -2,19 +2,14 @@
     <div class="choice-activity-container">
         <el-card style="min-height:600px">
             <div class="title">
-                <p>电脑绘画</p>
+                <p>{{OneObject.title}}</p>
             </div>
             <el-divider></el-divider>
-            <div class="content">
-                <p>本年度主题为：小康·中国梦。
-                运用各类绘画软件制作完成的作品。可以是主题性单幅画或表达
-                同一主题的组画、连环画（建议不超过五幅）。创作的视觉形象可以
-                是二维的或三维的，可以选择写实、变形或抽象的表达方式。
-                作品格式为 JPG、BMP 等常用格式，大小建议不超过 20MB。</p>
-                <p>注意：单纯的数字摄影画面不属于此项目范围。</p>                                
+            <div class="content" v-html="OneObject.content">
+                                            
             </div>
             <div class="activity-img">
-                <el-image :src="imgUrl" fit="cover"></el-image>
+                <el-image :src="cover" fit="cover"></el-image>
             </div>
             <el-row>
                 <el-col :span="3" :offset="5">
@@ -25,11 +20,29 @@
     </div>
 </template>
 <script>
+import axios from 'axios';
+import api from '../../service/api';
     export default {
         data(){
             return {
+                cover:sessionStorage.getItem("cover"),
+                OneObject:{},
+                otherObjectid:"",
+                gradeListid:"",
                 imgUrl:require('../../public/images/ac1.png')
             };
+        },
+        created(){
+            this.OneObject=JSON.parse(sessionStorage.getItem("OneObject"))
+            // console.log( this.$route.query.otherObjectid, this.$route.query.gradeListid)
+            // this.$route.query.otherObjectid=this.otherObjectid
+            // this.$route.query.gradeListid=this.gradeListid
+            // var that=this;
+            // setTimeout(function(){
+               
+            //     that.activityCategory(that.$route.query.otherObjectid);
+            // },1000)
+            
         },
         mounted(){
 
@@ -41,6 +54,15 @@
                     path:'/home/activityEnroll'
                 })
             },
+            //读取活动项目详情
+            // async activityCategory(id){
+            //     let params={}
+            //     params.url=api.activityCategory
+            //     params.id=id
+            //     params.expand="content,formats"
+            //     let res = await this.axiosGet(params).catch(err => err);   
+            //     console.log(res)
+            // }
             
         }
     }
