@@ -66,6 +66,7 @@
           // { key: 'expertAssign', name: '专家分配', hide: false },
           // { key: 'classifyManage', name: '分类管理', hide: false },
           { key: 'prizeManagement', name: '奖品管理', hide: false },
+          { key: 'activeManager',name:'活动管理',hide:false},
         ],
         activeTab: 'home',
         levelList:[],//面包屑
