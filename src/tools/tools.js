@@ -179,7 +179,7 @@ export function axiosPost(param, isExpire = true, headers_) {
 export function axiosPostPIC(param, isExpire = true, ) {
   let options = axiosPostParam(param);
   let headers = {
-    'x-api-key':JSON.parse(localStorage.getItem("user")).token,
+    'x-api-key':getCookie('x-api-key'),
   }
   store.dispatch('INIT_SHOW', false);
   return new Promise((resolve, reject) => {

@@ -96,9 +96,9 @@ export default {
             console.log(1)
             console.log(this.activityObjectid,this.gradeObjectid,this.regionObjectid)
                 let params={}
-                params.url=api.activityDetail,
+                params.url=api.activityDetail
                 
-                params.created_by=this.userid;
+                // params.created_by=this.userid;
                 if(this.activityObjectid!=0){
                      params.target=this.activityObjectid;
                 }
