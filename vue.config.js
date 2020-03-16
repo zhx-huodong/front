@@ -9,7 +9,6 @@ let config = {
 		proxy: {
 			'/api': {
 				target: 'http://api.huodong.eduinspector.com',
-        		// agent: agent
 				changeOrigin:true,
 				secure:false,
 				pathRewrite:{

@@ -1,7 +1,5 @@
 import axios from 'axios';
 import store from '../store';
-// let redirectUrl = location.protocol + '//' + location.host;
-// const isLocal = location.hostname === '127.0.0.1' || location.hostname === 'localhost';
 
 export function getCookie(name) {
   let arr = document.cookie.match(new RegExp('(^| )' + name + '=([^;]*)(;|$)'));
