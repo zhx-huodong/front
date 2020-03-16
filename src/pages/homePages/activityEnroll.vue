@@ -13,12 +13,11 @@
           <el-input v-model="form.activityProject" placeholder="请输入活动项目" style="width:400px;" size="small" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="作品名称：">
-          <el-input v-model="form.name" placeholder="请输入作品名称" style="width:400px;" size="small"></el-input>
+          <el-input v-model="form.title" placeholder="请输入作品名称" style="width:400px;" size="small"></el-input>
         </el-form-item>
         <el-form-item label="作品封面：">
           <template>
             <el-upload
-            
               :on-success="upsuccess"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
@@ -26,12 +25,9 @@
               :action="action"
               :name="filename" 
               :file-list="form.cover" 
-              list-type="picture-card"
-            >
+              list-type="picture-card">
               <i class="el-icon-plus"></i>
-              <span
-                style="font-size: 12px;position: absolute;top: 26%;left: 15%;color:#ccc"
-              >添加作品封面 (JPG、PNG格式)</span>
+              <span style="font-size: 12px;position: absolute;top: 26%;left: 15%;color:#ccc">添加作品封面 (JPG、PNG格式)</span>
             </el-upload>
           </template>
         </el-form-item>
@@ -52,14 +48,9 @@
               :name="filename" 
               :file-list="form.banner" 
               :limit="1"
-               list-type="picture-card"
-          
-            >
-              <i class="el-icon-plus"></i>
-               <span
-                style="font-size: 12px;position: absolute;top: 26%;left:41%;color:#ccc"
-              >点击上传</span>
-          <!-- <el-button size="small" type="primary" @click="upload(1)" plain>点击上传</el-button> -->
+              list-type="picture-card">
+            <i class="el-icon-plus"></i>
+            <span style="font-size: 12px;position: absolute;top: 26%;left:41%;color:#ccc">点击上传</span>
         </el-upload>
         </div>
         </el-form-item>
@@ -74,13 +65,9 @@
               :action="action"
               :name="filename" 
               :file-list="form.banner" 
-               list-type="picture-card"
-               >
-               <i class="el-icon-plus"></i>
-                <span
-                style="font-size: 12px;position: absolute;top: 26%;left: 41%;color:#ccc"
-              >点击上传</span>
-              <!-- <el-button size="small" type="primary"  @click="upload(2)" plain>点击上传</el-button> -->
+              list-type="picture-card">
+              <i class="el-icon-plus"></i>
+              <span style="font-size: 12px;position: absolute;top: 26%;left: 41%;color:#ccc">点击上传</span>
             </el-upload>
             <p>{{pp[0]}}</p>
           </div>
@@ -99,10 +86,7 @@
               list-type="picture-card"
               >
                 <i class="el-icon-plus"></i>
-                 <span
-                style="font-size: 12px;position: absolute;top: 26%;left: 41%;color:#ccc"
-              >点击上传</span>
-              <!-- <el-button size="small" type="primary"  @click="upload(3)" plain>点击上传</el-button> -->
+                <span style="font-size: 12px;position: absolute;top: 26%;left: 41%;color:#ccc">点击上传</span>
             </el-upload>
             <p>{{pp[1]}}</p>
           </div>
@@ -118,13 +102,9 @@
               :action="action"
               :name="filename" 
               :file-list="form.banner" 
-              list-type="picture-card"
-               >
-                 <i class="el-icon-plus"></i>
-                  <span
-                style="font-size: 12px;position: absolute;top: 26%;left: 41%;color:#ccc"
-              >点击上传</span>
-              <!-- <el-button size="small" type="primary"  @click="upload()" plain>点击上传</el-button> -->
+              list-type="picture-card">
+                <i class="el-icon-plus"></i>
+                <span style="font-size: 12px;position: absolute;top: 26%;left: 41%;color:#ccc">点击上传</span>
             </el-upload>
             <p>{{pp[2]}}</p>
           </div>
@@ -150,7 +130,7 @@
                   v-for="item in studentList"
                   :key="item.id"
                   :label="item.name"
-                  :value="item.name">
+                  :value="item">
                   <span style="float: left">{{ item.name }}</span>
                   <span style="float: right; color: #8492a6; font-size: 13px">{{ item.memberInfo[0].school.title }}</span>
                 </el-option>
@@ -193,7 +173,7 @@
           </el-row>
         </el-form-item>
         <el-form-item label="作者邮箱：">
-          <el-input v-model="form.addrs" placeholder="请输入电子邮箱" style="width:400px;" size="small"></el-input>
+          <el-input v-model="form.email" placeholder="请输入电子邮箱" style="width:400px;" size="small"></el-input>
         </el-form-item>
       </el-form>
       <el-row>
@@ -216,17 +196,15 @@ export default {
           headers:{
           'x-api-key':getCookie("x-api-key"),
           },
-         action:api.uploadPic,
+          action:api.uploadPic,
           apipath:"http://api.huodong.eduinspector.com",
-          activeName:'first',
-          activeName2:'two',
           form: {
-            activityName:'数字创作',
-            activityProject:'电脑绘画',
-            name: '',
-            desc: '',
+            activityName:'',
+            activityProject:'',
+            title: '',
             banner:[],
-            cover:[]
+            cover:[],
+            email:''
           },
           authorTags: [],
           authorInputVisible: false,
@@ -243,7 +221,11 @@ export default {
           filename:"upFile",
           ppp:[],
           studentList:[],//学生选择列表
+          authorIds:[],//学生IDS
           teacherList:[],//老师选择列表
+          teacherIds:[],//老师ids
+          content:'',//活动介绍
+          category_id:'',//活动id
         }
     },
     created(){
@@ -286,18 +268,6 @@ export default {
         },
 
          upsuccess(response, file, fileList) {
-           
-          //    this.form.cover=[]
-          //   fileList.forEach(item=>{
-          //     item.response.files.forEach(ite=>{
-                
-          //       this.form.cover.push(this.apipath+ite.path)
-          //     })
-          //   })
-          //  console.log(this.form.cover)
-          //  var activedata=JSON.parse(sessionStorage.getItem("activedata"))
-          //  activedata.cover=this.form.cover[0]
-          //  sessionStorage.setItem("activedata",JSON.stringify(activedata))
             
         },
 
@@ -305,7 +275,7 @@ export default {
         var data=JSON.parse(sessionStorage.getItem("OneObject"))
         this.object_.categoryDetail.forEach(item=>{
             if(item.id==data.pid){
-                this.form.activityName=item.title
+              this.form.activityName=item.title
             }
         })
        this.form.activityProject=data.title
@@ -315,7 +285,6 @@ export default {
          this.ppp.push(item.size)
          this.author_limit=data.author_limit
          this.mentor_limit=data.mentor_limit
-        
        })
        
       },
@@ -345,7 +314,7 @@ export default {
         }
       },
 
-      //作品上传
+    //作品上传
     beforeAvatarUpload1(file){
       console.log(file,this.ppp[0])
       var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
@@ -371,8 +340,6 @@ export default {
           return false;
         }
     },
-    // tv_id!=".mp4"&&tv_id!=".rmvb"&&tv_id!=".avi"&&tv_id!=".ts"
-
     //作品上传
     beforeAvatarUpload2(file){
       console.log(file)
@@ -399,25 +366,10 @@ export default {
           return false;
         }
     },
-
     //作品上传
     beforeAvatarUpload3(file){
       console.log(file)
       var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-      // const extension =
-      //   testmsg === "jpg" ||
-      //   testmsg === "JPG" ||
-      //   testmsg === "png" ||
-      //   testmsg === "PNG" ||
-      //   testmsg === "bpm" ||
-      //   testmsg === "BPM";
-      //   if (!extension) {
-      //     this.$message({
-      //       message: "上传图片只能是jpg / png / bpm格式!",
-      //       type: "error"
-      //     });
-      //     return false; //必须加上return false; 才能阻止
-      //   }
         if(this.ppp[2]<file.size){
            this.$message({
             message: "上传单个文件大小超过了",
@@ -428,32 +380,61 @@ export default {
     },
     submitEnroll(){
       this.postData();
-      this.$router.push({
-        path:"/home/submitEnroll",
-      })
+      // this.$router.push({
+      //   path:"/home/submitEnroll",
+      // })
+      let params={}
+      if(this.form.title!=''){
+        params.title=this.form.title
+      }else{
+        this.$message({
+          message: "请添加作品名称",
+          type: "warning"
+        });
+        return
+      }
+      if(this.content!==''){
+        params.content=this.content
+      }else{
+        this.$message({
+          message: "请添加活动介绍",
+          type: "warning"
+        });
+        return
+      }
+      if(this.authorIds.length>0){
+        params.author=this.authorIds
+      }else{
+        this.$message({
+          message: "请添加作者",
+          type: "warning"
+        });
+        return
+      }
+      if(this.teacherIds.length>0){
+        params.mentor=this.teacherIds
+      }else{
+        this.$message({
+          message:'请添加指导老师',
+          type: "warning"
+        })
+        return;
+      }
+      if(this.form.email!==''){
+        params.email=this.form.email
+      }else{
+        this.$message({
+          message:'请添加邮箱',
+          type: "warning"
+        })
+        return;
+      }
     },
-    updata(item){
-      console.log(item)
+ 
+    editorChange(data){
+      this.content=this.data
     },
-    onSubmit() {
-      console.log('submit!');
-    },
-    handlePictureCardPreview(){
-
-    },
-    editorChange(){
-
-    },
-    //作者
-    authorClose(tag) {
-      this.authorTags.splice(this.authorTags.indexOf(tag), 1);
-    },
-    //查询学生
     
-    isPhoneNumber(tel) {
-        var reg =/^0?1[3|4|5|6|7|8][0-9]\d{8}$/;
-        return reg.test(tel);
-    },
     //获取学生列表
     async  getStudentList(params){
       delete params.mtype
@@ -463,7 +444,6 @@ export default {
       params.ball=1
       await this.axiosGet(params).then(res=>{
         this.studentList=res.items
-        console.log("学生列表===",this.studentList)
       }).catch(err => err); 
     },
     //获取老师列表
@@ -475,25 +455,26 @@ export default {
       params.ball=1
       await this.axiosGet(params).then(res=>{
         this.teacherList=res.items
-        console.log("老师列表===",this.teacherList)
       }).catch(err => err); 
     },
+
+    //作者
+    authorClose(tag) {
+      this.authorTags.splice(this.authorTags.indexOf(tag), 1);
+    },
+
     showAuthorInput() {
       this.authorInputVisible = true;
     },
 
     authorInputConfirm(tag) {
-      console.log('authorTags===',this.authorTags)
-      let authorInputValue = this.authorInputValue;
-      
-      this.authorTags.push(authorInputValue);
-      
+      this.authorIds.push(tag.id)
+      this.authorTags.push(tag.name);
       this.authorInputVisible = false;
-      
+      this.authorInputValue=''
     },
     //作者
     teacherClose(tag) {
-      console.log(tag)
       this.teacherTags.splice(this.teacherTags.indexOf(tag), 1);
     },
 
@@ -501,12 +482,9 @@ export default {
       this.teacherInputVisible = true;
     },
 
-    teacherInputConfirm(value) {
-      console.log("change===",value,"teacher====",this.teacherTags)
-      let teacherInputValue = this.teacherInputValue;
-      if (teacherInputValue) {
-        this.teacherTags.push(teacherInputValue);
-      }
+    teacherInputConfirm(data) {
+      this.teacherTags.push(data.name);
+      this.teacherIds.push(data.id)
       this.teacherInputVisible = false;
       this.teacherInputValue = '';
     }

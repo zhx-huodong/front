@@ -21,50 +21,13 @@
                             </div>
                             <el-divider></el-divider>
                             <div class="activity-introduction-main">
-                                <!-- <div class="activity-title">
+                                <div class="activity-title">
                                     <p>活动介绍：</p>
-                                </div> -->
-                                <div class="activity-int-item">
-                                    <!-- <div class="sub-title">
-                                        <p>一、活动背景</p>
-                                    </div> -->
-                                    <div class="activity-int-content" v-html="object_.detail.content">
-                                        <p>
-                                            <!-- {{object_.detail.content}} -->
-                                            <!-- 自 2000 年起，全国中小学电脑制作活动（学生信息素养提升实践活动，以下简称“电脑制作活动”）始终坚持以“实践、探索、创新”为主题、以形式多样的活动项目为载体，为基础教育领域培养信息技术人才起到了重要的推动作用。《教育信息化 2.0 行动计划》明确提出要从提升师生信息技术应用能力向全面提升其信息素养转变、从融合应用向创新发展转变。在这样的历史机遇下，电脑制作活动也在努力寻求新发展。根据教育部对评审评比评估和竞赛的管理要求，不再举办全国性评比和竞赛，全国活动以交流展示的形式开展，旨在通过充分的互动分享，促进各地师生信息技术水平的提升；提供丰富的现场实践，培养学生创造思维和动手能力；给予优质的展示平台，锻炼学生的表达能力和协作意识，全方位助力师生的信息素养提升，更好地培养具有创新精神和实践能力的高端人才。各地基于本项活动组织开展省内活动，组织方式自定。 -->
-                                        </p>
-                                    </div>
-                                </div>
-                                <!-- <div class="activity-int-item">
-                                    <div class="sub-title">
-                                        <p>二、人员范围</p>
-                                    </div>
-                                    <div class="activity-int-content">
-                                        <p>
-                                            全国小学、初中、高中（含中职）在校学生。
-                                        </p>
-                                    </div>
                                 </div>
                                 <div class="activity-int-item">
-                                    <div class="sub-title">
-                                        <p>三、活动内容</p>
-                                    </div>
-                                    <div class="activity-int-content">
-                                        <p>
-                                            数字创作、程序设计、创客、人工智能、机器人五个项目。
-                                        </p>
+                                    <div class="activity-int-content" v-html="object_.detail.content">  
                                     </div>
                                 </div>
-                                <div class="activity-int-item">
-                                    <div class="sub-title">
-                                        <p>四、数字创作项目设置及有关要求</p>
-                                    </div>
-                                    <div class="activity-int-content">
-                                        <p>
-                                            数字创作项目是使用计算机，设计、制作完成数字化创意作品。
-                                        </p>
-                                    </div>
-                                </div> -->
                             </div>
                             <div class="activity-annex">
                                 <p>相关附件：</p>
@@ -114,15 +77,7 @@
                                 <type-select :otherList="item.child"  @otherObject='otherObjectOne' ></type-select>
                                 </div>
                             </div>
-                            
-                            <!-- <div class="list-project">
-                                <div class="list-project-title">
-                                    <p>程序设计</p>
-                                </div>
-                                <type-select :otherList="otherListTwo"  @otherObject='otherObjectTwo'></type-select>
-                            </div> -->
                         </el-card>
-
                     </el-tab-pane>
                     <el-tab-pane label="通知公告">
                         <el-card style="padding-bottom:30px;">
@@ -206,7 +161,7 @@
     import FilePreview from '../../components/FilePreview';
     import TypeSelect from '../../components/TypeSelect';
     import CardList from '../../components/CardList';
-import { getTimestamp } from '../../tools/tools';
+    import { getTimestamp } from '../../tools/tools';
     export default{
         components: { FilePreview ,TypeSelect, CardList},
         data(){
@@ -260,14 +215,14 @@ import { getTimestamp } from '../../tools/tools';
                     { id: 3, name: '高中组' }
                 ],
                 object_:{},
-             ClassList:[
-                {name:"幼教组",id:1},
-                {name:"小学组",id:2},
-                {name:"初中组",id:4},
-                {name:"高中组",id:8},
-                {name:"特教组",id:16},
-                {name:"中职组",id:32},
-                {name:"高教组",id:64},
+                ClassList:[
+                    {name:"幼教组",id:1},
+                    {name:"小学组",id:2},
+                    {name:"初中组",id:4},
+                    {name:"高中组",id:8},
+                    {name:"特教组",id:16},
+                    {name:"中职组",id:32},
+                    {name:"高教组",id:64},
                 ],
                 activityObject:[
                     {name:"老师",id:1},
@@ -286,97 +241,88 @@ import { getTimestamp } from '../../tools/tools';
             };
         },
         created(){
-           
-              var that=this;
-            setTimeout(function(){
-                 that.selectActive();
-            },1000)
-            
         },
         mounted(){
-          
+            var that=this;
+            that.selectActive();
         },
         methods:{
             categoryDetail(value){
-                console.log(value,"sssssssssssssssss")
+                
             },
             async selectActive(){
-            console.log(1)
-            let params={}
-            params.url=api.activityDetail,
-            params.id=this.$route.query.id
-            params.expand="detail,region,node,attachment,banner,category,categoryDetail,process"
-            let res = await this.axiosGet(params).catch(err => err);
-            this.object_=res
-            console.log(res,"11111111")
-            
-                var baomingdata=[];
-                 var Str5='';//活动对象数据处理
-                console.log(this.object_.target,"item.target")
-                var ii=this.object_.target.toString(2)
-                for(let i=0;i<ii.length;i++){
-                  if(ii[i]==1){
-                      Str5=Str5+"【"+this.activityObject[i].name+"】"
-                      baomingdata.push(i+1)
-                  }
-                }
-                sessionStorage.setItem("baomingdata",JSON.stringify(baomingdata) )
-                sessionStorage.setItem("cover",this.object_.cover)
-                sessionStorage.setItem("object_",JSON.stringify(this.object_))
-                this.object_.targetList=Str5 //活动对象数据处理
-
-                var Str=[];//学段数据处理
-                console.log(this.object_.period,"item.target")
-                var ii=this.object_.period.toString(2)
-                for(let i=0;i<ii.length;i++){
-                  if(ii[i]==1){
-                      Str.push(this.ClassList[i])
-                  }
-                }
-                this.object_.periodList=Str //学段数据处理
-                
-                var Str2=""//活动范围数据处理
-                for(let i=0;i<this.object_.region.length;i++){
-                    Str2=Str2+'【'+this.object_.region[i].area_name+'】'
-                }
-                this.object_.regionList=Str2
-
-                var Str3=""//发起时间
-                let opts={}
-                opts.dateZero="dateZero"
-                Str3=this.timestampToTime(this.object_.created_at,opts)
-                this.object_.Sta_created_at=Str3
-                //node
-                let Str4=[]
-                var newtimeStamp= Math.round(new Date().getTime()/1000)
-                this.object_.node.forEach((element,index) => {
-                    console.log(element.stime,newtimeStamp,element.etime)
-                    if(element.stime<=newtimeStamp&&newtimeStamp<=element.etime){
-                        console.log(index)
-                        this.object_.process_=index+1
-                    }
-                    if(index==3){
-                        console.log(index)
-                        if(newtimeStamp>element.etime){
-                            console.log(1111)
-                             this.object_.process_=index+1
+                console.log(1)
+                let params={}
+                params.url=api.activityDetail,
+                params.id=this.$route.query.id
+                params.expand="detail,region,node,attachment,banner,category,categoryDetail,process"
+                await this.axiosGet(params).then(res=>{
+                    this.object_=res
+                    this.bannerUrl=res.banner[0].url
+                    var baomingdata=[];
+                    var Str5='';//活动对象数据处理
+                    console.log(this.object_.target,"item.target")
+                    var ii=this.object_.target.toString(2)
+                    for(let i=0;i<ii.length;i++){
+                        if(ii[i]==1){
+                            Str5=Str5+"【"+this.activityObject[i].name+"】"
+                            baomingdata.push(i+1)
                         }
                     }
+                    sessionStorage.setItem("baomingdata",JSON.stringify(baomingdata) )
+                    sessionStorage.setItem("cover",this.object_.cover)
+                    sessionStorage.setItem("object_",JSON.stringify(this.object_))
+                    this.object_.targetList=Str5 //活动对象数据处理
+                    var Str=[];//学段数据处理
+                    var ii=this.object_.period.toString(2)
+                    for(let i=0;i<ii.length;i++){
+                    if(ii[i]==1){
+                        Str.push(this.ClassList[i])
+                    }
+                    }
+                    this.object_.periodList=Str //学段数据处理
+                    
+                    var Str2=""//活动范围数据处理
+                    for(let i=0;i<this.object_.region.length;i++){
+                        Str2=Str2+'【'+this.object_.region[i].area_name+'】'
+                    }
+                    this.object_.regionList=Str2
+
+                    var Str3=""//发起时间
                     let opts={}
                     opts.dateZero="dateZero"
-                    var s=this.timestampToTime(element.stime,opts)
-                    var e=this.timestampToTime(element.etime,opts)
-                    Str4.push(s+"~"+e)
-                });
-                this.object_.processTime=Str4
-                this.object_.categoryDetail.forEach(item=>{
-                    item.child.forEach(ite=>{
-                        ite.name=ite.title
+                    Str3=this.timestampToTime(this.object_.created_at,opts)
+                    this.object_.Sta_created_at=Str3
+                    //node
+                    let Str4=[]
+                    var newtimeStamp= Math.round(new Date().getTime()/1000)
+                    this.object_.node.forEach((element,index) => {
+                        console.log(element.stime,newtimeStamp,element.etime)
+                        if(element.stime<=newtimeStamp&&newtimeStamp<=element.etime){
+                            console.log(index)
+                            this.object_.process_=index+1
+                        }
+                        if(index==3){
+                            console.log(index)
+                            if(newtimeStamp>element.etime){
+                                console.log(1111)
+                                this.object_.process_=index+1
+                            }
+                        }
+                        let opts={}
+                        opts.dateZero="dateZero"
+                        var s=this.timestampToTime(element.stime,opts)
+                        var e=this.timestampToTime(element.etime,opts)
+                        Str4.push(s+"~"+e)
+                    });
+                    this.object_.processTime=Str4
+                    this.object_.categoryDetail.forEach(item=>{
+                        item.child.forEach(ite=>{
+                            ite.name=ite.title
+                        })
                     })
-                })
-               this.gradeObjectid=this.object_.periodList[0].id
-                console.log(this.object_)
-           
+                    this.gradeObjectid=this.object_.periodList[0].id
+                }).catch(err => err);
             
             },
 

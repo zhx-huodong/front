@@ -121,7 +121,6 @@ function axiosGetParam(param) {
 export function axiosGet(param, isExpire = true, headers_) {
   let options = axiosGetParam(param);
   let headers = Object.assign(options.headers, headers_);
-  console.log("options===",options,"header====",headers)
   store.dispatch('INIT_SHOW', false);
   return new Promise((resolve, reject) => {
     axios.get(options.url, {
@@ -289,11 +288,6 @@ function expire() {
   if (window.app) {
     store.dispatch('INIT_SHOW', true);
   }
-  // setTimeout(() => {
-  //   setCookie('Authorization', '');
-  //   let host = isLocal ? 'https://upclass.educloud.tencent.com' : (location.protocol + '//' + location.host);
-  //   location.href = `${host}/edulogin/?redirectUrl=${redirectUrl}&from=activity`;
-  // }, 1500);
 }
 
 export function downloadFromUrl(url, name) {

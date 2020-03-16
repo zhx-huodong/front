@@ -6,14 +6,10 @@
                     <type-select :gradeList="gradeList" :activityObjectList="activityObjectList" :regionList="regionList" @gradeObject='gradeObject' 
                     @regionObject="regionObject" @activityObject="activityObject" ></type-select>
                 </div>
-                <!-- <div class="home-header"></div> -->
                 <div class="home-activity-list" v-if="activityList">
                     <card-list :cardList="list" @toNext="toNext"></card-list>
                 </div>
-                <!-- <my-video-player :videoSrc="videoSrc"></my-video-player> -->
-                <!-- <upload-file></upload-file> -->
             </div> 
-            <!-- <file-preview></file-preview> -->
         </el-card> 
 	</div>
 </template>
@@ -77,7 +73,6 @@ export default {
             {name:"中职组",id:32},
             {name:"高教组",id:64},
         ],
-        userid:'',
         activityObjectid:0,
         gradeObjectid:0,
         regionObjectid:'77',
@@ -85,33 +80,25 @@ export default {
         
     },
     created(){
-        this.userid=JSON.parse(localStorage.getItem("user")).id
         this.selectActive()
     },
     methods: {
         //查询活动
-        // {{uri}}/activity?expand=detail,region,node,attachment,banner
-        
         async selectActive(){
-            console.log(1)
-            console.log(this.activityObjectid,this.gradeObjectid,this.regionObjectid)
-                let params={}
-                params.url=api.activityDetail
-                
-                // params.created_by=this.userid;
-                if(this.activityObjectid!=0){
-                     params.target=this.activityObjectid;
-                }
-                console.log()
-                if(this.gradeObjectid!=0){
-                     params.period=this.gradeObjectid;
-                }
-                if(this.regionObjectid!="77"){
-                     params.region=this.regionObjectid;
-                }
-
-             let res = await this.axiosGet(params).catch(err => err);
-             this.list=res.items
+            let params={}
+            params.url=api.activityDetail
+            
+            if(this.activityObjectid!=0){
+                params.target=this.activityObjectid;
+            }
+            if(this.gradeObjectid!=0){
+                params.period=this.gradeObjectid;
+            }
+            if(this.regionObjectid!="77"){
+                params.region=this.regionObjectid;
+            }
+            let res = await this.axiosGet(params).catch(err => err);
+            this.list=res.items
         },
 
         // 下一步
@@ -119,7 +106,7 @@ export default {
             this.$router.push({
                 path: '/home/activityIntroduction',
                 query: {
-                id: id
+                    id: id
                 }
             });
         },
