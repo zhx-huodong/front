@@ -140,16 +140,21 @@
                 @close="authorClose(tag)">
                 {{tag}}
               </el-tag>
-              <el-input
-                class="input-new-tag"
+              <el-select filterable placeholder="请选择作者" 
                 v-if="authorInputVisible"
                 v-model="authorInputValue"
                 ref="authorSaveTagInput"
                 size="small"
-                @keyup.enter.native="authorInputConfirm(tag)"
-                @blur="authorInputConfirm"
-              >
-              </el-input>
+                @change="authorInputConfirm">
+                <el-option
+                  v-for="item in studentList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.name">
+                  <span style="float: left">{{ item.name }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.memberInfo[0].school.title }}</span>
+                </el-option>
+              </el-select>
               <el-button v-else class="button-new-tag" size="small" @click="showAuthorInput" type="primary">添加作者</el-button>
               <el-tag type="info">限制{{author_limit}}人</el-tag>
             </el-col>
@@ -166,16 +171,22 @@
                 @close="teacherClose(tag)">
                 {{tag}}
               </el-tag>
-              <el-input
-                class="input-new-tag"
+              
+              <el-select filterable placeholder="请选择指导老师" 
                 v-if="teacherInputVisible"
                 v-model="teacherInputValue"
                 ref="teacherSaveTagInput"
                 size="small"
-                @keyup.enter.native="teacherInputConfirm"
-                @blur="teacherInputConfirm"
-              >
-              </el-input>
+                @change="teacherInputConfirm">
+                <el-option
+                  v-for="item in teacherList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.name">
+                  <span style="float: left">{{ item.name }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.memberInfo[0].school.title }}</span>
+                </el-option>
+              </el-select>
               <el-button v-else class="button-new-tag" type="primary" size="small" @click="showTeacherInput" >添加指导老师</el-button>
               <el-tag type="info">限制{{mentor_limit}}人</el-tag>
             </el-col>
@@ -202,11 +213,11 @@ export default {
     components: { UploadFile,MyEditor },
     data(){
         return{
-            headers:{
+          headers:{
           'x-api-key':getCookie("x-api-key"),
           },
          action:api.uploadPic,
-        apipath:"http://api.huodong.eduinspector.com",
+          apipath:"http://api.huodong.eduinspector.com",
           activeName:'first',
           activeName2:'two',
           form: {
@@ -231,7 +242,8 @@ export default {
           mentor_limit:"",
           filename:"upFile",
           ppp:[],
-          items:[],
+          studentList:[],//学生选择列表
+          teacherList:[],//老师选择列表
         }
     },
     created(){
@@ -240,6 +252,12 @@ export default {
       this.object_=object_;
       this.categoryDetail=object_.categoryDetail
       this.handle();
+      let params={}
+      this.getTeacherList(params) 
+    },
+    mounted(){
+      let params={}
+      this.getStudentList(params) 
     },
     methods:{
         async postData(){
@@ -290,10 +308,8 @@ export default {
                 this.form.activityName=item.title
             }
         })
-        console.log(data,"...........")
        this.form.activityProject=data.title
        data.formats.forEach((item,index)=>{
-         console.log(item)
          console.log(item.remark,item.size/1024)
          this.pp.push(item.remark+(item.size/1024)+'M')
          this.ppp.push(item.size)
@@ -357,7 +373,7 @@ export default {
     },
     // tv_id!=".mp4"&&tv_id!=".rmvb"&&tv_id!=".avi"&&tv_id!=".ts"
 
-          //作品上传
+    //作品上传
     beforeAvatarUpload2(file){
       console.log(file)
       var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
@@ -384,7 +400,7 @@ export default {
         }
     },
 
-          //作品上传
+    //作品上传
     beforeAvatarUpload3(file){
       console.log(file)
       var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
@@ -410,117 +426,91 @@ export default {
           return false;
         }
     },
+    submitEnroll(){
+      this.postData();
+      this.$router.push({
+        path:"/home/submitEnroll",
+      })
+    },
+    updata(item){
+      console.log(item)
+    },
+    onSubmit() {
+      console.log('submit!');
+    },
+    handlePictureCardPreview(){
 
+    },
+    editorChange(){
 
-
-
-
-
-      submitEnroll(){
-        this.postData();
-        this.$router.push({
-          path:"/home/submitEnroll",
-        })
-      },
-      updata(item){
-        console.log(item)
-      },
-      onSubmit() {
-        console.log('submit!');
-      },
-      handlePictureCardPreview(){
-
-      },
-      editorChange(){
-
-      },
-      //作者
-      authorClose(tag) {
-        console.log(tag,"tag2")
-        this.authorTags.splice(this.authorTags.indexOf(tag), 1);
-      },
+    },
+    //作者
+    authorClose(tag) {
+      this.authorTags.splice(this.authorTags.indexOf(tag), 1);
+    },
     //查询学生
     
     isPhoneNumber(tel) {
         var reg =/^0?1[3|4|5|6|7|8][0-9]\d{8}$/;
         return reg.test(tel);
     },
-   async  selectStudent(){
-      //  //判断是否是手机号
-      let params={}
-      var mtype=[]
-      mtype=JSON.parse(sessionStorage.getItem("baomingdata"));
-      console.log(mtype)
-      console.log(mtype.toString())
-      
-      // console.log(typeof(mtype))
-      if(mtype.length>0){
-       
-        params.mtype=mtype.toString();
-      }
-     
+    //获取学生列表
+    async  getStudentList(params){
+      delete params.mtype
       params.url=api.user
-      // params.mtype=sessionStorage.getItem
-      params.expand='memberAuth,memberInfo,roleInfo';
-     
-      if(this.isPhoneNumber(this.authorInputValue)==false){
-          var name=this.authorInputValue
-          params.name=name
-      }else{
-          var mobile=this.authorInputValue
-          params.mobile=mobile
-      }
-      let res = await this.axiosGet(params).catch(err => err);
-          this.items=res.items
+      params.expand='memberAuth,memberInfo,roleInfo'
+      params.mtype=2
+      params.ball=1
+      await this.axiosGet(params).then(res=>{
+        this.studentList=res.items
+        console.log("学生列表===",this.studentList)
+      }).catch(err => err); 
     },
-      showAuthorInput() {
-        this.authorInputVisible = true;
-        
-        this.$nextTick(_ => {
-          this.$refs.authorSaveTagInput.$refs.input.focus();
-        });
-      },
+    //获取老师列表
+    async  getTeacherList(params){
+      delete params.mtype
+      params.url=api.user
+      params.expand='memberAuth,memberInfo,roleInfo'
+      params.mtype=1
+      params.ball=1
+      await this.axiosGet(params).then(res=>{
+        this.teacherList=res.items
+        console.log("老师列表===",this.teacherList)
+      }).catch(err => err); 
+    },
+    showAuthorInput() {
+      this.authorInputVisible = true;
+    },
 
-      authorInputConfirm(tag) {
-        console.log(tag,"tag")
-        this.selectStudent();
-        if(this.items.length==0){
-          this.authorInputValue="";
-          return false;
-        }else{
+    authorInputConfirm(tag) {
+      console.log('authorTags===',this.authorTags)
+      let authorInputValue = this.authorInputValue;
+      
+      this.authorTags.push(authorInputValue);
+      
+      this.authorInputVisible = false;
+      
+    },
+    //作者
+    teacherClose(tag) {
+      console.log(tag)
+      this.teacherTags.splice(this.teacherTags.indexOf(tag), 1);
+    },
 
-       
-        // console.log("this.authorInputValue",'111111111111',this.authorInputValue)
-        let authorInputValue = this.authorInputValue;
-        if (authorInputValue) {
-          this.authorTags.push(authorInputValue);
-        }
-        this.authorInputVisible = false;
-        this.authorInputValue = '';
-         }
-      },
-      //作者
-      teacherClose(tag) {
-        console.log(tag)
-        this.teacherTags.splice(this.teacherTags.indexOf(tag), 1);
-      },
+    showTeacherInput() {
+      this.teacherInputVisible = true;
+    },
 
-      showTeacherInput() {
-        this.teacherInputVisible = true;
-        this.$nextTick(_ => {
-          this.$refs.teacherSaveTagInput.$refs.input.focus();
-        });
-      },
-
-      teacherInputConfirm() {
-        let teacherInputValue = this.teacherInputValue;
-        if (teacherInputValue) {
-          this.teacherTags.push(teacherInputValue);
-        }
-        this.teacherInputVisible = false;
-        this.teacherInputValue = '';
+    teacherInputConfirm(value) {
+      console.log("change===",value,"teacher====",this.teacherTags)
+      let teacherInputValue = this.teacherInputValue;
+      if (teacherInputValue) {
+        this.teacherTags.push(teacherInputValue);
       }
+      this.teacherInputVisible = false;
+      this.teacherInputValue = '';
     }
+  }
 }
 </script>
 <style lang="less" scoped>  
