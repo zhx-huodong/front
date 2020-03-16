@@ -1,8 +1,8 @@
 let protocol = location.protocol;
 let devHost = 'api.huodong.eduinspector.com';
 const isLocal = location.hostname === 'huodong.eduinspector.com' || location.hostname === 'localhost';
-// let host = isLocal ? devHost : location.host;
-let host=devHost
+let host = isLocal ? devHost : location.host;
+console.log("网络地址====",location,"host===",host,"isLocal===",isLocal);
 
 let config = {
 	protocol: protocol,

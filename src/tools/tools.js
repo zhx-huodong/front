@@ -1,7 +1,12 @@
 import axios from 'axios';
 import store from '../store';
-// let redirectUrl = location.protocol + '//' + location.host;
-// const isLocal = location.hostname === '127.0.0.1' || location.hostname === 'localhost';
+
+
+let devHost = 'http://api.huodong.eduinspector.com';
+const isLocal =  location.hostname === 'localhost';
+let host = isLocal ?  '' : devHost ;
+
+axios.defaults.baseURL =host
 
 export function getCookie(name) {
   let arr = document.cookie.match(new RegExp('(^| )' + name + '=([^;]*)(;|$)'));
@@ -116,6 +121,7 @@ function axiosGetParam(param) {
 export function axiosGet(param, isExpire = true, headers_) {
   let options = axiosGetParam(param);
   let headers = Object.assign(options.headers, headers_);
+  console.log("options===",options,"header====",headers)
   store.dispatch('INIT_SHOW', false);
   return new Promise((resolve, reject) => {
     axios.get(options.url, {
