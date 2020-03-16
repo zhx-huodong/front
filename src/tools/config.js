@@ -6,7 +6,7 @@ let host = isLocal ? devHost : location.host;
 let config = {
 	protocol: protocol,
 	host: host,
-	protocolHost: `http://${host}`
+	protocolHost: `http://${devHost}`
 };
 
 export default config;
