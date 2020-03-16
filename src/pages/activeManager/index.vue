@@ -9,7 +9,16 @@
                             <el-form ref="form" :inline="true" :model="form" class="demo-form-inline">
                                 
                                         <el-form-item label="报名时间：">
-                                                <el-date-picker format="yyyy-MM-dd" v-model="form.time" size="small" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">   
+                                                <el-date-picker 
+                                              
+                                                format="yyyy-MM-dd"
+                                                 v-model="form.time"
+                                                  size="small" type="daterange"
+                                                   range-separator="至" 
+                                                   start-placeholder="开始日期"
+                                                    end-placeholder="结束日期"
+                                                    value-format="timestamp"
+                                                    >   
                                                 </el-date-picker>
                                         </el-form-item>
                                           
@@ -43,7 +52,7 @@
                                 </div>
                                 <div class="shenheclass" >
                                     <!-- <p>{{item.progress}}</p> -->
-                                   <p>haol</p>
+                                   <p>{{item.progress}}</p>
                                 </div>
                                 <div class="shenheclass2" >
         
@@ -99,7 +108,8 @@ export default {
                 {name:"中职组",id:32},
                 {name:"高教组",id:64},
                 ],
-            
+            time1:'',
+            time2:'',
             // list:[
             //     {
             //         id:1,
@@ -129,6 +139,7 @@ export default {
         this.selectActive();
     },
      methods: {
+      
     //删除
         deleteOne(id){
             let params={}
@@ -174,9 +185,17 @@ export default {
          
     async selectActive(){
         console.log(1)
+            // upload_stime  created_by
             let params={}
+            if(this.time1.length!=0&&this.time2.length!=0){
+                params.upload_stime=this.time1/1000;
+                params.upload_etime=this.time2/1000;
+            }
+            if(this.form.acitvename!=""){
+                params.title=this.form.acitvename
+            }
             params.url=api.activityDetail,
-            params.expand="detail,region,node,attachment,banner,category,categoryDetail,process"
+            params.expand="detail,region,node,attachment,banner,category,categoryDetail,process,progress"
             let res = await this.axiosGet(params).catch(err => err);
             this.list=res.items
             this.list.forEach(item=>{
@@ -202,10 +221,24 @@ export default {
                 Str3=this.timestampToTime(item.created_at,opts)
                 item.Sta_created_at=Str3
             })
+            // 数据清除
+            {
+                this.time1="";
+                this.time2="";
+                this.form.time='';
+                this.form.acitvename="";
+            }
     },
 
       onSubmit(){
-
+ 
+           
+          if(this.form.time.length==2){
+              this.time1=this.form.time[0]
+              this.time2=this.form.time[1]
+          }
+         
+        this.selectActive()
       },
       fabuActive(){
           this.$router.push({

@@ -627,6 +627,9 @@ export default {
     
     console.log(activedata)
     let res = await this.axiosPost(activedata).catch(err => err);
+    if(res.code==""){
+      this.$router.go(-1)
+    }
     console.log(res);
 
     },

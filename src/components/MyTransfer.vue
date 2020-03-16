@@ -1,14 +1,14 @@
 <template>
     <div>
         
-        <span class="countnum" style="margin-left:33px;">共20个作品</span>
+        <span class="countnum" style="margin-left:33px;">共{{count}}个作品</span>
         <span class="title" style="margin-left:244px;">分配作品</span>
         
         <hr>
-        <div class="div1">
+        <div class="div1" style="overflow: auto;">
             <input  class="inputclass"v-model="input" placeholder="请输入内容" style="" ></input>
             
-            <div style="margin-top:21px;" >
+            <div style="margin-top:21px;  " >
                 <div v-for="(item,index) in dataList" style="margin-bottom:10px;">
                 <img :src="url" style="width:20px;height:20px;margin-left:30px;">
                 <span style="margin-left: 56px;margin-top: -25px;display: block;">{{item.name}}</span>
@@ -19,7 +19,7 @@
             </div>
         </div>
         
-        <div class="div2">
+        <div class="div2" style="overflow: auto;">
             <span style="font-size:14px;font-family:PingFang;font-weight:500;color:rgba(153,153,153,1);line-height:70px;margin-left:30px;">请选择您要添加的人员</span>
             <div style="margin-top:12px;">
             <div   v-for="(item,index) in addList" >
@@ -30,14 +30,17 @@
             </div>
             </div>
             <div class='mybtn'>
-                <el-button type="primary" size="medium" @click="edit()">确认</el-button>
-                <el-button size="medium" style="margin-right:118px;" @click="Noedit()">取消</el-button>
+                <el-button type="primary" size="medium" @click="edit(),commit()">确认</el-button>
+                <el-button size="medium"  @click="Noedit()">取消</el-button>
             </div>
         </div>
     </div>
 </template>
 <script>
+import api from '../service/api';
+import { axiosGet,  } from '../tools/tools';
   export default {
+      props: ['workList'],
     data() {
       return {
           input:"",
@@ -51,17 +54,57 @@
                 {name:'曹老师',checked:false},
                 {name:'周老师',checked:false},
                 {name:'吴老师',checked:false},
+                {name:"张老师",checked:false}, 
+                {name:'周老师',checked:false},
+                {name:'吴老师',checked:false},
                 {name:"张老师",checked:false}
               ],
         addList:[],
           url:require('../public/images/peopLogo.png'),
+           count:"",
       };
+     
     },
     created(){
         this.dataList2=this.dataList;
         console.log(this.dataList2)
+        this.getuser()
+        console.log(this.workList,"testllllllll")
+        this.count=this.workList.length
     },
     methods: {
+      async  commit(){
+            console.log(this.addList)
+            console.log(this.workList)
+            var worList=[]
+            var teaList=[]
+            this.addList.forEach(item=>{
+               teaList.push(item.id)
+            })
+            this.workList.forEach(item=>{
+               worList.push(item.id)
+            })
+            console.log(teaList,"tea")
+             console.log(worList,"work")
+            let parmas={}
+            parmas.url=api.assignment
+            parmas.enroll_ids=worList
+            parmas.user_ids=teaList
+          
+            let res=await axiosGet(parmas).catch(res=>res)
+        },
+          //获取专家
+      async getuser(){
+        let parmas={}
+        parmas.url=api.user
+        parmas.role_id=5
+        let res=await axiosGet(parmas).catch(err=>err)
+        if(res.items.length!=0){
+          this.dataList=res.items
+        }
+        console.log(this.cities,"sssssssssssssssssss")
+      },
+
         edit(){
              this.$emit('edit',false)
         },
@@ -140,11 +183,16 @@
     width:400px;
     height:432px;
     .mybtn{
-        position:absolute;
-        bottom:0;
+       // position:absolute;
+       // bottom:0;
+       height: 40px;
+       position: fixed;
+       bottom: 110px;
         margin-left:118px;
         margin-bottom:18px;
-        
+        el-button{
+            
+        }
     }
     
     

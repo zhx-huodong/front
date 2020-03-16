@@ -5,7 +5,7 @@
             <el-row :gutter="12">
               <el-col :span="8">
                    <el-form-item label="所在学校：">
-              <el-input v-model="form.workname" placeholder="请输入"> </el-input>
+              <el-input v-model="form.school" placeholder="请输入"> </el-input>
             </el-form-item>
               </el-col>
 
@@ -17,7 +17,7 @@
 
               <el-col :span="8">
                   <el-form-item label="指导老师：">
-                    <el-input v-model="form.author" placeholder="请输入"> </el-input>
+                    <el-input v-model="form.mentor" placeholder="请输入"> </el-input>
                   </el-form-item>
               </el-col>
 
@@ -26,7 +26,7 @@
             <el-row>
               <el-col :span="8">
                 <el-form-item label="作品名称：">
-                    <el-input v-model="form.workname" placeholder="请输入作品名称"> </el-input>
+                    <el-input v-model="form.work_title" placeholder="请输入作品名称"> </el-input>
                 </el-form-item>
 
               </el-col>
@@ -43,16 +43,21 @@
           <!--展示内容-->
           <div class="buttonenum">
              <el-button size="medium" type="primary" @click="fenpeiwork()">分配作品</el-button>
-             <el-button size="medium">下载作品</el-button>
-             <el-button size="medium">导出excel</el-button>
-             <div>
+             <el-button size="medium" @click="xiazai()">下载作品</el-button>
+             <el-button size="medium" @click="daochu()">导出excel</el-button>
+             <!-- <div>
                ------------{{id1}},{{id2}},{{id3}},{{id4}}-------
-             </div>
+             </div> -->
           </div>
           <div style="margin-top:16px;">
             <template>
               <!-- 序号 报名时间 报名人 联系电话 所在地区 所在学校 -->
-              <el-table :data="tableData" stripe style="width: 100%">
+              <el-table :data="tableData" stripe style="width: 100%"
+                @selection-change="handleSelectionChange">>
+                 <el-table-column
+                  type="selection"
+                  width="55">
+                </el-table-column>
                 <el-table-column
                   label="序号"
                   type="index"
@@ -101,21 +106,7 @@
                   width="116">
                 </el-table-column>
                 
-                <!-- <el-table-column
-                  prop="address"
-                  label="所在地区"
-                  width="180">>
-                </el-table-column>
-                <el-table-column
-                  prop="shcoolname"
-                  label="所在学校"
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="private"
-                  label="分配专家"
-                  width="180">
-                </el-table-column> -->
+              
               </el-table>
             </template>
           </div>
@@ -134,7 +125,7 @@
              
                   <div v-if="dialogVisible" class="mask">
                     <div class="box">
-                      <my-transfer @edit="edit" @Noedit="Noedit"></my-transfer>
+                      <my-transfer @edit="edit" @Noedit="Noedit" :workList="workList" ></my-transfer>
                     </div>
                   </div>
                   
@@ -151,7 +142,8 @@
 <script>
 import MyTransfer from '../../components/MyTransfer';
 import api from '../../service/api';
-import { axiosGet } from '../../tools/tools';
+import { axiosGet, getCookie } from '../../tools/tools';
+import axios from 'axios';
 
   export default {
     components:{MyTransfer},
@@ -164,33 +156,33 @@ import { axiosGet } from '../../tools/tools';
     //     id4:String,
     // },
     data() {
-        const generateData = _ => {
-        const data = [];
+      //   const generateData = _ => {
+      //   const data = [];
        
-        const cities = ['陈老师', '张老师', '李老师', '吴老师', '张老师', '曹老师', '周老师','吴老师',"张老师"];
-        const pinyin = ['陈老师', '张老师', '李老师', '吴老师', '张老师', '曹老师', '周老师','吴老师',"张老师"];
+      //   const cities = ['陈老师', '张老师', '李老师', '吴老师', '张老师', '曹老师', '周老师','吴老师',"张老师"];
+      //   const pinyin = ['陈老师', '张老师', '李老师', '吴老师', '张老师', '曹老师', '周老师','吴老师',"张老师"];
        
-        cities.forEach((city, index) => {
-          data.push({
-            label: city,
-            key: index,
-            pinyin: pinyin[index]
-          });
-        });
-        return data;
-      };
+      //   cities.forEach((city, index) => {
+      //     data.push({
+      //       label: city,
+      //       key: index,
+      //       pinyin: pinyin[index]
+      //     });
+      //   });
+      //   return data;
+      // };
       return {
        
-            data: generateData(),
+            data: [],
             value: [],
             filterMethod(query, item) {
               return item.pinyin.indexOf(query) > -1;
             },
             form:{
-              addr:'',
-              schoolname:'',
-              workname:'',
-              phone:'',
+              
+              school:'',
+              work_title:'',
+              mentor:'',
               author:'',
             
             },
@@ -214,39 +206,105 @@ import { axiosGet } from '../../tools/tools';
           pageCount: "",
           currentPage: 1,
           perPage: "",
+          teacherList:[],
+          workList:[],
+          
             
       };
     },
     watch:{
         id1:function(val){
-        console.log(val,"watch1")
+          console.log(val,"watch1")
+          this.enrollSelect()
+
         },
         id2:function(val){
+            this.enrollSelect()
             console.log(val,"watch2")
         },
         id3:function(val){
+            this.enrollSelect()
             console.log(val,"watch3")
         },
         id4:function(val){
+            this.enrollSelect()
             console.log(val,"watch4")
         }
     },
     created(){
+     
       this.enrollSelect()
-
+      
     },
     mounted(){
       
       
     },
     methods: {
+      handleSelectionChange(val){
+        console.log(val,"val")
+        this.workList=val
+      },
+    
       
+      onSubmit(){
+          this.enrollSelect()
+          
+      },
+    async xiazai(){
+      let parmas={};
+       
+       
+        var ids=[];
+        this.workList.forEach(item=>{
+          ids.push(item.id)
+          console.log(typeof(item.id))
+        })
+       
+     
+        
+        axios.get(api.enroll,{
+          params:{
+            id:ids.join(","),
+            bdownload:"1"
+          },
+          headers:
+          {headers:getCookie('x-api-key')}
+        })
+      },
      async enrollSelect(){
 
         
           let parmas={}
+          if(this.form.school!=""){
+            parmas.school=this.form.school
+          }
+           if(this.form.work_title!=""){
+            parmas.work_title=this.form.work_title
+          }
+           if(this.form.mentor!=""){
+            parmas.mentor=this.form.mentor
+          }
+           if(this.form.author!=""){
+            parmas.author=this.form.author
+          }
+          // ---------------------
+           if(this.id1!=0){
+            parmas.period=this.id1
+          }
+           if(this.id2!=0){
+            parmas.category_id=this.id2
+          }
+           if(this.id3!=0){
+            parmas.item_id=this.id3
+          }
+          console.log(this.id4)
+           if(this.id4!=0&&this.id4!="77"){
+            parmas.region=this.id4.toString()
+          }
+
           parmas.url=api.enroll
-          parmas.expand='info,works,school'
+          parmas.expand='info,works,school,professional'
           parmas.page=this.currentPage
           parmas.activity_id=sessionStorage.getItem("workid")
           let res=await axiosGet(parmas).catch(err=>err)

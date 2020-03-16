@@ -20,6 +20,8 @@ const activityDetail=`${base}/activity`;//活动获取
 const activityCategory=`${base}/activity-category`;//读取活动项目详情
 const enroll=`${base}/enroll`;//读取报名记录
 const works=`${base}/works`;//读取报名记录
+const assignment=`${base}/works-admin/assignment`;//读取报名记录
+// 
 
 // {{uri}}/activity?expand=detail,region,node,attachment,banner
 // const testLogin=`${base}/test/login`; 
@@ -41,5 +43,6 @@ export default {
     activityDetail,
     activityCategory,
     enroll,
-    works
+    works,
+    assignment
 }

@@ -62,7 +62,7 @@
          
           <el-form-item>
            
-            <el-button type="primary"  @click="onSubmit()" size="small">确定</el-button>
+            <el-button type="primary"  @click="back()" size="small">确定</el-button>
             <el-button @click="back()" size="small">取消</el-button>
           </el-form-item>
         </el-form>
