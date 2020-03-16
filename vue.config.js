@@ -1,6 +1,4 @@
 const HttpsProxyAgent = require('https-proxy-agent');
-// const proxy = 'http:localhost:8003';
-// let agent = new HttpsProxyAgent(proxy);
 
 let config = {
 	productionSourceMap: true,
