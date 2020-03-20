@@ -3,7 +3,9 @@
     <el-card style="min-height:650px;">
       <div class="home-wrap">
         <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="活动设置" name="first">活动设置</el-tab-pane>
+          <el-tab-pane label="活动设置" name="first">
+            <create-activity></create-activity>
+          </el-tab-pane>
 
           <el-tab-pane label="作品管理" name="third">
             <div class="activity-lable">
@@ -43,6 +45,7 @@ import EnrollInfo from "./EnrollInfo";
 import WorksManagement from "./WorksManagement";
 import EvaluationResult from "./EvaluationResult";
 import ActivityStatistics from "./ActivityStatistics";
+import CreateActivity from "./createActivity";//活动设置
 import TypeSelect from "../../components/TypeSelect";
 import NewsBulletin from "../newsBulletin";
 import { axiosGet } from "../../tools/tools";
@@ -54,7 +57,8 @@ export default {
     EvaluationResult,
     ActivityStatistics,
     TypeSelect,
-    NewsBulletin
+    NewsBulletin,
+    CreateActivity
   },
   data() {
     return {
