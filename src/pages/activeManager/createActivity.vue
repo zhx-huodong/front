@@ -1,22 +1,18 @@
 <template>
   <div class="create-activity-container">
     <el-card style="min-height:650px">
-      <!-- <div>
-                <el-button style="margin-bottom:10px;" size="mini" @click="back()"> <返回</el-button>
-             
-                <p style="text-align: center;" >发布活动</p>
-                <hr>
-      </div>-->
       <el-page-header @back="back()" title="发布活动"></el-page-header>
-      <hr />
-
-      <!-- <el-tabs v-model="activeName" >
-      <el-tab-pane label="创建活动" name="first">-->
+      <el-divider></el-divider>
       <div class="create-activity-body">
-        <el-form ref="form" :model="form" label-width="80px">
+        <el-form ref="form" :model="addActivityForm" label-width="80px">
           <el-form-item label="活动名称:">
             <el-col :span="9">
-              <el-input placeholder="请输入" v-model="form.title" size="small" @input="changeTitle()"></el-input>
+              <el-input
+                placeholder="请输入"
+                v-model="addActivityForm.title"
+                size="small"
+                @input="changeTitle()"
+              ></el-input>
             </el-col>
           </el-form-item>
 
@@ -26,20 +22,17 @@
                 <el-upload
                   :show-file-list="true"
                   :before-upload="beforeupload"
-                  :on-success="upsuccess"
+                  :on-success="coverSuccess"
                   :on-preview="handlePreview"
-                  :on-remove="handleRemove"
+                  :on-remove="coverRemove"
                   :headers="headers"
                   :action="action"
                   :name="filename"
                   list-type="picture-card"
-                  :file-list="form.cover"
+                  :file-list="cover"
                   :limit="1"
                 >
                   <i class="el-icon-plus"></i>
-                  <!-- <el-dialog :visible.sync="dialogVisible_cover">
-                    <img width="100%" :src="dialogImageUrl_cover" alt="">
-                  </el-dialog> -->
                   <span
                     style="font-size: 14px;position: absolute;top: 26%;left: 25%;color:#ccc"
                   >添加活动展示图片</span>
@@ -50,21 +43,21 @@
           <el-form-item label="banner图:">
             <template>
               <el-upload
-              :before-upload="beforeupload"
-              :on-success="upsuccess2"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove2"
-              :headers="headers"
-              :action="action"
-              :name="filename" 
-              :file-list="form.banner" 
-              list-type="picture-card"
+                :before-upload="beforeupload"
+                :on-success="bannerSuccess"
+                :on-preview="handlePreview"
+                :on-remove="bannerRemove"
+                :headers="headers"
+                :action="action"
+                :name="filename"
+                :file-list="banner"
+                :limit="1"
+                list-type="picture-card"
               >
                 <i class="el-icon-plus"></i>
                 <span
                   style="font-size: 14px;position: absolute;top: 26%;left:15%;color:#ccc"
                 >添加内页banner图(1920*460)</span>
-                <!-- <div slot="tip"  >添加内页banner图(1920*460)</div> -->
               </el-upload>
             </template>
           </el-form-item>
@@ -73,588 +66,675 @@
             <P>活动介绍 ：</P>
             <my-editor @editorChange="editorChange" :inputtext="inputtext"></my-editor>
           </div>
-          
+
           <el-upload
-           
+            style="width:790px;margin-bottom:20px;"
             :action="action2"
             :on-preview="handlePreview"
-            :on-success="upsuccess3"
-            :on-remove="handleRemove3"
-             multiple
+            :on-success="attachmentSuccess"
+            :on-remove="attachmentRemove"
+            multiple
             :headers="headers"
-            :name="filename" 
-            :file-list="form.attachment">
-            <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">支持excle、word、pdf 三种格式</div>
+            :name="filename"
+            :file-list="attachment"
+          >
+            <el-button size="small" type="primary" plain>上传活动指南</el-button>
+            <span slot="tip" class="el-upload__tip" style="margin-left:20px;">支持PNG、JPG格式</span>
           </el-upload>
-          <!-- <div class="upload-file">
-            <div class="annex">上传活动指南</div>
-            <p>支持excle、word、pdf 三种格式</p>
-          </div> -->
-          <!-- 暂时不做 -->
-          <!-- <div style="clear:both;margin-top:20px;margin-bottom:20px;">
-            <div style="font-size: 14px">作品限额设置:</div>
-            <el-button
-              type="primary"
-              @click="limitSetting()"
-              style="margin-left: 95px;float: left;margin-top: -25px;"
-              size="small"
-            >点击进入设置</el-button>
-          </div> -->
           <el-form-item label="活动类型 :">
-            <span class="mybtn" @click="addclassFlag=true" >+添加类别</span>
-            <div class="myOut" v-for="(item,index) in classList">
-              <div class="myTitle" >
+            <span class="mybtn" @click="addclassFlag=true,edit_1=false">+添加类别</span>
+            <div class="myOut" v-for="(item,index) in addActivityForm.category" :key="index">
+              <div class="myTitle">
                 <span>{{item.title}}</span>
                 <div class="myBtns">
-                  <a href="javascript:void(0);" style="color:#198AF3" @click="edit_(item,index)">编辑</a>
+                  <a href="javascript:void(0);" style="color:#198AF3" @click="edit_(index)">编辑</a>
                   <a href="javascript:void(0);" style="color:#FE5426" @click="deleteTitle(index)">删除</a>
                 </div>
               </div>
-              <div >
-
-              <div class="content" v-for="(ite,inde) in item.child">
-                <span>{{ite.title}}</span>
-                <div class="myBtns">
-                  <a href="javascript:void(0);" style="color:#198AF3" @click="childEdit(index,inde)">编辑</a>
-                  <a href="javascript:void(0);" style="color:#FE5426" @click="childDele(index,inde)">删除</a>
+              <div>
+                <div class="content" v-for="(subItem,subIndex) in item.child" :key="subIndex">
+                  <span>{{subItem.title}}</span>
+                  <div class="myBtns">
+                    <a
+                      href="javascript:void(0);"
+                      style="color:#198AF3"
+                      @click="childEdit(index,subIndex)"
+                    >编辑</a>
+                    <a
+                      href="javascript:void(0);"
+                      style="color:#FE5426"
+                      @click="childDelete(index,subIndex)"
+                    >删除</a>
+                  </div>
                 </div>
+                <p class="addclass" @click="toActiveEdit(index)">
+                  <span>+</span>添加题目
+                </p>
               </div>
-              <p class="addclass"  @click="toActiveEdit(index)">
-                <span >+</span>添加题目
-              </p>
             </div>
-              </div>
           </el-form-item>
-
-            <el-form-item label="活动范围 :">
-            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-           
-            <el-checkbox-group v-model="actLimit" @change="handleCheckedCitiesChange">
-                <el-checkbox v-for="city in options" :label="city" :key="city.id">{{city.name}}</el-checkbox>
-            </el-checkbox-group>
-          </el-form-item><el-form-item label="活动对象 :">
-             <el-checkbox-group v-model="form.target" @change="handleCheckedCitiesChange2" >
-               <el-checkbox v-for="city in list2" :label="city.id" :key="city.id">{{city.name}}</el-checkbox>
+          <el-form-item label="活动范围 :">
+            <el-checkbox
+              :indeterminate="isIndeterminate"
+              v-model="checkAll"
+              @change="regionCheckAllChange"
+            >全选</el-checkbox>
+            <el-checkbox-group v-model="region" @change="regionCheckedChange">
+              <el-checkbox v-for="item in regionList" :label="item" :key="item.id">{{item.name}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-
- 
-          <el-form-item label="作品上传 :" >
+          <el-form-item label="活动对象 :">
+            <el-checkbox-group v-model="target" @change="targetCheckedChange">
+              <el-checkbox v-for="item in targetList" :label="item" :key="item.id">{{item.name}}</el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+          <el-form-item label="作品上传 :">
             <el-date-picker
-              v-model="form.upload"
+              v-model="upload"
               type="daterange"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              @change="uploadChange"
               value-format="timestamp"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="区域推荐 :">
             <el-date-picker
-              v-model="form.recommend"
+              v-model="recommend"
               type="daterange"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-               value-format="timestamp"
+              @change="recommendChange"
+              value-format="timestamp"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="市级评审 :">
             <el-date-picker
-              v-model="form.review"
+              v-model="review"
               type="daterange"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-               value-format="timestamp"
+              @change="reviewChange"
+              value-format="timestamp"
             ></el-date-picker>
           </el-form-item>
 
           <el-form-item label="作品展示 :">
             <el-date-picker
-              v-model="form.exhibit"
+              v-model="exhibit"
               type="daterange"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-               value-format="timestamp"
+              @change="exhibitChange"
+              value-format="timestamp"
             ></el-date-picker>
           </el-form-item>
-         
+
           <el-form-item>
             <el-button type="primary" @click="onSubmit()">保存并发布</el-button>
-            <el-button>保存草稿</el-button>
+            <!-- <el-button>保存草稿</el-button> -->
             <el-button>取消</el-button>
           </el-form-item>
         </el-form>
       </div>
-      <!-- </el-tab-pane>
-      </el-tabs>-->
     </el-card>
     <el-dialog
       :center="true"
       :title="edit_1==false?'添加类别':'修改类别'"
       :visible.sync="addclassFlag"
       width="30%"
-     >
+    >
       <div style=":display: inline-block;">
-           <span>类别名称：</span>
-           <el-input v-model="cname" placeholder="请输出"></el-input>
+        <span>类别名称：</span>
+        <el-input v-model="title" placeholder="请输出"></el-input>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addclassFlag = false,edit_1=false">取 消</el-button>
-        <el-button type="primary" @click="addclassFlag = false,addclassL() ">确 定</el-button>
+        <el-button type="primary" @click="addclassFlag = false,addCategory() ">确 定</el-button>
       </span>
     </el-dialog>
-    
-    <!-- <div class="myBox" v-show="limitSet">
-      <p>根据所选活动范围列出下级区域</p>
-      <div class="myList" style="margin:20px;0px">
-        <span>地区名称:</span>
-        <el-select v-model="RegionIndex" placeholder="请选择" style="width:150px;" id="mySelect"  @change="selectRegion(RegionIndex)" >
-          <el-option
-            v-for="(item,index) in options"
-            :key="item.id"
-            :label="item.name"
-            :value="index"
-          ></el-option>
-        </el-select>
-      </div>
-      <div class="myList" style="margin:20px;0px">
-        <span>作品限额:</span>
-        <el-input v-model="number" style="width:150px" id="myInput" @input="LimitSet(number)"></el-input>
-      </div>
-      <div class="mtBoxList">
-          <el-button size="mini">设置</el-button>
-          <el-button size="mini">统一设定</el-button>
-          <el-button size="mini">取消</el-button>
-          <div class="myItem">
-              <table>
-                  <tr style="background-color:#eee;height:45px">
-                      <td>市/区</td>
-                      <td>作品限额</td>
-                  </tr>
-                  <tr style="height:40px" v-for="(item,index) in options" :key="index">
-                      <td>{{item.name}}</td>
-                      <td>{{item.val}}</td>
-                  </tr>
-              </table>
-          </div>
-          <el-button class="sure" @click="limitSetting()">确定</el-button>
-      </div>
-    </div> -->
   </div>
 </template>
 <script>
-import api from '../../service/api';
+import api from "../../service/api";
 import MyEditor from "../../components/MyEditor";
-import { getCookie } from '../../tools/tools';
+import { getCookie } from "../../tools/tools";
 export default {
   components: {
     MyEditor
   },
   data() {
     return {
-      
-      inputtext:"",
-      edit_1:false,
-      cname:"",
-      addclassFlag:false,
-        RegionIndex:"",
-        actLimit:[],
-         checkAll: false,
-         isIndeterminate: true,
-         checkAll2: false,
-         isIndeterminate2: true,
-        list2:[
-            {name:"老师",id:1},
-            {name:"学生",id:2},
-            {name:"家长",id:4},
-        ],
-         list1:[
-            {name:"南山",id:1},
-            {name:"宝安",id:2},
-            {name:"西乡",id:3},
-        ],
-        object:[],
-      activeName: "first",
-      form: {
-        content:"",
-        cover:[],
+      inputtext: "",
+      edit_1: false,
+      title: "",
+      addclassFlag: false,
+      RegionIndex: "",
+      checkAll: false,
+      isIndeterminate: true,
+      checkAll2: false,
+      isIndeterminate2: true,
+      targetList: [
+        { name: "老师", id: 1, checked: false },
+        { name: "学生", id: 2, checked: false },
+        { name: "家长", id: 4, checked: false },
+        { name: "老师和学生", id: 3, checked: false }
+      ],
+      addActivityForm: {
         title: "",
-        banner:[],
-        target:[],
-        attachment:[],
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: "",
-        upload:[],
-        recommend:[],
-        review:[],
-        exhibit:[],
+        content: "",
+        cover: "",
+        banner: [],
+        attachment: [],
+        target: "",
+        region: [],
+        upload: {},
+        recommend: {},
+        review: {},
+        exhibit: {},
+        category: []
       },
       content: null,
       editorOption: {},
       value: "",
-      options: [
-        {"id":"77","pid":"6","type":"2","name":"深圳","val":200},
-        {"id":"726","pid":"77","type":"3","name":"福田区","val":200},
-        {"id":"727","pid":"77","type":"3","name":"罗湖区","val":200},
-        {"id":"728","pid":"77","type":"3","name":"南山区","val":200},
-        {"id":"729","pid":"77","type":"3","name":"宝安区","val":200},
-        {"id":"730","pid":"77","type":"3","name":"龙岗区","val":200},
-        {"id":"731","pid":"77","type":"3","name":"盐田区","val":200},
-        {"id":"732","pid":"77","type":"3","name":"市辖区","val":200},
-        {"id":"733","pid":"77","type":"3","name":"龙华区","val":200},
-        {"id":"734","pid":"77","type":"3","name":"坪山区","val":200},
-        {"id":"735","pid":"77","type":"3","name":"光明区","val":200},
-        {"id":"736","pid":"77","type":"3","name":"大鹏区","val":200}
+      regionList: [
+        { id: "77", pid: "6", type: "2", name: "深圳", val: 200 },
+        { id: "726", pid: "77", type: "3", name: "福田区", val: 200 },
+        { id: "727", pid: "77", type: "3", name: "罗湖区", val: 200 },
+        { id: "728", pid: "77", type: "3", name: "南山区", val: 200 },
+        { id: "729", pid: "77", type: "3", name: "宝安区", val: 200 },
+        { id: "730", pid: "77", type: "3", name: "龙岗区", val: 200 },
+        { id: "731", pid: "77", type: "3", name: "盐田区", val: 200 },
+        { id: "732", pid: "77", type: "3", name: "市辖区", val: 200 },
+        { id: "733", pid: "77", type: "3", name: "龙华区", val: 200 },
+        { id: "734", pid: "77", type: "3", name: "坪山区", val: 200 },
+        { id: "735", pid: "77", type: "3", name: "光明区", val: 200 },
+        { id: "736", pid: "77", type: "3", name: "大鹏区", val: 200 }
       ],
-      
-      
-      limitSet:false,
-      classList:[],
-      filename:"upFile",
-      url:"",
-      datas:{},
-      headers:{
-          'x-api-key':getCookie("x-api-key")
+      limitSet: false,
+      filename: "upFile",
+      url: "",
+      datas: {},
+      headers: {
+        "x-api-key": getCookie("x-api-key")
       },
-      action:api.uploadPic,
-      action2:api.uploadFile,
-      editIndex:"",
-      activedata:{},
-      apipath:"http://api.huodong.eduinspector.com"
+      action: api.uploadPic,
+      action2: api.uploadFile,
+      editIndex: "",
+      apipath: "http://api.huodong.eduinspector.com",
+      cover: [], //活动图
+      banner: [], //banner图
+      attachment: [], //活动指南
+      region: [], //区域
+      target: [], //活动对象
+      upload: [], //作品上传时间
+      recommend: [], //区推荐时间
+      review: [], //市审核时间
+      exhibit: [] //作品展示时间
     };
   },
 
-  created(){
-    var ativeEdit=[];
-    if(localStorage.getItem("ativeEdit")!= null){
-        this.classList=JSON.parse(localStorage.getItem('ativeEdit'))
-        console.log(this.classList,"classlist")
+  created() {
+    if (JSON.parse(sessionStorage.getItem("addActivityForm")) != null) {
+      this.addActivityForm = JSON.parse(
+        sessionStorage.getItem("addActivityForm")
+      );
+      if (this.addActivityForm.cover != "") {
+        this.cover.push({
+          name: this.addActivityForm.cover,
+          url: this.addActivityForm.cover
+        });
+      }
+      for (let i in this.addActivityForm.banner) {
+        this.banner.push({
+          name: this.addActivityForm.banner[i],
+          url: this.addActivityForm.banner[i]
+        });
+      }
+      for (let j in this.addActivityForm.attachment) {
+        this.attachment.push({
+          name: this.addActivityForm.attachment[j],
+          url: this.addActivityForm.attachment[j]
+        });
+      }
+      for (let k in this.addActivityForm.region) {
+        for (let l in this.regionList) {
+          if (this.addActivityForm.region[k] == this.regionList[l].id) {
+            this.region.push(this.regionList[l]);
+          }
+        }
+      }
+      this.checkAll = this.region.length == this.regionList.length;
+      this.isIndeterminate = !(this.region.length == this.regionList.length);
+      if (this.addActivityForm.target != "") {
+        for (let h in this.targetList) {
+          if (this.targetList[h].id == this.addActivityForm.target) {
+            this.target.push(this.targetList[h]);
+          }
+        }
+      }
+      this.inputtext = this.addActivityForm.content;
+      if (this.addActivityForm.upload.stime != undefined) {
+        this.upload.push(this.addActivityForm.upload.stime * 1000);
+        this.upload.push(this.addActivityForm.upload.etime * 1000);
+        console.log("this.upload===", this.upload);
+      }
+      if (this.addActivityForm.recommend.stime != undefined) {
+        this.recommend.push(this.addActivityForm.recommend.stime * 1000);
+        this.recommend.push(this.addActivityForm.recommend.etime * 1000);
+      }
+      if (this.addActivityForm.review.stime != undefined) {
+        this.review.push(this.addActivityForm.review.stime * 1000);
+        this.review.push(this.addActivityForm.review.etime * 1000);
+      }
+      if (this.addActivityForm.exhibit.stime != undefined) {
+        this.exhibit.push(this.addActivityForm.exhibit.stime * 1000);
+        this.exhibit.push(this.addActivityForm.exhibit.etime * 1000);
+      }
     }
+  },
 
-    if(sessionStorage.getItem("activedata")!= null){
-       var activedata=JSON.parse(sessionStorage.getItem('activedata'))
-        this.form.title=activedata.title
-        this.form.cover.push({"name":"封面","url":activedata.cover})
-        if(activedata.banner.length!=0){
-          activedata.banner.forEach((item,index)=>{
-            this.form.banner.push({"name":"banner"+index,"url":item})
-          })
-        }
-        this.inputtext=activedata.content
-         if(activedata.attachment.length!=0){
-          activedata.attachment.forEach((item,index)=>{ 
-            this.form.attachment.push({"name":"attachment-"+index,"url":item})
-          })
-        }
-    }
-  },
-  
-  computed: {
-  
-  },
+  computed: {},
   mounted() {},
   methods: {
-    changeTitle(){
-        console.log(sessionStorage.getItem("activedata")) 
-        if(sessionStorage.getItem("activedata")!=null){
-           
-            var activedata=JSON.parse(sessionStorage.getItem("activedata"))
-            console.log(this.form.title)
-            activedata.title=this.form.title
-            sessionStorage.setItem("activedata",JSON.stringify(activedata))
-        }else{
-           this.activedata.title=this.form.title
-            sessionStorage.setItem("activedata",JSON.stringify(this.activedata))
-        }
-        
+    //活动名称
+    changeTitle() {
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
+      console.log(
+        "addActivityForm====",
+        sessionStorage.getItem("addActivityForm")
+      );
     },
-    childDele(index,inde){
-        var ativeEdit=JSON.parse(localStorage.getItem("ativeEdit"))
-        console.log(ativeEdit)
-        ativeEdit.forEach((items,index_) => {
-          console.log(items)
-          if(index_==index){
-            items.child.forEach((item,inde_)=>{
-              if(inde==inde_){
-                items.child.splice(inde_,1)
-              }
-            })
-          }
-        });
-        localStorage.setItem("ativeEdit",JSON.stringify(ativeEdit))
-         var ativeEdit=[];
-        if(localStorage.getItem("ativeEdit")!= null){
-            this.classList=JSON.parse(localStorage.getItem('ativeEdit'))
-            console.log(this.classList,"classlist")
+    //删除活动项目
+    childDelete(index, subIndex) {
+      this.addActivityForm.category.forEach((items, index_) => {
+        if (index_ == index) {
+          items.child.forEach((item, subIndex_) => {
+            if (subIndex == subIndex_) {
+              items.child.splice(subIndex_, 1);
+            }
+          });
         }
+      });
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
     },
-    childEdit(index,inde){
+    //编辑活动项目
+    childEdit(index, subIndex) {
       this.$router.push({
-            path:"/activeManager/createActivity/activeEdit",
-            query: {
-            id:index,
-            id2:inde,
-          }
-          })
-    },
-    edit_(item,index){
-      this.classList=JSON.parse(localStorage.getItem('ativeEdit'));
-      this.cname=this.classList[index].title
-      this.addclassFlag=true;
-      this.edit_1=true;
-      this.editIndex=index;
-    },
-    deleteTitle(index){
-        this.classList.splice(index,1)
-        localStorage.setItem("ativeEdit",JSON.stringify(this.classList))
-    },
-        toActiveEdit(index){
-          this.$router.push({
-            path:"/activeManager/createActivity/activeEdit",
-            query: {
-            id:index,
-          }
-          })
-        },
-    // 添加图片
-      beforeupload(file){
-            // this.datas={upFile:file.name} 
-            // console.log(file.name)
-            // console.log(file)
-        },
-        upsuccess(response, file, fileList) {
-           
-             this.form.cover=[]
-            fileList.forEach(item=>{
-              item.response.files.forEach(ite=>{
-                
-                this.form.cover.push(this.apipath+ite.path)
-              })
-            })
-           console.log(this.form.cover)
-           var activedata=JSON.parse(sessionStorage.getItem("activedata"))
-           activedata.cover=this.form.cover[0]
-           sessionStorage.setItem("activedata",JSON.stringify(activedata))
-            
-        },
-        handleRemove(file, fileList) {
-           
-            this.form.cover=[]
-            fileList.forEach(item=>{
-              item.response.files.forEach(ite=>{
-                
-                this.form.cover.push(this.apipath+ite.path)
-              })
-            })
-           console.log(this.form.cover)
-           var activedata=JSON.parse(sessionStorage.getItem("activedata"))
-           activedata.cover=this.form.cover[0]
-          sessionStorage.setItem("activedata",JSON.stringify(activedata))
-        },
-        upsuccess2(response, file, fileList) {
-           
-             this.form.banner=[]
-            fileList.forEach(item=>{
-              item.response.files.forEach(ite=>{
-                
-                this.form.banner.push(this.apipath+ite.path)
-              })
-            })
-           console.log(this.form.banner)
-           var activedata=JSON.parse(sessionStorage.getItem("activedata"))
-           activedata.banner=this.form.banner
-           sessionStorage.setItem("activedata",JSON.stringify(activedata))
-            
-        },
-        handleRemove2(file, fileList) {
-           
-            this.form.banner=[]
-            fileList.forEach(item=>{
-              item.response.files.forEach(ite=>{
-                this.form.banner.push(this.apipath+ite.path)
-              })
-            })
-           console.log(this.form.banner)
-           var activedata=JSON.parse(sessionStorage.getItem("activedata"))
-           activedata.banner=this.form.banner
-          sessionStorage.setItem("activedata",JSON.stringify(activedata))
-        },
-          upsuccess3(response, file, fileList) {
-           
-             this.form.attachment=[]
-            fileList.forEach(item=>{
-              item.response.files.forEach(ite=>{
-                
-                this.form.attachment.push(this.apipath+ite.path)
-              })
-            })
-           console.log(this.form.attachment)
-           var activedata=JSON.parse(sessionStorage.getItem("activedata"))
-           activedata.attachment=this.form.attachment
-           sessionStorage.setItem("activedata",JSON.stringify(activedata))
-            
-        },
-        handleRemove3(file, fileList) {
-           
-            this.form.attachment=[]
-            fileList.forEach(item=>{
-              item.response.files.forEach(ite=>{
-                this.form.attachment.push(this.apipath+ite.path)
-              })
-            })
-           console.log(this.form.attachment)
-           var activedata=JSON.parse(sessionStorage.getItem("activedata"))
-           activedata.attachment=this.form.attachment
-          sessionStorage.setItem("activedata",JSON.stringify(activedata))
-        },
-        handlePreview(file) {
-            console.log(file,"....");
-        },
-    //
-    addclassL(){
-        if(this.edit_1==false){
-            var nullList=[]
-            this.classList.push({"title":this.cname,type:1,child:nullList});
-            localStorage.setItem("ativeEdit",JSON.stringify(this.classList))
-        }else{
-          this.classList[this.editIndex].title=this.cname;
-            localStorage.setItem("ativeEdit",JSON.stringify(this.classList))
-            this.edit_1=false;
+        path: "/activeManager/createActivity/activeEdit",
+        query: {
+          id: index,
+          subId: subIndex,
+          operate:1,
         }
-      
-      console.log(this.classList,1111111)
+      });
     },
-    LimitSet(num){
-        this.options[this.RegionIndex].val=num
+    //添加类别
+    addCategory() {
+      if (this.edit_1 == false) {
+        var child = [];
+        this.addActivityForm.category.push({
+          title: this.title,
+          type: 1,
+          child: child
+        });
+        sessionStorage.setItem(
+          "addActivityForm",
+          JSON.stringify(this.addActivityForm)
+        );
+      } else {
+        this.addActivityForm.category[this.editIndex].title = this.title;
+        sessionStorage.setItem(
+          "addActivityForm",
+          JSON.stringify(this.addActivityForm)
+        );
+        this.edit_1 = false;
+      }
     },
-    selectRegion(index){
-      console.log(index)
-       this.number=this.options[index].val
+    edit_(index) {
+      this.edit_1 = true;
+      this.addclassFlag = true;
+      this.editIndex = index;
     },
-    limitSeting(){
-        this.limitSet=true;
+    //删除活动
+    deleteTitle(index) {
+      this.addActivityForm.category.splice(index, 1);
+      sessionStorage.setItem("addActivityForm", JSON.stringify(this.addActivityForm));
     },
-     
-      limitSetting(){
-          console.log(this.limitSetting)
-          if(this.limitSet==false){
-              this.limitSet=true;
-          }else{
-               this.limitSet=false;
-          }
-      },
+    toActiveEdit(index) {
+      this.$router.push({
+        path: "/activeManager/createActivity/activeEdit",
+        query: {
+          id: index,
+          operate:0,
+        }
+      });
+    },
+    // 添加图片
+    beforeupload(file) {
+      // this.datas={upFile:file.name}
+      // console.log(file.name)
+      // console.log(file)
+    },
+    //活动图success
+    coverSuccess(response, file, fileList) {
+      this.addActivityForm.cover = "";
+      fileList.forEach(item => {
+        item.response.files.forEach(subItem => {
+          this.addActivityForm.cover = this.apipath + subItem.path;
+        });
+      });
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
+    },
+    //活动图remove
+    coverRemove(file, fileList) {
+      this.addActivityForm.cover = "";
+      fileList.forEach(item => {
+        item.files.forEach(subItem => {
+          this.cover.push({
+            name: this.apipath + subItem.path,
+            url: this.apipath + subItem.path
+          });
+        });
+      });
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
+    },
+    //banner
+    bannerSuccess(response, file, fileList) {
+      this.addActivityForm.banner = [];
+      fileList.forEach(item => {
+        item.response.files.forEach(subItem => {
+          this.addActivityForm.banner.push(this.apipath + subItem.path);
+        });
+      });
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
+    },
+    //banner图
+    bannerRemove(file, fileList) {
+      this.addActivityForm.banner = [];
+      fileList.forEach(item => {
+        item.files.forEach(subItem => {
+          this.addActivityForm.banner.push(this.apipath + subItem.path);
+        });
+      });
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
+    },
+    //活动指南
+    attachmentSuccess(response, file, fileList) {
+      this.addActivityForm.attachment = [];
+      fileList.forEach(item => {
+        item.response.files.forEach(ite => {
+          this.addActivityForm.attachment.push(this.apipath + ite.path);
+        });
+      });
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
+    },
+    //上传活动指南
+    attachmentRemove(file, fileList) {
+      this.addActivityForm.attachment = [];
+      fileList.forEach(item => {
+        item.files.forEach(ite => {
+          this.addActivityForm.attachment.push(this.apipath + ite.path);
+        });
+      });
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
+    },
+    handlePreview(file) {
+      console.log(file);
+      window.open(file.url);
+    },
+
+    LimitSet(num) {
+      this.regionList[this.RegionIndex].val = num;
+    },
+    selectRegion(index) {
+      console.log(index);
+      this.number = this.regionList[index].val;
+    },
+    limitSeting() {
+      this.limitSet = true;
+    },
+
+    limitSetting() {
+      console.log(this.limitSetting);
+      if (this.limitSet == false) {
+        this.limitSet = true;
+      } else {
+        this.limitSet = false;
+      }
+    },
     back() {
       this.$router.go(-1);
     },
-     handleCheckAllChange(val) {
-        this.actLimit = val ? this.options : [];
-        this.isIndeterminate = false;
+    //活动范围全选
+    regionCheckAllChange(val) {
+      this.region = val ? this.regionList : [];
+      this.addActivityForm.region = [];
+      for (let i in this.region) {
+        this.addActivityForm.region.push(this.region[i].id);
+      }
+      this.isIndeterminate = false;
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
+    },
+    //活动范围
+    regionCheckedChange(value) {
+      console.log("value===", value);
+      this.addActivityForm.region = [];
+      let checkedCount = value.length;
+      this.checkAll = checkedCount === this.regionList.length;
+      this.isIndeterminate =
+        checkedCount > 0 && checkedCount < this.regionList.length;
+      this.region = value;
+      for (let i in this.region) {
+        this.addActivityForm.region.push(this.region[i].id);
+      }
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
+    },
+    //活动对象
+    targetCheckedChange(val) {
+      this.target = [];
+      this.target.push(val[val.length - 1]);
+      for (let i in this.target) {
+        this.addActivityForm.target = this.target[i].id;
+      }
+      console.log("this===", this.addActivityForm, this.target);
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
+    },
 
-        var activedata=JSON.parse(sessionStorage.getItem("activedata"))
-        console.log(activedata)
-        var region=[]
-        this.actLimit.forEach(item=>{
-          region.push(item.id)
-        })
-        activedata.region=region;
-        sessionStorage.setItem("activedata",JSON.stringify(activedata))
-      },
-      handleCheckedCitiesChange(value) {
-        let checkedCount = value.length;
-        this.checkAll = checkedCount === this.options.length;
-        this.isIndeterminate = checkedCount > 0 && checkedCount < this.list1.length;
-        var activedata=JSON.parse(sessionStorage.getItem("activedata"))
-        console.log(activedata)
-        var region=[]
-        this.actLimit.forEach(item=>{
-          region.push(item.id)
-        })
-        activedata.region=region;
-        sessionStorage.setItem("activedata",JSON.stringify(activedata))
-      },
-    handleCheckedCitiesChange2(value) {
-        let checkedCount = value.length;
-        this.checkAll = checkedCount === this.list2.length;
-        this.isIndeterminate2 = checkedCount > 0 && checkedCount < this.list2.length;
-
-        var count=0;
-        console.log(this.form.target)
-        this.form.target.forEach(item=>{
-          count=count+item
-        })
-        var activedata=JSON.parse(sessionStorage.getItem("activedata"))
-        // console.log(activedata)
-        activedata.target=count
-        sessionStorage.setItem("activedata",JSON.stringify(activedata))
-      },
-    
-    
     //提交
-
-     async onSubmit() {
-        console.log(1,"-------------------------")
-        var activedata=JSON.parse(sessionStorage.getItem("activedata"))
-        var ativeEdit=JSON.parse(localStorage.getItem("ativeEdit"))
-        console.log(ativeEdit)
-        activedata.upload={
-          stime:this.form.upload[0],
-          etime:this.form.upload[1],
+    async onSubmit() {
+      
+      let params=JSON.parse(sessionStorage.getItem('addActivityForm'))
+      console.log("params====",params)
+      params.url=api.activity
+      if(params.title==''){
+        this.$message({
+            type: 'warning',
+            message:"请添加活动标题"
+        });
+        return
+      }
+      if(params.content==''){
+        this.$message({
+            type: 'warning',
+            message:"请添加活动介绍"
+        });
+        return
+      }
+      if(params.cover==''){
+        this.$message({
+            type: 'warning',
+            message:"请添加活动图"
+        });
+        return
+      }
+      if(params.target==''){
+        this.$message({
+            type: 'warning',
+            message:"请选择活动对象"
+        });
+        return
+      }
+      if(params.region.length<=0){
+        this.$message({
+            type: 'warning',
+            message:"请选择活动区域"
+        });
+        return
+      }
+      if(params.upload.stime==undefined){
+        this.$message({
+            type: 'warning',
+            message:"请选择上传作品时间"
+        });
+        return
+      }
+      if(params.recommend.stime==undefined){
+        this.$message({
+            type: 'warning',
+            message:"请选择去推荐时间"
+        });
+        return
+      }
+      if(params.review.stime==undefined){
+        this.$message({
+            type: 'warning',
+            message:"请选择市级审核时间"
+        });
+        return
+      }
+      if(params.exhibit.stime==undefined){
+        this.$message({
+            type: 'warning',
+            message:"请选择作品展示时间"
+        });
+        return
+      }
+      if(params.category.length<=0){
+        this.$message({
+            type: 'warning',
+            message:"请添加活动类别"
+        });
+        return
+      }
+      
+      await this.axiosPost(params).then(res=>{
+        if (res.title!= "") {
+          this.$message({
+              type: 'success',
+              message:"添加活动成功"
+          });
+          this.addActivityForm= null;
+          sessionStorage.setItem(
+            "addActivityForm",
+            JSON.stringify(this.addActivityForm)
+          );
+          this.$router.go(-1);
+        }else if(res.code==-1){
+          this.$message({
+              type: 'warning',
+              message:res.message
+          });
         }
-        activedata.recommend={
-      stime:this.form.recommend[0],
-      etime:this.form.recommend[1],
-    }
-        activedata.review={
-      stime:this.form.review[0],
-      etime:this.form.review[1],
-    }
-        activedata.exhibit={
-      stime:this.form.exhibit[0],
-      etime:this.form.exhibit[1],
-    }
-    activedata.category=ativeEdit
-    activedata.url=api.activity
-    sessionStorage.setItem("activedata",JSON.stringify(activedata))
-    
-    console.log(activedata)
-    let res = await this.axiosPost(activedata).catch(err => err);
-    if(res.code==""){
-      this.$router.go(-1)
-    }
-    console.log(res);
-
+        
+      }).catch(err => err);
+      
     },
     handlePictureCardPreview() {},
-   
+
     //富文本内容改变
     editorChange(data) {
-      console.log("data===", data);
-      this.form.content=data;
-      var activedata=JSON.parse(sessionStorage.getItem("activedata"))
-      activedata.content= this.form.content
-      sessionStorage.setItem("activedata",JSON.stringify(activedata))
+      this.addActivityForm.content = data;
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
+    },
+    //上传时间
+    uploadChange(val) {
+      this.addActivityForm.upload.stime = val[0] / 1000;
+      this.addActivityForm.upload.etime = val[1] / 1000;
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
+    },
+    //区推荐时间
+    recommendChange(val) {
+      this.addActivityForm.recommend.stime = val[0] / 1000;
+      this.addActivityForm.recommend.etime = val[1] / 1000;
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
+    },
+    //市审核时间
+    reviewChange(val) {
+      this.addActivityForm.review.stime = val[0] / 1000;
+      this.addActivityForm.review.etime = val[1] / 1000;
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
+    },
+    //作品展示时间
+    exhibitChange(val) {
+      this.addActivityForm.exhibit.stime = val[0] / 1000;
+      this.addActivityForm.exhibit.etime = val[1] / 1000;
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
     }
   }
 };
 </script>
-<style lang="less" >
+<style lang="less" scoped>
 #mySelect {
   height: 25px;
   line-height: 25px;
   margin-left: 15px;
 }
-#myInput{
-    height: 25px;
-     line-height: 25px;
+#myInput {
+  height: 25px;
+  line-height: 25px;
   margin-left: 15px;
 }
 .el-page-header__content {
@@ -676,32 +756,33 @@ export default {
     margin-bottom: 20px;
     margin-top: 20px;
   }
-  .mtBoxList{
-      margin-left: 20px;
+  .mtBoxList {
+    margin-left: 20px;
   }
-  .sure{
-      background-color:#2568ED;color:#fff;
-      margin-left: 30%;
-      margin-top: 5%;
+  .sure {
+    background-color: #2568ed;
+    color: #fff;
+    margin-left: 30%;
+    margin-top: 5%;
   }
-  .myItem{
-      margin-top: 20px;
-    
-          height: 290px;
-          overflow: auto;
-      table{
-          width: 290px;
-          border: 1px solid #eee;
-          overflow: auto;
-          tr{
-              text-align: center;
-              
-              td{
-                  padding: 3px 0px;
-                  width: 50%;
-              }
-          }
+  .myItem {
+    margin-top: 20px;
+
+    height: 290px;
+    overflow: auto;
+    table {
+      width: 290px;
+      border: 1px solid #eee;
+      overflow: auto;
+      tr {
+        text-align: center;
+
+        td {
+          padding: 3px 0px;
+          width: 50%;
+        }
       }
+    }
   }
 }
 .mybtn {
@@ -711,6 +792,7 @@ export default {
   border: 1px solid #409eff;
   border-radius: 3px;
   margin-left: 67%;
+  cursor: pointer;
 }
 .myOut {
   width: 710px;
@@ -735,6 +817,7 @@ export default {
   .addclass {
     padding-left: 50px;
     color: #198af3;
+    cursor: pointer;
     span {
       font-size: 16px;
       font-weight: bold;

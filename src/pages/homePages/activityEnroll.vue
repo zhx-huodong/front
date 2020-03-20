@@ -1,16 +1,28 @@
 <template>
   <div class="activity-enroll">
-   <el-card class="box-card">
+    <el-card class="box-card">
       <div class="title">
         <p>活动报名</p>
       </div>
       <el-divider></el-divider>
       <el-form ref="form" :model="form" label-width="90px">
         <el-form-item label="活动组别：">
-          <el-input v-model="form.activityName" placeholder="请输入活动组别" style="width:400px;" size="small" :disabled="true"></el-input>
+          <el-input
+            v-model="form.activityName"
+            placeholder="请输入活动组别"
+            style="width:400px;"
+            size="small"
+            :disabled="true"
+          ></el-input>
         </el-form-item>
         <el-form-item label="活动项目：">
-          <el-input v-model="form.activityProject" placeholder="请输入活动项目" style="width:400px;" size="small" :disabled="true"></el-input>
+          <el-input
+            v-model="form.activityProject"
+            placeholder="请输入活动项目"
+            style="width:400px;"
+            size="small"
+            :disabled="true"
+          ></el-input>
         </el-form-item>
         <el-form-item label="作品名称：">
           <el-input v-model="form.title" placeholder="请输入作品名称" style="width:400px;" size="small"></el-input>
@@ -18,16 +30,21 @@
         <el-form-item label="作品封面：">
           <template>
             <el-upload
-              :on-success="upsuccess"
+              :before-upload="coverBeforeUpload"
+              :on-success="coverSuccess"
               :on-preview="handlePreview"
-              :on-remove="handleRemove"
+              :on-remove="coverRemove"
               :headers="headers"
               :action="action"
-              :name="filename" 
-              :file-list="form.cover" 
-              list-type="picture-card">
+              :name="filename"
+              :limit="1"
+              :file-list="form.cover"
+              list-type="picture-card"
+            >
               <i class="el-icon-plus"></i>
-              <span style="font-size: 12px;position: absolute;top: 26%;left: 15%;color:#ccc">添加作品封面 (JPG、PNG格式)</span>
+              <span
+                style="font-size: 12px;position: absolute;top: 26%;left: 15%;color:#ccc"
+              >添加作品封面 (JPG、PNG格式)</span>
             </el-upload>
           </template>
         </el-form-item>
@@ -39,103 +56,96 @@
         <el-form-item label="报名登记：">
           <div class="dianji1">
             <el-upload
-              :before-upload="beforeAvatarUpload"
-              :on-success="upsuccess"
+              :before-upload="registrationBeforeUpload"
+              :on-success="registrationSuccess"
               :on-preview="handlePreview"
-              :on-remove="handleRemove"
+              :on-remove="registrationRemove"
               :headers="headers"
               :action="action"
-              :name="filename" 
-              :file-list="form.banner" 
+              :name="filename"
+              :file-list="form.registration"
               :limit="1"
-              list-type="picture-card">
-            <i class="el-icon-plus"></i>
-            <span style="font-size: 12px;position: absolute;top: 26%;left:41%;color:#ccc">点击上传</span>
-        </el-upload>
-        </div>
-        </el-form-item>
-        <el-form-item label="作品上传：">
-          <div class="upload-container">
-            <el-upload
-              :before-upload="beforeAvatarUpload1"
-              :on-success="upsuccess"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
-              :headers="headers"
-              :action="action"
-              :name="filename" 
-              :file-list="form.banner" 
-              list-type="picture-card">
-              <i class="el-icon-plus"></i>
-              <span style="font-size: 12px;position: absolute;top: 26%;left: 41%;color:#ccc">点击上传</span>
-            </el-upload>
-            <p>{{pp[0]}}</p>
-          </div>
-        </el-form-item>
-        <el-form-item label="">
-          <div class="upload-container">
-            <el-upload
-              :before-upload="beforeAvatarUpload2"
-              :on-success="upsuccess"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
-              :headers="headers"
-              :action="action"
-              :name="filename" 
-              :file-list="form.banner" 
               list-type="picture-card"
-              >
-                <i class="el-icon-plus"></i>
-                <span style="font-size: 12px;position: absolute;top: 26%;left: 41%;color:#ccc">点击上传</span>
+            >
+              <i class="el-icon-plus"></i>
+              <span
+                style="font-size: 12px;position: absolute;top: 26%;left:25%;color:#ccc"
+              >点击上传(JPG、PNG格式)</span>
             </el-upload>
-            <p>{{pp[1]}}</p>
           </div>
         </el-form-item>
-        <el-form-item label="">
+        <el-form-item
+          label="作品上传"
+          v-for="(item,index) in activityProjectDetail.formats"
+          :key="index"
+        >
           <div class="upload-container">
             <el-upload
-             :before-upload="beforeAvatarUpload3"
-              :on-success="upsuccess"
+              :before-upload="(file)=>{return beforeUpload(file,item.type,item.size)}"
+              :on-success="(response,file,fileList)=>{return upsuccess(response,file,fileList,item.id,item.type)}"
               :on-preview="handlePreview"
-              :on-remove="handleRemove"
+              :on-remove="(file,fileList)=>{return handleRemove(file,fileList,item.id)}"
               :headers="headers"
-              :action="action"
-              :name="filename" 
-              :file-list="form.banner" 
-              list-type="picture-card">
+              :action="item.type==1? action : uploadFile"
+              :name="filename"
+              :file-list="formats"
+              :limit="1"
+              :list-type="item.type==1? 'picture-card':'text'"
+            >
+              <template v-if="item.type==1">
                 <i class="el-icon-plus"></i>
-                <span style="font-size: 12px;position: absolute;top: 26%;left: 41%;color:#ccc">点击上传</span>
+                <span
+                  style="font-size: 12px;position: absolute;top: 26%;left: 30%;color:#ccc"
+                >{{item.type==1? '点击上传图片作品':''}}</span>
+              </template>
+              <el-button
+                size="small"
+                type="primary"
+                plain
+                v-else
+              >{{item.type==2? '点击上传视频作品':''}}{{item.type==3? '点击上传文档作品':''}}</el-button>
             </el-upload>
-            <p>{{pp[2]}}</p>
           </div>
         </el-form-item>
+
         <el-form-item label="作者：">
           <el-row>
             <el-col :span="16">
-             <el-tag
-                :key="tag"
+              <el-tag
+                :key="tag.id"
                 v-for="tag in authorTags"
                 closable
                 :disable-transitions="false"
-                @close="authorClose(tag)">
-                {{tag}}
-              </el-tag>
-              <el-select filterable placeholder="请选择作者" 
+                @close="authorClose(tag.id)"
+              >{{tag.name}}</el-tag>
+              <el-select
+                filterable
+                placeholder="请选择作者"
                 v-if="authorInputVisible"
                 v-model="authorInputValue"
                 ref="authorSaveTagInput"
                 size="small"
-                @change="authorInputConfirm">
+                @change="authorInputConfirm"
+              >
                 <el-option
                   v-for="item in studentList"
                   :key="item.id"
                   :label="item.name"
-                  :value="item">
+                  :value="item"
+                >
                   <span style="float: left">{{ item.name }}</span>
-                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.memberInfo[0].school.title }}</span>
+                  <span
+                    style="float: right; color: #8492a6; font-size: 13px"
+                  >{{ item.memberInfo[0].school.title }}</span>
                 </el-option>
               </el-select>
-              <el-button v-else class="button-new-tag" size="small" @click="showAuthorInput" type="primary">添加作者</el-button>
+              <el-button
+                v-else
+                class="button-new-tag"
+                size="small"
+                @click="showAuthorInput"
+                type="primary"
+              >添加作者</el-button>
               <el-tag type="info">限制{{author_limit}}人</el-tag>
             </el-col>
           </el-row>
@@ -143,31 +153,42 @@
         <el-form-item label="指导老师：">
           <el-row>
             <el-col :span="16">
-             <el-tag
-                :key="tag"
+              <el-tag
+                :key="tag.id"
                 v-for="tag in teacherTags"
                 closable
                 :disable-transitions="false"
-                @close="teacherClose(tag)">
-                {{tag}}
-              </el-tag>
-              
-              <el-select filterable placeholder="请选择指导老师" 
+                @close="teacherClose(tag.id)"
+              >{{tag.name}}</el-tag>
+
+              <el-select
+                filterable
+                placeholder="请选择指导老师"
                 v-if="teacherInputVisible"
                 v-model="teacherInputValue"
                 ref="teacherSaveTagInput"
                 size="small"
-                @change="teacherInputConfirm">
+                @change="teacherInputConfirm"
+              >
                 <el-option
                   v-for="item in teacherList"
                   :key="item.id"
                   :label="item.name"
-                  :value="item.name">
+                  :value="item"
+                >
                   <span style="float: left">{{ item.name }}</span>
-                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.memberInfo[0].school.title }}</span>
+                  <span
+                    style="float: right; color: #8492a6; font-size: 13px"
+                  >{{ item.memberInfo[0].school.title }}</span>
                 </el-option>
               </el-select>
-              <el-button v-else class="button-new-tag" type="primary" size="small" @click="showTeacherInput" >添加指导老师</el-button>
+              <el-button
+                v-else
+                class="button-new-tag"
+                type="primary"
+                size="small"
+                @click="showTeacherInput"
+              >添加指导老师</el-button>
               <el-tag type="info">限制{{mentor_limit}}人</el-tag>
             </el-col>
           </el-row>
@@ -185,282 +206,338 @@
   </div>
 </template>
 <script>
-import api from '../../service/api.js';
-import UploadFile from '../../components/UploadFile';
-import MyEditor from '../../components/MyEditor';
-import { getCookie, axiosGet, axiosPost } from '../../tools/tools';
+import api from "../../service/api.js";
+import UploadFile from "../../components/UploadFile";
+import MyEditor from "../../components/MyEditor";
+import { getCookie, axiosGet, axiosPost } from "../../tools/tools";
 export default {
-    components: { UploadFile,MyEditor },
-    data(){
-        return{
-          headers:{
-          'x-api-key':getCookie("x-api-key"),
-          },
-          action:api.uploadPic,
-          apipath:"http://api.huodong.eduinspector.com",
-          form: {
-            activityName:'',
-            activityProject:'',
-            title: '',
-            banner:[],
-            cover:[],
-            email:''
-          },
-          authorTags: [],
-          authorInputVisible: false,
-          authorInputValue: '',
-          teacherTags: [],
-          teacherInputVisible: false,
-          teacherInputValue: '',
-          object_:{},
-          categoryDetail:{},
-          title:"",
-          pp:[],
-          author_limit:"",
-          mentor_limit:"",
-          filename:"upFile",
-          ppp:[],
-          studentList:[],//学生选择列表
-          authorIds:[],//学生IDS
-          teacherList:[],//老师选择列表
-          teacherIds:[],//老师ids
-          content:'',//活动介绍
-          category_id:'',//活动id
-        }
-    },
-    created(){
-      console.log(this.action)
-      var object_=JSON.parse(sessionStorage.getItem("object_"))
-      this.object_=object_;
-      this.categoryDetail=object_.categoryDetail
-      this.handle();
-      let params={}
-      this.getTeacherList(params) 
-    },
-    mounted(){
-      let params={}
-      this.getStudentList(params) 
-    },
-    methods:{
-        async postData(){
-          let params={
-            "category_id":19,
-              "title":"大闹天宫",
-              "cover":"https://edu-cloud-dev-1255701415.cos.ap-guangzhou.myqcloud.com/activity_platform/20190930180753.jpg",
-              "content":"大闹天宫动漫",
-              "registration":"https://edu-cloud-dev-1255701415.cos.ap-guangzhou.myqcloud.com/activity_platform/20190930180753.jpg",
-              "author":[7],
-              "mentor":[5],
-              "email":"77288022@qq.com",
-              "attachment":{
-                "19":[
-                  "https://edu-cloud-dev-1255701415.cos.ap-guangzhou.myqcloud.com/activity_platform/20190930180753.jpg",
-                  "https://edu-cloud-dev-1255701415.cos.ap-guangzhou.myqcloud.com/activity_platform/20190930180753.jpg"
-                ],
-                "20":[
-                  "https://edu-cloud-dev-1255701415.cos.ap-guangzhou.myqcloud.com/activity_platform/20190930180753.jpg",
-                  "https://edu-cloud-dev-1255701415.cos.ap-guangzhou.myqcloud.com/activity_platform/20190930180753.jpg"
-                ]
-              }
-          }
-          params.url=api.works
-          let res=await axiosPost(params).catch(err=>err)
-        },
-
-         upsuccess(response, file, fileList) {
-            
-        },
-
-      handle(){
-        var data=JSON.parse(sessionStorage.getItem("OneObject"))
-        this.object_.categoryDetail.forEach(item=>{
-            if(item.id==data.pid){
-              this.form.activityName=item.title
-            }
-        })
-       this.form.activityProject=data.title
-       data.formats.forEach((item,index)=>{
-         console.log(item.remark,item.size/1024)
-         this.pp.push(item.remark+(item.size/1024)+'M')
-         this.ppp.push(item.size)
-         this.author_limit=data.author_limit
-         this.mentor_limit=data.mentor_limit
-       })
-       
+  components: { UploadFile, MyEditor },
+  data() {
+    return {
+      headers: {
+        "x-api-key": getCookie("x-api-key")
       },
+      action: api.uploadPic,
+      uploadFile: api.uploadFile,
+      apipath: "http://api.huodong.eduinspector.com",
+      form: {
+        activityName: this.$route.query.activityName,
+        activityProject: "",
+        title: "",
+        cover: [],
+        registration: [],
+        email: ""
+      },
+      registration: '', //报名登记表
+      cover: "", //作品封面
+      authorTags: [],
+      authorInputVisible: false,
+      authorInputValue: "",
+      teacherTags: [],
+      teacherInputVisible: false,
+      teacherInputValue: "",
+      title: "",
+      author_limit: "", //限制学生人数
+      mentor_limit: "", //限制指导老师人数
+      filename: "upFile",
+      studentList: [], //学生选择列表
+      authorIds: [], //学生IDS
+      teacherList: [], //老师选择列表
+      teacherIds: [], //老师ids
+      content: "", //活动介绍
+      activityProjectId: this.$route.query.id, //活动项目id
+      activityProjectDetail: {}, //活动项目信息
+      formats: [], //作品上传
+      attachment: {} //作品上传
+    };
+  },
+  created() {
+    let params = {};
+    this.getTeacherList(params);
+    this.getObjectDetail();
+  },
+  mounted() {
+    let params = {};
+    this.getStudentList(params);
+  },
+  methods: {
+    //读取活动项目详情
+    async getObjectDetail() {
+      let params = {};
+      params.url = api.activityCategory;
+      params.id = this.activityProjectId;
+      params.expand = "content,formats";
+      await this.axiosGet(params)
+        .then(res => {
+          this.activityProjectDetail = res;
+          this.form.activityProject = res.title;
+          this.author_limit = res.author_limit;
+          this.mentor_limit = res.mentor_limit;
+        })
+        .catch(err => err);
+    },
+
+    //cover
+    coverBeforeUpload(file) {
+      var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
+      const extension =
+        testmsg == "jpg" ||
+        testmsg === "JPG" ||
+        testmsg === "png" ||
+        testmsg === "PNG";
+      if (!extension) {
+        this.$message({
+          message: "上传图片只能是jpg / png 格式!",
+          type: "error"
+        });
+        return false;
+      }
+    },
+    //cover
+    coverSuccess(response, file, fileList) {
+      fileList.forEach(item => {
+        item.response.files.forEach(subItem => {
+          this.cover = this.apipath + subItem.path;
+        });
+      });
+    },
+    //cover图
+    coverRemove(file, fileList) {
+      fileList.forEach(item => {
+        item.files.forEach(subItem => {
+          this.cover = this.apipath + subItem.path;
+        });
+      });
+    },
+    //报名登记表
+    registrationBeforeUpload(file) {
+      var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
+      const extension =
+        testmsg == "jpg" ||
+        testmsg === "JPG" ||
+        testmsg === "png" ||
+        testmsg === "PNG";
+      if (!extension) {
+        this.$message({
+          message: "上传图片只能是jpg / png 格式!",
+          type: "error"
+        });
+        return false;
+      }
+    },
+    //报名登记表
+    registrationSuccess(response, file, fileList) {
+      this.registration = '';
+      fileList.forEach(item => {
+        item.response.files.forEach(subItem => {
+          this.registration=this.apipath + subItem.path;
+        });
+      });
+    },
+    //报名登记表
+    registrationRemove(file, fileList) {
+      this.registration = '';
+      fileList.forEach(item => {
+        item.files.forEach(subItem => {
+          this.registration=this.apipath + subItem.path;
+        });
+      });
+    },
+
     handlePreview(file) {
       console.log(file);
+      window.open(file.url)
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    //报名登记上传
-    beforeAvatarUpload(file){
-      console.log(file)
-      var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-      const extension =
-        testmsg === "jpg" ||
-        testmsg === "JPG" ||
-        testmsg === "png" ||
-        testmsg === "PNG" ||
-        testmsg === "bpm" ||
-        testmsg === "BPM";
-        if (!extension) {
-          this.$message({
-            message: "上传图片只能是jpg / png / bpm格式!",
-            type: "error"
-          });
-          return false; //必须加上return false; 才能阻止
-        }
-      },
 
     //作品上传
-    beforeAvatarUpload1(file){
-      console.log(file,this.ppp[0])
+    beforeUpload(file, type, size) {
+      console.log("file===", file, "type==", type, "size===", size);
       var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-      const extension =
-        testmsg === "jpg" ||
-        testmsg === "JPG" ||
-        testmsg === "png" ||
-        testmsg === "PNG" ||
-        testmsg === "bpm" ||
-        testmsg === "BPM";
-        if (!extension) {
-          this.$message({
-            message: "上传图片只能是jpg / png / bpm格式!",
-            type: "error"
-          });
-          return false; //必须加上return false; 才能阻止
-        }
-        if(this.ppp[0]<file.size){
-           this.$message({
-            message: "上传单个文件大小超过了",
-            type: "error"
-          });
-          return false;
-        }
+      var extension = "";
+      var message = "";
+      if (type == 1) {
+        extension =
+          testmsg === "jpg" ||
+          testmsg === "JPG" ||
+          testmsg === "png" ||
+          testmsg === "PNG";
+        message = "请上传图片！！";
+      } else if (type == 2) {
+        extension =
+          testmsg === "mp4" ||
+          testmsg === "mov" ||
+          testmsg === "avi" ||
+          testmsg === "flv";
+        message = "请上传视频！！";
+      } else if (type == 3) {
+        extension =
+          testmsg === "doc" ||
+          testmsg === "docx" ||
+          testmsg === "pdf" ||
+          testmsg === "xls" ||
+          testmsg === "xlsx";
+        message = "请上传文档！！";
+      }
+      if (!extension) {
+        this.$message({
+          message: message,
+          type: "error"
+        });
+        return false; //必须加上return false; 才能阻止
+      }
+      if (!file.size > size) {
+        this.$message({
+          message: "上传文件超过了" + size / 1024 / 1024,
+          type: "error"
+        });
+        return false; //必须加上return false; 才能阻止
+      }
     },
     //作品上传
-    beforeAvatarUpload2(file){
-      console.log(file)
-      var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-      const extension =
-        testmsg === "mp4" ||
-        testmsg === "rmvb" ||
-        testmsg === "avi" ||
-        testmsg === "ts" ;//||
-        // testmsg === "bpm" ||
-        // testmsg === "BPM";
-        if (!extension) {
-          this.$message({
-            message: "上传图片只能是jpg / png / bpm格式!",
-            type: "error"
-          });
-          return false; //必须加上return false; 才能阻止
-        }
-        if(this.ppp[1]<file.size){
-           this.$message({
-            message: "上传单个文件大小超过了",
-            type: "error"
-          });
-          return false;
-        }
+    upsuccess(response, file, fileList, id, type) {
+      fileList.forEach(item => {
+        item.response.files.forEach(subItem => {
+          let key = id;
+          let value = [this.apipath + subItem.path];
+          this.attachment[id] = value;
+        });
+      });
+      console.log("this.attachment===", this.attachment);
     },
-    //作品上传
-    beforeAvatarUpload3(file){
-      console.log(file)
-      var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-        if(this.ppp[2]<file.size){
-           this.$message({
-            message: "上传单个文件大小超过了",
-            type: "error"
-          });
-          return false;
-        }
+    //作品移除
+    handleRemove(file, fileList, id) {
+      delete this.attachment[id];
+      console.log("this.attachment===", this.attachment);
     },
-    submitEnroll(){
-      this.postData();
-      // this.$router.push({
-      //   path:"/home/submitEnroll",
-      // })
-      let params={}
-      if(this.form.title!=''){
-        params.title=this.form.title
-      }else{
+    //提交报名
+    async submitEnroll() {
+      let params = {};
+      params.url = api.works;
+      params.category_id=this.activityProjectDetail.id
+      if (this.form.title != "") {
+        params.title = this.form.title;
+      } else {
         this.$message({
           message: "请添加作品名称",
           type: "warning"
         });
-        return
+        return;
       }
-      if(this.content!==''){
-        params.content=this.content
-      }else{
+      if (this.cover !== "") {
+        params.cover = this.cover;
+      } else {
+        this.$message({
+          message: "请上传作品封面",
+          type: "warning"
+        });
+        return;
+      }
+      if (this.registration!='') {
+        params.registration = this.registration;
+      } else {
+        this.$message({
+          message: "请上传报名表",
+          type: "warning"
+        });
+        return;
+      }
+      if (this.content !== "") {
+        params.content = this.content;
+      } else {
         this.$message({
           message: "请添加活动介绍",
           type: "warning"
         });
-        return
+        return;
       }
-      if(this.authorIds.length>0){
-        params.author=this.authorIds
-      }else{
+      if (this.authorIds.length > 0) {
+        params.author = this.authorIds;
+      } else {
         this.$message({
           message: "请添加作者",
           type: "warning"
         });
-        return
-      }
-      if(this.teacherIds.length>0){
-        params.mentor=this.teacherIds
-      }else{
-        this.$message({
-          message:'请添加指导老师',
-          type: "warning"
-        })
         return;
       }
-      if(this.form.email!==''){
-        params.email=this.form.email
-      }else{
+      if (this.teacherIds.length > 0) {
+        params.mentor = this.teacherIds;
+      } else {
         this.$message({
-          message:'请添加邮箱',
+          message: "请添加指导老师",
           type: "warning"
-        })
+        });
         return;
       }
+      if (this.form.email !== "") {
+        params.email = this.form.email;
+      } else {
+        this.$message({
+          message: "请添加邮箱",
+          type: "warning"
+        });
+        return;
+      }
+
+      params.attachment = this.attachment;
+      console.log("params===",params)
+      await axiosPost(params)
+        .then(res => {
+          if(res.code==-1){
+            this.$message({
+              message:res.message,
+              type: "warning"
+            });
+          }
+          setTimeout(() => {
+            // this.$router.push({
+            //   path: "/home/submitEnroll"
+            // });
+          }, 1000);
+        })
+        .catch(err => err);
     },
- 
-    editorChange(data){
-      this.content=this.data
+
+    editorChange(data) {
+      this.content = data;
     },
-    
+
     //获取学生列表
-    async  getStudentList(params){
-      delete params.mtype
-      params.url=api.user
-      params.expand='memberAuth,memberInfo,roleInfo'
-      params.mtype=2
-      params.ball=1
-      await this.axiosGet(params).then(res=>{
-        this.studentList=res.items
-      }).catch(err => err); 
+    async getStudentList(params) {
+      delete params.mtype;
+      params.url = api.user;
+      params.expand = "memberAuth,memberInfo,roleInfo";
+      params.mtype = 2;
+      params.ball = 1;
+      await this.axiosGet(params)
+        .then(res => {
+          this.studentList = res.items;
+        })
+        .catch(err => err);
     },
     //获取老师列表
-    async  getTeacherList(params){
-      delete params.mtype
-      params.url=api.user
-      params.expand='memberAuth,memberInfo,roleInfo'
-      params.mtype=1
-      params.ball=1
-      await this.axiosGet(params).then(res=>{
-        this.teacherList=res.items
-      }).catch(err => err); 
+    async getTeacherList(params) {
+      delete params.mtype;
+      params.url = api.user;
+      params.expand = "memberAuth,memberInfo,roleInfo";
+      params.mtype = 1;
+      params.ball = 1;
+      await this.axiosGet(params)
+        .then(res => {
+          this.teacherList = res.items;
+        })
+        .catch(err => err);
     },
 
     //作者
-    authorClose(tag) {
-      this.authorTags.splice(this.authorTags.indexOf(tag), 1);
+    authorClose(id) {
+      this.authorIds.splice(this.authorIds.indexOf(id), 1);
+      let newAutorTags = [];
+      for (let i in this.authorTags) {
+        if (this.authorTags[i].id != id) {
+          newAutorTags.push(this.authorTags[i]);
+        }
+      }
+      this.authorTags = newAutorTags;
     },
 
     showAuthorInput() {
@@ -468,14 +545,29 @@ export default {
     },
 
     authorInputConfirm(tag) {
-      this.authorIds.push(tag.id)
-      this.authorTags.push(tag.name);
+      if (this.authorIds.length < this.author_limit) {
+        this.authorIds.push(tag.id);
+        this.authorTags.push(tag);
+      } else {
+        this.$message({
+          type: "warning",
+          message: "人数已超出"
+        });
+      }
+
       this.authorInputVisible = false;
-      this.authorInputValue=''
+      this.authorInputValue = "";
     },
     //作者
-    teacherClose(tag) {
-      this.teacherTags.splice(this.teacherTags.indexOf(tag), 1);
+    teacherClose(id) {
+      this.teacherIds.splice(this.teacherIds.indexOf(id), 1);
+      let newTeacherTags = [];
+      for (let i in this.teacherTags) {
+        if (this.teacherTags[i].id != id) {
+          newTeacherTags.push(this.teacherTags[i]);
+        }
+      }
+      this.teacherTags = newTeacherTags;
     },
 
     showTeacherInput() {
@@ -483,39 +575,46 @@ export default {
     },
 
     teacherInputConfirm(data) {
-      this.teacherTags.push(data.name);
-      this.teacherIds.push(data.id)
+      console.log(data);
+      if (this.teacherIds.length < this.mentor_limit) {
+        this.teacherTags.push(data);
+        this.teacherIds.push(data.id);
+      } else {
+        this.$message({
+          type: "warning",
+          message: "人数已超出"
+        });
+      }
       this.teacherInputVisible = false;
-      this.teacherInputValue = '';
+      this.teacherInputValue = "";
+    }
+  }
+};
+</script>
+<style lang="less" scoped>
+.activity-enroll {
+  width: 1180px;
+  margin: auto;
+  margin-top: 20px;
+}
+.box-card {
+  min-height: 650px;
+  .title {
+    display: flex;
+    justify-content: center;
+    p {
+      font-size: 18px;
+      color: #333;
+    }
+  }
+  .upload-container {
+    display: flex;
+    flex-direction: row;
+    p {
+      font-size: 14px;
+      color: #999;
+      margin-left: 20px;
     }
   }
 }
-</script>
-<style lang="less" scoped>  
-  .activity-enroll{
-    width:1180px;
-    margin: auto;
-    margin-top: 20px;
-  }
-  .box-card {
-    min-height: 650px;
-    .title{
-      display:flex;
-      justify-content:center;
-      p{
-        font-size:18px;
-        color:#333;
-      }
-    }
-    .upload-container{
-      display:flex;
-      flex-direction:row;
-      p{
-        font-size:14px;
-        color:#999;
-        margin-left:20px;
-      }
-    }
-  }
-
 </style>

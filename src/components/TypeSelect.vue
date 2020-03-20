@@ -32,7 +32,7 @@
       <div class="lable-title">活动项目:</div>
       <div class="lable-aside">
         <div class="lable-self" v-for="(item, index) in activityProjectList" :key="index"
-        @click="onActivityProjectList(item.id, index)" :class="{'type-active':activityProjectIndex == index}">{{item.name}}</div>
+        @click="onActivityProjectList(item.id, index)" :class="{'type-active':activityProjectIndex == index}">{{item.name||item.title}}</div>
       </div>
     </div>
     <div class="lable" v-if="regionList.length>0">
@@ -46,7 +46,7 @@
       <div class="lable-title" v-if="otherName!=''&&otherName!=undefined">{{otherName}}:</div>
       <div class="lable-aside">
         <div class="lable-self" v-for="(item, index) in otherList" :key="index"
-        @click="onOtherList(item.id, index)" :class="{'type-active':otherIndex == index}">{{item.name}}</div>
+        @click="onOtherList(item.id, index)" :class="{'type-active':otherIndex == index}">{{item.name||item.title}}</div>
       </div>
     </div>
   </div>

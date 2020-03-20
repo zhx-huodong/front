@@ -2,53 +2,42 @@
     <div class="activity-container">
         <el-card>
             <div class="title">
-                <p>电脑绘画</p>
+                <p>{{activityDetail.info.activity}}</p>
             </div>
             <el-divider></el-divider>
             <el-steps :active="2" align-center>
-                <el-step title="作品报名" description="2020-01-05 ～ 2020-02-06"></el-step>
-                <el-step title="专家评审" description="2020-01-05 ～ 2020-02-06"></el-step>
-                <el-step title="市级评奖" description="2020-01-05 ～ 2020-02-06"></el-step>
-                <el-step title="查看结果" description="2020-01-05 ～ 2020-02-06"></el-step>
+                <el-step title="作品报名" :description="formatDateChar(activityDetail.info.nodes[0].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[0].etime*1000)"></el-step>
+                <el-step title="专家评审" :description="formatDateChar(activityDetail.info.nodes[1].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[1].etime*1000)"></el-step>
+                <el-step title="市级评奖" :description="formatDateChar(activityDetail.info.nodes[2].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[2].etime*1000)"></el-step>
+                <el-step title="查看结果" :description="formatDateChar(activityDetail.info.nodes[3].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[2].etime*1000)"></el-step>
             </el-steps>  
         </el-card>
         <el-card style="margin-top:10px;">
             <div class="title">
-                <p>山海经之大禹娶妻</p>
+                <p>{{activityDetail.works.title}}</p>
                 <div class="act-button">
                     <el-button type="primary" plain size="small" @click="goToEdit">修改</el-button>
                 </div>
             </div>
             <el-divider></el-divider>
             <div class="content-main">
-                <p>大禹治水的故事想必是中华名族流传已久的经典之一 ，他身为一个治水英雄他心怀天下，
-曾三过家门而不入，而他的故事背后时常被我们忽略的一个同样伟大的人，是他的妻子 ，
-她为他生下儿子，养育成人，一生守候，不仅没有半分怨言，还让儿子长大后和大禹一起去治水，
-她不像大禹那样被世人赞美传颂，很少人知道她的名字，可谓正的伟大，而相传她也并不是一般女子，
-而是九尾狐仙，涂山氏女娇，我们一听到狐狸，总会联想起蛊惑人心的妖精，或者助纣为虐的妖后妲己，
-但很少人知道，山海经中的九尾曾是瑞兽，有吉祥美满的寓意，大禹治水三十未能成家，在涂山遇到了九尾的暗示
-歌道：“绥绥白狐，九尾痝痝。我家嘉夷，来宾为王。”后娶其为妻</p>
-                <p>作品描绘的正是大禹在治水的路上路经涂山，遇到九尾歌唱给予暗示的场景，
-他随着歌声寻觅此,隔岸对歌回应着，生而为人自然有七情六欲，只是身怀大业，
-婚后第四日遍离家治水了，但他们的相遇相识也如一般男女那样美好难忘吧。</p>
-                <p>希望今后提到九尾，不再只是封印在鸣人体内的神兽，不再是祸国殃民的的妖后，
-而也是我们山海经里的瑞兽，是狐仙，最后 ，万物皆有灵，愿我们善待每一种生物，尊重每一种文化。</p>
-                <el-image :src="imgUrl" fit="contain"></el-image>
+                <div>{{activityDetail.works.content}}</div>
+                <el-image :src="activityDetail.works.cover" fit="contain"></el-image>
                 <el-form ref="form" :model="form" label-width="90px">
                     <el-form-item label="活动组别：">
-                        计算机创作
+                        {{activityDetail.info.category}}
                     </el-form-item>
                     <el-form-item label="活动项目：">
-                        电脑绘画
+                        {{activityDetail.info.project}}
                     </el-form-item>
                     <el-form-item label="作者：">
-                        张珊，李思
+                        <template v-for="item in activityDetail.works.member.author">{{item.name}}、</template>
                     </el-form-item>
                     <el-form-item label="指导老师：">
-                        陈老师
+                        <template v-for="item in activityDetail.works.member.mentor">{{item.name}}、</template>
                     </el-form-item>
                     <el-form-item label="作者邮箱：">
-                       2062531131@qq.com 
+                       {{activityDetail.works.email}}
                     </el-form-item>
                 </el-form>
             </div>
@@ -56,17 +45,30 @@
     </div>
 </template>
 <script>
+    import api from "../../service/api.js";
     export default{
         data(){
             return {
                 imgUrl:require('../../public/images/ac1.png'),
-                form:{}
+                form:{},
+                id:this.$route.query.id,//获取详情id
+                activityDetail:{},//活动详情
             }
         },
         mounted(){
-
+            this.getActivityDetail()
         },
         methods:{
+            //获取报名活动详情
+            async getActivityDetail(){
+                let params={}
+                params.url=api.enroll
+                params.id=this.id
+                params.expand="info,works,school,professional,award"
+                await this.axiosGet(params).then(res=>{
+                    this.activityDetail=res
+                }).catch(err=>err)
+            },
             //修改
             goToEdit(){
                 this.$router.push({

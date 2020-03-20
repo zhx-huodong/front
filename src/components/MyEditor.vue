@@ -104,15 +104,12 @@
       }
     },
     created(){
-      console.log(this.inputtext)
       this.content=this.inputtext
     },
     methods:{
       //富文本内容改变
       editorChange(){
-        // console.log("content===",this.content)
         this.$emit('editorChange',this.content)
-        console.log(this.content)
       }
     }
   }
