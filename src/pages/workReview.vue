@@ -11,15 +11,15 @@
                     </el-row>
                     <el-row>
                         <el-col :span="2">
-                            <el-button type="primary" plain size="small">下载作品</el-button>
+                            <el-button type="primary" plain size="small" @click="downloadWork">下载作品</el-button>
                         </el-col>
                         <el-col :span="3">
-                            <el-button type="primary" plain @click="goToImport" size="small">导入评分表</el-button>
+                            <!-- <el-button type="primary" plain @click="goToImport" size="small">导入评分表</el-button> -->
                         </el-col>
                         <el-col :span="2">
-                            <el-button type="primary" plain @click="goToDownload" size="small">下载评分表</el-button>
+                            <!-- <el-button type="primary" plain @click="goToDownload" size="small">下载评分表</el-button> -->
                         </el-col>
-                        <el-col :span="8" :offset="6">
+                        <el-col :span="8" :offset="11">
                             <el-form :inline="true" :model="formInline" class="demo-form-inline" style="width:900px">
                                 <el-form-item label="作品名称：" >
                                     <el-input v-model="formInline.activityName" placeholder="输入作品姓名" style="width:350px" size="small"></el-input>
@@ -50,25 +50,25 @@
                             </el-table-column>
 
                             <el-table-column
-                            prop="activityName"
+                            prop="activity"
                             label="活动名称"
                             show-overflow-tooltip>
                             </el-table-column>
 
                             <el-table-column
-                            prop="activityType"
+                            prop="category"
                             label="活动类型"
                             show-overflow-tooltip>
                             </el-table-column>
 
                             <el-table-column
-                            prop="activityProject"
+                            prop="project"
                             label="活动项目"
                             show-overflow-tooltip>
                             </el-table-column>
 
                             <el-table-column
-                            prop="workName"
+                            prop="title"
                             label="作品名称"
                             show-overflow-tooltip>
                             </el-table-column>
@@ -95,14 +95,14 @@
                     </el-row>
                     <el-row class="page-div">
                         <el-pagination
-                        @size-change="pageSizeChange"
-                        @current-change="pageCurrentChange"
-                        :current-page="currentPage"
-                        :page-sizes="[10, 20, 30, 40]"
-                        :page-size="10"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="40">
-                        </el-pagination>
+                         @size-change="handleSizeChange"
+                         @current-change="handleCurrentChange"
+                         :current-page="pages.now_page"
+                         :page-sizes="[10, 20, 30, 40]"
+                         :page-size="searchParams.per_page"
+                         layout="total, sizes, prev, pager, next, jumper"
+                         :total="pages.total">
+                         </el-pagination>
                     </el-row>
                 </el-tab-pane>
             </el-tabs>
@@ -111,105 +111,169 @@
 </template>
 <script>
 import TypeSelect from '../components/TypeSelect';
+import api from "../service/api";
+import { axiosGet, getCookie } from "../tools/tools";
+import axios from "axios";
 export default {
     components: {TypeSelect},
     data(){
         return{
             workReview:'workReview',
+            userid: "", //用户id
             activityNameList:[
-                {id:0,name:'全部'},
-                {id:1,name:'深圳中小学数字创作大赛'},
-                {id:2,name:'深圳中小学图文大赛'},
-                {id:3,name:'深圳电脑创作大赛'}
+                // {id:0,name:'全部'},
+                // {id:1,name:'深圳中小学数字创作大赛'},
+                // {id:2,name:'深圳中小学图文大赛'},
+                // {id:3,name:'深圳电脑创作大赛'}
             ],
+            activityNameSelectID:'',//活动名称所选择的id
             activityTypleList:[
-                {id:0,name:'全部'},
-                {id:1,name:'数字创作'},
-                {id:2,name:'程序设计'},
-                {id:3,name:'电脑绘画'}
+                // {id:0,name:'全部'},
+                // {id:1,name:'数字创作'},
+                // {id:2,name:'程序设计'},
+                // {id:3,name:'电脑绘画'}
             ],
+            activityTypleSelectID:'',//活动分类所选择的id
             activityProjectList:[
-                {id:0,name:'全部'},
-                {id:1,name:'数字创作'},
-                {id:2,name:'程序设计'},
-                {id:3,name:'电脑绘画'},
-                {id:4,name:'手绘插画'}
+                // {id:0,name:'全部'},
+                // {id:1,name:'数字创作'},
+                // {id:2,name:'程序设计'},
+                // {id:3,name:'电脑绘画'},
+                // {id:4,name:'手绘插画'}
             ],
+            activityProjectSelectID:'',
             gradeList:[
                 { id: 0, name: '全部' },
                 { id: 1, name: '小学组' },
                 { id: 2, name: '初中组' },
                 { id: 3, name: '高中组' }
             ],
+            gradeSelectID:'',//学段选择的id
             formInline: {
                 activityName: '',
                 activityType:''
             },
-            tableData: [{
-                activityName:'深圳市中小学电脑制作大赛',
-                activityType:'电脑制作类',
-                activityProject:'程序设计项目',
-                workName: '森林精',
-                score: '70',
-                comment:' 思想家，自由主义大师，国学大师，中国近代史学者 ，时事批评家，台湾作家，历史学家，诗人'
-                }, {
-                activityName:'深圳市中小学电脑制作大赛',
-                activityType:'电脑制作类',
-                activityProject:'程序设计项目',
-                score: '80',
-                workName: '森林精',
-                comment:' 思想家，自由主义大师，国学大师，中国近代史学者 ，时事批评家，台湾作家，历史学家，诗人'
-                }, {
-                activityName:'深圳市中小学电脑制作大赛',
-                activityType:'电脑制作类',
-                activityProject:'程序设计项目',
-                score: '75',
-                workName: '森林精',
-                comment:' 思想家，自由主义大师，国学大师，中国近代史学者 ，时事批评家，台湾作家，历史学家，诗人'
-                }, {
-                activityName:'深圳市中小学电脑制作大赛',
-                activityType:'电脑制作类',
-                activityProject:'程序设计项目',
-                score: '90',
-                workName: '森林精',
-                comment:' 思想家，自由主义大师，国学大师，中国近代史学者 ，时事批评家，台湾作家，历史学家，诗人'
-                }, {
-                activityName:'深圳市中小学电脑制作大赛',
-                activityType:'电脑制作类',
-                activityProject:'程序设计项目',
-                score: '85',
-                workName: '森林精',
-                comment:' 思想家，自由主义大师，国学大师，中国近代史学者 ，时事批评家，台湾作家，历史学家，诗人'
-                }, {
-                activityName:'深圳市中小学电脑制作大赛',
-                activityType:'电脑制作类',
-                activityProject:'程序设计项目',
-                score: '78',
-                workName: '森林精',
-                comment:' 思想家，自由主义大师，国学大师，中国近代史学者 ，时事批评家，台湾作家，历史学家，诗人'
-                }, {
-                activityName:'深圳市中小学电脑制作大赛',
-                activityType:'电脑制作类',
-                activityProject:'程序设计项目',
-                score: '59',
-                workName: '森林精',
-                comment:' 思想家，自由主义大师，国学大师，中国近代史学者 ，时事批评家，台湾作家，历史学家，诗人'
-                }
+            tableData: [
+                // {
+                // activityName:'深圳市中小学电脑制作大赛',
+                // activityType:'电脑制作类',
+                // activityProject:'程序设计项目',
+                // score: '59',
+                // workName: '森林精',
+                // comment:' 思想家，自由主义大师，国学大师，中国近代史学者 ，时事批评家，台湾作家，历史学家，诗人'
+                // }
             ],
             multipleSelection: [],
-            currentPage:1,//当前页
+            selectedCell:[],//选择的表格行数
+            pages:{now_page:1,per_page:10,total:0},
+            searchParams:{now_page:0,per_page:10},
+            apiKey:getCookie("x-api-key"),
         }
     },
-    async created() {
-        
+    created() {
+        this.userid = JSON.parse(localStorage.getItem("user")).id;
+        this.getWorksList();
+        this.getActivityList();
     },
     mounted(){
 
     },
     methods:{
+        //获取所有的活动列表
+        async getActivityList(){
+            let that=this;
+            let params={};
+            params.url=api.activity;
+            params.expand='category';
+            params.inscore=1;
+            await this.axiosGet(params).then(res=>{
+                that.activityNameList=res.items.map(item=>{
+                    return {
+                        "id":item.id,
+                        "name":item.title,
+                    }
+                })
+                that.activityTypleList=res.items.map(item=>{
+                    return {
+                        "id":item.category[0].id,
+                        "name":item.category[0].title,
+                    }
+                })
+                that.activityProjectList=res.items.map(item=>{
+                    return {
+                        "id":item.category[0].child[0].id,
+                        "name":item.category[0].child[0].title,
+                    }
+                })
+            })
+            that.activityNameList.unshift({id:0,name:"全部"});
+            that.activityTypleList.unshift({id:0,name:"全部"});
+            that.activityProjectList.unshift({id:0,name:"全部"});
+        },
+        //获取所有的专家作品列表
+        async getWorksList(){
+            let that=this;
+            let params={};
+            params.url=api.enroll;
+            params.inscore=1;
+            params.expand='info,works,professional';
+            params.currentPage=that.pages.now_page;
+            if(that.pages.per_page!=0){
+                params.pagesize=that.pages.per_page;
+            }
+            if(that.activityNameSelectID!=''){
+               params.activity_id=that.activityNameSelectID;//按活动筛选报名记录
+            }
+            if(that.gradeSelectID!=''&&that.gradeSelectID!=0){
+               params.period=that.gradeSelectID;//按学段筛选 [筛选活动时有效] 按学段筛选：多个学段则相加 
+            }
+            if(that.activityTypleSelectID!=''&&that.activityTypleSelectID!=0){
+               params.category_id=that.activityTypleSelectID;//按分类筛选
+            }
+            if(that.activityProjectSelectID!=''&&that.activityProjectSelectID!=0){
+               params.item_id=that.activityProjectSelectID;//按项目筛选
+            }
+            if(that.formInline.activityName!=''){//按作品名称搜索
+                params.works_title=that.formInline.activityName;
+            }
+            //if(that.selectedCell.length>0){
+            //    params.bdownload=1;//支持下载作品附件
+            //    params.id=that.selectedCell.join(",");//需要导出或下载的记录
+            //    console.log(params.id);
+            //}
+            // params.bself=1,//只读取自己相关的报名
+            // params.region='',//按区域筛选
+            // params.school='',//按学校筛选
+            // params.author='',//按作者筛选
+            // params.mentor='',//[筛选活动时有效] 按指导老师筛选
+            // params.exhibit='',//[筛选活动时有效] 按优秀作品筛选
+            // params.bexport=1,//支持导出excel
+            //params.sort='score',//记录排序，支持多字段排序：score：按score字段升序 -score：按score字段降序
+            await this.axiosGet(params).then(res=>{
+                
+                that.tableData=[];
+                let item=res.items;
+                for(let i=0;i<item.length;i++){
+                // console.log("ces",Object.assign(item[i].info,item[i].works));
+                    that.tableData.push(Object.assign(item[i].info,item[i].works,item[i].professional));
+                }
+                for(let i=0;i<that.tableData.length;i++){
+                    that.tableData[i].comment=that.tableData[i][0].comment||"";
+                    that.tableData[i].score=that.tableData[i][0].score/10||0;
+                }
+                that.pages.per_page=res._meta.pageCount;
+                that.pages.now_page=res._meta.currentPage;
+                that.pages.total=res._meta.totalCount;
+                console.log(that.tableData);
+
+            }).catch(err=>{
+                console.log(err);
+            });
+        },
         //查询
         goToSearch(){
-
+            let that=this;
+            that.getWorksList();
         },
         //导入评分表
         goToImport(){
@@ -221,19 +285,46 @@ export default {
         goToDownload(){
 
         },
+        //下载作品
+        downloadWork(){
+            let that=this;
+            axios.get(api.enroll, {
+             params: {
+               id: that.selectedCell.join(","),
+               bdownload: "1",
+               inscore:"1"
+             },
+             headers: { 'x-api-key': that.apiKey }
+            }).then(res=>{
+                let datas=res.data;
+                if(datas.code==0){
+                    console.log("哈哈",datas.url);
+                    window.location.href=datas.url;
+                    return;
+                }
+                that.selectedCell=[];//再把所选的下载文件置空
+            });
+        },
         //查看
-        goToLook(){
+        goToLook(row){
+            let query;
             this.$router.push({
-                path:'/workScore'
-            })
-        },
-        //每页数量改变
-        pageSizeChange(val){
+                path:'/workScore',
+                query:{"id":row.id,"score":row.score,"comment":row.comment}
+            });
 
         },
-        //页码改变
-        pageCurrentChange(val){
-
+        //处理每页数量的改变
+        handleSizeChange(val) {
+            let that=this;
+            that.searchParams.per_page=val;
+            that.getWorksList();
+        },
+        //处理每页的改变
+        handleCurrentChange(val) {
+            let that=this;
+            that.searchParams.now_page=val;
+            that.getWorksList();
         },
         //提示框
         open(index,rows) {
@@ -257,23 +348,36 @@ export default {
         },
         //活动名称
         async activityNameObject(value) {
-            console.log(value)
+            let that=this;
+            that.activityNameSelectID=value;
+            that.getWorksList();
         },
         //活动类型
         async activityTypleObject(value) {
-            console.log(value)
+            let that=this;
+            that.activityTypleSelectID=value;
+            that.getWorksList();
         },
         //学段
         async gradeObject(value) {
-            console.log(value)
+            let that=this;
+            that.gradeSelectID=value;
+            that.getWorksList();
         },
         //活动项目
         async activityProjectObject(value){
-            console.log(value)
+            let that=this;
+            that.activityProjectSelectID=value;
+            that.getWorksList();
         },
         //表格选择
-        async tableSelectionChange(){
-
+        async tableSelectionChange(val){
+            let that=this;
+            let select=val;
+            that.selectedCell=select.map((item)=>{
+                return item.id;
+            })
+            // console.log("ces",that.selectedCell);
         }
 			
     }
