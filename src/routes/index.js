@@ -13,9 +13,10 @@ const activeManager=require('../pages/activeManager/index.vue'); // 活动管理
 const publicActive=require('../pages/activeManager/publicActive.vue'); // 活动管理
 const createActivity=require('../pages/activeManager/createActivity.vue'); // 创建活动
 const managerCenter=require('../pages/activeManager/managerCenter.vue'); // 创建活动
+const activeEdit=require('../pages/activeManager/activeEdit.vue'); // 创建活动/编辑 
+const EvaluationResultDital=require('../pages/activeManager/EvaluationResultDital.vue'); // 市评审详情
+const releaseAnnouncement=require('../pages/activeManager/releaseAnnouncement.vue'); // 发布公告
 
- const activeEdit=require('../pages/activeManager/activeEdit.vue'); // 创建活动/编辑 
- const EvaluationResultDital=require('../pages/activeManager/EvaluationResultDital.vue'); // 市评审详情也
 
 
 const MyActivityDetail = require('../pages/myActivityDetail.vue'); // 我发布的活动-创建活动
@@ -41,7 +42,6 @@ const activityEnroll=require('../pages/homePages/activityEnroll');
 const userEdit=require('../pages/userCenter/userEdit');
 const submitEnroll=require('../pages/homePages/submitEnroll');
 const activityDetail = require('../pages/homePages/activityDetail');
-// const activityDetail = require('../pages/activityProcess/activityDetail');
 const workShow = require('../pages/activityProcess/workShow');
 
 
@@ -85,21 +85,17 @@ const routes = [
       { path: '/newsBulletin',name:"消息公告", components: newsBulletin ,meta: { title: '消息公告' }}, // 消息公告
       { path: '/newsBulletinDetail',name:"消息公告详情", components: newsBulletinDetail,meta: { title: '消息公告详情' } }, // 消息公告
 
-     
-
-      // { path: '/activeManager/publicActive',name:"发布活动设置", components: publicActive,meta: { title: '发布活动设置' } }, // 发布活动设置
       { path: '/activeManager',name:"活动管理", components: activeManager,meta: { title: '活动管理' } }, // 活动管理
       { path: '/activeManager/createActivity',name:"创建活动", components: createActivity,meta: { title: '创建活动' } }, // 创建活动
       { path: '/activeManager/managerCenter',name:"活动管理中心", components: managerCenter,meta: { title: '活动管理中心' } }, // 活动管理中心
       { path: '/activeManager/createActivity/activeEdit',name:"活动编辑", components: activeEdit,meta: { title: '编辑' } }, // 活动管理中心 
       { path: '/activeManager/createActivity/EvaluationResultDital',name:"市评审结果详情", components: EvaluationResultDital,meta: { title: '详情' } }, // 市活动评审详情 
+      { path: '/activeManager/managerCenter/releaseAnnouncement',name:"发布公告", components: releaseAnnouncement,meta: { title: '发布公告' } }, // 发布公告 
 
       { path: '/excellentWork/index',name:"优秀作品展示", components: excellentWork,meta: { title: '优秀作品展示' } }, // 优秀作品展示
       { path: '/excellentWork/excellentWorkDetail',name:"优秀作品展示详情", components: excellentWorkDetail,meta: { title: '优秀作品展示详情' } }, // 优秀作品展示详情
-
       { path: '/expertReview',name:"专家评审", components: expertReview ,meta: { title: '专家评审' }}, // 专家评审（评审作品）
       { path: '/expertReview/workDetail', name:"专家评审点击后详情",components: expertReviewDetail,meta: { title: '专家评审点击后详情' } }, // 专家评审点击后详情
-
       { path: '/expertStore',name:"专家库", components: expertStore,meta: { title: '专家库' } }, // 专家库
       { path: '/auditActivity',name:"审核中心", components: auditActivity,meta: { title: '审核中心' } }, // 审核中心（审核活动）
       { path: '/auditActivity/auditDetail', name:"活动审核点击后详情",components: auditDetail,meta: { title: '活动审核点击后详情' } }, // 活动审核点击后详情
@@ -115,7 +111,6 @@ const routes = [
       { path: '/home/activityDetail',name:"活动详情", components: activityDetail,meta: { title: '活动详情' }},//活动详情
       { path: '/userCenter/userEdit',name:"个人中心编辑", components: userEdit,meta: { title: '个人中心编辑' }},//个人中心编辑
 
-      // { path: '/activityDetail',name:"查看活动详情", components: activityDetail,meta: { title: '查看活动详情' }},//查看活动详情
       { path: '/workShow',name:"活动详情展示", components: workShow,meta: { title: '活动详情展示' }},//活动详情展示
 
 

@@ -1,171 +1,262 @@
 <template>
   <div class="container">
+    <el-row>
+      <type-select
+        :gradeList="gradeList"
+        :activityProjectList="activityProjectList"
+        :activityTypleList="activityTypleList"
+        :regionList="regionList"
+        @gradeObject="gradeObject"
+        @activityProjectObject="activityProjectObject"
+        @activityTypleObject="activityTypleObject"
+        @regionObject="regionObject"
+      ></type-select>
+    </el-row>
     <el-form ref="form" :model="form" :inline="true">
       <el-row>
-        <el-col :span="7">
+        <el-col :span="6">
           <el-form-item label="所在学校：">
-            <el-input v-model="form.school" placeholder="请输入" size="small"></el-input>
+            <el-input v-model="form.school" placeholder="请输入" size="small" style="width:160px"></el-input>
           </el-form-item>
         </el-col>
 
-        <el-col :span="7">
+        <el-col :span="4">
           <el-form-item label="作者：">
-            <el-input v-model="form.author" placeholder="请输入作者" size="small"></el-input>
+            <el-input v-model="form.author" placeholder="请输入作者" size="small" style="width:120px"></el-input>
           </el-form-item>
         </el-col>
 
-        <el-col :span="7">
+        <el-col :span="6">
           <el-form-item label="指导老师：">
-            <el-input v-model="form.mentor" placeholder="请输入指导老师" size="small"></el-input>
+            <el-input v-model="form.mentor" placeholder="请输入指导老师" size="small" style="width:160px"></el-input>
           </el-form-item>
         </el-col>
 
-        <el-col :span="7">
+        <el-col :span="6">
           <el-form-item label="作品名称：">
-            <el-input v-model="form.work_title" placeholder="请输入作品名称" size="small"></el-input>
+            <el-input
+              v-model="form.work_title"
+              placeholder="请输入作品名称"
+              size="small"
+              style="width:160px"
+            ></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="3">
+        <el-col :span="2">
           <el-form-item>
-            <el-button type="primary" @click="onSubmit()" size="small">查询</el-button>
+            <el-button type="primary" @click="goToSearch()" size="small" icon="el-icon-search">查询</el-button>
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
     <!--展示内容-->
     <el-row>
-      <el-button size="medium" type="primary" @click="fenpeiwork()">分配作品</el-button>
-      <el-button size="medium" @click="xiazai()">下载作品</el-button>
-      <el-button size="medium" @click="daochu()">导出excel</el-button>
+      <el-button size="small" type="primary" @click="distributionWorks()">分配作品</el-button>
+      <el-button size="small" @click="downloadWorks()">下载作品</el-button>
+      <el-button size="small" @click="exportWorks()">导出excel</el-button>
     </el-row>
     <div style="margin-top:16px;">
       <template>
         <!-- 序号 报名时间 报名人 联系电话 所在地区 所在学校 -->
         <el-table
           :data="tableData"
-          stripe
+          ref="multipleTable"
+          border
+          :header-cell-style="{background:'#EEEEEE',color:'#323232'}"
+          tooltip-effect="dark"
           style="width: 100%"
-          @selection-change="handleSelectionChange"
+          @selection-change="tableSelectionChange"
         >
           >
           <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column label="序号" type="index" width="116" align="center"></el-table-column>
-          <el-table-column prop="works.title" label="作品名称" width="116"></el-table-column>
-          <el-table-column prop="author_" label="作者" width="116"></el-table-column>
-          <el-table-column prop="mentor_" label="指导老师" width="116"></el-table-column>
-          <el-table-column prop="areaName" label="所在地区" width="116"></el-table-column>
-          <el-table-column prop="title_" label="所在学校" width="116"></el-table-column>
-          <el-table-column prop="info.category" label="活动分类" width="116"></el-table-column>
-          <el-table-column prop="info.project" label="活动项目" width="116"></el-table-column>
-          <el-table-column prop="private" label="分配专家" width="116"></el-table-column>
+          <el-table-column label="序号" type="index" width="80" align="center"></el-table-column>
+          <el-table-column prop="works.title" label="作品名称" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="author_" label="作者" ></el-table-column>
+          <el-table-column prop="mentor_" label="指导老师" ></el-table-column>
+          <el-table-column prop="areaName" label="所在地区" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="title_" label="所在学校" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="info.category" label="活动分类" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="info.project" label="活动项目" show-overflow-tooltip></el-table-column>
+          <el-table-column  label="分配专家" show-overflow-tooltip>
+            <template slot-scope="scope" >
+              <template v-if="scope.row.professional.length>0" v-for="item in scope.row.professional">{{item.name }}、</template>
+              <template v-else>未分配</template>
+            </template>
+          </el-table-column>
         </el-table>
       </template>
     </div>
 
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="currentPage"
-      :page-sizes="[perPage]"
-      :page-size="perPage"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="totalCount"
-    ></el-pagination>
+    <el-row class="page-div">
+      <el-pagination
+        @size-change="pageSizeChange"
+        @current-change="pageCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[20, 30, 40, 50, 100]"
+        :page-size="perPage"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalCount"
+      ></el-pagination>
+    </el-row>
 
     <div v-if="dialogVisible" class="mask">
       <div class="box">
-        <my-transfer @edit="edit" @Noedit="Noedit" :workList="workList"></my-transfer>
+        <my-transfer @edit="edit" @Noedit="Noedit" :workList="multipleSelection"></my-transfer>
       </div>
     </div>
   </div>
 </template>
 <script>
 import MyTransfer from "../../components/MyTransfer";
+import TypeSelect from "../../components/TypeSelect";
 import api from "../../service/api";
 import { axiosGet, getCookie } from "../../tools/tools";
 import axios from "axios";
-
 export default {
-  components: { MyTransfer },
-
-  props: ["id1", "id2", "id3", "id4"],
-
+  components: { MyTransfer, TypeSelect },
+  props: {
+    id: {
+      type: Number,
+      default() {
+        return 0;
+      }
+    }
+  },
   data() {
     return {
-      data: [],
-      value: [],
-      filterMethod(query, item) {
-        return item.pinyin.indexOf(query) > -1;
-      },
+      gradeList: [
+        { id: 0, name: "全部" },
+        { name: "幼教组", id: 1 },
+        { name: "小学组", id: 2 },
+        { name: "初中组", id: 4 },
+        { name: "高中组", id: 8 },
+        { name: "特教组", id: 16 },
+        { name: "中职组", id: 32 },
+        { name: "高教组", id: 64 }
+      ], //学段
+      activityProjectList: [{ id: 0, name: "全部" }], //活动项目列表
+      activityTypleList: [{ id: 0, name: "全部" }], //活动分类列表
+      regionList: [{ id: 0, name: "全部" }], //区域列表
+      multipleSelection: [], //选择列表
       form: {
         school: "",
         work_title: "",
         mentor: "",
         author: ""
       },
-      AddrList: [
-        { id: 1, name: "宝安" },
-        { id: 2, name: "福田" },
-        { id: 3, name: "南山" }
-      ],
-      SchoolList: [
-        { id: 1, name: "一中" },
-        { id: 2, name: "二中" },
-        { id: 3, name: "三中" }
-      ],
-      // 森林精灵 赵四 罗湖区 罗湖中学 张老师、朱老师
       tableData: [],
-
       dialogVisible: false,
-
-      totalCount: "",
-      pageCount: "",
+      totalCount: 0, //总条数
+      perPage: 20,
       currentPage: 1,
-      perPage: "",
-      teacherList: [],
-      workList: []
+      region:'',//区域
+      item_id:'',//项目
+      period:'',//学段
+      category_id:'',//分类
     };
   },
   watch: {
-    id1: function(val) {
-      console.log(val, "watch1");
-      this.enrollSelect();
-    },
-    id2: function(val) {
-      this.enrollSelect();
-      console.log(val, "watch2");
-    },
-    id3: function(val) {
-      this.enrollSelect();
-      console.log(val, "watch3");
-    },
-    id4: function(val) {
-      this.enrollSelect();
-      console.log(val, "watch4");
+    id: function(val) {
+      console.log(val, "id");
     }
   },
   created() {
-    this.enrollSelect();
+    let params={}
+    this.getEnrollList(params);
   },
-  mounted() {},
+  mounted() {
+    console.log("id===", this.id);
+    this.getActivityDetail();
+  },
   methods: {
-    handleSelectionChange(val) {
-      console.log(val, "val");
-      this.workList = val;
+    //获取详情
+    async getActivityDetail() {
+      let params = {};
+      params.url = api.activity;
+      params.id = this.id;
+      params.expand =
+        "detail,region,node,attachment,banner,category,categoryDetail";
+      await axiosGet(params)
+        .then(res => {
+          console.log(res.categoryDetail);
+          if (res.categoryDetail.length > 0) {
+            res.categoryDetail.forEach(element => {
+              this.activityTypleList.push({
+                id: element.id,
+                name: element.title
+              });
+              element.child.forEach(ite => {
+                this.activityProjectList.push({ id: ite.id, name: ite.title });
+              });
+            });
+            res.region.forEach(item => {
+              this.regionList.push({ id: item.id, name: item.area_name });
+            });
+            console.log(this.activityTypleList);
+          }
+        })
+        .catch(err => err);
+    },
+    //学段改变
+    async gradeObject(val) {
+      console.log(val);
+      this.period=val
+      let params = {
+        "per-page": this.perPage
+      };
+      params.page = this.currentPage;
+      this.getEnrollList(params);
+    },
+    //活动项目
+    async activityProjectObject(val) {
+      console.log(val);
+      this.item_id=val
+      let params = {
+        "per-page": this.perPage
+      };
+      params.page = this.currentPage;
+      this.getEnrollList(params);
+    },
+    //活动类别
+    async activityTypleObject(val) {
+      console.log(val);
+      this.category_id=val
+      let params = {
+        "per-page": this.perPage
+      };
+      params.page = this.currentPage;
+      this.getEnrollList(params);
+    },
+    //区域
+    async regionObject(val) {
+      console.log(val);
+      this.region=val
+      let params = {
+        "per-page": this.perPage
+      };
+      params.page = this.currentPage;
+      this.getEnrollList(params);
     },
 
-    onSubmit() {
-      this.enrollSelect();
+    //列表选择
+    tableSelectionChange(val) {
+      this.multipleSelection = val;
     },
-    async xiazai() {
-      let parmas = {};
-
+    //查询
+    goToSearch() {
+      let params = {
+        "per-page": this.perPage
+      };
+      params.page = this.currentPage;
+      this.getEnrollList(params);
+    },
+    //下载
+    async download() {
+      let params = {};
       var ids = [];
-      this.workList.forEach(item => {
+      this.multipleSelection.forEach(item => {
         ids.push(item.id);
-        console.log(typeof item.id);
       });
-
       axios.get(api.enroll, {
         params: {
           id: ids.join(","),
@@ -174,75 +265,79 @@ export default {
         headers: { headers: getCookie("x-api-key") }
       });
     },
-    async enrollSelect() {
-      let parmas = {};
+    //导出
+    async exportWorks(){
+
+    },
+    //获取作品
+    async getEnrollList(params) {
       if (this.form.school != "") {
-        parmas.school = this.form.school;
+        params.school = this.form.school;
       }
       if (this.form.work_title != "") {
-        parmas.work_title = this.form.work_title;
+        params.work_title = this.form.work_title;
       }
       if (this.form.mentor != "") {
-        parmas.mentor = this.form.mentor;
+        params.mentor = this.form.mentor;
       }
       if (this.form.author != "") {
-        parmas.author = this.form.author;
+        params.author = this.form.author;
       }
-      if (this.id1 != 0) {
-        parmas.period = this.id1;
+      if (this.period != 0&&this.period!='') {
+        params.period = this.period;
       }
-      if (this.id2 != 0) {
-        parmas.category_id = this.id2;
+      if (this.category_id != 0&&this.category_id!='') {
+        params.category_id = this.category_id;
       }
-      if (this.id3 != 0) {
-        parmas.item_id = this.id3;
+      if (this.item_id != 0&&this.item_id!='') {
+        params.item_id = this.item_id;
       }
-      console.log(this.id4);
-      if (this.id4 != 0 && this.id4 != "77") {
-        parmas.region = this.id4.toString();
+      if (this.region != 0 && this.region != "77") {
+        params.region = this.region
       }
-
-      parmas.url = api.enroll;
-      parmas.expand = "info,works,school,professional";
-      parmas.page = this.currentPage;
-      parmas.activity_id = sessionStorage.getItem("workid");
-      let res = await axiosGet(parmas).catch(err => err);
-
-      this.tableData = res.items;
-
-      this.tableData.forEach(ite => {
-        var title = "";
-        var areaName = "";
-        var author_ = "";
-        var mentor_ = "";
-        ite.school.forEach(item => {
-          title == ""
-            ? (title = item.title)
-            : (title = title + "," + item.title);
-          areaName = item.areaInfo.areaName;
-        });
-        ite.works.member.author.forEach(item => {
-          author_ == ""
-            ? (author_ = item.name)
-            : (author_ = author_ + "," + item.name);
-        });
-        ite.works.member.mentor.forEach(item => {
-          mentor_ == ""
-            ? (mentor_ = item.name)
-            : (mentor = mentor_ + "," + item.name);
-        });
-        ite.mentor_ = mentor_;
-        ite.author_ = author_;
-        ite.areaName = areaName;
-        ite.title_ = title;
-      });
-      this.totalCount = res._meta.totalCount;
-      this.pageCount = res._meta.pageCount;
-      this.currentPage = res._meta.currentPage;
-      this.perPage = res._meta.perPage;
+      params.url = api.enroll;
+      params.expand = "info,works,school,professional";
+      params.activity_id =this.id
+      await axiosGet(params)
+        .then(res => {
+          this.tableData = res.items;
+          this.tableData.forEach(ite => {
+            var title = "";
+            var areaName = "";
+            var author_ = "";
+            var mentor_ = "";
+            ite.school.forEach(item => {
+              title == ""
+                ? (title = item.title)
+                : (title = title + "," + item.title);
+              areaName = item.areaInfo.areaName;
+            });
+            ite.works.member.author.forEach(item => {
+              author_ == ""
+                ? (author_ = item.name)
+                : (author_ = author_ + "," + item.name);
+            });
+            ite.works.member.mentor.forEach(item => {
+              mentor_ == ""
+                ? (mentor_ = item.name)
+                : (mentor = mentor_ + "," + item.name);
+            });
+            ite.mentor_ = mentor_;
+            ite.author_ = author_;
+            ite.areaName = areaName;
+            ite.title_ = title;
+          });
+          this.totalCount = res._meta.totalCount;
+        })
+        .catch(err => err);
     },
     edit(item) {
       this.dialogVisible = item;
+      let params = {
+        "per-page": this.perPage
+      };
+      params.page = this.currentPage;
+      this.getEnrollList(params);
     },
     Noedit(item) {
       this.dialogVisible = item;
@@ -254,26 +349,37 @@ export default {
         })
         .catch(_ => {});
     },
-
-    fenpeiwork() {
-      if (this.dialogVisible == true) {
-        this.dialogVisible = false;
-      } else {
-        this.dialogVisible = true;
-      }
+    //分配作品
+    distributionWorks() {
+      this.dialogVisible=!this.dialogVisible 
     },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+    //每页数量改变
+    pageSizeChange(val) {
+      this.perPage = val;
+      let params = {
+        "per-page": this.perPage
+      };
+      params.page = this.currentPage;
+      this.getEnrollList(params);
     },
-    handleCurrentChange(val) {
+    //页码改变
+    pageCurrentChange(val) {
       this.currentPage = val;
-      console.log(`当前页: ${val}`);
-      this.enrollSelect();
+      let params = {
+        "per-page": this.perPage
+      };
+      params.page = this.currentPage;
+      this.getEnrollList(params);
     }
   }
 };
 </script>
 <style lang="less" scoped>
+.page-div {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
 .buttonenum {
   float: left;
   margin: 20px 0 10px 0;
@@ -295,7 +401,7 @@ export default {
   margin-top: -250px;
   margin-left: -400px;
   width: 782px;
-  height: 500px;
+  min-height: 500px;
   background: rgba(255, 255, 255, 1);
   border-radius: 6px;
 }
