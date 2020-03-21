@@ -258,11 +258,14 @@ export default {
                     that.tableData.push(Object.assign(item[i].info,item[i].works,item[i].professional));
                 }
                 for(let i=0;i<that.tableData.length;i++){
-                    that.tableData[i].score=item[i].score;
+                    that.tableData[i].comment=that.tableData[i][0].comment;
+                    that.tableData[i].score=that.tableData[i][0].score/10;
                 }
                 that.pages.per_page=res._meta.pageCount;
                 that.pages.now_page=res._meta.currentPage;
                 that.pages.total=res._meta.totalCount;
+                console.log(that.tableData);
+
             }).catch(err=>{
                 console.log(err);
             });
@@ -304,7 +307,7 @@ export default {
         },
         //查看
         goToLook(row){
-            // console.log(row.id);
+            console.log(row.id);
             this.$router.push({
                 path:'/workScore',
                 query:{"id":row.id}

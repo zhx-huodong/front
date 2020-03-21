@@ -17,11 +17,11 @@
                                 </el-form-item>
 
                                 <el-form-item label="报名登记表：">
-                                    <el-col><a :href="form.regForm">报名登记表</a></el-col>
+                                    <el-col><a :href="form.regForm"  target="_blank">报名登记表</a></el-col>
                                 </el-form-item>
 
                                 <el-form-item label="作品附件：">
-                                    <el-col v-for="(item,index) in form.annex" :key="index"><a :href="item.url">附件{{index+1}}</a><span class="remark">备注:{{item.remark}}</span></el-col>
+                                    <el-col v-for="(item,index) in form.annex" :key="index"><a :href="item.url" target="_blank">附件{{index+1}}</a><span class="remark">备注:{{item.remark}}</span></el-col>
                                 </el-form-item>    
                             </el-form>
                         </el-row>
@@ -36,6 +36,7 @@
                             <el-form ref="form" :model="form2" label-width="100px">
                                 <el-form-item label="评分：">
                                     <el-input
+                                    onkeyup="value=value.replace(/[^\d]/g,'')"
                                     placeholder="请输入评分"
                                     v-model="form2.scope"
                                     clearable
@@ -60,7 +61,7 @@
             </el-tabs>
             <el-row>
                 <el-col :span="2" :offset="11">
-                    <el-button type="primary" @click="goToScope">提交评分</el-button>
+                    <el-button type="primary" @click="goToScope(queryId)">提交评分</el-button>
                 </el-col>
             </el-row>
         </el-card>
@@ -85,7 +86,8 @@ export default {
                 scope:'',//评分
                 introduction:'',//评语
             },
-            
+            apiKey:getCookie("x-api-key"),
+            queryId:this.$route.query.id,
         }
     },
     mounted(){
@@ -93,14 +95,14 @@ export default {
     },
     created(){
         let that=this;
-        that.getWorkDetail();
+        that.getWorkDetail(that.queryId);
     },
     methods:{
-        async getWorkDetail(){
+        async getWorkDetail(queryId){
             let that=this;
             let params={};
             params.url=api.enroll;
-            params.id=that.$route.query.id;
+            params.id=queryId;
             params.inscore=1;
             params.expand="works";
             await this.axiosGet(params).then(res=>{
@@ -113,31 +115,62 @@ export default {
                     }
                 })
                 that.form.regForm=res.registration;
+                
             }).catch(err=>{
-                console.log(err);
+                if(err.status===404){
+                   that.$message({
+                        type: 'error',
+                        message: '已评完，没有下一份了'
+                   });
+                   that.queryId=that.queryId-1;
+                }
             });
+
+            
         },
         //评分
-        goToScope(){
-            this.open()
+        goToScope(queryId){
+            let that=this;
+            let params={};
+            // params.url=api.scoring;
+            params.ids=new Array();
+            params.ids[0]=queryId;
+            params.score=Number(that.form2.scope)*10;
+            params.comment=that.form2.introduction;
+            let params1=new Array();
+            params1.push(params);
+            // console.log(params1);
+            axios.post(api.scoring, 
+              params1
+            ,{headers: { 'x-api-key': that.apiKey }}).then(res=>{
+                // console.log(res);
+                if(res.data.code==0){
+                    that.open();
+                }
+            });
         },
         //弹窗提示
         open() {
-            this.$confirm('评分成功', '提示', {
+            let that=this;
+            that.$confirm('评分成功', '提示', {
                 confirmButtonText: '下一份',
                 type: 'warning',
                 center: true,
                 showCancelButton:false,
             }).then(() => {
-                this.$message({
-                    type: 'success',
-                     message: '下一份'
-                });
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '下一份'
-                });
+                that.queryId=that.queryId+1;
+                that.getWorkDetail(that.queryId);
+
+                // this.$message({
+                //     type: 'success',
+                //      message: '下一份'
+                // });
+            }).catch((err) => {
+                console.log(err)
+                // this.$message({
+                //     type: 'info',
+                //     message: '下一份'
+                // });
             });
         }
     }
@@ -152,6 +185,7 @@ export default {
 .remark{
     font-size:14px;
     font-weight:400;
+    margin-left:20px;
     color:rgba(153,153,153,1);
 }
 </style>
