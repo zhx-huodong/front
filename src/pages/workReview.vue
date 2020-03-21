@@ -248,7 +248,7 @@ export default {
             // params.mentor='',//[筛选活动时有效] 按指导老师筛选
             // params.exhibit='',//[筛选活动时有效] 按优秀作品筛选
             // params.bexport=1,//支持导出excel
-            params.sort='score',//记录排序，支持多字段排序：score：按score字段升序 -score：按score字段降序
+            //params.sort='score',//记录排序，支持多字段排序：score：按score字段升序 -score：按score字段降序
             await this.axiosGet(params).then(res=>{
                 
                 that.tableData=[];
@@ -258,8 +258,8 @@ export default {
                     that.tableData.push(Object.assign(item[i].info,item[i].works,item[i].professional));
                 }
                 for(let i=0;i<that.tableData.length;i++){
-                    that.tableData[i].comment=that.tableData[i][0].comment;
-                    that.tableData[i].score=that.tableData[i][0].score/10;
+                    that.tableData[i].comment=that.tableData[i][0].comment||"";
+                    that.tableData[i].score=that.tableData[i][0].score/10||0;
                 }
                 that.pages.per_page=res._meta.pageCount;
                 that.pages.now_page=res._meta.currentPage;
@@ -307,11 +307,12 @@ export default {
         },
         //查看
         goToLook(row){
-            console.log(row.id);
+            let query;
             this.$router.push({
                 path:'/workScore',
-                query:{"id":row.id}
-            })
+                query:{"id":row.id,"score":row.score,"comment":row.comment}
+            });
+
         },
         //处理每页数量的改变
         handleSizeChange(val) {

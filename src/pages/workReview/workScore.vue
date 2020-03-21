@@ -38,7 +38,7 @@
                                     <el-input
                                     onkeyup="value=value.replace(/[^\d]/g,'')"
                                     placeholder="请输入评分"
-                                    v-model="form2.scope"
+                                    v-model="form2.score"
                                     clearable
                                     style="width:300px;"
                                     size="small">
@@ -61,7 +61,7 @@
             </el-tabs>
             <el-row>
                 <el-col :span="2" :offset="11">
-                    <el-button type="primary" @click="goToScope(queryId)">提交评分</el-button>
+                    <el-button type="primary" @click="goToScore(queryId)">提交评分</el-button>
                 </el-col>
             </el-row>
         </el-card>
@@ -77,14 +77,14 @@ export default {
             activeName:'look',
             activeDetail:'detail',
             form: {
-                activityName: '森林精灵',
-                introduction:'一般认为，从古埃及、波斯、印度和中国等东方文明古国发展起来的东方绘画，与从古希腊、古罗马发展起来的以欧洲力中心的西方绘画，是世界上的两大绘画体系。这两大绘画体系在历史上互有影响，对人类文明都作出了各自独特的重要贡献。绘画本身的可塑性决定了它具有很大的自由创造度，它既可以表现现实的空间世界，也可以表现超时空的想象世界，画家可以通过绘画来表现对生活和理想的各种独特的情感和理解，团为绘画是可视的静态艺术，可以长期对画中具有美学性的形式和内容进行欣赏、玩味、体验，所以它是人们最容易接受而且最喜爱的一种艺术。',
+                activityName: '',
+                introduction:'',
                 regForm:[],
                 annex:[]
             },
             form2:{
-                scope:'',//评分
-                introduction:'',//评语
+                score:Number(this.$route.query.score),//评分
+                introduction:this.$route.query.comment,//评语
             },
             apiKey:getCookie("x-api-key"),
             queryId:this.$route.query.id,
@@ -129,13 +129,13 @@ export default {
             
         },
         //评分
-        goToScope(queryId){
+        goToScore(queryId){
             let that=this;
             let params={};
             // params.url=api.scoring;
             params.ids=new Array();
             params.ids[0]=queryId;
-            params.score=Number(that.form2.scope)*10;
+            params.score=Number(that.form2.score)*10;
             params.comment=that.form2.introduction;
             let params1=new Array();
             params1.push(params);
