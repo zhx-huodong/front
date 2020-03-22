@@ -38,6 +38,7 @@
                             :header-cell-style="{background:'#EEEEEE',color:'#323232'}"
                             tooltip-effect="dark"
                             style="width: 100%"
+                            v-loading="loading"
                             @selection-change="tableSelectionChange">
                             <el-table-column
                             type="selection"
@@ -88,7 +89,9 @@
                             label="操作"
                             width="100">
                             <template slot-scope="scope">
-                                <el-button @click="goToLook(scope.row)" type="text" size="small">查看</el-button>
+                                <el-button @click="goToLook(scope.row)" v-if="scope.row.score==0&&scope.row.comment==''" type="text" size="small">查看</el-button>
+                                <el-button @click="goToLook(scope.row)" v-else  type="text" size="small" style="color:red">修改</el-button>
+
                             </template>
                             </el-table-column>
                         </el-table>
@@ -168,6 +171,7 @@ export default {
             pages:{now_page:1,per_page:10,total:0},
             searchParams:{now_page:0,per_page:10},
             apiKey:getCookie("x-api-key"),
+            loading:true,
         }
     },
     created() {
@@ -264,10 +268,11 @@ export default {
                 that.pages.per_page=res._meta.pageCount;
                 that.pages.now_page=res._meta.currentPage;
                 that.pages.total=res._meta.totalCount;
-                console.log(that.tableData);
+                that.loading=false;
 
             }).catch(err=>{
                 console.log(err);
+                that.loading=false;
             });
         },
         //查询
