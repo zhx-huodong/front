@@ -3,16 +3,16 @@
     <el-card style="min-height:650px;">
       <div class="home-wrap">
         <el-tabs v-model="activeName" @tab-click="tabClick">
-          <el-tab-pane label="活动设置" name="first">
+          <el-tab-pane label="活动设置" name="first" v-if="$store.state.account.nowRole.type!=3">
             <activity-setting :id="id"></activity-setting>
           </el-tab-pane>
           <el-tab-pane label="作品管理" name="third">
             <works-management :id="id"></works-management>
           </el-tab-pane>
-          <el-tab-pane label="评审结果" name="fourth">
+          <el-tab-pane label="评审结果" name="fourth" v-if="$store.state.account.nowRole.type!=3">
             <evaluation-result :id="id"></evaluation-result>
           </el-tab-pane>
-          <el-tab-pane label="消息公告" name="fifth">
+          <el-tab-pane label="消息公告" name="fifth" v-if="$store.state.account.nowRole.type!=3">
             <el-row>
               <el-col>
                 <el-button type="primary" @click="goToRelease()" size="small">发布公告</el-button>

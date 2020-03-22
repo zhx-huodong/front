@@ -51,11 +51,11 @@
     </el-form>
     <!--展示内容-->
     <div class="buttonenum">
-      <el-button size="small" type="primary">设置奖项</el-button>
-      <el-button size="small">推荐省级</el-button>
+      <el-button size="small" type="primary" @click="goToSetAwardMore()">设置奖项</el-button>
+      <el-button size="small" type="primary" plain @click="goToRecommmend()">推荐省级</el-button>
       <el-button size="small">下载作品</el-button>
       <el-button size="small">下载excel</el-button>
-      <el-button size="small">作品展示</el-button>
+      <el-button size="small" @click="goToShowWorkMore()">开启作品展示</el-button>
     </div>
     <div style="margin-top:16px;">
       <template>
@@ -72,17 +72,62 @@
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column label="序号" type="index" width="100" align="center"></el-table-column>
           <el-table-column prop="works.title" label="作品名称" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="author_" label="指导老师" ></el-table-column>
+          <el-table-column prop="author_" label="指导老师"></el-table-column>
           <el-table-column prop="title_" label="所在学校" show-overflow-tooltip></el-table-column>
           <el-table-column prop="areaName" label="所在地区"></el-table-column>
 
-          <el-table-column label="得分">
+          <el-table-column label="得分" width="80">
             <template slot-scope="scope">
-              <el-button type="text" @click="goToScoreDetail(scope.row.id)" size="small">{{scope.row.score}}</el-button>
+              <el-button
+                type="text"
+                @click="goToScoreDetail(scope.row.id)"
+                size="small"
+              >{{scope.row.score}}</el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="获奖"></el-table-column>
-          <el-table-column prop="" label="推荐"></el-table-column>
+          <el-table-column label="作品展示" width="100">
+            <template slot-scope="scope">
+              <template v-if="scope.row.position<4">
+                <el-button type="text" @click="goToShowWork(scope.row.id,1)" size="small">开启作品展示</el-button>
+              </template>
+              <template v-else>
+                <el-button
+                  type="text"
+                  style="color:red;"
+                  @click="goToShowWork(scope.row.id,0)"
+                  size="small"
+                >关闭作品展示</el-button>
+              </template>
+            </template>
+          </el-table-column>
+          <el-table-column label="获奖" width="100" show-overflow-tooltip>
+            <template slot-scope="scope">
+              <template v-if="scope.row.award.length>0">
+                <template v-for="item in scope.row.award">
+                  {{item.title}}
+                </template >
+              </template>
+              <template v-else>
+                <el-button type="text" @click="goToSetAward(scope.row.id)" size="small">设置奖项</el-button>
+              </template>
+            </template>
+          </el-table-column>
+          <el-table-column label="推荐省级" width="160">
+            <template slot-scope="scope">
+              <template v-if="scope.row.position==1||scope.row.position==5">
+                <el-button type="text" @click="goToRecommmendItem(scope.row.id)" size="small">推荐省级</el-button>
+              </template>
+              <template slot-scope="scope" v-else>
+                已推荐省级
+                <el-button
+                  type="text"
+                  style="color:red"
+                  @click="goToDisRecommmendItem(scope.row.id)"
+                  size="small"
+                >取消推荐</el-button>
+              </template>
+            </template>
+          </el-table-column>
         </el-table>
       </template>
     </div>
@@ -97,13 +142,26 @@
         :total="totalCount"
       ></el-pagination>
     </el-row>
+    <el-dialog title="设置奖项" :visible.sync="awardDialogVisible" width="200" center>
+      <el-row type="flex" class="row-bg" justify="center">
+        <el-col :offset="5">
+            <el-checkbox-group v-model="award_ids" @change="awardCheckedChange">
+              <el-checkbox v-for="item in awardList" :label="item.id" :key="item.id">{{item.title}}</el-checkbox>
+            </el-checkbox-group>
+
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitSetAward">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
 import TypeSelect from "../../components/TypeSelect";
 import api from "../../service/api";
 export default {
-  components: {TypeSelect },
+  components: { TypeSelect },
   props: {
     id: {
       type: Number,
@@ -117,7 +175,7 @@ export default {
       currentPage: 1, //当前页
       perPage: 20, //每页条数
       totalCount: 0, //总数
-      multipleSelection:[],//列表选择
+      multipleSelection: [], //列表选择
       gradeList: [
         { id: 0, name: "全部" },
         { name: "幼教组", id: 1 },
@@ -137,15 +195,21 @@ export default {
         mentor: "",
         author: ""
       },
-      tableData: [],//作品列表
+      tableData: [], //作品列表
+      awardList: [], //奖品列表
+      ids: [], //ids
+      awardDialogVisible: false, //设置奖项弹窗
+      enroll_ids:[],//ids
+      award_ids:[],//奖项id
     };
   },
-  created(){
-    let params={}
+  created() {
+    let params = {};
     this.getEnrollList(params);
   },
-  mounted(){
+  mounted() {
     this.getActivityDetail();
+    this.getAwardList();
   },
   methods: {
     //获取详情
@@ -177,7 +241,7 @@ export default {
     },
     //学段改变
     async gradeObject(val) {
-      this.period=val
+      this.period = val;
       let params = {
         "per-page": this.perPage
       };
@@ -186,7 +250,7 @@ export default {
     },
     //活动项目
     async activityProjectObject(val) {
-      this.item_id=val
+      this.item_id = val;
       let params = {
         "per-page": this.perPage
       };
@@ -195,7 +259,7 @@ export default {
     },
     //活动类别
     async activityTypleObject(val) {
-      this.category_id=val
+      this.category_id = val;
       let params = {
         "per-page": this.perPage
       };
@@ -204,7 +268,15 @@ export default {
     },
     //区域
     async regionObject(val) {
-      this.region=val
+      this.region = val;
+      let params = {
+        "per-page": this.perPage
+      };
+      params.page = this.currentPage;
+      this.getEnrollList(params);
+    },
+    //搜索
+    goToSearch() {
       let params = {
         "per-page": this.perPage
       };
@@ -225,24 +297,26 @@ export default {
       if (this.form.author != "") {
         params.author = this.form.author;
       }
-      if (this.period != 0&&this.period!='') {
+      if (this.period != 0 && this.period != "") {
         params.period = this.period;
       }
-      if (this.category_id != 0&&this.category_id!='') {
+      if (this.category_id != 0 && this.category_id != "") {
         params.category_id = this.category_id;
       }
-      if (this.item_id != 0&&this.item_id!='') {
+      if (this.item_id != 0 && this.item_id != "") {
         params.item_id = this.item_id;
       }
       if (this.region != 0 && this.region != "77") {
-        params.region = this.region
+        params.region = this.region;
       }
       params.url = api.enroll;
       params.expand = "info,works,school,professional,award";
-      params.activity_id =this.id
-      params.scored=1
+      params.activity_id = this.id;
+      params.scored = 1;
+      params.position = 1;
       await this.axiosGet(params)
         .then(res => {
+          this.tableData = [];
           this.tableData = res.items;
           this.tableData.forEach(ite => {
             var title = "";
@@ -274,16 +348,248 @@ export default {
         })
         .catch(err => err);
     },
+    //获取奖项列表
+    async getAwardList() {
+      let params = {};
+      params.url = api.award;
+      params.ball = 1;
+      await this.axiosGet(params)
+        .then(res => {
+          this.awardList=res.items
+        })
+        .catch(err => err);
+    },
+    
     //查看评分情况
-    goToScoreDetail(id){
+    goToScoreDetail(id) {
       this.$router.push({
         path: "/activeManager/managerCenter/EvaluationResultDetail",
-        query:{
-          id:id
+        query: {
+          id: id
         }
       });
     },
-    
+    //展示优秀作品
+    async goToShowWorkMore() {
+      this.ids = [];
+      this.multipleSelection.forEach(item => {
+        this.ids.push(item.id);
+      });
+      let params = {};
+      params.url = api.recommend;
+      params.ids = this.ids;
+      params.position = 4;
+      params.value = 1;
+      await this.axiosPost(params)
+        .then(res => {
+          if (res.code == 0) {
+            this.$message({
+              type: "success",
+              message: "开启成功！！"
+            });
+            let params = {
+              "per-page": this.perPage
+            };
+            params.page = this.currentPage;
+            this.getEnrollList(params);
+          } else if (res.code == -1) {
+            this.$message({
+              type: "warning",
+              message: res.message
+            });
+          }
+        })
+        .catch(err => err);
+    },
+    //展示优秀作品单条
+    async goToShowWork(id, value) {
+      let message = "";
+      this.ids = [];
+      this.ids.push(id);
+      let params = {};
+      params.url = api.recommend;
+      params.ids = this.ids;
+      params.position = 4;
+      if (value == 1) {
+        params.value = value;
+        message = "开启成功！！";
+      } else if (value == 0) {
+        params.value = value;
+        message = "关闭成功！！";
+      }
+      await this.axiosPost(params)
+        .then(res => {
+          if (res.code == 0) {
+            this.$message({
+              type: "success",
+              message: message
+            });
+            let params = {
+              "per-page": this.perPage
+            };
+            params.page = this.currentPage;
+            this.getEnrollList(params);
+          } else if (res.code == -1) {
+            this.$message({
+              type: "warning",
+              message: res.message
+            });
+          }
+        })
+        .catch(err => err);
+    },
+    //设置奖项多个
+    goToSetAwardMore(){
+      this.awardDialogVisible = true;
+      this.enroll_ids=[]
+      this.multipleSelection.forEach(item=>{
+        this.enroll_ids.push(item.id)
+      })
+    },
+    //设置奖项单个
+    goToSetAward(id) {
+      this.awardDialogVisible = true;
+      this.enroll_ids=[]
+      this.enroll_ids.push(id)
+    },
+    //选择奖项
+    awardCheckedChange(data){
+    },
+    //设置奖项
+    async submitSetAward(){
+      let params={}
+      params.url=api.awards
+     
+      if(this.enroll_ids.length>0){
+        params.enroll_ids=this.enroll_ids
+      }else{
+        this.$message({
+          type:'warning',
+          message:'请选择对象',
+        })
+        return
+      }
+      if(this.award_ids.length>0){
+        params.award_ids=this.award_ids
+      }else{
+        this.$message({
+          type:'warning',
+          message:'请选择奖项'
+        })
+      }
+      await this.axiosPost(params).then(res=>{
+         if (res.code == 0) {
+            this.$message({
+              type: "success",
+              message: "颁奖成功！！"
+            });
+            this.awardDialogVisible = false;
+            let params = {
+              "per-page": this.perPage
+            };
+            params.page = this.currentPage;
+            this.getEnrollList(params);
+          } else if (res.code == -1) {
+            this.$message({
+              type: "warning",
+              message: res.message
+            });
+          }
+      }).catch(err=>err)
+    },
+    //推荐省级
+    async goToRecommmend() {
+      this.ids = [];
+      this.multipleSelection.forEach(item => {
+        this.ids.push(item.id);
+      });
+      let params = {};
+      params.url = api.recommend;
+      params.ids = this.ids;
+      params.position = 2;
+      params.value = 1;
+      await this.axiosPost(params)
+        .then(res => {
+          if (res.code == 0) {
+            this.$message({
+              type: "success",
+              message: "推荐成功！！"
+            });
+            let params = {
+              "per-page": this.perPage
+            };
+            params.page = this.currentPage;
+            this.getEnrollList(params);
+          } else if (res.code == -1) {
+            this.$message({
+              type: "warning",
+              message: res.message
+            });
+          }
+        })
+        .catch(err => err);
+    },
+    //推荐省级单条
+    async goToRecommmendItem(id) {
+      this.ids = [];
+      this.ids.push(id);
+      let params = {};
+      params.url = api.recommend;
+      params.ids = this.ids;
+      params.position = 2;
+      params.value = 1;
+      await this.axiosPost(params)
+        .then(res => {
+          if (res.code == 0) {
+            this.$message({
+              type: "success",
+              message: "推荐成功！！"
+            });
+            let params = {
+              "per-page": this.perPage
+            };
+            params.page = this.currentPage;
+            this.getEnrollList(params);
+          } else if (res.code == -1) {
+            this.$message({
+              type: "warning",
+              message: res.message
+            });
+          }
+        })
+        .catch(err => err);
+    },
+    //取消推荐
+    async goToDisRecommmendItem(id) {
+      this.ids = [];
+      this.ids.push(id);
+      let params = {};
+      params.url = api.recommend;
+      params.ids = this.ids;
+      params.position = 2;
+      params.value = 0;
+      await this.axiosPost(params)
+        .then(res => {
+          if (res.code == 0) {
+            this.$message({
+              type: "success",
+              message: "取消推荐成功！！"
+            });
+            let params = {
+              "per-page": this.perPage
+            };
+            params.page = this.currentPage;
+            this.getEnrollList(params);
+          } else if (res.code == -1) {
+            this.$message({
+              type: "warning",
+              message: res.message
+            });
+          }
+        })
+        .catch(err => err);
+    },
+
     handleClose(done) {
       this.$confirm("确认关闭？")
         .then(_ => {
@@ -302,7 +608,7 @@ export default {
         "per-page": this.perPage
       };
       params.page = this.currentPage;
-      // this.getEnrollList(params);
+      this.getEnrollList(params);
     },
     //页码改变
     pageCurrentChange(val) {
@@ -311,7 +617,7 @@ export default {
         "per-page": this.perPage
       };
       params.page = this.currentPage;
-      // this.getEnrollList(params);
+      this.getEnrollList(params);
     }
   }
 };
@@ -328,6 +634,6 @@ export default {
 
 .buttonenum {
   float: left;
-  margin-bottom:20px;
+  margin-bottom: 20px;
 }
 </style>
