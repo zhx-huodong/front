@@ -122,11 +122,9 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.content = this.inputtext;
-      console.log("this.content===$", this.inputtext);
     });
     setTimeout(() => {
         this.content = this.inputtext;
-      console.log("this.content===", this.inputtext);
     }, 3000);
   },
   methods: {

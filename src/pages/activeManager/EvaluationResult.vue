@@ -76,7 +76,11 @@
           <el-table-column prop="title_" label="所在学校" show-overflow-tooltip></el-table-column>
           <el-table-column prop="areaName" label="所在地区"></el-table-column>
 
-          <el-table-column prop="score" label="得分"></el-table-column>
+          <el-table-column label="得分">
+            <template slot-scope="scope">
+              <el-button type="text" @click="goToScoreDetail(scope.row.id)" size="small">{{scope.row.score}}</el-button>
+            </template>
+          </el-table-column>
           <el-table-column prop="" label="获奖"></el-table-column>
           <el-table-column prop="" label="推荐"></el-table-column>
         </el-table>
@@ -234,8 +238,9 @@ export default {
         params.region = this.region
       }
       params.url = api.enroll;
-      params.expand = "info,works,school,professional";
+      params.expand = "info,works,school,professional,award";
       params.activity_id =this.id
+      params.scored=1
       await this.axiosGet(params)
         .then(res => {
           this.tableData = res.items;
@@ -269,13 +274,16 @@ export default {
         })
         .catch(err => err);
     },
-
-    CityReslut() {
-      console.log(111111);
+    //查看评分情况
+    goToScoreDetail(id){
       this.$router.push({
-        path: "/activeManager/createActivity/EvaluationResultDital"
+        path: "/activeManager/managerCenter/EvaluationResultDetail",
+        query:{
+          id:id
+        }
       });
     },
+    
     handleClose(done) {
       this.$confirm("确认关闭？")
         .then(_ => {
@@ -320,6 +328,6 @@ export default {
 
 .buttonenum {
   float: left;
-  margin: 20px 0 10px 0;
+  margin-bottom:20px;
 }
 </style>

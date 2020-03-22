@@ -19,7 +19,6 @@ const enroll=`${base}/enroll`;//读取报名记录
 const works=`${base}/works`;//读取报名记录
 const assignment=`${base}/works-admin/assignment`;//读取报名记录
 const activityNotice=`${base}/activity-notice`;//添加活动公告
-
 const scoring=`${base}/works-admin/scoring`;//给报名的作品评分
 
 const uploadPic=`http://api.huodong.eduinspector.com/upload/image`;//图片上传
@@ -45,6 +44,6 @@ export default {
     enroll,
     works,
     assignment,
-    activityNotice
+    activityNotice,
     scoring
 }
