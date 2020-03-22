@@ -26,7 +26,7 @@
                 </div>
                 <div class="activity-int-item">
                   <div class="activity-int-content" v-html="activityObject.detail.content"></div>
-                  <el-image :src="activityObject.cover" fit="cover" style="width:650px;margin-top:20px;"></el-image>
+                  <!-- <el-image :src="activityObject.cover" fit="cover" style="width:650px;margin-top:20px;"></el-image> -->
                 </div>
               </div>
               <div class="activity-annex">

@@ -1,6 +1,6 @@
 
-// const base='/api';
-const base='';
+const base='/api';
+// const base='';
 
 const captcha=`${base}/login/captcha`;//获取短信验证码
 const account=`${base}/login/account`;//手机验证码登录
@@ -27,6 +27,7 @@ const awards=`${base}/works-admin/awards`;//颁奖
 const uploadPic=`http://api.huodong.eduinspector.com/upload/image`;//图片上传
 const uploadKey=`http://api.huodong.eduinspector.com/upload/cos-key`;//文件上传
 const uploadFile=`http://api.huodong.eduinspector.com/upload/file`;//文件上传
+const getCosKeys=`http://api.huodong.eduinspector.com/upload/get-cos-keys`;//获取腾讯云cos签名 
 
 export default {
     captcha,
@@ -51,5 +52,6 @@ export default {
     scoring,
     reject,
     recommend,
-    awards
+    awards,
+    getCosKeys
 }

@@ -2,7 +2,7 @@ let config = {
 	productionSourceMap: true,
 	outputDir: 'manage',
 	devServer: {
-		port: 8003,
+		port: 8008,
 		disableHostCheck: true,
 		proxy: {
 			'/api': {

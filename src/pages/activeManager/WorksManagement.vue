@@ -302,7 +302,8 @@ export default {
       axios.get(api.enroll, {
         params: {
           id: ids.join(","),
-          bdownload: "1"
+          bdownload: "1",
+          expand:'works'
         },
         headers: {"x-api-key" : getCookie("x-api-key") }
       }).then(res=>{
@@ -312,7 +313,23 @@ export default {
       });
     },
     //导出
-    async exportWorks() {},
+    async exportWorks() {
+       let params = {};
+      var ids = [];
+      this.multipleSelection.forEach(item => {
+        ids.push(item.id);
+      });
+      axios.get(api.enroll, {
+        params: {
+          id: ids.join(","),
+          bexport: "1",
+          expand:'info,works,school,professional,award'
+        },
+        headers: {"x-api-key" : getCookie("x-api-key") }
+      }).then(res=>{
+        console.log("res===",res)
+      });
+    },
     //退回作品
     async returnWorks() {
       this.multipleSelection.forEach(item => {

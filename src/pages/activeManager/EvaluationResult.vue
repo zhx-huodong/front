@@ -53,7 +53,7 @@
     <div class="buttonenum">
       <el-button size="small" type="primary" @click="goToSetAwardMore()">设置奖项</el-button>
       <el-button size="small" type="primary" plain @click="goToRecommmend()">推荐省级</el-button>
-      <el-button size="small">下载作品</el-button>
+      <el-button size="small" @click="downloadWorks()">下载作品</el-button>
       <el-button size="small">下载excel</el-button>
       <el-button size="small" @click="goToShowWorkMore()">开启作品展示</el-button>
     </div>
@@ -359,7 +359,26 @@ export default {
         })
         .catch(err => err);
     },
-    
+    //下载作品
+    async downloadWorks() {
+      let params = {};
+      var ids = [];
+      this.multipleSelection.forEach(item => {
+        ids.push(item.id);
+      });
+      axios.get(api.enroll, {
+        params: {
+          id: ids.join(","),
+          bdownload: "1",
+          expand:'works'
+        },
+        headers: {"x-api-key" : getCookie("x-api-key") }
+      }).then(res=>{
+        if(res.data.code==0){
+          window.open(res.data.url)
+        }
+      });
+    },
     //查看评分情况
     goToScoreDetail(id) {
       this.$router.push({
