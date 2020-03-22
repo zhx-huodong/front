@@ -21,7 +21,7 @@
                                 </el-form-item>
 
                                 <el-form-item label="作品附件：">
-                                    <el-col v-for="(item,index) in form.annex" :key="index"><a :href="item.url" target="_blank">附件{{index+1}}</a><span class="remark">备注:{{item.remark}}</span></el-col>
+                                    <el-col v-for="(item,index) in form.annex" :key="index"><a :href="item.url" target="_blank">附件{{item.title}}</a><span class="remark">备注:{{item.remark}}</span></el-col>
                                 </el-form-item>    
                             </el-form>
                         </el-row>
@@ -112,6 +112,7 @@ export default {
                     return{
                         "remark":res.remark,
                         "url":res.url,
+                        "title":res.title,
                     }
                 })
                 that.form.regForm=res.registration;
@@ -158,7 +159,7 @@ export default {
                 center: true,
                 showCancelButton:false,
             }).then(() => {
-                that.queryId=that.queryId+1;
+                that.queryId=that.queryId-1;
                 that.getWorkDetail(that.queryId);
 
                 // this.$message({

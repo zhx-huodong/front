@@ -5,7 +5,7 @@
                 <p>{{activityDetail.info.activity}}</p>
             </div>
             <el-divider></el-divider>
-            <el-steps :active="2" align-center>
+            <el-steps :active="activityDetail.period" align-center>
                 <el-step title="作品报名" :description="formatDateChar(activityDetail.info.nodes[0].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[0].etime*1000)"></el-step>
                 <el-step title="专家评审" :description="formatDateChar(activityDetail.info.nodes[1].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[1].etime*1000)"></el-step>
                 <el-step title="市级评奖" :description="formatDateChar(activityDetail.info.nodes[2].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[2].etime*1000)"></el-step>
@@ -21,7 +21,7 @@
             </div>
             <el-divider></el-divider>
             <div class="content-main">
-                <div>{{activityDetail.works.content}}</div>
+                <div  v-html="activityDetail.works.content"></div>
                 <el-image :src="activityDetail.works.cover" fit="contain"></el-image>
                 <el-form ref="form" :model="form" label-width="90px">
                     <el-form-item label="活动组别：">
@@ -71,8 +71,10 @@
             },
             //修改
             goToEdit(){
+                let that=this;
                 this.$router.push({
-                    path:'/home/activityEnroll'
+                    path:'/home/activityEnroll',
+                    query:{id:that.id,activityName:that.activityDetail.info.category}
                 })
             },
         }
