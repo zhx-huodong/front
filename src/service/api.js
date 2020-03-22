@@ -1,6 +1,6 @@
 
-const base='/api';
-// const base='';
+// const base='/api';
+const base='';
 
 const captcha=`${base}/login/captcha`;//获取短信验证码
 const account=`${base}/login/account`;//手机验证码登录
