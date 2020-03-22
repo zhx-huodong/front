@@ -50,7 +50,7 @@
         </el-form-item>
         <el-form-item label="作品简介：">
           <div class="my-editor-main">
-            <my-editor @editorChange="editorChange"></my-editor>
+            <my-editor @editorChange="editorChange" :inputtext="inputtext"></my-editor>
           </div>
         </el-form-item>
         <el-form-item label="报名登记：">
@@ -125,6 +125,7 @@
                 v-model="authorInputValue"
                 ref="authorSaveTagInput"
                 size="small"
+                multiple
                 @change="authorInputConfirm"
               >
                 <el-option
@@ -168,6 +169,7 @@
                 v-model="teacherInputValue"
                 ref="teacherSaveTagInput"
                 size="small"
+                multiple
                 @change="teacherInputConfirm"
               >
                 <el-option
@@ -228,14 +230,15 @@ export default {
         registration: [],
         email: ""
       },
+      inputtext:'',//富文本内容
       registration: '', //报名登记表
       cover: "", //作品封面
       authorTags: [],
       authorInputVisible: false,
-      authorInputValue: "",
+      authorInputValue: [],
       teacherTags: [],
       teacherInputVisible: false,
-      teacherInputValue: "",
+      teacherInputValue: [],
       title: "",
       author_limit: "", //限制学生人数
       mentor_limit: "", //限制指导老师人数
@@ -255,12 +258,39 @@ export default {
     let params = {};
     this.getTeacherList(params);
     this.getObjectDetail();
+    if(this.activityProjectId){
+      this.getEnrollDetail();
+    }
   },
   mounted() {
     let params = {};
     this.getStudentList(params);
   },
   methods: {
+    //读取报名项目详情
+    async getEnrollDetail(){
+      let that=this;
+      let params={};
+      params.url=api.enroll;
+      params.id=that.activityProjectId;
+      params.expand="info,works,school,professional,award";
+      await that.axiosGet(params).then(res=>{
+        that.form.activityProject=res.info.project;
+        that.form.title=res.works.title;
+        that.inputtext=res.works.content;
+        that.form.email=res.works.email;
+        that.form.cover.push({"url":res.works.cover});
+        that.form.registration.push({"url":res.registration});
+        that.authorInputVisible=true;
+        that.authorInputValue=res.info.author.map(item=>{
+          return item.name;
+        });
+        that.teacherInputVisible=true;
+        that.teacherInputValue=res.info.mentor.map(item=>{
+          return item.name;
+        })
+      })
+    },
     //读取活动项目详情
     async getObjectDetail() {
       let params = {};
@@ -270,7 +300,7 @@ export default {
       await this.axiosGet(params)
         .then(res => {
           this.activityProjectDetail = res;
-          this.form.activityProject = res.title;
+          // this.form.activityProject = res.title;
           this.author_limit = res.author_limit;
           this.mentor_limit = res.mentor_limit;
         })
@@ -556,7 +586,7 @@ export default {
       }
 
       this.authorInputVisible = false;
-      this.authorInputValue = "";
+      this.authorInputValue = [];
     },
     //作者
     teacherClose(id) {
@@ -586,7 +616,7 @@ export default {
         });
       }
       this.teacherInputVisible = false;
-      this.teacherInputValue = "";
+      this.teacherInputValue = [];
     }
   }
 };

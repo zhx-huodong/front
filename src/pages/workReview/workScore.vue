@@ -159,7 +159,7 @@ export default {
                 center: true,
                 showCancelButton:false,
             }).then(() => {
-                that.queryId=that.queryId+1;
+                that.queryId=that.queryId-1;
                 that.getWorkDetail(that.queryId);
 
                 // this.$message({
