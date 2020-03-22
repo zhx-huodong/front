@@ -125,7 +125,6 @@
                 v-model="authorInputValue"
                 ref="authorSaveTagInput"
                 size="small"
-                multiple
                 @change="authorInputConfirm"
               >
                 <el-option
@@ -169,7 +168,6 @@
                 v-model="teacherInputValue"
                 ref="teacherSaveTagInput"
                 size="small"
-                multiple
                 @change="teacherInputConfirm"
               >
                 <el-option
@@ -200,8 +198,9 @@
         </el-form-item>
       </el-form>
       <el-row>
-        <el-col :span="2" :offset="6">
+        <el-col :span="5" :offset="5">
           <el-button type="primary" @click="submitEnroll()" size="small">提交报名</el-button>
+          <el-button type="default" @click="goback()" size="small">取消</el-button>
         </el-col>
       </el-row>
     </el-card>
@@ -235,10 +234,10 @@ export default {
       cover: "", //作品封面
       authorTags: [],
       authorInputVisible: false,
-      authorInputValue: [],
+      authorInputValue: "",
       teacherTags: [],
       teacherInputVisible: false,
-      teacherInputValue: [],
+      teacherInputValue: "",
       title: "",
       author_limit: "", //限制学生人数
       mentor_limit: "", //限制指导老师人数
@@ -279,15 +278,28 @@ export default {
         that.form.title=res.works.title;
         that.inputtext=res.works.content;
         that.form.email=res.works.email;
+        if(res.works.attachment.length>0){
+          res.works.attachment.map(res=>{
+              that.formats.push({'id':res.id,'name':res.title,'url':res.url});
+          })
+         console.log("我是",that.formats);
+        }
         that.form.cover.push({"url":res.works.cover});
+        // that.cover
         that.form.registration.push({"url":res.registration});
-        that.authorInputVisible=true;
-        that.authorInputValue=res.info.author.map(item=>{
-          return item.name;
+        // that.authorInputVisible=true;
+        that.authorTags=res.info.author.map(item=>{
+          return {
+            "id":item.id,
+            "name":item.name,
+          }
         });
-        that.teacherInputVisible=true;
-        that.teacherInputValue=res.info.mentor.map(item=>{
-          return item.name;
+        // that.teacherInputVisible=true;
+        that.teacherTags=res.info.mentor.map(item=>{
+          return {
+            "id":item.id,
+            "name":item.name,
+          }
         })
       })
     },
@@ -325,6 +337,7 @@ export default {
     },
     //cover
     coverSuccess(response, file, fileList) {
+      console.log(fileList);
       fileList.forEach(item => {
         item.response.files.forEach(subItem => {
           this.cover = this.apipath + subItem.path;
@@ -433,11 +446,21 @@ export default {
         });
       });
       console.log("this.attachment===", this.attachment);
+    console.log("kkformat",this.formats);
+
     },
     //作品移除
     handleRemove(file, fileList, id) {
       delete this.attachment[id];
+      // delete this.formats[id];
+      for(let i=0;i<this.formats.length;i++){
+          if(this.formats[i].id==file.id){
+            this.formats.splice(i,1);
+          }
+      }
       console.log("this.attachment===", this.attachment);
+      console.log("kkformat",this.formats);
+
     },
     //提交报名
     async submitEnroll() {
@@ -455,6 +478,9 @@ export default {
       }
       if (this.cover !== "") {
         params.cover = this.cover;
+      }else if(this.form.cover.length!=0&&this.activityProjectId!=undefined){
+        // console.log("测试封面",this.form.cover);
+        params.cover = this.form.cover[0].url;
       } else {
         this.$message({
           message: "请上传作品封面",
@@ -464,7 +490,9 @@ export default {
       }
       if (this.registration!='') {
         params.registration = this.registration;
-      } else {
+      } else if(this.form.registration.length!=0&&this.activityProjectId!=undefined){
+        params.registration = this.form.registration[0].url;
+      }else {
         this.$message({
           message: "请上传报名表",
           type: "warning"
@@ -482,6 +510,10 @@ export default {
       }
       if (this.authorIds.length > 0) {
         params.author = this.authorIds;
+      }else if(this.authorTags.length>0&&this.activityProjectId!=undefined){
+        params.author=this.authorTags.map(res=>{
+          return   res.id;
+        })
       } else {
         this.$message({
           message: "请添加作者",
@@ -491,6 +523,10 @@ export default {
       }
       if (this.teacherIds.length > 0) {
         params.mentor = this.teacherIds;
+      } else if(this.teacherTags.length>0&&this.activityProjectId!=undefined){
+        params.mentor=this.teacherTags.map(res=>{
+          return  res.id;
+        })
       } else {
         this.$message({
           message: "请添加指导老师",
@@ -507,8 +543,16 @@ export default {
         });
         return;
       }
-
-      params.attachment = this.attachment;
+      
+      if(this.formats.length>0&&this.activityProjectId!=undefined){
+        let attachment={};
+        for(let i=0;i<this.formats.length;i++){
+          attachment[this.formats[i].id]={"url":this.formats[i].url,"title":this.formats[i].name};
+        }
+        params.attachment =Object.assign(this.attachment,attachment);
+      }else{
+         params.attachment = this.attachment;
+      }
       console.log("params===",params)
       await axiosPost(params)
         .then(res => {
@@ -517,6 +561,8 @@ export default {
               message:res.message,
               type: "warning"
             });
+          }else{
+              that.$router.go(-1);
           }
           setTimeout(() => {
             // this.$router.push({
@@ -530,7 +576,19 @@ export default {
     editorChange(data) {
       this.content = data;
     },
-
+    //取消
+    goback(){
+        let that=this;
+        this.$confirm('确定取消吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    that.$router.go(-1);
+                }).catch(() => {
+                    console.log("取消");      
+                });
+    },
     //获取学生列表
     async getStudentList(params) {
       delete params.mtype;
@@ -586,7 +644,7 @@ export default {
       }
 
       this.authorInputVisible = false;
-      this.authorInputValue = [];
+      this.authorInputValue ="";
     },
     //作者
     teacherClose(id) {
@@ -616,7 +674,7 @@ export default {
         });
       }
       this.teacherInputVisible = false;
-      this.teacherInputValue = [];
+      this.teacherInputValue = "";
     }
   }
 };
