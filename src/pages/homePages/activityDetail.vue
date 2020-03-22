@@ -16,7 +16,8 @@
             <div class="title">
                 <p>{{activityDetail.works.title}}</p>
                 <div class="act-button">
-                    <el-button type="primary" plain size="small" @click="goToEdit">修改</el-button>
+                    <!-- v-show="activityDetail.period<=1" -->
+                    <el-button type="primary"  plain size="small" @click="goToEdit">修改</el-button>
                 </div>
             </div>
             <el-divider></el-divider>
