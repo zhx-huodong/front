@@ -22,10 +22,10 @@
               </el-form-item>
 
               <el-form-item>
-                <el-button type="primary" @click="onSubmit()" size="small">查询</el-button>
+                <el-button type="primary" @click="goToSearch()" size="small">查询</el-button>
               </el-form-item>
             </el-form>
-            <div v-for="(item,index) in list" :key="index">
+            <div v-for="(item,index) in activityList" :key="index">
               <div class="count">
                 <div class="sc">
                   <div class="imglogo">
@@ -35,10 +35,12 @@
                     <p class="font1">{{item.title}}</p>
                     <p>
                       活动对象：
-                      {{item.targetList}}
+                      【{{targetObj[item.target]}}】
                     </p>
-                    <p>活动范围：{{item.regionList}}</p>
-                    <p>发起时间：{{item.Sta_created_at}}</p>
+                    <p>活动范围：
+                      <template v-for="subItem in item.region">【{{subItem.area_name}}】</template>
+                    </p>
+                    <p>发起时间：{{formatDateChar(item.created_at*1000)}}</p>
                   </div>
                 </div>
                 <div class="shenheclass">
@@ -66,7 +68,7 @@
           size="mini"
           type="primary"
           style="position: absolute;right:0px;top:0px;"
-          @click="fabuActive()"
+          @click="releaseActivity()"
           v-if="$store.state.account.nowRole.type==0||$store.state.account.nowRole.type==2"
         >+发起活动</el-button>
       </div>
@@ -81,7 +83,7 @@ import Axios from "axios";
 export default {
   data() {
     return {
-      list: [],
+      activityList: [],
       activeName: "first",
       form: {
         object: "",
@@ -89,39 +91,22 @@ export default {
         time: "",
         acitvename: ""
       },
-
-      ClassList: [
-        { name: "幼教组", id: 1 },
-        { name: "小学组", id: 2 },
-        { name: "初中组", id: 4 },
-        { name: "高中组", id: 8 },
-        { name: "特教组", id: 16 },
-        { name: "中职组", id: 32 },
-        { name: "高教组", id: 64 }
-      ],
+      targetObj: { 1: "老师",  2: "学生", 4: "家长"},
       time1: "",
-      time2: "",
-      userid: "" //用户id
+      time2: ""
     };
   },
   created() {
-    this.userid = JSON.parse(localStorage.getItem("user")).id;
-    this.selectActive();
+    this.getActivityList();
   },
   methods: {
     //删除
-    deleteOne(id) {
+    async deleteOne(id) {
       let params = {};
       params.url = api.activity;
       params.id = id;
-      axios
-        .delete(params.url + "/" + params.id, {
-          headers: {
-            "x-api-key": getCookie("x-api-key")
-          }
-        })
+      await this.axiosDelete(params)
         .then(res => {
-          console.log(res);
           if (res.status == 200) {
             this.$message({
               type: "success ",
@@ -134,7 +119,7 @@ export default {
               message: "无内容"
             });
           }
-          this.selectActive();
+          this.getActivityList();
         })
         .catch(err => {
           this.$message({
@@ -147,9 +132,8 @@ export default {
     handleClick(tab, event) {
       console.log(tab, event);
     },
-
-    async selectActive() {
-      console.log(1);
+    //获取活动列表
+    async getActivityList() {
       let params = {};
       if (this.time1.length != 0 && this.time2.length != 0) {
         params.upload_stime = this.time1 / 1000;
@@ -163,27 +147,7 @@ export default {
           "detail,region,node,attachment,banner,category,categoryDetail,process,progress");
       let res = await this.axiosGet(params)
         .then(res => {
-          this.list = res.items;
-          this.list.forEach(item => {
-            var Str = ""; //活动对象数据处理
-            var ii = item.target.toString(2);
-            for (let i = 0; i < ii.length; i++) {
-              if (ii[i] == 1) {
-                Str = Str + "【" + this.ClassList[i].name + "】";
-              }
-            }
-            item.targetList = Str; //活动对象数据处理
-            var Str2 = ""; //活动范围数据处理
-            for (let i = 0; i < item.region.length; i++) {
-              Str2 = Str2 + "【" + item.region[i].area_name + "】";
-            }
-            item.regionList = Str2;
-            var Str3 = ""; //发起时间
-            let opts = {};
-            opts.dateZero = "dateZero";
-            Str3 = this.timestampToTime(item.created_at, opts);
-            item.Sta_created_at = Str3;
-          });
+          this.activityList = res.items;
           // 数据清除
           {
             this.time1 = "";
@@ -194,21 +158,26 @@ export default {
         })
         .catch(err => err);
     },
-
-    onSubmit() {
+    //查询
+    goToSearch() {
       if (this.form.time.length == 2) {
         this.time1 = this.form.time[0];
         this.time2 = this.form.time[1];
       }
-
-      this.selectActive();
+      this.getActivityList();
     },
-    fabuActive() {
+    //发布活动
+    releaseActivity() {
+      let addActivityForm = null;
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(addActivityForm)
+      );
       this.$router.push({
         path: "/activeManager/createActivity"
       });
     },
-    //活动管理
+    //活动详情
     goToActivityDetail(id) {
       this.$router.push({
         path: "/home/activityIntroduction",
@@ -217,13 +186,12 @@ export default {
         }
       });
     },
-    //活动详情
+    //活动管理
     goToManagerCenter(id) {
       this.$router.push({
         path: "/activeManager/managerCenter",
         query: {
-          name: "third",
-          id: id
+          id: id,
         }
       });
     }
@@ -264,7 +232,7 @@ export default {
   align-items: center;
   font-size: 14px;
   font-weight: 400;
-  color: rgba(255, 198, 44, 1);
+  color: #1D8CFD;
 }
 .shenheclass2 {
   display: flex;

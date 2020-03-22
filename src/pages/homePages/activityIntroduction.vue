@@ -26,6 +26,7 @@
                 </div>
                 <div class="activity-int-item">
                   <div class="activity-int-content" v-html="activityObject.detail.content"></div>
+                  <el-image :src="activityObject.cover" fit="cover" style="width:650px;margin-top:20px;"></el-image>
                 </div>
               </div>
               <div class="activity-annex">
@@ -90,13 +91,15 @@
                 >
                   <el-table-column label="序号" type="index" width="100"></el-table-column>
 
-                  <el-table-column prop="noticeName" label="公告通知名称" show-overflow-tooltip></el-table-column>
+                  <el-table-column prop="title" label="公告通知名称" show-overflow-tooltip></el-table-column>
 
-                  <el-table-column label="时间" prop="time"></el-table-column>
+                  <el-table-column label="时间">
+                    <template slot-scope="scope">{{formatDateChar(scope.row.created_at*1000)}}</template>
+                  </el-table-column>
 
                   <el-table-column fixed="right" label="操作" width="100">
                     <template slot-scope="scope">
-                      <el-button @click="goToLook(scope.row)" type="text" size="small">查看</el-button>
+                      <el-button @click="goToLook(scope.row.id)" type="text" size="small">查看</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -106,10 +109,10 @@
                   @size-change="pageSizeChange"
                   @current-change="pageCurrentChange"
                   :current-page="currentPage"
-                  :page-sizes="[10, 20, 30, 40]"
-                  :page-size="10"
+                  :page-sizes="[20, 30, 40,50,100]"
+                  :page-size="perPage"
                   layout="total, sizes, prev, pager, next, jumper"
-                  :total="40"
+                  :total="totalCount"
                 ></el-pagination>
               </el-row>
             </el-card>
@@ -153,18 +156,11 @@ export default {
     return {
       bannerUrl: '',
       gradeList: [],
-      tableData: [
-        { noticeName: "深圳市中小学电脑制作大赛", time: "2020.02.26" },
-        { noticeName: "深圳市中小学电脑制作大赛", time: "2020.02.26" },
-        { noticeName: "深圳市中小学电脑制作大赛", time: "2020.02.26" },
-        { noticeName: "深圳市中小学电脑制作大赛", time: "2020.02.26" },
-        { noticeName: "深圳市中小学电脑制作大赛", time: "2020.02.26" },
-        { noticeName: "深圳市中小学电脑制作大赛", time: "2020.02.26" },
-        { noticeName: "深圳市中小学电脑制作大赛", time: "2020.02.26" },
-        { noticeName: "深圳市中小学电脑制作大赛", time: "2020.02.26" }
-      ],
+      tableData: [],//公告列表
       multipleSelection: [],
+      perPage: 20, //每页数据条数
       currentPage: 1, //当前页
+      totalCount: 0 ,//总条数
       activityTypleList: [],
       activityProjectList: [],
       gradeListTwo: [],
@@ -182,7 +178,6 @@ export default {
         { name: "老师", id: 1 },
         { name: "学生", id: 2 },
         { name: "家长", id: 4 },
-        { name: "老师和学生", id: 3 }
       ],
       activityList: [
         {
@@ -219,10 +214,16 @@ export default {
       gradeObjectid: ""
     };
   },
-  created() {},
+  created() {
+      let params = {
+        "per-page": this.perPage,
+        "filter[activity_id]": this.$route.query.id
+      };
+      params.page = this.currentPage;
+      this.getActivityNoticeList(params);
+  },
   mounted() {
     this.getActivityInfo();
-    
   },
   methods: {
     getSubSet(target,arr){
@@ -308,15 +309,45 @@ export default {
       console.log("点赞===", id);
     },
     //查看
-    goToLook() {
+    goToLook(id) {
       this.$router.push({
-        path: "/home/seeInformation"
+        path: "/home/seeInformation",
+        query:{
+          id:id
+        }
       });
     },
+    //获取公告
+    async getActivityNoticeList(params) {
+      params.url = api.activityNotice;
+      params.expand = "content,bcheck";
+      await this.axiosGet(params)
+        .then(res => {
+          this.tableData = res.items;
+          this.totalCount = res._meta.totalCount;
+        })
+        .catch(err => err);
+    },
     //每页数量改变
-    pageSizeChange(val) {},
+    pageSizeChange(val) {
+      this.perPage = val;
+      let params = {
+        "per-page": this.perPage,
+        "filter[activity_id]": this.$route.query.id
+      };
+      params.page = this.currentPage;
+      this.getActivityNoticeList(params);
+    },
     //页码改变
-    pageCurrentChange(val) {},
+    pageCurrentChange(val) {
+      this.perPage = val;
+      let params = {
+        "per-page": this.perPage,
+        "filter[activity_id]": this.$route.query.id
+      };
+      params.page = this.currentPage;
+      this.getActivityNoticeList(params);
+    },
     //提示框
     open(index, rows) {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
