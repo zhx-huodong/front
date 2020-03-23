@@ -5,9 +5,13 @@
       <div class="picture-list">
         <div class="picture-list-items" v-for="(item,index) in pictureList" :key="index">
           <el-image :src="item.url" fit="cover"></el-image>
+          <div class="operate">
+            <p class="el-icon-zoom-in" @click="goToPreview(item.url)"></p>
+            <p class="el-icon-delete" @click="goToDelete(index)"></p>
+          </div>
         </div>
       </div>
-      <div class="my-button" @click="uploadFile">
+      <div class="my-button" @click="uploadFile" v-if="pictureList.length<max">
         <p class="el-icon-upload"></p>
         <span>上传图片</span>
       </div>
@@ -32,14 +36,17 @@ export default {
         return "picture";
       }
     },
-    fileLimit:{
-        type:Number,
-        default(){
-            return 20
-        }
+    fileLimit: {
+      type: Number,
+      default() {
+        return 20;
+      }
     },
-    max:{
-
+    max: {
+      type: Number,
+      default() {
+        return 3;
+      }
     }
   },
   data() {
@@ -55,10 +62,9 @@ export default {
       this.validList = ["mp4"];
     } else if (this.uploadType == "audio") {
       this.validList = ["mp3"];
-    }else if(this.uploadType=='work'){
-        this.validList=["doc","docx","pdf","xls","xls"]
+    } else if (this.uploadType == "work") {
+      this.validList = ["doc", "docx", "pdf", "xls", "xls"];
     }
-    
   },
   methods: {
     //触发文件选择
@@ -74,6 +80,16 @@ export default {
       picFile.url = "https://" + data.Location;
       picFile.name = data.filename;
       this.pictureList.push(picFile);
+      this.$emit("uploadSuccess", this.pictureList);
+      console.log(data)
+    },
+    //预览
+    goToPreview(url){
+        window.open(url)
+    },
+    //删除
+    goToDelete(index){
+        this.pictureList.splice(index,1)
     }
   }
 };
@@ -83,13 +99,14 @@ export default {
   display: flex;
   flex-direction: row;
   .my-button {
+      cursor: pointer;
     display: flex;
     justify-content: center;
     flex-direction: column;
     text-align: center;
     align-items: center;
-    width: 140px;
-    height: 80px;
+    width: 160px;
+    height: 100px;
     border: 1px solid #198af3;
     border-radius: 8px;
     p {
@@ -107,15 +124,40 @@ export default {
     display: flex;
     flex-direction: row;
     .picture-list-items {
+      position: relative;
       margin-right: 10px;
-      border: 1px solid #198af3;
+    //   border: 1px solid #198af3;
+    
       border-radius: 8px;
-      width: 140px;
-      height: 80px;
+      width: 160px;
+      height: 100px;
       .el-image {
-        width: 140px;
-        height: 80px;
+        width: 160px;
+        height: 100px;
         border-radius: 8px;
+      }
+      .operate {
+        top: 0px;
+        position: absolute;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        display: none;
+        text-align: center;
+        border-radius: 8px;
+        background-color: rgba(0, 0, 0, 0.5);
+        p {
+          font-size: 24px;
+          margin: 0 10px;
+          color: #fff;
+          cursor: pointer;
+          line-height: 100px;
+        }
+      }
+    }
+    .picture-list-items:hover {
+      .operate {
+        display: block;
       }
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="card-list">
       <div class="card-item" v-for="(item,index) in cardList" :key="index" @click="toNext(item.id)">
-          <img :src="item.imgUrl" />
+          <img :src="item.cover" />
           <div class="card-name" v-if="!isExcellent">
             <p>{{item.title}}</p>
           </div>
@@ -41,6 +41,9 @@
       return {
         imgUrl:require('../public/images/logo.png')
       };
+    },
+    mounted(){
+      console.log("this.cardList==",this.cardList)
     },
     methods: {
       // 下一步

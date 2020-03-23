@@ -1,49 +1,191 @@
 <template>
-  <div>
-    <el-upload
-    :before-upload="beforeupload"
-    :on-success="upsuccess"
-    :on-preview="handlePreview"
-    :on-remove="handleRemove"
-    :headers="headers"
-    :action="action"
-    :name="filename"
-    
-    :limit="1"
-    list-type="picture">
-   
-    <el-button size="small" type="primary">上传头像</el-button>
-</el-upload>
+  <div class="container">
+    <div class="file-list">
+      <div class="file-list-items" v-for="(item,index) in fileList" :key="index">
+        <div class="name-img">
+          <el-image :src="fileIconUrl" fit="cover"></el-image>
+          <div class="file-name">{{item.name}}</div>
+        </div>
+
+        <div class="file-operate">
+          <p @click="goToPreview(item.url)">下载</p>
+          <p @click="goToDelete(index)" style="color:red;">删除</p>
+        </div>
+      </div>
+    </div>
+    <div class="file-operate-button">
+      <cos
+        ref="cos"
+        :valid-list="validList"
+        :limit="fileLimit"
+        @success="uploadSuccess"
+        @start="uploadStart"
+      ></cos>
+      <div class="file-button" @click="uploadFile" v-if="fileList.length<max">
+        <p class="el-icon-upload"></p>
+        <span>上传文件</span>
+      </div>
+      
+    </div>
   </div>
 </template>
 <script>
-import { getCookie } from '../tools/tools';
+import Cos from "../components/Cos";
 export default {
+  components: { Cos },
+  props: {
+    uploadType: {
+      type: String,
+      default() {
+        return "work";
+      }
+    },
+    fileLimit: {
+      type: Number,
+      default() {
+        return 20;
+      }
+    },
+    max: {
+      type: Number,
+      default() {
+        return 3;
+      }
+    }
+  },
   data() {
     return {
-       filename:"upFile",
-        headers:{
-                'x-api-key':getCookie("x-api-key"),
-            },
-        action:api.uploadPic,
+      validList: ["doc", "docx", "pdf", "xls", "xls"],
+      fileList: [],
+      fileIconUrl:''
     };
   },
+  mounted() {
+    if (this.uploadType == "picture") {
+      this.validList = ["png", "jpg", "jpeg"];
+      this.fileIconUrl= require("../public/images/file-icon/image.svg")
+    } else if (this.uploadType == "video") {
+      this.validList = ["mp4"];
+      this.fileIconUrl=require("../public/images/file-icon/default.svg")
+    } else if (this.uploadType == "audio") {
+      this.validList = ["mp3"];
+      this.fileIconUrl=require("../public/images/file-icon/default.svg")
+    } else if (this.uploadType == "work") {
+      this.validList = ["doc", "docx", "pdf", "xls", "xls"];
+      this.fileIconUrl= require("../public/images/file-icon/default.svg")
+    }
+  },
   methods: {
-    handleSuccess(file, fileList) {
-      console.log(file, fileList);
+    //触发文件选择
+    uploadFile() {
+      this.$refs.cos.$refs.fileEle.dispatchEvent(new MouseEvent("click"));
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
+    uploadStart() {
+      this.$emit("uploading", true);
     },
-    handlePreview(file) {
-      console.log('file.response...', file.response);
+    //上传成功
+    uploadSuccess(data) {
+      let myFile = {};
+      myFile.url = "https://" + data.Location;
+      myFile.name = data.filename;
+      this.fileList.push(myFile);
+      this.$emit("uploadSuccess", this.fileList);
+      console.log("this.fileList===",this.fileList);
     },
-    handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 10 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+    //预览
+    goToPreview(url) {
+      window.open(url);
     },
-    beforeRemove(file, fileList) {
-      // return this.$confirm(`确定移除 ${ file.name }？`);
+    //删除
+    goToDelete(index) {
+      this.fileList.splice(index, 1);
     }
   }
 };
 </script>
+<style lang="less" >
+.file-operate-button {
+  width: 100%;
+  display: flex;
+  // flex-direction: column;
+  justify-content: flex-end;
+  .file-button {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    text-align: center;
+    align-items: center;
+    width: 120px;
+    height: 40px;
+    border: 1px solid #198af3;
+    border-radius: 8px;
+    p {
+      font-size: 28px;
+      color: #198af3;
+    }
+    span {
+      font-size: 14px;
+    }
+  }
+  .file-button:hover {
+    box-shadow: 0px 0px 3px #198af3 inset;
+  }
+}
+.file-list {
+  display: flex;
+  flex-direction: column;
+  .file-list-items {
+    display: flex;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    background-color: #ecf1f6;
+    justify-content: space-between;
+    line-height: 50px;
+    width: 100%;
+    height: 50px;
+    .name-img {
+      display: flex;
+      align-items: center;
+      .file-name {
+        color: #198af3;
+        margin-left: 20px;
+      }
+      .el-image {
+        margin-left: 5px;
+        width: 40px;
+        height: 40px;
+      }
+    }
+    .file-operate {
+      display: flex;
+      display: none;
+      flex-direction: row;
+      border-radius: 8px;
+      p {
+        font-size: 12px;
+        margin: 0 20px;
+        color: #666;
+        cursor: pointer;
+        line-height: 50px;
+      }
+    }
+  }
+  .file-list-items:hover {
+    .file-operate {
+      display: block;
+      display: flex;
+      text-align: center;
+      flex-direction: row;
+      border-radius: 8px;
+      p {
+        font-size: 12px;
+        margin: 0 20px;
+        color: #666;
+        cursor: pointer;
+        line-height: 50px;
+      }
+    }
+  }
+}
+</style>

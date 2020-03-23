@@ -2,7 +2,8 @@
     <div class="home-center">
         <el-card style="min-height:650px;">
             <div class="home-wrap">
-                <upload-picture></upload-picture>
+                <!-- <upload-file></upload-file>
+                <upload-picture></upload-picture> -->
                 <div>
                     <type-select :gradeList="gradeList" :activityObjectList="activityObjectList" :regionList="regionList" @gradeObject='gradeObject' 
                     @regionObject="regionObject" @activityObject="activityObject" ></type-select>
@@ -18,12 +19,13 @@
 import CardList from '../components/CardList';
 import MyVideoPlayer from '../components/MyVideoPlayer';
 import UploadPicture from '../components/UploadPicture';
+import UploadFile from '../components/UploadFile';
 import FilePreview from '../components/FilePreview';
 import TypeSelect from '../components/TypeSelect';
 import api from '../service/api';
 export default {
     name: 'home-center',
-    components: { CardList ,MyVideoPlayer,FilePreview,TypeSelect,UploadPicture},
+    components: { CardList ,MyVideoPlayer,FilePreview,UploadFile,TypeSelect,UploadPicture},
     data() {
         return {
             // videoSrc:'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4',
