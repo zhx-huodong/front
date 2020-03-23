@@ -1,21 +1,21 @@
 <template>
   <div class="card-list">
       <div class="card-item" v-for="(item,index) in cardList" :key="index" @click="toNext(item.id)">
-          <img :src="item.cover" />
+          <img :src="item.imgUrl" />
           <div class="card-name" v-if="!isExcellent">
             <p>{{item.title}}</p>
           </div>
           <div class="excellent-tag" v-if="isExcellent">
               <div class="title">
-                <p>TRACK+耳机海报</p>
+                <p>{{item.name}}</p>
               </div>
               <div class="flow-like">
-                <p class="el-icon-view">1000</p>
-                <p class="el-icon-thumb" @click="onlike(item.id)">1000</p>
+                <p class="el-icon-view">{{item.view_counts}}</p>
+                <p class="el-icon-thumb" @click="onlike(item.id)">{{item.like_counts}}</p>
               </div>
               <div class="author">
                 <el-image :src="imgUrl"></el-image>
-                <p>周天乐</P>
+                <p>{{item.author}}</P>
               </div>
           </div>
       </div>
