@@ -568,6 +568,7 @@ export default {
             // this.$router.push({
             //   path: "/home/submitEnroll"
             // });
+            // this.$router.go(-1);
           }, 1000);
         })
         .catch(err => err);

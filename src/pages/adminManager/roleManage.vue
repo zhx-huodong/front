@@ -41,14 +41,15 @@
                     label="权限类型"
                     show-overflow-tooltip>
                         <template slot-scope="scope">
-                            <template  v-for="item in (scope.row.roleInfo)">{{ item.name }}、</template>
+                            <template  >{{ scope.row.roleInfos.join("、") }}</template>
                         </template>
                     </el-table-column>
                     <el-table-column
                     label="区域"
                     >
                         <template slot-scope="scope" >
-                            <template v-for="item in (scope.row.areas)" >{{item}}、</template>
+                            <template >{{scope.row.areas.join("、")}}</template>
+
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -124,20 +125,23 @@
                     params.name=this.searchVal
                 }
                 params.url=api.user
-                params.role_id='1,3,4,5'
+                params.role_id='1,3,4'
                 params.expand='roleInfo'
                 let res=await this.axiosGet(params).catch(err=>err)
                 this.userList=res.items
                 this.totalCount=res._meta.totalCount
                 for(let i in this.userList){
                     let areas=[]
+                    let roleInfos=[]
                     for(let j in this.userList[i].roleInfo){
+                        roleInfos.push(this.userList[i].roleInfo[j].name);
                         if(this.userList[i].roleInfo[j].areas!=undefined){
                             for(let k in this.userList[i].roleInfo[j].areas){
                                 areas.push(this.userList[i].roleInfo[j].areas[k].name)
                             }
                         }  
                     }
+                    this.userList[i].roleInfos=roleInfos
                     this.userList[i].areas=areas
                 }
             },
@@ -276,6 +280,13 @@
                 for(let i in this.multipleSelection){
                     ids.push(this.multipleSelection[i].id)
                 }
+                if(ids.length==0){
+                    this.$message({
+                        type: 'info',
+                        message: '请先选择需要禁用的用户'
+                    })
+                    return;
+                }
                 let params={}
                 params.ids=ids
                 params.url=api.disableUsers
@@ -311,6 +322,13 @@
                 let ids=[]
                 for(let i in this.multipleSelection){
                     ids.push(this.multipleSelection[i].id)
+                }
+                if(ids.length==0){
+                    this.$message({
+                        type: 'info',
+                        message: '请先选择需要删除的用户'
+                    })
+                    return;
                 }
                 let params={}
                 params.ids=ids

@@ -18,7 +18,7 @@
                                     </template>
                                 </el-checkbox-group>
                             </el-form-item>
-                            <el-form-item label="管理区域" >
+                            <el-form-item label="管理区域" v-show="ruleForm.type.indexOf(4)>-1">
                                 <el-checkbox-group v-model="area" @change="areaChange">
                                     <template v-for="item in areaList" >
                                         <el-checkbox :label="item.id" name="area" :value="item.id">{{item.name}}</el-checkbox>
@@ -153,15 +153,30 @@
                     });
                     return
                 }
-                // if(this.area.length>0){
-                    params.area_id=this.area
-                // }else{
-                //     this.$message({
-                //         type: 'warning',
-                //         message: '请选择管理区域!'
-                //     });
-                //     return
-                // }
+                
+                if(this.ruleForm.type.indexOf(4)>-1&&this.area.length<=0){
+                     this.$message({
+                         type: 'warning',
+                         message: '请选择管理区域!'
+                     });
+                     return
+                 }
+                //如果选了区域管理员和市管理员
+                 if(this.ruleForm.type.indexOf(4)>-1&&this.ruleForm.type.indexOf(3)>-1&&this.area.length>0){
+                      params.area_id=this.area;
+                      params.area_id.push(77);
+                 }
+                //如果只选择了市管理员
+                 if(this.ruleForm.type.indexOf(4)==-1&&this.ruleForm.type.indexOf(3)>-1){
+                     params.area_id=[77];
+                 }
+                 if(this.ruleForm.type.indexOf(4)>-1&&this.area.length>0){
+                     params.area_id=this.area;
+                 }
+                //  if(this.ruleForm.type==3){
+                //      params.area_id=[77];
+                //  }
+                console.log("area",this.area);
                 if(this.id!=undefined){
                     params.id=this.id
                     let res = await this.axiosPut(params).catch(err => err);
@@ -178,7 +193,12 @@
                         });
                     }
                 }else{
-                    let res = await this.axiosPost(params).catch(err => err);
+                    let res = await this.axiosPost(params).catch(err => {
+                        this.$message({
+                            type: 'warning',
+                            message: err[0].message
+                        });
+                    });
                     if(res.name!=''&&res.name!=undefined){
                         this.$message({
                             type: 'success',
