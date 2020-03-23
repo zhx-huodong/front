@@ -29,23 +29,7 @@
         </el-form-item>
         <el-form-item label="作品封面：">
           <template>
-            <el-upload
-              :before-upload="coverBeforeUpload"
-              :on-success="coverSuccess"
-              :on-preview="handlePreview"
-              :on-remove="coverRemove"
-              :headers="headers"
-              :action="action"
-              :name="filename"
-              :limit="1"
-              :file-list="form.cover"
-              list-type="picture-card"
-            >
-              <i class="el-icon-plus"></i>
-              <span
-                style="font-size: 12px;position: absolute;top: 26%;left: 15%;color:#ccc"
-              >添加作品封面 (JPG、PNG格式)</span>
-            </el-upload>
+            <upload-picture :uploadType="'picture'" :max="1" :myPictureList="form.cover" @uploadSuccess="coverSuccess" :name="'添加作品封面JPG,PNG格式'"></upload-picture>
           </template>
         </el-form-item>
         <el-form-item label="作品简介：">
@@ -54,57 +38,16 @@
           </div>
         </el-form-item>
         <el-form-item label="报名登记：">
-          <div class="dianji1">
-            <el-upload
-              :before-upload="registrationBeforeUpload"
-              :on-success="registrationSuccess"
-              :on-preview="handlePreview"
-              :on-remove="registrationRemove"
-              :headers="headers"
-              :action="action"
-              :name="filename"
-              :file-list="form.registration"
-              :limit="1"
-              list-type="picture-card"
-            >
-              <i class="el-icon-plus"></i>
-              <span
-                style="font-size: 12px;position: absolute;top: 26%;left:25%;color:#ccc"
-              >点击上传(JPG、PNG格式)</span>
-            </el-upload>
-          </div>
+          <upload-picture :uploadType="'picture'" :max="1" :myPictureList="form.registration" @uploadSuccess="registrationSuccess" :name="'上传登记表JPG,PNG格式'"></upload-picture>
         </el-form-item>
         <el-form-item
           label="作品上传"
           v-for="(item,index) in activityProjectDetail.formats"
           :key="index"
+          v-if="index==0"
         >
-          <div class="upload-container">
-            <el-upload
-              :before-upload="(file)=>{return beforeUpload(file,item.type,item.size)}"
-              :on-success="(response,file,fileList)=>{return upsuccess(response,file,fileList,item.id,item.type)}"
-              :on-preview="handlePreview"
-              :on-remove="(file,fileList)=>{return handleRemove(file,fileList,item.id)}"
-              :headers="headers"
-              :action="item.type==1? action : uploadFile"
-              :name="filename"
-              :file-list="formats"
-              :limit="1"
-              :list-type="item.type==1? 'picture-card':'text'"
-            >
-              <template v-if="item.type==1">
-                <i class="el-icon-plus"></i>
-                <span
-                  style="font-size: 12px;position: absolute;top: 26%;left: 30%;color:#ccc"
-                >{{item.type==1? '点击上传图片作品':''}}</span>
-              </template>
-              <el-button
-                size="small"
-                type="primary"
-                plain
-                v-else
-              >{{item.type==2? '点击上传视频作品':''}}{{item.type==3? '点击上传文档作品':''}}</el-button>
-            </el-upload>
+          <div style="width:700px;">
+            <upload-file :uploadType="uploadTypeObj[item.type]" :myFileList="formats"  @uploadSuccess="(data)=>{return upsuccess(data,item.id,item.type)}" :name="'上传'+uploadTypeChar[item.type]+'格式作品'"></upload-file>
           </div>
         </el-form-item>
 
@@ -208,11 +151,12 @@
 </template>
 <script>
 import api from "../../service/api.js";
-// import UploadFile from "../../components/UploadFile";
 import MyEditor from "../../components/MyEditor";
-import { getCookie, axiosGet, axiosPost } from "../../tools/tools";
+import { getCookie, axiosGet, axiosPost, axiosPut } from "../../tools/tools";
+import UploadPicture from '../../components/UploadPicture';
+import UploadFile from '../../components/UploadFile';
 export default {
-  components: { MyEditor },
+  components: { MyEditor,UploadPicture,UploadFile },
   data() {
     return {
       headers: {
@@ -231,7 +175,7 @@ export default {
       },
       inputtext:'',//富文本内容
       registration: '', //报名登记表
-      cover: "", //作品封面
+      cover: '', //作品封面
       authorTags: [],
       authorInputVisible: false,
       authorInputValue: "",
@@ -250,15 +194,21 @@ export default {
       activityProjectId: this.$route.query.id, //活动项目id
       activityProjectDetail: {}, //活动项目信息
       formats: [], //作品上传
-      attachment: {} //作品上传
+      attachment: {} ,//作品上传
+      operate:this.$route.query.operate,
+      uploadTypeObj:{1:'picture',2:'video',3:'work'},
+      uploadTypeChar:{1:'图片',2:'视频',3:'普通文档'}
     };
   },
   created() {
     let params = {};
     this.getTeacherList(params);
-    this.getObjectDetail();
-    if(this.activityProjectId){
+    
+    if(this.operate==0){
+      this.getObjectDetail();
+    }else{
       this.getEnrollDetail();
+      this.getObjectDetail();
     }
   },
   mounted() {
@@ -280,21 +230,22 @@ export default {
         that.form.email=res.works.email;
         if(res.works.attachment.length>0){
           res.works.attachment.map(res=>{
-              that.formats.push({'id':res.id,'name':res.title,'url':res.url});
+              that.formats.push({'id':res.id,'name':res.title,'url':res.url,'type':res.type});
           })
          console.log("我是",that.formats);
         }
+        // this.attachment=res.works.attachment
+  
         that.form.cover.push({"url":res.works.cover});
-        // that.cover
+
         that.form.registration.push({"url":res.registration});
-        // that.authorInputVisible=true;
+
         that.authorTags=res.info.author.map(item=>{
           return {
             "id":item.id,
             "name":item.name,
           }
         });
-        // that.teacherInputVisible=true;
         that.teacherTags=res.info.mentor.map(item=>{
           return {
             "id":item.id,
@@ -312,7 +263,7 @@ export default {
       await this.axiosGet(params)
         .then(res => {
           this.activityProjectDetail = res;
-          // this.form.activityProject = res.title;
+          this.form.activityProject = res.title;
           this.author_limit = res.author_limit;
           this.mentor_limit = res.mentor_limit;
         })
@@ -320,148 +271,43 @@ export default {
     },
 
     //cover
-    coverBeforeUpload(file) {
-      var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-      const extension =
-        testmsg == "jpg" ||
-        testmsg === "JPG" ||
-        testmsg === "png" ||
-        testmsg === "PNG";
-      if (!extension) {
-        this.$message({
-          message: "上传图片只能是jpg / png 格式!",
-          type: "error"
-        });
-        return false;
-      }
-    },
-    //cover
-    coverSuccess(response, file, fileList) {
-      console.log(fileList);
-      fileList.forEach(item => {
-        item.response.files.forEach(subItem => {
-          this.cover = this.apipath + subItem.path;
-        });
+    coverSuccess(data) {
+      data.forEach(item => {
+        this.cover = item.url;
       });
     },
-    //cover图
-    coverRemove(file, fileList) {
-      fileList.forEach(item => {
-        item.files.forEach(subItem => {
-          this.cover = this.apipath + subItem.path;
-        });
-      });
-    },
+  
+  
     //报名登记表
-    registrationBeforeUpload(file) {
-      var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-      const extension =
-        testmsg == "jpg" ||
-        testmsg === "JPG" ||
-        testmsg === "png" ||
-        testmsg === "PNG";
-      if (!extension) {
-        this.$message({
-          message: "上传图片只能是jpg / png 格式!",
-          type: "error"
-        });
-        return false;
-      }
-    },
-    //报名登记表
-    registrationSuccess(response, file, fileList) {
+    registrationSuccess(data) {
       this.registration = '';
-      fileList.forEach(item => {
-        item.response.files.forEach(subItem => {
-          this.registration=this.apipath + subItem.path;
-        });
+      data.forEach(item => {
+        this.registration=item.url;
+
       });
     },
-    //报名登记表
-    registrationRemove(file, fileList) {
-      this.registration = '';
-      fileList.forEach(item => {
-        item.files.forEach(subItem => {
-          this.registration=this.apipath + subItem.path;
-        });
-      });
-    },
+   
 
     handlePreview(file) {
       console.log(file);
       window.open(file.url)
     },
 
+   
     //作品上传
-    beforeUpload(file, type, size) {
-      console.log("file===", file, "type==", type, "size===", size);
-      var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-      var extension = "";
-      var message = "";
-      if (type == 1) {
-        extension =
-          testmsg === "jpg" ||
-          testmsg === "JPG" ||
-          testmsg === "png" ||
-          testmsg === "PNG";
-        message = "请上传图片！！";
-      } else if (type == 2) {
-        extension =
-          testmsg === "mp4" ||
-          testmsg === "mov" ||
-          testmsg === "avi" ||
-          testmsg === "flv";
-        message = "请上传视频！！";
-      } else if (type == 3) {
-        extension =
-          testmsg === "doc" ||
-          testmsg === "docx" ||
-          testmsg === "pdf" ||
-          testmsg === "xls" ||
-          testmsg === "xlsx";
-        message = "请上传文档！！";
-      }
-      if (!extension) {
-        this.$message({
-          message: message,
-          type: "error"
-        });
-        return false; //必须加上return false; 才能阻止
-      }
-      if (!file.size > size) {
-        this.$message({
-          message: "上传文件超过了" + size / 1024 / 1024,
-          type: "error"
-        });
-        return false; //必须加上return false; 才能阻止
-      }
-    },
-    //作品上传
-    upsuccess(response, file, fileList, id, type) {
-      fileList.forEach(item => {
-        item.response.files.forEach(subItem => {
-          let key = id;
-          let value = [this.apipath + subItem.path];
-          this.attachment[id] = value;
-        });
+    upsuccess(data, id, type) {
+      console.log("data==",data,"id==",id,"type==",type)
+      let key = id;
+      this.attachment[id] = [];
+      data.forEach(item => {
+        let attachmentItem={}
+        attachmentItem.url=item.url
+        attachmentItem.title=item.name
+        this.attachment[id].push(attachmentItem);
       });
       console.log("this.attachment===", this.attachment);
-    console.log("kkformat",this.formats);
-
     },
-    //作品移除
-    handleRemove(file, fileList, id) {
-      delete this.attachment[id];
-      // delete this.formats[id];
-      for(let i=0;i<this.formats.length;i++){
-          if(this.formats[i].id==file.id){
-            this.formats.splice(i,1);
-          }
-      }
-      console.log("this.attachment===", this.attachment);
-      console.log("kkformat",this.formats);
-
-    },
+  
     //提交报名
     async submitEnroll() {
       let params = {};
@@ -476,10 +322,9 @@ export default {
         });
         return;
       }
-      if (this.cover !== "") {
+      if (this.cover !='') {
         params.cover = this.cover;
-      }else if(this.form.cover.length!=0&&this.activityProjectId!=undefined){
-        // console.log("测试封面",this.form.cover);
+      }else if(this.form.cover.length!=0&&this.operate!=0){
         params.cover = this.form.cover[0].url;
       } else {
         this.$message({
@@ -490,7 +335,7 @@ export default {
       }
       if (this.registration!='') {
         params.registration = this.registration;
-      } else if(this.form.registration.length!=0&&this.activityProjectId!=undefined){
+      } else if(this.form.registration.length!=0&&this.operate!=0){
         params.registration = this.form.registration[0].url;
       }else {
         this.$message({
@@ -510,7 +355,7 @@ export default {
       }
       if (this.authorIds.length > 0) {
         params.author = this.authorIds;
-      }else if(this.authorTags.length>0&&this.activityProjectId!=undefined){
+      }else if(this.authorTags.length>0&&this.operate!=0){
         params.author=this.authorTags.map(res=>{
           return   res.id;
         })
@@ -523,7 +368,7 @@ export default {
       }
       if (this.teacherIds.length > 0) {
         params.mentor = this.teacherIds;
-      } else if(this.teacherTags.length>0&&this.activityProjectId!=undefined){
+      } else if(this.teacherTags.length>0&&this.operate!=0){
         params.mentor=this.teacherTags.map(res=>{
           return  res.id;
         })
@@ -543,35 +388,69 @@ export default {
         });
         return;
       }
-      
-      if(this.formats.length>0&&this.activityProjectId!=undefined){
-        let attachment={};
-        for(let i=0;i<this.formats.length;i++){
-          attachment[this.formats[i].id]={"url":this.formats[i].url,"title":this.formats[i].name};
-        }
-        params.attachment =Object.assign(this.attachment,attachment);
-      }else{
-         params.attachment = this.attachment;
-      }
+      params.attachment = this.attachment;
+      // if(this.formats.length>0&&this.operate!=0){
+      //   let attachment={};
+      //   for(let i=0;i<this.formats.length;i++){
+      //     attachment[this.formats[i].id]={"url":this.formats[i].url,"title":this.formats[i].name};
+      //   }
+      //   params.attachment =Object.assign(this.attachment,attachment);
+      // }else{
+      //    params.attachment = this.attachment;
+      // }
       console.log("params===",params)
-      await axiosPost(params)
+      if(this.operate==0){
+        await axiosPost(params)
         .then(res => {
           if(res.code==-1){
             this.$message({
               message:res.message,
               type: "warning"
             });
+          }else if(res.title!=undefined&&res.title!=''){
+            this.$message({
+              message:'报名成功！！',
+              type: "success"
+            });
+            setTimeout(() => {
+              this.$router.push({
+                path: "/home/submitEnroll"
+              });
+              // this.$router.go(-1);
+            }, 1000);
           }else{
               that.$router.go(-1);
           }
-          setTimeout(() => {
-            // this.$router.push({
-            //   path: "/home/submitEnroll"
-            // });
-            // this.$router.go(-1);
-          }, 1000);
+          
         })
         .catch(err => err);
+      }else{
+        await axiosPut(params)
+        .then(res => {
+          if(res.code==-1){
+            this.$message({
+              message:res.message,
+              type: "warning"
+            });
+          }else if(res.title!=undefined&&res.title!=''){
+            this.$message({
+              message:'修改成功！！',
+              type: "success"
+            });
+            setTimeout(() => {
+              // this.$router.push({
+              //   path: "/home/submitEnroll"
+              // });
+              // this.$router.go(-1);
+            }, 1000);
+          }else{
+              that.$router.go(-1);
+          }
+          
+        })
+        .catch(err => err);
+      }
+      
     },
 
     editorChange(data) {

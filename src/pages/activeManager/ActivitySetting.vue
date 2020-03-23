@@ -14,70 +14,22 @@
         </el-form-item>
 
         <el-form-item label="活动图:">
-          <div>
-            <template>
-              <el-upload
-                :show-file-list="true"
-                :before-upload="beforeupload"
-                :on-success="coverSuccess"
-                :on-preview="handlePreview"
-                :on-remove="coverRemove"
-                :headers="headers"
-                :action="action"
-                :name="filename"
-                list-type="picture-card"
-                :file-list="cover"
-                :limit="1"
-              >
-                <i class="el-icon-plus"></i>
-                <span
-                  style="font-size: 14px;position: absolute;top: 26%;left: 25%;color:#ccc"
-                >添加活动展示图片</span>
-              </el-upload>
-            </template>
-          </div>
+          <upload-picture :uploadType="'picture'" :max="1" :myPictureList="cover" @uploadSuccess="coverSuccess" :name="'上传活动封面图'"></upload-picture>
         </el-form-item>
         <el-form-item label="banner图:">
-          <template>
-            <el-upload
-              :before-upload="beforeupload"
-              :on-success="bannerSuccess"
-              :on-preview="handlePreview"
-              :on-remove="bannerRemove"
-              :headers="headers"
-              :action="action"
-              :name="filename"
-              :file-list="banner"
-              :limit="1"
-              list-type="picture-card"
-            >
-              <i class="el-icon-plus"></i>
-              <span
-                style="font-size: 14px;position: absolute;top: 26%;left:15%;color:#ccc"
-              >添加内页banner图(1920*460)</span>
-            </el-upload>
-          </template>
+          <upload-picture :uploadType="'picture'" :max="1" :myPictureList="banner" @uploadSuccess="bannerSuccess" :name="'上传banner图(1920*460)'"></upload-picture>
         </el-form-item>
 
         <div class="my-editer">
           <P>活动介绍 ：</P>
           <my-editor @editorChange="editorChange" :inputtext="inputtext"></my-editor>
         </div>
-
-        <el-upload
-          style="width:790px;margin-bottom:20px;"
-          :action="action2"
-          :on-preview="handlePreview"
-          :on-success="attachmentSuccess"
-          :on-remove="attachmentRemove"
-          multiple
-          :headers="headers"
-          :name="filename"
-          :file-list="attachment"
-        >
-          <el-button size="small" type="primary" plain>上传活动指南</el-button>
-          <span slot="tip" class="el-upload__tip" style="margin-left:20px;">支持PNG、JPG格式</span>
-        </el-upload>
+        <el-form-item label="活动指南:">
+          <div style="width:710px">
+            <upload-file :uploadType="'picture'" :myFileList="attachment"  @uploadSuccess="attachmentSuccess" :name="'上传活动指南PNG、JPG格式'"></upload-file>
+          </div>
+        </el-form-item>
+        
         <el-form-item label="活动类型 :">
           <span class="mybtn" @click="addclassFlag=true,edit_1=false">+添加类别</span>
           <div class="myOut" v-for="(item,index) in addActivityForm.category" :key="index">
@@ -116,7 +68,7 @@
             v-model="checkAll"
             @change="regionCheckAllChange"
           >全选</el-checkbox>
-          <el-checkbox-group v-model="region" @change="regionCheckedChange">
+          <el-checkbox-group v-model="region" @change="regionCheckedChange" style="width:800px;">
             <el-checkbox v-for="item in regionList" :label="item" :key="item.id">{{item.name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
@@ -204,8 +156,10 @@
 import api from "../../service/api";
 import MyEditor from "../../components/MyEditor";
 import { getCookie } from "../../tools/tools";
+import UploadPicture from '../../components/UploadPicture';
+import UploadFile from '../../components/UploadFile';
 export default {
-  components: { MyEditor },
+  components: { MyEditor,UploadPicture,UploadFile },
   props: {
     id: {
       type: Number,
@@ -261,7 +215,6 @@ export default {
         { id: "735", pid: "77", type: "3", name: "光明区", val: 200 },
         { id: "736", pid: "77", type: "3", name: "大鹏区", val: 200 }
       ],
-      limitSet: false,
       filename: "upFile",
       url: "",
       datas: {},
@@ -319,10 +272,10 @@ export default {
           });
         }
         for (let j in this.addActivityForm.attachment) {
-          this.attachment.push({
-            name: this.addActivityForm.attachment[j],
-            url: this.addActivityForm.attachment[j]
-          });
+          let attachmentItem={}
+          attachmentItem.name=this.addActivityForm.attachment[j].name
+          attachmentItem.url=this.addActivityForm.attachment[j].url
+          this.attachment.push(attachmentItem);
         }
         for (let k in this.addActivityForm.region) {
           for (let l in this.regionList) {
@@ -380,7 +333,7 @@ export default {
           });
           this.addActivityForm.attachment = [];
           res.attachment.forEach(items => {
-            this.addActivityForm.attachment.push(items.url);
+            this.addActivityForm.attachment.push({url:items.url,name:items.title});
           });
           this.addActivityForm.banner = [];
           res.banner.forEach(items => {
@@ -481,28 +434,11 @@ export default {
       // this.datas={upFile:file.name}
     },
     //活动图success
-    coverSuccess(response, file, fileList) {
+    coverSuccess(data) {
+      console.log("活动图===",data)
       this.addActivityForm.cover = "";
-      fileList.forEach(item => {
-        item.response.files.forEach(subItem => {
-          this.addActivityForm.cover = this.apipath + subItem.path;
-        });
-      });
-      sessionStorage.setItem(
-        "addActivityForm",
-        JSON.stringify(this.addActivityForm)
-      );
-    },
-    //活动图remove
-    coverRemove(file, fileList) {
-      this.addActivityForm.cover = "";
-      fileList.forEach(item => {
-        item.files.forEach(subItem => {
-          this.cover.push({
-            name: this.apipath + subItem.path,
-            url: this.apipath + subItem.path
-          });
-        });
+      data.forEach(item => {
+        this.addActivityForm.cover = item.url
       });
       sessionStorage.setItem(
         "addActivityForm",
@@ -510,78 +446,38 @@ export default {
       );
     },
     //banner
-    bannerSuccess(response, file, fileList) {
+    bannerSuccess(data) {
       this.addActivityForm.banner = [];
-      fileList.forEach(item => {
-        item.response.files.forEach(subItem => {
-          this.addActivityForm.banner.push(this.apipath + subItem.path);
-        });
+      data.forEach(item => {
+        this.addActivityForm.banner.push(item.url);
       });
       sessionStorage.setItem(
         "addActivityForm",
         JSON.stringify(this.addActivityForm)
       );
     },
-    //banner图
-    bannerRemove(file, fileList) {
-      this.addActivityForm.banner = [];
-      fileList.forEach(item => {
-        item.files.forEach(subItem => {
-          this.addActivityForm.banner.push(this.apipath + subItem.path);
-        });
-      });
-      sessionStorage.setItem(
-        "addActivityForm",
-        JSON.stringify(this.addActivityForm)
-      );
-    },
+ 
     //活动指南
-    attachmentSuccess(response, file, fileList) {
+    attachmentSuccess(data) {
       this.addActivityForm.attachment = [];
-      fileList.forEach(item => {
-        item.response.files.forEach(ite => {
-          this.addActivityForm.attachment.push(this.apipath + ite.path);
-        });
+     
+      data.forEach(item => {
+        let attachmentItem={}
+        attachmentItem.url=item.url
+        attachmentItem.title=item.name
+        this.addActivityForm.attachment.push(attachmentItem);
       });
+
       sessionStorage.setItem(
         "addActivityForm",
         JSON.stringify(this.addActivityForm)
       );
     },
-    //上传活动指南
-    attachmentRemove(file, fileList) {
-      this.addActivityForm.attachment = [];
-      fileList.forEach(item => {
-        item.files.forEach(ite => {
-          this.addActivityForm.attachment.push(this.apipath + ite.path);
-        });
-      });
-      sessionStorage.setItem(
-        "addActivityForm",
-        JSON.stringify(this.addActivityForm)
-      );
-    },
+   
     handlePreview(file) {
       window.open(file.url);
     },
 
-    LimitSet(num) {
-      this.regionList[this.RegionIndex].val = num;
-    },
-    selectRegion(index) {
-      this.number = this.regionList[index].val;
-    },
-    limitSeting() {
-      this.limitSet = true;
-    },
-
-    limitSetting() {
-      if (this.limitSet == false) {
-        this.limitSet = true;
-      } else {
-        this.limitSet = false;
-      }
-    },
     back() {
       this.$router.go(-1);
     },
@@ -864,7 +760,7 @@ export default {
   display: inline-block;
   border: 1px solid #409eff;
   border-radius: 3px;
-  margin-left: 67%;
+  margin-left: 64%;
   cursor: pointer;
 }
 .myOut {

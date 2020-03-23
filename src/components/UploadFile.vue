@@ -8,7 +8,7 @@
         </div>
 
         <div class="file-operate">
-          <p @click="goToPreview(item.url)">下载</p>
+          <p @click="goToPreview(item.url)">预览/下载</p>
           <p @click="goToDelete(index)" style="color:red;">删除</p>
         </div>
       </div>
@@ -23,9 +23,8 @@
       ></cos>
       <div class="file-button" @click="uploadFile" v-if="fileList.length<max">
         <p class="el-icon-upload"></p>
-        <span>上传文件</span>
+        <span>{{name}}</span>
       </div>
-      
     </div>
   </div>
 </template>
@@ -34,6 +33,12 @@ import Cos from "../components/Cos";
 export default {
   components: { Cos },
   props: {
+    myFileList: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
     uploadType: {
       type: String,
       default() {
@@ -51,28 +56,54 @@ export default {
       default() {
         return 3;
       }
+    },
+    name: {
+      type: String,
+      default() {
+        return "上传文件";
+      }
     }
   },
   data() {
     return {
       validList: ["doc", "docx", "pdf", "xls", "xls"],
       fileList: [],
-      fileIconUrl:''
+      fileIconUrl: ""
     };
   },
   mounted() {
+    setTimeout(() => {
+      if (this.myFileList.length > 0) {
+        this.fileList = this.myFileList;
+      }
+    }, 3000);
     if (this.uploadType == "picture") {
       this.validList = ["png", "jpg", "jpeg"];
-      this.fileIconUrl= require("../public/images/file-icon/image.svg")
+      this.fileIconUrl = require("../public/images/file-icon/image.svg");
     } else if (this.uploadType == "video") {
       this.validList = ["mp4"];
-      this.fileIconUrl=require("../public/images/file-icon/default.svg")
+      this.fileIconUrl = require("../public/images/file-icon/default.svg");
     } else if (this.uploadType == "audio") {
       this.validList = ["mp3"];
-      this.fileIconUrl=require("../public/images/file-icon/default.svg")
+      this.fileIconUrl = require("../public/images/file-icon/default.svg");
     } else if (this.uploadType == "work") {
       this.validList = ["doc", "docx", "pdf", "xls", "xls"];
-      this.fileIconUrl= require("../public/images/file-icon/default.svg")
+      this.fileIconUrl = require("../public/images/file-icon/default.svg");
+    } else if (this.uploadType == "all") {
+      this.validList = [
+        "doc",
+        "docx",
+        "pdf",
+        "xls",
+        "xls",
+        "mp3",
+        "mp3",
+        "png",
+        "jpg",
+        "jpeg",
+        "zip"
+      ];
+      this.fileIconUrl = require("../public/images/file-icon/default.svg");
     }
   },
   methods: {
@@ -90,7 +121,7 @@ export default {
       myFile.name = data.filename;
       this.fileList.push(myFile);
       this.$emit("uploadSuccess", this.fileList);
-      console.log("this.fileList===",this.fileList);
+      console.log("this.fileList===", this.fileList);
     },
     //预览
     goToPreview(url) {
@@ -116,7 +147,8 @@ export default {
     flex-direction: row;
     text-align: center;
     align-items: center;
-    width: 120px;
+    // width: 120px;
+    padding: 0 10px;
     height: 40px;
     border: 1px solid #198af3;
     border-radius: 8px;

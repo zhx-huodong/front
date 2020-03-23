@@ -23,8 +23,8 @@
             <el-divider></el-divider>
             <div class="content-main">
                 <div  v-html="activityDetail.works.content"></div>
-                <el-image :src="activityDetail.works.cover" fit="contain"></el-image>
-                <el-form ref="form" :model="form" label-width="90px">
+                <!-- <el-image :src="activityDetail.works.cover" fit="contain"></el-image> -->
+                <el-form ref="form" :model="form" label-width="90px" style="margin-top:50px;">
                     <el-form-item label="活动组别：">
                         {{activityDetail.info.category}}
                     </el-form-item>

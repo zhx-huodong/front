@@ -3,7 +3,7 @@
     <div class="file-preview" v-for="(item,index) in fileList" :key="index">
       <div class="icon-name">
         <img :src="fileIconUrl" alt />
-        <p>{{item.name}}</p>
+        <p>{{item.name||item.title}}</p>
       </div>
       <div class="operate">
         <el-button type="text" @click="onItemClick(item.url)">预览</el-button>

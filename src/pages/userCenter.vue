@@ -114,7 +114,7 @@ export default {
     //获取报名活动列表
     async getActivityList(params) {
       params.url = api.enroll;
-      // params.bself=1
+      params.bself=1
       params.expand = "info,works,school,professional,award";
       await this.axiosGet(params)
         .then(res => {

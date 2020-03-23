@@ -5,13 +5,14 @@
         <p>{{objectDetail.title}}</p>
       </div>
       <el-divider></el-divider>
-      <div class="content" v-html="objectDetail.content"></div>
-      <div class="activity-img">
-        <el-image :src="imgUrl" fit="cover"></el-image>
-      </div>
       <el-row>
-        <el-col :span="3" :offset="5">
-          <el-button type="primary" size="small" @click="goToActivityEnroll">我要报名</el-button>
+        <el-col :span="18" :offset="3">
+          <div class="content" v-html="objectDetail.content"></div>
+          <el-row>
+            <el-col :span="3" :offset="11" style="margin-top:20px;">
+              <el-button type="primary" size="small" @click="goToActivityEnroll">我要报名</el-button>
+            </el-col>
+          </el-row>
         </el-col>
       </el-row>
     </el-card>
@@ -42,7 +43,8 @@ export default {
         path: "/home/activityEnroll",
         query: {
           id: this.id,
-          activityName: this.activityName
+          activityName: this.activityName,
+          operate:0
         }
       });
     },
@@ -78,7 +80,7 @@ export default {
     }
   }
   .content {
-    width: 600px;
+    // width: 600px;
     p {
       line-height: 30px;
       font-size: 14px;

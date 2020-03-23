@@ -13,7 +13,7 @@
       </div>
       <div class="my-button" @click="uploadFile" v-if="pictureList.length<max">
         <p class="el-icon-upload"></p>
-        <span>上传图片</span>
+        <span style="font-size:12px;">{{name}}</span>
       </div>
       <cos
         ref="cos"
@@ -29,7 +29,14 @@
 import Cos from "../components/Cos";
 export default {
   components: { Cos },
+
   props: {
+    myPictureList: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
     uploadType: {
       type: String,
       default() {
@@ -47,6 +54,12 @@ export default {
       default() {
         return 3;
       }
+    },
+    name: {
+      type: String,
+      default() {
+        return "上传图片";
+      }
     }
   },
   data() {
@@ -56,14 +69,34 @@ export default {
     };
   },
   mounted() {
+      setTimeout(()=>{
+          if (this.myPictureList.length > 0) {
+            this.pictureList = this.myPictureList;
+            }
+      },3000)
+    
     if (this.uploadType == "picture") {
       this.validList = ["png", "jpg", "jpeg"];
     } else if (this.uploadType == "video") {
-      this.validList = ["mp4"];
+      this.validList = ["mp3"];
     } else if (this.uploadType == "audio") {
       this.validList = ["mp3"];
     } else if (this.uploadType == "work") {
       this.validList = ["doc", "docx", "pdf", "xls", "xls"];
+    } else if (this.uploadType == "all") {
+      this.validList = [
+        "doc",
+        "docx",
+        "pdf",
+        "xls",
+        "xls",
+        "mp3",
+        "mp3",
+        "png",
+        "jpg",
+        "jpeg",
+        "zip"
+      ];
     }
   },
   methods: {
@@ -81,15 +114,16 @@ export default {
       picFile.name = data.filename;
       this.pictureList.push(picFile);
       this.$emit("uploadSuccess", this.pictureList);
-      console.log(data)
+      console.log(data);
     },
     //预览
-    goToPreview(url){
-        window.open(url)
+    goToPreview(url) {
+      window.open(url);
     },
     //删除
-    goToDelete(index){
-        this.pictureList.splice(index,1)
+    goToDelete(index) {
+      this.pictureList.splice(index, 1);
+      this.$emit("uploadSuccess", this.pictureList);
     }
   }
 };
@@ -99,7 +133,7 @@ export default {
   display: flex;
   flex-direction: row;
   .my-button {
-      cursor: pointer;
+    cursor: pointer;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -126,8 +160,8 @@ export default {
     .picture-list-items {
       position: relative;
       margin-right: 10px;
-    //   border: 1px solid #198af3;
-    
+      border: 1px solid #198af3;
+
       border-radius: 8px;
       width: 160px;
       height: 100px;

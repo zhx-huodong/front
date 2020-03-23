@@ -98,12 +98,12 @@ export default {
             form: {
                 userIcon:'',
                 userName: '',
-                unitName: '清湖小学',
-                areaName: '龙华区',
-                className: '一年级（1）班',
+                unitName: '',
+                areaName: '',
+                className: '',
                 cerNum: 5,
             },
-            identityTags: ['老师', '家长', '学生'],
+            identityTags: [],
             identityVisible: false,
             identityValue: '',
             
