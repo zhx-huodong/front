@@ -133,7 +133,8 @@
               </el-row>
               <el-row>
                 <el-col>
-                  <card-list :cardList="activityList" :isExcellent="true" @onlike="onlike"></card-list>
+                  <div v-if="activityList.length==0">暂无</div>
+                  <card-list :cardList="activityList" :isExcellent="true" @onlike="onlike" @toNext="gotoGoodWorkDetail"></card-list>
                 </el-col>
               </el-row>
             </el-card>
@@ -150,6 +151,8 @@ import FilePreview from "../../components/FilePreview";
 import TypeSelect from "../../components/TypeSelect";
 import CardList from "../../components/CardList";
 import { getTimestamp } from "../../tools/tools";
+import { getCookie, axiosGet, axiosPost } from "../../tools/tools";
+
 export default {
   components: { FilePreview, TypeSelect, CardList },
   data() {
@@ -211,7 +214,9 @@ export default {
           imgUrl: require("../../public/images/ac6.png")
         }
       ], // 活动列表
-      gradeObjectid: ""
+      gradeObjectid: "",
+      id:this.$route.query.id,//获取详情id
+      apiKey:getCookie("x-api-key"),
     };
   },
   created() {
@@ -221,11 +226,43 @@ export default {
       };
       params.page = this.currentPage;
       this.getActivityNoticeList(params);
+      this.goodWorkList();
   },
   mounted() {
     this.getActivityInfo();
   },
   methods: {
+    async goodWorkList(){
+        let that=this;
+        let params={}
+        params.url=api.enroll
+        params.activity_id=this.id
+        params.position=4;//优秀作品展示
+        params.expand="info,works,school,professional,award"
+        await this.axiosGet(params).then(res=>{
+          console.log(res);
+          if(res.items.length>0){
+            that.activityList=res.items.map(item=>{
+              let author=[];
+              author=item.info.author.map(res=>{
+                 return res.name
+              })
+              return{
+                "id": item.works.id,
+                "name": item.works.title,
+                "imgUrl": item.works.cover,
+                "view_counts":item.view_counts,
+                "like_counts":item.like_counts,
+                "author":author.join(""),
+              }
+              console.log("item",item.works.id)
+            });
+          }else{
+            that.activityList=[];
+          }
+          console.log("哈哈哈",that.activityList);
+        }).catch(err=>err)
+    },
     getSubSet(target,arr){
         var len = arr.length;
         var result = [];
@@ -305,8 +342,31 @@ export default {
     //表格选择
     tableSelectionChange() {},
     //点赞
-    onlike(id) {
-      console.log("点赞===", id);
+    async onlike(id) {
+        let that=this;
+        let params={};
+        //  console.log(that.apiKey);
+        params.id=id;
+        axios.get(api.like, 
+         {params:params,
+         headers: { 'x-api-key': that.apiKey }}
+        ).then(res=>{
+            if(res.data.code==0){
+              
+              for(let i=0;i<that.activityList.length;i++){
+                if(that.activityList[i].id==id){
+                  that.activityList[i].like_counts++;
+                }
+              }
+              console.log(that.activityList);
+            }else{
+              that.$message.error('点赞失败');
+            }
+         });
+    },
+    gotoGoodWorkDetail(id){
+        let that=this;
+        that.$router.push("/goodWorks");
     },
     //查看
     goToLook(id) {

@@ -65,6 +65,17 @@
                 </el-col>
             </el-row>
         </el-card>
+        <el-dialog
+            title="提示"
+            :visible.sync="dialogVisible"
+            width="30%"
+            >
+            <span>当前已评完，继续评分?</span>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="$router.go(-1)">取 消</el-button>
+              <el-button type="primary" @click="open">下一份</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -88,6 +99,7 @@ export default {
             },
             apiKey:getCookie("x-api-key"),
             queryId:this.$route.query.id,
+            dialogVisible:false,
         }
     },
     mounted(){
@@ -116,7 +128,7 @@ export default {
                     }
                 })
                 that.form.regForm=res.registration;
-                
+                that.dialogVisible=false;
             }).catch(err=>{
                 if(err.status===404){
                    that.$message({
@@ -124,6 +136,7 @@ export default {
                         message: '已评完，没有下一份了'
                    });
                    that.queryId=that.queryId-1;
+                   that.dialogVisible=false;
                 }
             });
 
@@ -144,35 +157,41 @@ export default {
             axios.post(api.scoring, 
               params1
             ,{headers: { 'x-api-key': that.apiKey }}).then(res=>{
-                // console.log(res);
-                if(res.data.code==0){
-                    that.open();
+                console.log(res.data,res.data.code);
+                if(res.data.code==-1){
+                    that.$message({
+                        type: 'error',
+                        message: res.data.message,
+                   });
+                }
+                else if(res.data.code==0){
+                    that.dialogVisible=true;
                 }
             });
         },
-        //弹窗提示
+        //评论下一份
         open() {
             let that=this;
-            that.$confirm('评分成功', '提示', {
-                confirmButtonText: '下一份',
-                type: 'warning',
-                center: true,
-                showCancelButton:false,
-            }).then(() => {
-                that.queryId=that.queryId-1;
-                that.getWorkDetail(that.queryId);
+            // that.$confirm('评分成功', '提示', {
+            //     confirmButtonText: '下一份',
+            //     type: 'warning',
+            //     center: true,
+            //     showCancelButton:false,
+            // }).then(() => {
+            that.queryId=that.queryId-1;
+            that.getWorkDetail(that.queryId);
 
                 // this.$message({
                 //     type: 'success',
                 //      message: '下一份'
                 // });
-            }).catch((err) => {
-                console.log(err)
+            // }).catch((err) => {
+            //     console.log(err)
                 // this.$message({
                 //     type: 'info',
                 //     message: '下一份'
                 // });
-            });
+            //});
         }
     }
 }

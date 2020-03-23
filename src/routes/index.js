@@ -43,7 +43,7 @@ const userEdit=require('../pages/userCenter/userEdit');
 const submitEnroll=require('../pages/homePages/submitEnroll');
 const activityDetail = require('../pages/homePages/activityDetail');
 const workShow = require('../pages/activityProcess/workShow');
-
+const goodWorks=require('../pages/homePages/goodWorks'); //每个活动中的优秀作品
 
 
 const admin=require('../pages/admin.vue'); // 超级管理员
@@ -79,6 +79,7 @@ const routes = [
       { path: '/activityCenter',name:"活动中心", components: ActivityCenter ,meta: { title: '活动中心' }}, // 活动中心
       { path: '/publishManage',name:"活动发布编辑页", components: PublishManage ,meta: { title: '活动发布编辑页' }}, // 活动发布编辑页
       { path: '/excellence',name:"优秀作品展示", components: ExcellenceShow ,meta: { title: '优秀作品展示' }}, // 优秀作品展示
+      { path: '/goodWorks',name:'活动优秀作品详情', components:goodWorks, meta: {title :'活动优秀作品详情'}},//活动优秀作品详情
       { path: '/userCenter',name:"个人中心", components: UserCenter ,meta: { title: '个人中心' }}, // 个人中心
       { path: '/activeManager',name:"活动管理", components: activeManager,meta: { title: '活动管理' } }, // 活动管理
       { path: '/activity/process',name:"活动各阶段", components: activityProcess,meta: { title: '活动各阶段' } }, // 活动各阶段
