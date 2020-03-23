@@ -34,27 +34,19 @@ export default {
     }
   },
   async mounted() {
-    // // 获取bucket
-    // let bucketRes = await this.axiosGet({
-    //   url: "/v1/resource/costoken"
-    // });
-    // let bucketData = bucketRes.Data;
-    // this.cosConfig.bucket = bucketData.Name;
-    // this.cosConfig.region = bucketData.Region;
-
     // 初始化实例
     this.cos = new COS({
       getAuthorization(options, callback) {
         // 异步获取临时密钥
         let url = api.getCosKeys;
-        axios.get(url, {
+        axios
+          .get(url, {
             headers: {
               "x-api-key": getCookie("x-api-key")
             }
           })
           .then(res => {
             let data = res.data.keys;
-			console.log("res==",res)
             callback({
               TmpSecretId: data.credentials.tmpSecretId,
               TmpSecretKey: data.credentials.tmpSecretKey,
@@ -82,11 +74,15 @@ export default {
       self.$emit("start");
       this.$refs.fileEle.value = "";
       let filename = file.name;
-	  
+
       let names = filename.split(".");
       let type = names[names.length - 1]; // 获取复杂版本的文件类型
-      let name = filename.replace("." + type, ""); // 文件名去掉后缀
-		
+
+      var md = new Date();
+      var y = md.getFullYear();
+      var m = md.getMonth() + 1;
+      var d = md.getDate();
+      var key = "file/" + y + m + d + "/" + file.name;
       // 文件类型校验
       if (this.validList.indexOf(type) == -1) {
         let validStr = this.validList.join("，");
@@ -120,11 +116,10 @@ export default {
         {
           Bucket: self.cosConfig.bucket,
           Region: self.cosConfig.region,
-          Key: `${name}${new Date().getTime()}.${type}`, // 对象键（Object 的名称），对象在存储桶中的唯一标识
+          Key: key, // 对象键（Object 的名称），对象在存储桶中的唯一标识
           Body: file
         },
         (err, data) => {
-			console.log("data==",data,"err",err)
           data.filename = filename;
           if (!err) self.$emit("success", data);
           else self.$emit("fail");

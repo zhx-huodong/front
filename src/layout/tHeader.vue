@@ -30,9 +30,7 @@
           <span class="name" @click="loginClick">未登录</span>
         </template>
       </div>
-      <!-- <w-x-login ref="wxLogin"></w-x-login> -->
       <login ref="allLogin"></login>
-     
     </div>
     <div class="my-bread">
       <div class="my-bread-main">
@@ -81,6 +79,9 @@
       },
       getNowRole(){
         return this.$store.state.account.nowRole
+      },
+      show(){
+        return this.$store.state.login.show
       }
       
     },
@@ -120,7 +121,11 @@
           }
         }
         
+      },
+      show(val) {
+        if (val) this.$refs.allLogin.showDialog();
       }
+      
     },
     methods: {
       //导航栏跳转

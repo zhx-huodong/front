@@ -223,22 +223,17 @@ export default {
     //文件上传格式
     ChangeFormatsType(item) {
       this.form.formats.push({ type: this.uploadFormatons[item].value });
-      console.log(this.form);
-      
     },
     //大小限制
     ChangeFormatsSize(item) {
       this.form.formats[0].size = this.sizeRestriction[item].value;
-      console.log(this.form);
     },
     //备注
     ChangeFormatsRemark(item) {
       this.form.formats[0].remark = this.remark;
-      console.log("this.form",this.form);
     },
 
     editorChange(data) {
-      console.log("data===", data);
       this.form.content = data;
     },
     back() {

@@ -2,6 +2,7 @@
     <div class="home-center">
         <el-card style="min-height:650px;">
             <div class="home-wrap">
+                <!-- <upload-picture></upload-picture> -->
                 <div>
                     <type-select :gradeList="gradeList" :activityObjectList="activityObjectList" :regionList="regionList" @gradeObject='gradeObject' 
                     @regionObject="regionObject" @activityObject="activityObject" ></type-select>
@@ -16,13 +17,13 @@
 <script>
 import CardList from '../components/CardList';
 import MyVideoPlayer from '../components/MyVideoPlayer';
-import UploadFile from '../components/UploadFile';
+import UploadPicture from '../components/UploadPicture';
 import FilePreview from '../components/FilePreview';
 import TypeSelect from '../components/TypeSelect';
 import api from '../service/api';
 export default {
     name: 'home-center',
-    components: { CardList ,MyVideoPlayer,UploadFile,FilePreview,TypeSelect},
+    components: { CardList ,MyVideoPlayer,FilePreview,TypeSelect,UploadPicture},
     data() {
         return {
             // videoSrc:'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4',

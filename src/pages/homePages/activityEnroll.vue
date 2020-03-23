@@ -208,11 +208,11 @@
 </template>
 <script>
 import api from "../../service/api.js";
-import UploadFile from "../../components/UploadFile";
+// import UploadFile from "../../components/UploadFile";
 import MyEditor from "../../components/MyEditor";
 import { getCookie, axiosGet, axiosPost } from "../../tools/tools";
 export default {
-  components: { UploadFile, MyEditor },
+  components: { MyEditor },
   data() {
     return {
       headers: {

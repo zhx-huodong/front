@@ -6,19 +6,19 @@
         <router-view></router-view>
       </div>
     </div>
-    <w-x-login ref="wxLogin"></w-x-login>
+    <!-- <login ref="allLogin"></login> -->
   </div>
 </template>
 <script>
   import tHeader from '../layout/tHeader.vue';
-  import WXLogin from '../components/WXLogin';
+  import Login from '../components/Login'
   export default {
     name: 'uni-content',
-    components: { tHeader, WXLogin },
+    components: { tHeader, Login },
     watch: {
-      '$store.state.login.show'(val) {
-        if (val) this.$refs.wxLogin.login();
-      }
+      // '$store.state.login.show'(val) {
+      //   if (val) this.$refs.allLogin.showDialog();
+      // }
     }
   };
 </script>

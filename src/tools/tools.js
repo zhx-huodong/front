@@ -286,6 +286,11 @@ export function axiosPut(param, isExpire = true, headers_) {
 
 function expire() {
   if (window.app) {
+    setCookie('x-api-key', '');
+    localStorage.removeItem('user');
+    localStorage.removeItem('roles');
+    localStorage.removeItem('nowRole');
+    location.href = '/';
     store.dispatch('INIT_SHOW', true);
   }
 }

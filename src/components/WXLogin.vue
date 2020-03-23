@@ -18,7 +18,7 @@
     },
     methods: {
       login() {
-        this.show = true;
+        // this.show = true;
         let redirectUri = location.hostname == '127.0.0.1' ? 'https://upclaass.educloud.tencent.com'
           : (location.protocol + '//' + location.host);
         if (location.hostname == 'cxyy.educloud.tencent.com' || location.hostname == 'cxyy.szdj.edu.cn') {

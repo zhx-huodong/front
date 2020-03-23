@@ -186,10 +186,9 @@ export default {
   height: 432px;
   .bottom {
     height: 40px;
-    position: fixed;
-    bottom: 110px;
-    margin-left: 118px;
-    margin-bottom: 18px;
+    position: absolute;
+    top:380px;
+    margin-left: 120px;
   }
 }
 .countnum {

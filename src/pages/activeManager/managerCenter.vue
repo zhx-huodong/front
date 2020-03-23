@@ -187,8 +187,8 @@ export default {
     }
   },
   beforeDestroy() {
-    let addActivityForm = null;
-    sessionStorage.setItem("addActivityForm", JSON.stringify(addActivityForm));
+    // let addActivityForm = null;
+    // sessionStorage.setItem("addActivityForm", JSON.stringify(addActivityForm));
   }
 };
 </script>
