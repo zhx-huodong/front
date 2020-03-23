@@ -366,7 +366,7 @@ export default {
     },
     gotoGoodWorkDetail(id){
         let that=this;
-        that.$router.push("/goodWorks");
+        that.$router.push({path:"/goodWorks",query:{id:id}});
     },
     //查看
     goToLook(id) {
