@@ -1,6 +1,6 @@
 
-// const base='/api';
-const base='';
+const base='/api';
+// const base='';
 
 const captcha=`${base}/login/captcha`;//获取短信验证码
 const account=`${base}/login/account`;//手机验证码登录
@@ -8,8 +8,8 @@ const role=`${base}/role`;//读取所有角色
 const user=`${base}/user`;//用户
 const award=`${base}/award`;//奖项
 const school=`${base}/school`;//学校
-const deleteUsers=`${base}/common/delete-users`;//批量删除用户
-const disableUsers=`${base}/common/disable-users`;//批量禁用用户
+const deleteUsers=`${base}/user-admin/batch-delete`;//批量删除用户
+const disableUsers=`${base}/user-admin/batch-disable`;//批量禁用用户
 
 const testLogin=`${base}/login/test`;//测试登录
 const activity=`${base}/activity`;//添加活动

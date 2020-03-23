@@ -3,7 +3,9 @@
     <el-card style="min-height:650px">
       <div style="position:relative">
         <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="活动中心" name="first">
+          <el-tab-pane label="活动中心" name="first"></el-tab-pane>
+          <el-tab-pane label="历史记录" name="second"></el-tab-pane>
+          <el-row>
             <el-form ref="form" :inline="true" :model="form" class="demo-form-inline">
               <el-form-item label="报名时间：">
                 <el-date-picker
@@ -61,8 +63,7 @@
                 </div>
               </div>
             </div>
-          </el-tab-pane>
-          <el-tab-pane label="历史记录" name="second"></el-tab-pane>
+          </el-row>
         </el-tabs>
         <el-button
           size="mini"
@@ -85,6 +86,7 @@ export default {
     return {
       activityList: [],
       activeName: "first",
+      process:1,
       form: {
         object: "",
         limit: "",
@@ -129,12 +131,22 @@ export default {
         });
     },
 
-    handleClick(tab, event) {
-      console.log(tab, event);
+    handleClick(tab) {
+      if(tab.index==1){
+        this.process=2
+      }else if(tab.index==0){
+        this.process=1
+      }
+      if (this.form.time.length == 2) {
+        this.time1 = this.form.time[0];
+        this.time2 = this.form.time[1];
+      }
+      this.getActivityList();
     },
     //获取活动列表
     async getActivityList() {
       let params = {};
+      params.process=this.process
       if (this.time1.length != 0 && this.time2.length != 0) {
         params.upload_stime = this.time1 / 1000;
         params.upload_etime = this.time2 / 1000;
@@ -142,9 +154,9 @@ export default {
       if (this.form.acitvename != "") {
         params.title = this.form.acitvename;
       }
-      (params.url = api.activityDetail),
-        (params.expand =
-          "detail,region,node,attachment,banner,category,categoryDetail,process,progress");
+      params.url = api.activityDetail
+      params.expand =
+          "detail,region,node,attachment,banner,category,categoryDetail,process,progress"
       let res = await this.axiosGet(params)
         .then(res => {
           this.activityList = res.items;

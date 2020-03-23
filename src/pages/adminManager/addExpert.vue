@@ -13,8 +13,8 @@
                     </div>
                     <div class="add-expert-item" v-if="isHave!=null">
                         <div class="tag">
-                            <p v-if="isHave" style="color:#F9513F">改电话号码关联的用户已存在，可以直接修改</p>
-                            <p v-if="!isHave" style="color:#198AF3">改电话号码关联的用户不存在，可以直接添加</p>
+                            <p v-if="isHave" style="color:#F9513F">该电话号码关联的用户已存在，可以直接修改</p>
+                            <p v-if="!isHave" style="color:#198AF3">该电话号码关联的用户不存在，可以直接添加</p>
                         </div>
                         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="200px" class="demo-ruleForm">
                             <el-form-item label="姓名" prop="name">

@@ -28,7 +28,7 @@
                     
                             <el-form-item>
                                 <el-button type="primary" @click="submitForm()" size="small" >保存</el-button>
-                                <el-button  @click="submitForm()" size="small">取消</el-button>
+                                <el-button  @click="cancel()" size="small">取消</el-button>
                             </el-form-item>
                         </el-form>
                     </div>
@@ -153,15 +153,15 @@
                     });
                     return
                 }
-                if(this.area.length>0){
+                // if(this.area.length>0){
                     params.area_id=this.area
-                }else{
-                    this.$message({
-                        type: 'warning',
-                        message: '请选择管理区域!'
-                    });
-                    return
-                }
+                // }else{
+                //     this.$message({
+                //         type: 'warning',
+                //         message: '请选择管理区域!'
+                //     });
+                //     return
+                // }
                 if(this.id!=undefined){
                     params.id=this.id
                     let res = await this.axiosPut(params).catch(err => err);
@@ -193,6 +193,9 @@
                 }
                 
                 
+            },
+            cancel(){
+                this.$router.go(-1)
             }
         }
     };

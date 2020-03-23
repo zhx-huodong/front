@@ -2,7 +2,7 @@
     <div class="home-center">
         <el-card style="min-height:650px;">
             <div class="home-wrap">
-                <!-- <upload-picture></upload-picture> -->
+                <upload-picture></upload-picture>
                 <div>
                     <type-select :gradeList="gradeList" :activityObjectList="activityObjectList" :regionList="regionList" @gradeObject='gradeObject' 
                     @regionObject="regionObject" @activityObject="activityObject" ></type-select>
