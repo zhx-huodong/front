@@ -15,7 +15,7 @@
 
         <el-card style="min-height:600px;">
             <el-tabs v-model="activeName">
-                <el-tab-pane label="奖品设置" name="importExpert">
+                <el-tab-pane label="奖项设置" name="importExpert">
                     <el-row>
                         <el-col :span="8">
                             <el-button type="primary" @click="dialogVisible=true;operate='add'" size="small">添加奖项</el-button>
@@ -187,7 +187,12 @@
                     }
                     params.page=this.currentPage
                     this.getAward(params)
-                }).catch(err=>err)
+                }).catch(err=>{
+                     this.$message({
+                        type: 'error',
+                        message: "无权限操作"
+                    });
+                })
 
             },
             //每页数量改变

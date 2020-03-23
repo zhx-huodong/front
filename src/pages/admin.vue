@@ -101,12 +101,24 @@
                             <template slot-scope="scope">{{ scope.row.mobile }}</template>
                             </el-table-column>
                             <el-table-column
+                            label="所关联的家长"
+                            show-overflow-tooltip
+                            v-if="this.index==1">
+                                <template slot-scope="scope">{{ scope.row.memberInfo[0].parent.join(",") }}</template>
+                            </el-table-column>
+                            <el-table-column
+                            label="所关联的学生"
+                            show-overflow-tooltip
+                            v-if="this.index==2">
+                                <template slot-scope="scope">{{ scope.row.memberInfo[0].student.join(",") }}</template>
+                            </el-table-column>
+                            <el-table-column
                             fixed="right"
                             label="操作"
                             width="150">
                             <template slot-scope="scope">
                                 <template v-if="scope.row.status==1">
-                                    <el-button @click="goToDetail(scope.row.id)" type="text" size="small">查看</el-button>
+                                    <!-- <el-button @click="goToDetail(scope.row.id)" type="text" size="small">查看</el-button> -->
                                     <el-button @click="goToForbidden(scope.row.id)" type="text" size="small" style="color:red;">禁用</el-button>
                                 </template>
                                 <template v-if="scope.row.status==0">
@@ -161,6 +173,8 @@
                 mobile:'',
                 parent:'',
                 student:'',
+                tableParent:"",//父母表格数据
+                tableStudent:"",//学生表格数据
                 userList: [],
                 multipleSelection: [],
                 perPage: 20,//每页数据条数
@@ -201,6 +215,30 @@
                 await this.axiosGet(params).then(res=>{
                     this.userList=res.items
                     this.totalCount=res._meta.totalCount
+                    //获取表格学生 表格父母信息
+                    //  console.log("测试",this.userList);
+                //    console.log(this.userList[0].memberInfo[0])
+                    for(let i=0;i<this.userList.length;i++){
+                        for(let j=0;j<this.userList[i].memberInfo.length;j++){
+                            if(this.userList[i].memberInfo[j].parents!=undefined){
+                                this.userList[i].memberInfo[j].parent=this.userList[i].memberInfo[j].parents.map(item=>{
+                                return item.name
+                            })
+                            }
+                            else{
+                                this.userList[i].memberInfo[j].parent=[];
+                            }   
+                            if(this.userList[i].memberInfo[j].students!=undefined){
+                                this.userList[i].memberInfo[j].student=this.userList[i].memberInfo[j].students.map(item=>{
+                                return item.name
+                            })
+                            }
+                            else{
+                                this.userList[i].memberInfo[j].student=[];
+                            }     
+                        }   
+                    }
+                    // console.log("测试",this.userList);
                 }).catch(err => err);
             },
             //获取学校列表
@@ -370,8 +408,16 @@
                 for(let i in this.multipleSelection){
                     ids.push(this.multipleSelection[i].id)
                 }
+                if(ids.length==0){
+                    this.$message({
+                        type: 'info',
+                        message: '请先选择需要禁用的用户'
+                    })
+                    return;
+                }
                 let params={}
                 params.ids=ids
+                
                 params.url=api.disableUsers
                 this.$confirm(`此操作将批量禁用用户使用该系统, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
@@ -406,6 +452,13 @@
                 let ids=[]
                 for(let i in this.multipleSelection){
                     ids.push(this.multipleSelection[i].id)
+                }
+                if(ids.length==0){
+                    this.$message({
+                        type: 'info',
+                        message: '请先选择需要删除的用户'
+                    })
+                    return;
                 }
                 let params={}
                 params.ids=ids

@@ -5,7 +5,7 @@
                 <el-tab-pane label="添加专家" name="addExpert">
                     <div>
                         <el-form :model="ruleForm"  ref="ruleForm" label-width="300px" class="demo-ruleForm">
-                            <el-form-item label="请输入完整的手机号码查看用户是否全在" style="width:800px;">
+                            <el-form-item label="请输入完整的手机号码查看用户是否存在" style="width:800px;">
                                 <el-input v-model="searchVal" placeholder="请输入完整手机号" size="small" maxlength="11" style="width:400px"></el-input>
                                 <el-button type="primary"  size="small" icon="el-icon-search" @click="goToSearch">查询</el-button>
                             </el-form-item>
