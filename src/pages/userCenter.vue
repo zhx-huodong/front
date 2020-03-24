@@ -93,9 +93,7 @@ export default {
       return this.$store.state.account.user;
     }
   },
-  created() {
-    
-  },
+  created() {},
   mounted() {
     let list = [
       { Name: "沟通能力", Value: 80 },
@@ -114,7 +112,7 @@ export default {
     //获取报名活动列表
     async getActivityList(params) {
       params.url = api.enroll;
-      params.bself=1
+      params.bself = 1;
       params.expand = "info,works,school,professional,award";
       await this.axiosGet(params)
         .then(res => {
@@ -184,16 +182,66 @@ export default {
       };
       this.abilityOpt = options;
     },
+    //活动详情
     goToActDetail(id) {
       // 跳转活动详情页
       this.$router.push({
         path: "/home/activityDetail",
         query: {
           id: id,
-          look:1
+          look: 1
         }
       });
     },
+    //删除
+    goToDelete(id) {
+      this.open(id);
+    },
+    //提示框
+    open(id) {
+      this.$confirm(`此操作将永久删除该报名记录, 是否继续?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let params = {};
+          params.id = id;
+          this.deleteConfirm(params);
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消！"
+          });
+        });
+    },
+    //删除确认
+    async deleteConfirm(params) {
+      params.url = api.enroll;
+      params.status = -1;
+      await this.axiosPut(params)
+        .then(res => {
+          if (res.id != undefined) {
+            this.$message({
+              type: "success",
+              message: "删除成功"
+            });
+            let params = {
+              "per-page": this.perPage
+            };
+            params.page = this.currentPage;
+            this.getActivityList(params);
+          } else {
+            this.$message({
+              type: "warning",
+              message: "删除失败"
+            });
+          }
+        })
+        .catch(err => err);
+    },
+    //信息编辑
     goToUserEdit() {
       this.$router.push({
         path: "/userCenter/userEdit"

@@ -29,7 +29,13 @@
         </el-form-item>
         <el-form-item label="作品封面：">
           <template>
-            <upload-picture :uploadType="'picture'" :max="1" :myPictureList="form.cover" @uploadSuccess="coverSuccess" :name="'添加作品封面JPG,PNG格式'"></upload-picture>
+            <upload-picture
+              :uploadType="'picture'"
+              :max="1"
+              :myPictureList="form.cover"
+              @uploadSuccess="coverSuccess"
+              :name="'添加作品封面JPG,PNG格式'"
+            ></upload-picture>
           </template>
         </el-form-item>
         <el-form-item label="作品简介：">
@@ -38,16 +44,26 @@
           </div>
         </el-form-item>
         <el-form-item label="报名登记：">
-          <upload-picture :uploadType="'picture'" :max="1" :myPictureList="form.registration" @uploadSuccess="registrationSuccess" :name="'上传登记表JPG,PNG格式'"></upload-picture>
+          <upload-picture
+            :uploadType="'picture'"
+            :max="1"
+            :myPictureList="form.registration"
+            @uploadSuccess="registrationSuccess"
+            :name="'上传登记表JPG,PNG格式'"
+          ></upload-picture>
         </el-form-item>
         <el-form-item
           label="作品上传"
           v-for="(item,index) in activityProjectDetail.formats"
           :key="index"
-          v-if="index==0"
         >
           <div style="width:700px;">
-            <upload-file :uploadType="uploadTypeObj[item.type]" :myFileList="formats"  @uploadSuccess="(data)=>{return upsuccess(data,item.id,item.type)}" :name="'上传'+uploadTypeChar[item.type]+'格式作品'"></upload-file>
+            <upload-file
+              :uploadType="uploadTypeObj[item.type]"
+              :myFileList="formats"
+              @uploadSuccess="(data)=>{return upsuccess(data,item.id,item.type)}"
+              :name="'上传'+uploadTypeChar[item.type]+'格式作品'"
+            ></upload-file>
           </div>
         </el-form-item>
 
@@ -153,10 +169,10 @@
 import api from "../../service/api.js";
 import MyEditor from "../../components/MyEditor";
 import { getCookie, axiosGet, axiosPost, axiosPut } from "../../tools/tools";
-import UploadPicture from '../../components/UploadPicture';
-import UploadFile from '../../components/UploadFile';
+import UploadPicture from "../../components/UploadPicture";
+import UploadFile from "../../components/UploadFile";
 export default {
-  components: { MyEditor,UploadPicture,UploadFile },
+  components: { MyEditor, UploadPicture, UploadFile },
   data() {
     return {
       headers: {
@@ -173,9 +189,9 @@ export default {
         registration: [],
         email: ""
       },
-      inputtext:'',//富文本内容
-      registration: '', //报名登记表
-      cover: '', //作品封面
+      inputtext: "", //富文本内容
+      registration: "", //报名登记表
+      cover: "", //作品封面
       authorTags: [],
       authorInputVisible: false,
       authorInputValue: "",
@@ -194,19 +210,20 @@ export default {
       activityProjectId: this.$route.query.id, //活动项目id
       activityProjectDetail: {}, //活动项目信息
       formats: [], //作品上传
-      attachment: {} ,//作品上传
-      operate:this.$route.query.operate,
-      uploadTypeObj:{1:'picture',2:'video',3:'work'},
-      uploadTypeChar:{1:'图片',2:'视频',3:'普通文档'}
+      attachment: {}, //作品上传
+      operate: this.$route.query.operate,
+      uploadTypeObj: { 1: "picture", 2: "video", 3: "work" },
+      uploadTypeChar: { 1: "图片", 2: "视频", 3: "普通文档" },
+      category_id: ""
     };
   },
   created() {
     let params = {};
     this.getTeacherList(params);
-    
-    if(this.operate==0){
+
+    if (this.operate == 0) {
       this.getObjectDetail();
-    }else{
+    } else {
       this.getEnrollDetail();
       this.getObjectDetail();
     }
@@ -217,42 +234,48 @@ export default {
   },
   methods: {
     //读取报名项目详情
-    async getEnrollDetail(){
-      let that=this;
-      let params={};
-      params.url=api.enroll;
-      params.id=that.activityProjectId;
-      params.expand="info,works,school,professional,award";
-      await that.axiosGet(params).then(res=>{
-        that.form.activityProject=res.info.project;
-        that.form.title=res.works.title;
-        that.inputtext=res.works.content;
-        that.form.email=res.works.email;
-        if(res.works.attachment.length>0){
-          res.works.attachment.map(res=>{
-              that.formats.push({'id':res.id,'name':res.title,'url':res.url,'type':res.type});
-          })
-         console.log("我是",that.formats);
+    async getEnrollDetail() {
+      let that = this;
+      let params = {};
+      params.url = api.enroll;
+      params.id = that.activityProjectId;
+      params.expand = "info,works,school,professional,award";
+      await that.axiosGet(params).then(res => {
+        this.category_id = res.category_id;
+        that.form.activityProject = res.info.project;
+        that.form.title = res.works.title;
+        that.inputtext = res.works.content;
+        that.form.email = res.works.email;
+        if (res.works.attachment.length > 0) {
+          res.works.attachment.map(res => {
+            that.formats.push({
+              id: res.id,
+              name: res.title,
+              url: res.url,
+              type: res.type
+            });
+          });
+          console.log("我是", that.formats);
         }
         // this.attachment=res.works.attachment
-  
-        that.form.cover.push({"url":res.works.cover});
 
-        that.form.registration.push({"url":res.registration});
+        that.form.cover.push({ url: res.works.cover });
 
-        that.authorTags=res.info.author.map(item=>{
+        that.form.registration.push({ url: res.registration });
+
+        that.authorTags = res.info.author.map(item => {
           return {
-            "id":item.id,
-            "name":item.name,
-          }
+            id: item.id,
+            name: item.name
+          };
         });
-        that.teacherTags=res.info.mentor.map(item=>{
+        that.teacherTags = res.info.mentor.map(item => {
           return {
-            "id":item.id,
-            "name":item.name,
-          }
-        })
-      })
+            id: item.id,
+            name: item.name
+          };
+        });
+      });
     },
     //读取活动项目详情
     async getObjectDetail() {
@@ -276,43 +299,39 @@ export default {
         this.cover = item.url;
       });
     },
-  
-  
+
     //报名登记表
     registrationSuccess(data) {
-      this.registration = '';
+      this.registration = "";
       data.forEach(item => {
-        this.registration=item.url;
-
+        this.registration = item.url;
       });
     },
-   
 
     handlePreview(file) {
       console.log(file);
-      window.open(file.url)
+      window.open(file.url);
     },
 
-   
     //作品上传
     upsuccess(data, id, type) {
-      console.log("data==",data,"id==",id,"type==",type)
+      console.log("data==", data, "id==", id, "type==", type);
       let key = id;
       this.attachment[id] = [];
       data.forEach(item => {
-        let attachmentItem={}
-        attachmentItem.url=item.url
-        attachmentItem.title=item.name
+        let attachmentItem = {};
+        attachmentItem.url = item.url;
+        attachmentItem.title = item.name;
         this.attachment[id].push(attachmentItem);
       });
       console.log("this.attachment===", this.attachment);
     },
-  
+
     //提交报名
     async submitEnroll() {
       let params = {};
       params.url = api.works;
-      params.category_id=this.activityProjectDetail.id
+      params.category_id = this.activityProjectDetail.id;
       if (this.form.title != "") {
         params.title = this.form.title;
       } else {
@@ -322,9 +341,9 @@ export default {
         });
         return;
       }
-      if (this.cover !='') {
+      if (this.cover != "") {
         params.cover = this.cover;
-      }else if(this.form.cover.length!=0&&this.operate!=0){
+      } else if (this.form.cover.length != 0 && this.operate != 0) {
         params.cover = this.form.cover[0].url;
       } else {
         this.$message({
@@ -333,11 +352,11 @@ export default {
         });
         return;
       }
-      if (this.registration!='') {
+      if (this.registration != "") {
         params.registration = this.registration;
-      } else if(this.form.registration.length!=0&&this.operate!=0){
+      } else if (this.form.registration.length != 0 && this.operate != 0) {
         params.registration = this.form.registration[0].url;
-      }else {
+      } else {
         this.$message({
           message: "请上传报名表",
           type: "warning"
@@ -355,10 +374,10 @@ export default {
       }
       if (this.authorIds.length > 0) {
         params.author = this.authorIds;
-      }else if(this.authorTags.length>0&&this.operate!=0){
-        params.author=this.authorTags.map(res=>{
-          return   res.id;
-        })
+      } else if (this.authorTags.length > 0 && this.operate != 0) {
+        params.author = this.authorTags.map(res => {
+          return res.id;
+        });
       } else {
         this.$message({
           message: "请添加作者",
@@ -366,19 +385,15 @@ export default {
         });
         return;
       }
-      if (this.teacherIds.length > 0) {
-        params.mentor = this.teacherIds;
-      } else if(this.teacherTags.length>0&&this.operate!=0){
-        params.mentor=this.teacherTags.map(res=>{
-          return  res.id;
-        })
-      } else {
-        this.$message({
-          message: "请添加指导老师",
-          type: "warning"
+
+      if (this.operate != 0) {
+        params.mentor = this.teacherTags.map(res => {
+          return res.id;
         });
-        return;
+      } else {
+        params.mentor = this.teacherIds;
       }
+
       if (this.form.email !== "") {
         params.email = this.form.email;
       } else {
@@ -398,76 +413,78 @@ export default {
       // }else{
       //    params.attachment = this.attachment;
       // }
-      console.log("params===",params)
-      if(this.operate==0){
+      console.log("params===", params);
+      if (this.operate == 0) {
         await axiosPost(params)
-        .then(res => {
-          if(res.code==-1){
-            this.$message({
-              message:res.message,
-              type: "warning"
-            });
-          }else if(res.title!=undefined&&res.title!=''){
-            this.$message({
-              message:'报名成功！！',
-              type: "success"
-            });
-            setTimeout(() => {
-              this.$router.push({
-                path: "/home/submitEnroll"
+          .then(res => {
+            if (res.code == -1) {
+              this.$message({
+                message: res.message,
+                type: "warning"
               });
-              // this.$router.go(-1);
-            }, 1000);
-          }else{
+            } else if (res.title != undefined && res.title != "") {
+              this.$message({
+                message: "报名成功！！",
+                type: "success"
+              });
+              setTimeout(() => {
+                this.$router.push({
+                  path: "/home/submitEnroll"
+                });
+                // this.$router.go(-1);
+              }, 1000);
+            } else {
               that.$router.go(-1);
-          }
-          
-        })
-        .catch(err => err);
-      }else{
+            }
+          })
+          .catch(err => err);
+      } else {
+        params.id = this.activityProjectId;
+        params.category_id = this.category_id;
+        console.log("修改===", params);
         await axiosPut(params)
-        .then(res => {
-          if(res.code==-1){
-            this.$message({
-              message:res.message,
-              type: "warning"
-            });
-          }else if(res.title!=undefined&&res.title!=''){
-            this.$message({
-              message:'修改成功！！',
-              type: "success"
-            });
-            setTimeout(() => {
-              // this.$router.push({
-              //   path: "/home/submitEnroll"
-              // });
-              // this.$router.go(-1);
-            }, 1000);
-          }else{
+          .then(res => {
+            if (res.code == -1) {
+              this.$message({
+                message: res.message,
+                type: "warning"
+              });
+            } else if (res.title != undefined && res.title != "") {
+              this.$message({
+                message: "修改成功！！",
+                type: "success"
+              });
+              setTimeout(() => {
+                // this.$router.push({
+                //   path: "/home/submitEnroll"
+                // });
+                // this.$router.go(-1);
+              }, 1000);
+            } else {
               that.$router.go(-1);
-          }
-          
-        })
-        .catch(err => err);
+            }
+          })
+          .catch(err => err);
       }
-      
     },
 
     editorChange(data) {
       this.content = data;
     },
     //取消
-    goback(){
-        let that=this;
-        this.$confirm('确定取消吗?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    that.$router.go(-1);
-                }).catch(() => {
-                    console.log("取消");      
-                });
+    goback() {
+      let that = this;
+      this.$confirm("确定取消吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          that.$router.go(-1);
+        })
+        .catch(() => {
+          console.log("取消");
+        });
     },
     //获取学生列表
     async getStudentList(params) {
@@ -524,7 +541,7 @@ export default {
       }
 
       this.authorInputVisible = false;
-      this.authorInputValue ="";
+      this.authorInputValue = "";
     },
     //作者
     teacherClose(id) {

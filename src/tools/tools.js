@@ -290,7 +290,7 @@ function expire() {
     localStorage.removeItem('user');
     localStorage.removeItem('roles');
     localStorage.removeItem('nowRole');
-    location.href = '/';
+    // location.href = '/';
     store.dispatch('INIT_SHOW', true);
   }
 }

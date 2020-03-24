@@ -92,7 +92,6 @@
             async getUserInfo(params){
                 params.url=api.user
                 let res=await this.axiosGet(params).catch(err=>err)
-                console.log("userInfo===",res)
                 if(res.roleInfo!=undefined){
                     this.ruleForm.name=res.name
                     this.ruleForm.mobile=res.mobile

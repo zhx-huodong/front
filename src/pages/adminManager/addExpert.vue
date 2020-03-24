@@ -113,7 +113,18 @@
             },
             //查询用户
             goToSearch(){
-                if(this.searchVal.length<11)return;
+                if(this.searchVal.length<11){
+                    this.$message({
+                        type:'warning',
+                        message:'请输入完整的手机号码'
+                    })
+                    return;
+                }
+                this.ruleForm={
+                        name: '',
+                        mobile:'',
+                        des:''
+                    }
                 let params={}
                 this.getUserList(params)
             },
@@ -126,19 +137,27 @@
                 params.role_id=this.role_id
                 params.url=api.user
                 await this.axiosPost(params).then(res=>{
-                    this.$message({
-                        type: 'success',
-                        message: '添加成功！'
-                    });
-                    this.ruleForm={
-                        name: '',
-                        mobile:'',
-                        des:''
+                    if(res.id!=undefined&&res.id!=''){
+                        this.$message({
+                            type: 'success',
+                            message: '添加成功！'
+                        });
+                        this.ruleForm={
+                            name: '',
+                            mobile:'',
+                            des:''
+                        }
+                        this.id=''
+                        this.role_id=[5]
+                        this.isHave=null
+                        this.searchVal=''
+                    }else{
+                        this.$message({
+                            type: 'warning',
+                            message: '添加失败'
+                        });
                     }
-                    this.id=''
-                    this.role_id=[5]
-                    this.isHave=null
-                    this.searchVal=''
+                    
                 }).catch(err=>err)
             },
             //修改

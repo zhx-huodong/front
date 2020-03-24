@@ -8,7 +8,7 @@
         <el-tabs type="border-card">
           <el-tab-pane label="活动介绍">
             <el-card>
-              <el-steps :active="activityObject.process" align-center>
+              <el-steps :active="process" align-center>
                 <el-step title="作品报名" :description="formatDateChar(activityObject.node[0].stime*1000)+'--'+formatDateChar(activityObject.node[0].etime*1000)"></el-step>
                 <el-step title="区域推荐" :description="formatDateChar(activityObject.node[1].stime*1000)+'--'+formatDateChar(activityObject.node[1].etime*1000)"></el-step>
                 <el-step title="市级审批" :description="formatDateChar(activityObject.node[2].stime*1000)+'--'+formatDateChar(activityObject.node[2].etime*1000)"></el-step>
@@ -217,6 +217,7 @@ export default {
       gradeObjectid: "",
       id:this.$route.query.id,//获取详情id
       apiKey:getCookie("x-api-key"),
+      process:1,//进度
     };
   },
   created() {
@@ -311,6 +312,16 @@ export default {
                     }
                 }
             }
+              let nowTime=Date.parse(new Date())
+              if((res.node[0].stime*1000)<=nowTime<=(res.node[0].etime*1000)){
+                  this.process=1
+              }else if((res.node[1].stime*1000)<=nowTime<=(res.node[1].etime*1000)){
+                  this.process=2
+              }else if((res.node[2].stime*1000)<=nowTime<=(res.node[2].etime*1000)){
+                  this.process=3
+              }else if((res.node[3].stime*1000)<=nowTime<=(res.node[3].etime*1000)){
+                  this.process=4
+              }
            
         }).catch(err => err);
     },

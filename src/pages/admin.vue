@@ -104,13 +104,17 @@
                             label="所关联的家长"
                             show-overflow-tooltip
                             v-if="this.index==1">
-                                <template slot-scope="scope">{{ scope.row.memberInfo[0].parent.join(",") }}</template>
+                                <template slot-scope="scope">
+                                    <template v-for="item in scope.row.memberInfo">{{ item.parent.join(",") }}</template>
+                                </template>
                             </el-table-column>
                             <el-table-column
                             label="所关联的学生"
                             show-overflow-tooltip
                             v-if="this.index==2">
-                                <template slot-scope="scope">{{ scope.row.memberInfo[0].student.join(",") }}</template>
+                                <template slot-scope="scope">
+                                    <template v-for="item in scope.row.memberInfo">{{ item.student.join(",") }}</template>
+                                </template>
                             </el-table-column>
                             <el-table-column
                             fixed="right"

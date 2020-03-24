@@ -5,7 +5,7 @@
                 <p>{{activityDetail.info.activity}}</p>
             </div>
             <el-divider></el-divider>
-            <el-steps :active="1" align-center>
+            <el-steps :active="process" align-center>
                 <el-step title="作品报名" :description="formatDateChar(activityDetail.info.nodes[0].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[0].etime*1000)"></el-step>
                 <el-step title="区域推荐" :description="formatDateChar(activityDetail.info.nodes[1].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[1].etime*1000)"></el-step>
                 <el-step title="市级评审" :description="formatDateChar(activityDetail.info.nodes[2].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[2].etime*1000)"></el-step>
@@ -17,7 +17,7 @@
                 <p>{{activityDetail.works.title}}</p>
                 <div class="act-button">
                     <!-- v-show="activityDetail.period<=1" -->
-                    <el-button type="primary"  plain size="small" @click="goToEdit" v-if="look!=0">修改</el-button>
+                    <el-button type="primary"  plain size="small" @click="goToEdit" v-if="look!=0&&process==1">修改</el-button>
                 </div>
             </div>
             <el-divider></el-divider>
@@ -54,10 +54,12 @@
                 form:{},
                 id:this.$route.query.id,//获取详情id
                 activityDetail:{},//活动详情
-                look:this.$route.query.look
+                look:this.$route.query.look,
+                process:1,//活动状态
             }
         },
         mounted(){
+
             this.getActivityDetail()
         },
         methods:{
@@ -66,12 +68,19 @@
                 let params={}
                 params.url=api.enroll
                 params.id=this.id
-                params.expand="info,works,school,professional,award,"
+                params.expand="info,works,school,professional,award,process"
                 await this.axiosGet(params).then(res=>{
                     this.activityDetail=res
-                    // if(this.activityDetail.info.process=='报名中'){
-                    //     this.activityDetail.info.process==1
-                    // }
+                    let nowTime=Date.parse(new Date())
+                    if((res.info.nodes[0].stime*1000)<=nowTime<=(res.info.nodes[0].etime*1000)){
+                        this.process=1
+                    }else if((res.info.nodes[1].stime*1000)<=nowTime<=(res.info.nodes[1].etime*1000)){
+                        this.process=2
+                    }else if((res.info.nodes[2].stime*1000)<=nowTime<=(res.info.nodes[2].etime*1000)){
+                        this.process=3
+                    }else if((res.info.nodes[3].stime*1000)<=nowTime<=(res.info.nodes[3].etime*1000)){
+                        this.process=4
+                    }
                 }).catch(err=>err)
             },
             //修改
