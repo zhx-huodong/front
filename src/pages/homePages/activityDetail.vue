@@ -5,11 +5,11 @@
                 <p>{{activityDetail.info.activity}}</p>
             </div>
             <el-divider></el-divider>
-            <el-steps :active="activityDetail.period" align-center>
+            <el-steps :active="1" align-center>
                 <el-step title="作品报名" :description="formatDateChar(activityDetail.info.nodes[0].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[0].etime*1000)"></el-step>
-                <el-step title="专家评审" :description="formatDateChar(activityDetail.info.nodes[1].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[1].etime*1000)"></el-step>
-                <el-step title="市级评奖" :description="formatDateChar(activityDetail.info.nodes[2].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[2].etime*1000)"></el-step>
-                <el-step title="查看结果" :description="formatDateChar(activityDetail.info.nodes[3].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[2].etime*1000)"></el-step>
+                <el-step title="区域推荐" :description="formatDateChar(activityDetail.info.nodes[1].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[1].etime*1000)"></el-step>
+                <el-step title="市级评审" :description="formatDateChar(activityDetail.info.nodes[2].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[2].etime*1000)"></el-step>
+                <el-step title="作品展示" :description="formatDateChar(activityDetail.info.nodes[3].stime*1000)+'--'+formatDateChar(activityDetail.info.nodes[2].etime*1000)"></el-step>
             </el-steps>  
         </el-card>
         <el-card style="margin-top:10px;">
@@ -17,7 +17,7 @@
                 <p>{{activityDetail.works.title}}</p>
                 <div class="act-button">
                     <!-- v-show="activityDetail.period<=1" -->
-                    <el-button type="primary"  plain size="small" @click="goToEdit">修改</el-button>
+                    <el-button type="primary"  plain size="small" @click="goToEdit" v-if="look!=0">修改</el-button>
                 </div>
             </div>
             <el-divider></el-divider>
@@ -54,6 +54,7 @@
                 form:{},
                 id:this.$route.query.id,//获取详情id
                 activityDetail:{},//活动详情
+                look:this.$route.query.look
             }
         },
         mounted(){
@@ -65,9 +66,12 @@
                 let params={}
                 params.url=api.enroll
                 params.id=this.id
-                params.expand="info,works,school,professional,award"
+                params.expand="info,works,school,professional,award,"
                 await this.axiosGet(params).then(res=>{
                     this.activityDetail=res
+                    // if(this.activityDetail.info.process=='报名中'){
+                    //     this.activityDetail.info.process==1
+                    // }
                 }).catch(err=>err)
             },
             //修改

@@ -189,7 +189,8 @@ export default {
       this.$router.push({
         path: "/home/activityDetail",
         query: {
-          id: id
+          id: id,
+          look:1
         }
       });
     },

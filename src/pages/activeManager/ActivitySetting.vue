@@ -26,7 +26,7 @@
         </div>
         <el-form-item label="活动指南:">
           <div style="width:710px">
-            <upload-file :uploadType="'picture'" :myFileList="attachment"  @uploadSuccess="attachmentSuccess" :name="'上传活动指南PNG、JPG格式'"></upload-file>
+            <upload-file :uploadType="'all'" :myFileList="attachment"  @uploadSuccess="attachmentSuccess" :name="'上传活动指南'"></upload-file>
           </div>
         </el-form-item>
         
