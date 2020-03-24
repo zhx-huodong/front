@@ -250,7 +250,7 @@ export default {
               return{
                 "id": item.works.id,
                 "name": item.works.title,
-                "imgUrl": item.works.cover,
+                "cover": item.works.cover,
                 "view_counts":item.view_counts,
                 "like_counts":item.like_counts,
                 "author":author.join(""),
