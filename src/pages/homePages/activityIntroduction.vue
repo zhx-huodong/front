@@ -52,7 +52,7 @@
                 <p>请选择以下内容参加活动</p>
               </div>
               <div style="margin-bottom:30px;">
-                <type-select :gradeList="activityObject.periodList" @gradeObject="gradeObject"></type-select>
+                <type-select :gradeList="activityObject.periodList" @gradeObject="PeriodgradeObject"></type-select>
               </div>
               <div class="tag">
                 <p>请选择参加活动项目</p>
@@ -68,7 +68,13 @@
                   <div class="list-project-title">
                     <p>{{item.title}}</p>
                   </div>
-                  <type-select :otherList="item.child" @otherObject="otherObjectOne"></type-select>
+                  <div class="lable" v-if="activityProjectList.length>0">
+                     <div class="lable-aside">
+                       <div class="lable-self" v-for="(item1, index1) in item.child" :key="index1"
+                       @click="otherObjectOne(item1.id, index1)" :class="{'type-active':activityNameIndex == index1,'not-click':item1.period&PeriodGradeObjectid!=0}">{{item1.name||item1.title}}</div>
+                     </div>
+                   </div>
+                  <!-- <type-select :otherList="item.child"   @otherObject="otherObjectOne"></type-select> -->
                 </div>
               </div>
             </el-card>
@@ -131,9 +137,14 @@
                   ></type-select>
                 </el-col>
               </el-row>
+              <div class="workTotle">作品数量:{{workTotle}}个</div>
+              <!-- <hr style="color:#E5E5E5"/> -->
               <el-row>
                 <el-col>
-                  <div v-if="activityList.length==0">暂无</div>
+                  <div class="emptyWork" v-if="activityList.length==0">
+                    <img src="../../assets/img2/empty.png">
+                    <p>无相关作品</p>
+                  </div>
                   <card-list :cardList="activityList" :isExcellent="true" @onlike="onlike" @toNext="gotoGoodWorkDetail"></card-list>
                 </el-col>
               </el-row>
@@ -166,7 +177,13 @@ export default {
       totalCount: 0 ,//总条数
       activityTypleList: [],
       activityProjectList: [],
-      gradeListTwo: [],
+      activityNameIndex:0,//选择参加活动项目的id
+      activityTypleSelectID:'',
+      activityProjectSelectID:'',
+      gradeListTwo: [ { id: 0, name: '全部' },
+                { id: 1, name: '小学组' },
+                { id: 2, name: '初中组' },
+                { id: 3, name: '高中组' }],
       activityObject: {},
       ClassList: [
         { name: "幼教组", id: 1 },
@@ -215,9 +232,11 @@ export default {
         }
       ], // 活动列表
       gradeObjectid: "",
+      PeriodGradeObjectid:"",
       id:this.$route.query.id,//获取详情id
       apiKey:getCookie("x-api-key"),
       process:1,//进度
+      workTotle:'',//优秀作品数量
     };
   },
   created() {
@@ -228,21 +247,58 @@ export default {
       params.page = this.currentPage;
       this.getActivityNoticeList(params);
       this.goodWorkList();
+      this.getActivityList();
+
   },
   mounted() {
     this.getActivityInfo();
   },
   methods: {
+    //获取所有的活动列表 主要是用做筛选
+        async getActivityList(){
+            let that=this;
+            let params={};
+            params.url=api.activity;
+            params.expand='category';
+            // params.inscore=1;
+            await this.axiosGet(params).then(res=>{
+                
+                that.activityTypleList=res.items.map(item=>{
+                    return {
+                        "id":item.category[0].id,
+                        "name":item.category[0].title,
+                    }
+                })
+                that.activityProjectList=res.items.map(item=>{
+                    return {
+                        "id":item.category[0].child[0].id,
+                        "name":item.category[0].child[0].title,
+                    }
+                })
+            })
+            that.activityTypleList.unshift({id:0,name:"全部"});
+            that.activityProjectList.unshift({id:0,name:"全部"});
+        },
     async goodWorkList(){
         let that=this;
         let params={}
         params.url=api.enroll
         params.activity_id=this.id
         params.position=4;//优秀作品展示
+        if(that.gradeObjectid!=''&&that.gradeObjectid!=0){
+               params.period=that.gradeObjectid;//按学段筛选 [筛选活动时有效] 按学段筛选：多个学段则相加 
+        }
+        if(that.activityTypleSelectID!=''&&that.activityTypleSelectID!=0){
+           params.category_id=that.activityTypleSelectID;//按分类筛选
+        }
+        if(that.activityProjectSelectID!=''&&that.activityProjectSelectID!=0){
+           params.item_id=that.activityProjectSelectID;//按项目筛选
+        }
         params.expand="info,works,school,professional,award"
         await this.axiosGet(params).then(res=>{
           console.log(res);
           if(res.items.length>0){
+            that.workTotle=res.items.length;
             that.activityList=res.items.map(item=>{
               let author=[];
               author=item.info.author.map(res=>{
@@ -259,9 +315,10 @@ export default {
               console.log("item",item.works.id)
             });
           }else{
+            that.workTotle=0;
             that.activityList=[];
           }
-          console.log("哈哈哈",that.activityList);
+          
         }).catch(err=>err)
     },
     getSubSet(target,arr){
@@ -303,6 +360,7 @@ export default {
             this.activityObject=res
             this.activityObject.period
             this.activityObject.periodList=[]
+            
             let arr=[1,2,4,8,16,32,64]
             let result=this.getSubSet(this.activityObject.period,arr)
             for(let i in result){
@@ -312,6 +370,7 @@ export default {
                     }
                 }
             }
+            this.PeriodGradeObjectid=this.activityObject.periodList[0].id;
               let nowTime=Date.parse(new Date())
               if((res.node[0].stime*1000)<=nowTime<=(res.node[0].etime*1000)){
                   this.process=1
@@ -322,28 +381,40 @@ export default {
               }else if((res.node[3].stime*1000)<=nowTime<=(res.node[3].etime*1000)){
                   this.process=4
               }
-           
+          //  console.log("学段",this.activityObject.periodList);
         }).catch(err => err);
     },
 
-    //学段
+    //学段筛选
     gradeObject(value) {
-      this.gradeObjectid = value;
+      let that=this;
+      that.gradeObjectid = value;
+      that.goodWorkList();
+    },
+    //学段筛选出活动项目
+    PeriodgradeObject(value){
+      let that=this;
+      that.PeriodGradeObjectid = value;
     },
     //活动类型
     activityTypleObject(value) {
-      console.log(value);
+      let that=this;
+      that.activityTypleSelectID=value;
+      that.goodWorkList();
     },
     //活动项目
     activityProjectObject(value) {
-      console.log(value);
+      let that=this;
+      that.activityProjectSelectID=value;
+      that.goodWorkList();
     },
     //其他
-    otherObjectOne(id, value2) {
+    otherObjectOne(id, index1) {
+      this.activityNameIndex=index1;
       this.$router.push({
         path: "/home/choiceActivity",
         query: {
-          gradeListid: this.gradeObjectid,
+          gradeListid: this.PeriodGradeObjectid,
           id:id,
           coverUrl:this.activityObject.cover,
           activityName:this.activityObject.title
@@ -487,6 +558,22 @@ export default {
           font-size: 18px;
         }
       }
+      .workTotle{
+         text-align: right;
+         font-size:14px;
+         color:rgba(153,153,153,1);
+         border-bottom:1px solid rgba(229,229,229,1);
+         padding-bottom:10px;
+      }
+      .emptyWork{
+        text-align: center;
+        margin-top:40px;
+        p{
+          color:#BFBFBF;
+          
+          font-size:14px;
+        }
+      }
     }
   }
   .activity-introduction-main {
@@ -548,6 +635,34 @@ export default {
     display: flex;
     flex-direction: column;
     margin-bottom: 30px;
+    .lable-aside{
+    margin-left: 90px;
+    
+      .type-active{
+        background-color: #2D97F0;
+      }
+      .not-click{
+        pointer-events: none;
+        background-color: #BFBFBF;
+      }
+    .lable-self{
+      padding:0 10px;
+      width:auto !important;
+      margin-top: 5px;
+      height: 30px;
+      line-height: 30px;
+      display: inline-block;
+      font-size: 14px;
+      text-align: center;
+      color: #888888;
+      border-radius: 4px;
+      margin-right: 10px;
+      &:hover {
+        cursor: pointer;
+      }
+      
+    }
+  }
     .list-project-title {
       margin-left: 90px;
       font-size: 14px;
