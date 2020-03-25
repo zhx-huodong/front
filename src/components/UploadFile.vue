@@ -14,6 +14,11 @@
       </div>
     </div>
     <div class="file-operate-button">
+      
+      <div class="file-button" @click="uploadFile" v-if="fileList.length<max">
+        <p class="el-icon-upload"></p>
+        <span>{{name}}</span>
+      </div>
       <cos
         ref="cos"
         :valid-list="validList"
@@ -21,10 +26,6 @@
         @success="uploadSuccess"
         @start="uploadStart"
       ></cos>
-      <div class="file-button" @click="uploadFile" v-if="fileList.length<max">
-        <p class="el-icon-upload"></p>
-        <span>{{name}}</span>
-      </div>
     </div>
   </div>
 </template>
@@ -89,21 +90,9 @@ export default {
     } else if (this.uploadType == "work") {
       this.validList = ["doc", "docx", "pdf", "xls", "xls"];
       this.fileIconUrl = require("../public/images/file-icon/default.svg");
-    } else if (this.uploadType == "all") {
-      this.validList = [
-        "doc",
-        "docx",
-        "pdf",
-        "xls",
-        "xls",
-        "mp3",
-        "mp3",
-        "png",
-        "jpg",
-        "jpeg",
-        "zip"
-      ];
-      this.fileIconUrl = require("../public/images/file-icon/default.svg");
+    } else if (this.uploadType == "zip") {
+      this.validList = ["zip"];
+      this.fileIconUrl = require("../public/images/file-icon/zip.svg");
     }
   },
   methods: {
@@ -139,7 +128,7 @@ export default {
   width: 100%;
   display: flex;
   // flex-direction: column;
-  justify-content: flex-end;
+  // justify-content: flex-end;
   .file-button {
     cursor: pointer;
     display: flex;
@@ -149,7 +138,7 @@ export default {
     align-items: center;
     // width: 120px;
     padding: 0 10px;
-    height: 40px;
+    height: 35px;
     border: 1px solid #198af3;
     border-radius: 8px;
     p {

@@ -392,3 +392,31 @@ export function formatTime(totalSecond) {
   else if (second < 10) second = '0' + second;
   return hour ? (hour + ':') : '' + minutes + ':' + second;
 }
+//把一个数拆分成指定数的数组
+export function getSubSet(target,arr){
+    var len = arr.length;
+    var result = [];
+    for(var i=0; i<len; i++){
+        var temp =[];
+        temp.push(arr[i])
+        var num=0
+        for(let k in temp){
+            num+=temp[k]
+        }
+        if(num==target){
+            result=temp
+        }
+        for(var j=i+1; j<len; j++){
+            temp = temp.concat(arr[j]);
+            var numTwo=0
+            for(let h in temp){
+                numTwo+=temp[h]
+            }
+            if(numTwo==target){
+                result=temp
+            }
+        }
+        
+    }
+    return result;
+}

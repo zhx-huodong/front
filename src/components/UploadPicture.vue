@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <div class="operate-button">
-      <!-- <el-button @click="uploadFile">上传图片</el-button> -->
       <div class="picture-list">
         <div class="picture-list-items" v-for="(item,index) in pictureList" :key="index">
           <el-image :src="item.url" fit="cover"></el-image>
@@ -83,20 +82,8 @@ export default {
       this.validList = ["mp3"];
     } else if (this.uploadType == "work") {
       this.validList = ["doc", "docx", "pdf", "xls", "xls"];
-    } else if (this.uploadType == "all") {
-      this.validList = [
-        "doc",
-        "docx",
-        "pdf",
-        "xls",
-        "xls",
-        "mp3",
-        "mp3",
-        "png",
-        "jpg",
-        "jpeg",
-        "zip"
-      ];
+    } else if (this.uploadType == "zip") {
+      this.validList = ["zip"];
     }
   },
   methods: {

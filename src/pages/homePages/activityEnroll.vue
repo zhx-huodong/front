@@ -38,10 +38,42 @@
             ></upload-picture>
           </template>
         </el-form-item>
-        <el-form-item label="作品简介：">
-          <div class="my-editor-main">
-            <my-editor @editorChange="editorChange" :inputtext="inputtext"></my-editor>
-          </div>
+
+        <div class="my-editer">
+          <P>创作思想：</P>
+          <my-editor @editorChange="editorChange" :inputtext="inputtext"></my-editor>
+        </div>
+        <el-form-item label="创作过程：">
+          <el-input
+            type="textarea"
+            :rows="5"
+            placeholder="请填写创作过程"
+            style="width:715px;"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="参考资源：">
+          <el-input
+            type="textarea"
+            :rows="5"
+            placeholder="请填写参考资源"
+            style="width:715px;"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="制作用软件及运行环境：">
+          <el-input
+            type="textarea"
+            :rows="5"
+            placeholder="请填写创作过程"
+            style="width:715px;"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="其他说明：">
+          <el-input
+            type="textarea"
+            :rows="3"
+            placeholder="请填写其他说明"
+            style="width:715px;"
+          ></el-input>
         </el-form-item>
         <el-form-item label="报名登记：">
           <upload-picture
@@ -64,90 +96,62 @@
               @uploadSuccess="(data)=>{return upsuccess(data,item.id,item.type)}"
               :name="'上传'+uploadTypeChar[item.type]+'格式作品'"
             ></upload-file>
+            <p style="color:#999;padding:0;margin:0;line-height:25px;">{{item.remark}}</p>
           </div>
         </el-form-item>
 
         <el-form-item label="作者：">
           <el-row>
-            <el-col :span="16">
-              <el-tag
-                :key="tag.id"
-                v-for="tag in authorTags"
-                closable
-                :disable-transitions="false"
-                @close="authorClose(tag.id)"
-              >{{tag.name}}</el-tag>
-              <el-select
-                filterable
-                placeholder="请选择作者"
-                v-if="authorInputVisible"
-                v-model="authorInputValue"
-                ref="authorSaveTagInput"
-                size="small"
-                @change="authorInputConfirm"
-              >
-                <el-option
-                  v-for="item in studentList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item"
-                >
-                  <span style="float: left">{{ item.name }}</span>
-                  <span
-                    style="float: right; color: #8492a6; font-size: 13px"
-                  >{{ item.memberInfo[0].school.title }}</span>
-                </el-option>
-              </el-select>
-              <el-button
-                v-else
-                class="button-new-tag"
-                size="small"
-                @click="showAuthorInput"
-                type="primary"
-              >添加作者</el-button>
+            <el-col>
+              <el-row v-for="(item,index) in authorList" :key="index">
+                <el-col :span="1" style="color:#999;">姓名:</el-col>
+                <el-col :span="4">
+                  <el-input size="small" :value="item.name"></el-input>
+                </el-col>
+                <el-col :span="1" style="color:#999;" :offset="1">电话:</el-col>
+                <el-col :span="4">
+                  <el-input size="small" :value="item.mobile"></el-input>
+                </el-col>
+                <el-col :span="2" :offset="1">
+                  <el-button
+                    size="small"
+                    type="text"
+                    style="color:red"
+                    @click="deleteAuthor(index)"
+                  >删除</el-button>
+                </el-col>
+              </el-row>
+            </el-col>
+            <el-col>
+              <el-button size="small" type="primary" @click="addAuthor()">添加</el-button>
               <el-tag type="info">限制{{author_limit}}人</el-tag>
             </el-col>
           </el-row>
         </el-form-item>
         <el-form-item label="指导老师：">
           <el-row>
-            <el-col :span="16">
-              <el-tag
-                :key="tag.id"
-                v-for="tag in teacherTags"
-                closable
-                :disable-transitions="false"
-                @close="teacherClose(tag.id)"
-              >{{tag.name}}</el-tag>
-
-              <el-select
-                filterable
-                placeholder="请选择指导老师"
-                v-if="teacherInputVisible"
-                v-model="teacherInputValue"
-                ref="teacherSaveTagInput"
-                size="small"
-                @change="teacherInputConfirm"
-              >
-                <el-option
-                  v-for="item in teacherList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item"
-                >
-                  <span style="float: left">{{ item.name }}</span>
-                  <span
-                    style="float: right; color: #8492a6; font-size: 13px"
-                  >{{ item.memberInfo[0].school.title }}</span>
-                </el-option>
-              </el-select>
-              <el-button
-                v-else
-                class="button-new-tag"
-                type="primary"
-                size="small"
-                @click="showTeacherInput"
-              >添加指导老师</el-button>
+            <el-col>
+              <el-row v-for="(item,index) in teacherList" :key="index">
+                <el-col :span="1" style="color:#999;">姓名:</el-col>
+                <el-col :span="4">
+                  <el-input size="small" :value="item.name"></el-input>
+                </el-col>
+                <el-col :span="1" style="color:#999;" :offset="1">电话:</el-col>
+                <el-col :span="4">
+                  <el-input size="small" :value="item.mobile"></el-input>
+                </el-col>
+                <el-col :span="2" :offset="1">
+                  <el-button
+                    size="small"
+                    type="text"
+                    style="color:red"
+                    @click="deleteTeacher(index)"
+                  >删除</el-button>
+                </el-col>
+              </el-row>
+            </el-col>
+            <el-col>
+              <el-button size="small" type="primary" @click="addTeacher()">添加</el-button>
               <el-tag type="info">限制{{mentor_limit}}人</el-tag>
             </el-col>
           </el-row>
@@ -202,10 +206,6 @@ export default {
       author_limit: "", //限制学生人数
       mentor_limit: "", //限制指导老师人数
       filename: "upFile",
-      studentList: [], //学生选择列表
-      authorIds: [], //学生IDS
-      teacherList: [], //老师选择列表
-      teacherIds: [], //老师ids
       content: "", //活动介绍
       activityProjectId: this.$route.query.id, //活动项目id
       activityProjectDetail: {}, //活动项目信息
@@ -214,13 +214,15 @@ export default {
       operate: this.$route.query.operate,
       uploadTypeObj: { 1: "picture", 2: "video", 3: "work" },
       uploadTypeChar: { 1: "图片", 2: "视频", 3: "普通文档" },
-      category_id: ""
+      category_id: "",
+      authorList: [{ name: "", mobile: "" }], //作者列表
+      authorIds: [], //学生IDS
+      teacherList: [{ name: "", mobile: "" }], //老师选择列表
+      teacherIds: [], //老师ids
     };
   },
   created() {
     let params = {};
-    this.getTeacherList(params);
-
     if (this.operate == 0) {
       this.getObjectDetail();
     } else {
@@ -229,8 +231,7 @@ export default {
     }
   },
   mounted() {
-    let params = {};
-    this.getStudentList(params);
+  
   },
   methods: {
     //读取报名项目详情
@@ -306,11 +307,6 @@ export default {
       data.forEach(item => {
         this.registration = item.url;
       });
-    },
-
-    handlePreview(file) {
-      console.log(file);
-      window.open(file.url);
     },
 
     //作品上传
@@ -404,15 +400,6 @@ export default {
         return;
       }
       params.attachment = this.attachment;
-      // if(this.formats.length>0&&this.operate!=0){
-      //   let attachment={};
-      //   for(let i=0;i<this.formats.length;i++){
-      //     attachment[this.formats[i].id]={"url":this.formats[i].url,"title":this.formats[i].name};
-      //   }
-      //   params.attachment =Object.assign(this.attachment,attachment);
-      // }else{
-      //    params.attachment = this.attachment;
-      // }
       console.log("params===", params);
       if (this.operate == 0) {
         await axiosPost(params)
@@ -454,12 +441,7 @@ export default {
                 message: "修改成功！！",
                 type: "success"
               });
-              setTimeout(() => {
-                // this.$router.push({
-                //   path: "/home/submitEnroll"
-                // });
-                // this.$router.go(-1);
-              }, 1000);
+              setTimeout(() => {}, 1000);
             } else {
               that.$router.go(-1);
             }
@@ -467,7 +449,7 @@ export default {
           .catch(err => err);
       }
     },
-
+    //富文本编辑器
     editorChange(data) {
       this.content = data;
     },
@@ -486,93 +468,40 @@ export default {
           console.log("取消");
         });
     },
-    //获取学生列表
-    async getStudentList(params) {
-      delete params.mtype;
-      params.url = api.user;
-      params.expand = "memberAuth,memberInfo,roleInfo";
-      params.mtype = 2;
-      params.ball = 1;
-      await this.axiosGet(params)
-        .then(res => {
-          this.studentList = res.items;
-        })
-        .catch(err => err);
-    },
-    //获取老师列表
-    async getTeacherList(params) {
-      delete params.mtype;
-      params.url = api.user;
-      params.expand = "memberAuth,memberInfo,roleInfo";
-      params.mtype = 1;
-      params.ball = 1;
-      await this.axiosGet(params)
-        .then(res => {
-          this.teacherList = res.items;
-        })
-        .catch(err => err);
-    },
 
-    //作者
-    authorClose(id) {
-      this.authorIds.splice(this.authorIds.indexOf(id), 1);
-      let newAutorTags = [];
-      for (let i in this.authorTags) {
-        if (this.authorTags[i].id != id) {
-          newAutorTags.push(this.authorTags[i]);
-        }
-      }
-      this.authorTags = newAutorTags;
-    },
-
-    showAuthorInput() {
-      this.authorInputVisible = true;
-    },
-
-    authorInputConfirm(tag) {
-      if (this.authorIds.length < this.author_limit) {
-        this.authorIds.push(tag.id);
-        this.authorTags.push(tag);
+    //添加作者
+    addAuthor() {
+      if (this.authorList.length < this.author_limit) {
+        let author = { name: "", mobile: "" };
+        this.authorList.push(author);
       } else {
         this.$message({
           type: "warning",
           message: "人数已超出"
         });
       }
-
-      this.authorInputVisible = false;
-      this.authorInputValue = "";
     },
-    //作者
-    teacherClose(id) {
-      this.teacherIds.splice(this.teacherIds.indexOf(id), 1);
-      let newTeacherTags = [];
-      for (let i in this.teacherTags) {
-        if (this.teacherTags[i].id != id) {
-          newTeacherTags.push(this.teacherTags[i]);
-        }
-      }
-      this.teacherTags = newTeacherTags;
+    //删除作者
+    deleteAuthor(index){
+      this.authorList.splice(index,1)
     },
 
-    showTeacherInput() {
-      this.teacherInputVisible = true;
-    },
-
-    teacherInputConfirm(data) {
-      console.log(data);
-      if (this.teacherIds.length < this.mentor_limit) {
-        this.teacherTags.push(data);
-        this.teacherIds.push(data.id);
+    //添加老师
+    addTeacher() {
+      if (this.teacherList.length < this.mentor_limit) {
+        let author = { name: "", mobile: "" };
+        this.teacherList.push(author);
       } else {
         this.$message({
           type: "warning",
           message: "人数已超出"
         });
       }
-      this.teacherInputVisible = false;
-      this.teacherInputValue = "";
-    }
+    },
+    //删除老师
+    deleteTeacher(index){
+      this.teacherList.splice(index,1)
+    },
   }
 };
 </script>
@@ -600,6 +529,17 @@ export default {
       color: #999;
       margin-left: 20px;
     }
+  }
+}
+.my-editer {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  p {
+    width: 70px;
+    font-size: 14px;
+    color: #666;
   }
 }
 </style>

@@ -18,13 +18,23 @@
           </div>
           <el-form-item label="学生人数上限:" prop="author_limit">
             <el-col :span="9">
-              <el-input placeholder v-model="form.author_limit" size="small" type="number"></el-input>
+              <el-input-number
+                v-model="form.author_limit"
+                :min="0"
+                controls-position="right"
+                size="medium"
+              ></el-input-number>
             </el-col>
           </el-form-item>
 
           <el-form-item label="指导老师上限:" prop="mentor_limit">
             <el-col :span="9">
-              <el-input placeholder v-model="form.mentor_limit" size="small" type="number"></el-input>
+              <el-input-number
+                v-model="form.mentor_limit"
+                :min="0"
+                controls-position="right"
+                size="medium"
+              ></el-input-number>
             </el-col>
           </el-form-item>
           <el-form-item label="学段设置 :" prop="actLimit">
@@ -36,47 +46,60 @@
               >{{item.name}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
+          <template v-for="(item,index) in form.formats" >
+            <el-form-item label="作品上传格式:" >
+              <el-select
+                v-model="item.type"
+                filterable
+                placeholder="请选择"
+                size="small"
+                @change="(value)=>{ChangeFormatsType(value,index)}"
+              >
+                <el-option
+                  v-for="(subItem) in uploadFormatons"
+                  :key="subItem.value"
+                  :label="subItem.label"
+                  :value="subItem.value"
+                ></el-option>
+              </el-select>
 
-          <el-form-item label="作品上传格式:" prop="formats">
-            <el-select
-              v-model="type"
-              filterable
-              placeholder="请选择"
+              <span>大小限制：</span>
+              <el-select
+                v-model="item.size"
+                filterable
+                placeholder="请选择"
+                size="small"
+                @change="(value)=>{ChangeFormatsSize(value,index)}"
+              >
+                <el-option
+                  v-for="(subItem) in sizeRestriction"
+                  :key="subItem.value"
+                  :label="subItem.label"
+                  :value="subItem.value"
+                ></el-option>
+              </el-select>
+              <el-button size="small" @click="deleteUploadType(index)" type="text" style="color:red;margin-left:160px">删除</el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-input
+                v-model="item.remark"
+                placeholder="输入备注"
+                @input="ChangeFormatsRemark(index)"
+                style="width:700px"
+                type="textarea"
+                :rows="2"
+              ></el-input>
+            </el-form-item>
+          </template>
+          <el-form-item>
+            <el-button
+              type="primary"
+              @click="addUploadType()"
               size="small"
-              @change="ChangeFormatsType"
-            >
-              <el-option
-                v-for="(item,index) in uploadFormatons"
-                :key="index"
-                :label="item.label"
-                :value="index"
-              ></el-option>
-            </el-select>
-
-            <span>大小限制：</span>
-            <el-select
-              v-model="size"
-              filterable
-              placeholder="请选择"
-              size="small"
-              @change="ChangeFormatsSize"
-            >
-              <el-option
-                v-for="(item,index) in sizeRestriction"
-                :key="index"
-                :label="item.label"
-                :value="index"
-              ></el-option>
-            </el-select>
+              plain
+              icon="el-icon-plus"
+            >添加上传入口</el-button>
           </el-form-item>
-          <el-form-item prop="remark">
-            <el-input
-              v-model="remark"
-              placeholder="输入备注"
-              @input="ChangeFormatsRemark"
-            ></el-input>
-          </el-form-item>
-
           <el-form-item>
             <el-button type="primary" @click="onSubmit()" size="small">确定</el-button>
             <el-button @click="back()" size="small">取消</el-button>
@@ -126,8 +149,8 @@ export default {
         content: "", //内容
         author_limit: "", //作者上限
         mentor_limit: "", //指导老师限制
-        formats: [],
-        period: '' //学段设置
+        formats: [{type:1,size:1,remark:''}],
+        period: "" //学段设置
       },
       uploadFormatons: [
         {
@@ -141,42 +164,45 @@ export default {
         {
           value: 3,
           label: "普通文件"
+        },
+        {
+          value: 4,
+          label: "压缩文件"
         }
       ],
       sizeRestriction: [
         {
-          value: 1024*1024,
+          value: 1,
           label: "1MB"
         },
         {
-          value: 5 * 1024*1024,
+          value: 5,
           label: "5MB"
         },
         {
-          value: 10 * 1024*1024,
+          value: 10,
           label: "10MB"
         },
         {
-          value: 20 * 1024*1024,
+          value: 20,
           label: "50MB"
         },
         {
-          value: 100 * 1024*1024,
+          value: 100,
           label: "100MB"
         },
         {
-          value: 500 * 1024*1024,
+          value: 500,
           label: "500MB"
         }
       ],
       flag: "",
       limitSet: false,
       inputtext: "",
-      sos: [],
-      period: [] ,//学段
-      size:'',//文件大小
-      remark:'',//备注
-      type:'',//文件类型
+      period: [], //学段
+      size: "", //文件大小
+      remark: "", //备注
+      type: "", //文件类型
     };
   },
   watch: {
@@ -197,40 +223,47 @@ export default {
         this.inputtext = this.content;
         this.form.author_limit = list.author_limit;
         this.form.mentor_limit = list.mentor_limit;
-        this.form.period=list.period
-        for(let i in this.periodList){
-          for(let j in list.period){
-            if(this.periodList[i].id==list.period[j]){
-              this.period.push(this.periodList[i])
+        this.form.period = list.period;
+        let arr=[1,2,4,8,16,32,64]
+        let period=this.getSubSet(list.period,arr)
+         for (let i in this.periodList) {
+          for (let j in period) {
+            if (this.periodList[i].id == period[j]) {
+              this.period.push(this.periodList[i]);
             }
           }
         }
-        this.size=list.formats[0].size/(1024*1024)+'MB'
-        
-        for(let k in this.uploadFormatons){
-          if(this.uploadFormatons[k].value==list.formats[0].type){
-            this.type = this.uploadFormatons[k].label;
-          }
-        }
-        this.remark = list.formats[0].remark;
-        this.form.formats=list.formats
+        console.log("this.period===",this.period)
+        this.form.formats = list.formats;
       }
     }
   },
   computed: {},
   mounted() {},
   methods: {
+    //增加文件上传入口
+    addUploadType(){
+      let item={type:1,size:1,remark:''}
+      this.form.formats.push(item)
+    },
+    //删除问卷上传入口
+    deleteUploadType(index){
+      console.log("index==",index)
+      this.form.formats.splice(index,1)
+    },
     //文件上传格式
-    ChangeFormatsType(item) {
-      this.form.formats.push({ type: this.uploadFormatons[item].value });
+    ChangeFormatsType(value,index) {
+      console.log("index==",index,"value===",value)
+      this.form.formats[index].type=value
     },
     //大小限制
-    ChangeFormatsSize(item) {
-      this.form.formats[0].size = this.sizeRestriction[item].value;
+    ChangeFormatsSize(value,index) {
+      console.log("index==",index,"value===",value)
+      this.form.formats[index].size = value;
     },
     //备注
-    ChangeFormatsRemark(item) {
-      this.form.formats[0].remark = this.remark;
+    ChangeFormatsRemark(index) {
+      // this.form.formats[index].remark = this.remark;
     },
 
     editorChange(data) {
@@ -242,13 +275,14 @@ export default {
 
     //学段选择
     periodChange(value) {
-      this.form.period=''
-      this.period=value
-      let period=0
-      for(let i in this.period){
-        period+=parseInt(this.period[i].id)
+      console.log("学段===",value)
+      this.form.period = "";
+      this.period = value;
+      let period = 0;
+      for (let i in this.period) {
+        period += parseInt(this.period[i].id);
       }
-      this.form.period=period
+      this.form.period = period;
     },
     //提交
     onSubmit() {
@@ -287,29 +321,29 @@ export default {
         });
         return;
       }
-      let addActivityForm=JSON.parse(sessionStorage.getItem('addActivityForm'))
-      let index=this.$route.query.id
-      if(this.$route.query.operate==0){
-        addActivityForm.category[index].child.push(this.form)
-      }else if(this.$route.query.operate==1){
-        let subIndex=this.$route.query.subId
-        addActivityForm.category[index].child[subIndex]=this.form
+      let addActivityForm = JSON.parse(
+        sessionStorage.getItem("addActivityForm")
+      );
+      let index = this.$route.query.id;
+      if (this.$route.query.operate == 0) {
+        addActivityForm.category[index].child.push(this.form);
+      } else if (this.$route.query.operate == 1) {
+        let subIndex = this.$route.query.subId;
+        addActivityForm.category[index].child[subIndex] = this.form;
       }
       sessionStorage.setItem(
         "addActivityForm",
         JSON.stringify(addActivityForm)
-      )
+      );
       this.$message({
-          type: 'success ',
-          message:"操作成功"
+        type: "success ",
+        message: "操作成功"
       });
-      setTimeout(()=>{
-        this.back()
-      },1000)
-      
+      setTimeout(() => {
+        this.back();
+      }, 1000);
     },
-    handlePictureCardPreview() {},
-    handleRemove() {}
+    
   }
 };
 </script>

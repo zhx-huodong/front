@@ -84,15 +84,22 @@
           tooltip-effect="dark"
           style="width: 100%"
           @selection-change="tableSelectionChange"
+        
         >
           >
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column label="序号" type="index" width="80" align="center"></el-table-column>
+          <el-table-column prop="" label="作品编号" show-overflow-tooltip>
+            <template slot-scope="scope">
+              SZ3251723
+            </template>
+          </el-table-column>
           <el-table-column prop="works.title" label="作品名称" show-overflow-tooltip>
             <template slot-scope="scope">
               <el-button type="text" @click="goToActDetail(scope.row.id)"> {{scope.row.works.title}}</el-button>
             </template>
           </el-table-column>
+          
           <el-table-column prop="author_" label="作者"></el-table-column>
           <el-table-column prop="mentor_" label="指导老师"></el-table-column>
           <el-table-column prop="areaName" label="所在地区" show-overflow-tooltip></el-table-column>

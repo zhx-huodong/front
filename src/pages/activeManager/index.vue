@@ -59,7 +59,7 @@
                     @click="goToActivityDetail(item.id)"
                     style="display:block"
                   >查看详情></el-button>
-                  <el-button type="text" style="color:red;" @click="deleteOne(item.id)">删除</el-button>
+                  <el-button type="text" style="color:red;" @click="deleteOne(item.id)" v-if="$store.state.account.nowRole.type!=3">删除</el-button>
                 </div>
               </div>
             </div>
