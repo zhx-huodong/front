@@ -84,7 +84,7 @@
           tooltip-effect="dark"
           style="width: 100%"
           @selection-change="tableSelectionChange"
-        
+          @cell-click="goToActDetail"
         >
           >
           <el-table-column type="selection" width="55"></el-table-column>
@@ -96,7 +96,7 @@
           </el-table-column>
           <el-table-column prop="works.title" label="作品名称" show-overflow-tooltip>
             <template slot-scope="scope">
-              <el-button type="text" @click="goToActDetail(scope.row.id)"> {{scope.row.works.title}}</el-button>
+              <el-button type="text"> {{scope.row.works.title}}</el-button>
             </template>
           </el-table-column>
           
@@ -114,8 +114,8 @@
             <template slot-scope="scope">
               <template
                 v-if="scope.row.professional.length>0"
-                v-for="item in scope.row.professional"
-              >{{item.name }}、</template>
+               
+              >{{scope.row.professionalArr.join("、")}}</template>
               <template v-else>未分配</template>
             </template>
           </el-table-column>
@@ -492,6 +492,17 @@ export default {
         .then(res => {
           this.tableData=[]
           this.tableData = res.items;
+          this.tableData.map(res=>{
+            // console.log(res);
+             res.professionalArr=res.professional.map(res1=>{
+                 if(res1.name!=undefined){
+                    return res1.name;
+                 }else{
+                   return [];
+                 }
+              })
+          })
+          console.log("Ces",this.tableData);
           this.tableData.forEach(ite => {
             var title = "";
             var areaName = "";
@@ -562,12 +573,13 @@ export default {
       params.page = this.currentPage;
       this.getEnrollList(params);
     },
-     goToActDetail(id) {
+     goToActDetail(row) {
+       console.log(row)
       // 跳转活动详情页
       this.$router.push({
         path: "/home/activityDetail",
         query: {
-          id: id,
+          id: row.id,
           look:0
         }
       });
