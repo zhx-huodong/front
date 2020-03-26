@@ -15,12 +15,13 @@
           <p>指导老师:{{teacher.join("、")}}</p>
           <p v-show="attachment.length!=0">
             作品附件:
-            <a
+            <file-preview :fileList="attachment[0]"></file-preview>
+            <!-- <a
               target="_blank"
               v-for="(item,index) in attachment[0]"
               :key="index"
               :href="item.url"
-            >{{item.title}}</a>
+            >{{item.title}}</a> -->
           </p>
         </div>
         <div class="like_counts" @click="onlike(id)">

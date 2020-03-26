@@ -15,6 +15,7 @@
         <el-card style="margin-top:10px;">
             <div class="title">
                 <p>{{activityDetail.works.title}}</p>
+                <span style="position:absolute;right:0;color:#999999">作品编号:{{activityDetail.serial_id}}</span>
                 <div class="act-button">
                     <!-- v-show="activityDetail.period<=1" -->
                     <el-button type="primary"  plain size="small" @click="goToEdit" v-if="look!=0&&process==1">修改</el-button>

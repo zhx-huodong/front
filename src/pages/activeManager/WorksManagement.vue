@@ -16,19 +16,19 @@
       <el-row>
         <el-col :span="6">
           <el-form-item label="所在学校：">
-            <el-input v-model="form.school" placeholder="请输入" size="small" style="width:160px"></el-input>
+            <el-input v-model="form.school" placeholder="请输入" size="small" ></el-input>
           </el-form-item>
         </el-col>
 
         <el-col :span="4">
           <el-form-item label="作者：">
-            <el-input v-model="form.author" placeholder="请输入作者" size="small" style="width:120px"></el-input>
+            <el-input v-model="form.author" placeholder="请输入作者" size="small" style="width:120px;"></el-input>
           </el-form-item>
         </el-col>
 
         <el-col :span="6">
           <el-form-item label="指导老师：">
-            <el-input v-model="form.mentor" placeholder="请输入指导老师" size="small" style="width:160px"></el-input>
+            <el-input v-model="form.mentor" placeholder="请输入指导老师" size="small" ></el-input>
           </el-form-item>
         </el-col>
 
@@ -38,7 +38,15 @@
               v-model="form.work_title"
               placeholder="请输入作品名称"
               size="small"
-              style="width:160px"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+         <el-col :span="6">
+          <el-form-item label="作品编号：">
+            <el-input
+              v-model="form.work_id"
+              placeholder="请输入作品编号"
+              size="small"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -72,7 +80,11 @@
         plain
         v-if="$store.state.account.nowRole.type==3"
       >退回作品</el-button>
+      
     </el-row>
+    
+       
+   
     <div style="margin-top:16px;">
       <template>
         <!-- 序号 报名时间 报名人 联系电话 所在地区 所在学校 -->
@@ -84,19 +96,19 @@
           tooltip-effect="dark"
           style="width: 100%"
           @selection-change="tableSelectionChange"
-        
+          @cell-click="goToActDetail"
         >
           >
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column label="序号" type="index" width="80" align="center"></el-table-column>
           <el-table-column prop="" label="作品编号" show-overflow-tooltip>
             <template slot-scope="scope">
-              SZ3251723
+              {{scope.row.serial_id}}
             </template>
           </el-table-column>
           <el-table-column prop="works.title" label="作品名称" show-overflow-tooltip>
             <template slot-scope="scope">
-              <el-button type="text" @click="goToActDetail(scope.row.id)"> {{scope.row.works.title}}</el-button>
+              <el-button type="text"> {{scope.row.works.title}}</el-button>
             </template>
           </el-table-column>
           
@@ -114,8 +126,8 @@
             <template slot-scope="scope">
               <template
                 v-if="scope.row.professional.length>0"
-                v-for="item in scope.row.professional"
-              >{{item.name }}、</template>
+               
+              >{{scope.row.professionalArr.join("、")}}</template>
               <template v-else>未分配</template>
             </template>
           </el-table-column>
@@ -194,7 +206,8 @@ export default {
         school: "",
         work_title: "",
         mentor: "",
-        author: ""
+        author: "",
+        work_id:"",//作品编号
       },
       tableData: [],
       dialogVisible: false,
@@ -470,6 +483,9 @@ export default {
       if (this.form.author != "") {
         params.author = this.form.author;
       }
+      if (this.form.work_id != "") {
+        params.serial_id = this.form.work_id;
+      }
       if (this.period != 0 && this.period != "") {
         params.period = this.period;
       }
@@ -492,6 +508,17 @@ export default {
         .then(res => {
           this.tableData=[]
           this.tableData = res.items;
+          this.tableData.map(res=>{
+            // console.log(res);
+             res.professionalArr=res.professional.map(res1=>{
+                 if(res1.name!=undefined){
+                    return res1.name;
+                 }else{
+                   return [];
+                 }
+              })
+          })
+          console.log("Ces",this.tableData);
           this.tableData.forEach(ite => {
             var title = "";
             var areaName = "";
@@ -562,12 +589,13 @@ export default {
       params.page = this.currentPage;
       this.getEnrollList(params);
     },
-     goToActDetail(id) {
+     goToActDetail(row) {
+       console.log(row)
       // 跳转活动详情页
       this.$router.push({
         path: "/home/activityDetail",
         query: {
-          id: id,
+          id: row.id,
           look:0
         }
       });

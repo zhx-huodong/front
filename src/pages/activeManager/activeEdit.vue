@@ -62,7 +62,7 @@
                   :value="subItem.value"
                 ></el-option>
               </el-select>
-
+              
               <span>大小限制：</span>
               <el-select
                 v-model="item.size"
@@ -80,6 +80,10 @@
               </el-select>
               <el-button size="small" @click="deleteUploadType(index)" type="text" style="color:red;margin-left:160px">删除</el-button>
             </el-form-item>
+            <!-- <el-form-item>
+            <div style="color:#999999">备注:1.图片: 支持JPG、png、bmg等图片格式</div>
+
+            </el-form-item> -->
             <el-form-item>
               <el-input
                 v-model="item.remark"
@@ -149,7 +153,7 @@ export default {
         content: "", //内容
         author_limit: "", //作者上限
         mentor_limit: "", //指导老师限制
-        formats: [{type:1,size:1,remark:''}],
+        formats: [{type:1,size:1,remark:'支持JPG、png、bmg等图片格式'}],
         period: "" //学段设置
       },
       uploadFormatons: [
@@ -253,6 +257,8 @@ export default {
     },
     //文件上传格式
     ChangeFormatsType(value,index) {
+      let remark=["支持JPG、png、bmg等图片格式","支持 MPG、MPEG、WMV、AVI、 MOV、  MP4等常用视频格式","支持word、pdf等常用格式","支持zip、rar等常用格式"]
+      this.form.formats[index].remark = remark[value-1];
       console.log("index==",index,"value===",value)
       this.form.formats[index].type=value
     },
@@ -263,7 +269,8 @@ export default {
     },
     //备注
     ChangeFormatsRemark(index) {
-      // this.form.formats[index].remark = this.remark;
+      
+      // console.log("备注",index);
     },
 
     editorChange(data) {

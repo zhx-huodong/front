@@ -19,10 +19,13 @@
                         <el-col :span="2">
                             <!-- <el-button type="primary" plain @click="goToDownload" size="small">下载评分表</el-button> -->
                         </el-col>
-                        <el-col :span="8" :offset="11">
+                        <el-col :span="10" :offset="6">
                             <el-form :inline="true" :model="formInline" class="demo-form-inline" style="width:900px">
+                                <el-form-item label="作品编号：" >
+                                    <el-input v-model="formInline.work_id" placeholder="输入作品编号" style="width:250px" size="small"></el-input>
+                                </el-form-item>
                                 <el-form-item label="作品名称：" >
-                                    <el-input v-model="formInline.activityName" placeholder="输入作品姓名" style="width:350px" size="small"></el-input>
+                                    <el-input v-model="formInline.activityName" placeholder="输入作品名称" style="width:250px" size="small"></el-input>
                                 </el-form-item>
                                 <el-form-item>
                                     <el-button type="primary" @click="goToSearch" size="small">查找</el-button>
@@ -49,27 +52,31 @@
                             type="index"
                             width="100">
                             </el-table-column>
-
+                             <el-table-column
+                            prop="serial_id"
+                            label="作品编号"
+                            show-overflow-tooltip>
+                            </el-table-column>
                             <el-table-column
-                            prop="activity"
+                            prop="info.activity"
                             label="活动名称"
                             show-overflow-tooltip>
                             </el-table-column>
 
                             <el-table-column
-                            prop="category"
+                            prop="info.category"
                             label="活动类型"
                             show-overflow-tooltip>
                             </el-table-column>
 
                             <el-table-column
-                            prop="project"
+                            prop="info.project"
                             label="活动项目"
                             show-overflow-tooltip>
                             </el-table-column>
 
                             <el-table-column
-                            prop="title"
+                            prop="works.title"
                             label="作品名称"
                             show-overflow-tooltip>
                             </el-table-column>
@@ -154,7 +161,8 @@ export default {
             gradeSelectID:'',//学段选择的id
             formInline: {
                 activityName: '',
-                activityType:''
+                activityType:'',
+                work_id:'',
             },
             tableData: [
                 // {
@@ -240,6 +248,9 @@ export default {
             if(that.formInline.activityName!=''){//按作品名称搜索
                 params.works_title=that.formInline.activityName;
             }
+            if(that.formInline.work_id!=''){//按作品id搜索
+                params.serial_id=that.formInline.work_id;
+            }
             //if(that.selectedCell.length>0){
             //    params.bdownload=1;//支持下载作品附件
             //    params.id=that.selectedCell.join(",");//需要导出或下载的记录
@@ -257,14 +268,17 @@ export default {
                 
                 that.tableData=[];
                 let item=res.items;
-                for(let i=0;i<item.length;i++){
-                // console.log("ces",Object.assign(item[i].info,item[i].works));
-                    that.tableData.push(Object.assign(item[i].info,item[i].works,item[i].professional));
-                }
+                that.tableData=item;
+
                 for(let i=0;i<that.tableData.length;i++){
-                    that.tableData[i].comment=that.tableData[i][0].comment||"";
-                    that.tableData[i].score=that.tableData[i][0].score/10||0;
+                       that.tableData[i].score=that.tableData[i].professional.map(res=>{
+                           return res.score/10;
+                       });
+                       that.tableData[i].comment=that.tableData[i].professional.map(res=>{
+                           return res.comment;
+                       });
                 }
+
                 that.pages.per_page=res._meta.pageCount;
                 that.pages.now_page=res._meta.currentPage;
                 that.pages.total=res._meta.totalCount;

@@ -1,34 +1,35 @@
 <template>
     <div class="work-score-container">
         <el-card style="min-height:600px;">
-            
-            <el-tabs v-model="activeName">
-                <el-tab-pane label="查看" name="look">
-                    <div style="width:900px">
-                        <el-row>
-                            <el-form ref="form" :model="form" label-width="100px">
-                                <el-form-item label="作品名称：">
-                                    <el-col>{{form.activityName}}</el-col>
-                                </el-form-item>
-
-                                <el-form-item label="作品简介：">
-                                    <!-- <el-col>{{form.introduction}}</el-col> -->
-                                    <div class="content" v-html="form.introduction"></div>
-                                </el-form-item>
-
-                                <el-form-item label="报名登记表：">
-                                    <el-col><a :href="form.regForm"  target="_blank">报名登记表</a></el-col>
-                                </el-form-item>
-
-                                <el-form-item label="作品附件：">
-                                    <el-col v-for="(item,index) in form.annex" :key="index"><a :href="item.url" target="_blank">附件{{item.title}}</a><span class="remark">备注:{{item.remark}}</span></el-col>
-                                </el-form-item>    
-                            </el-form>
-                        </el-row>
+                  <div slot="header" class="clearfix">
+                      <el-button type="defualt" size="mini" @click="goback">返回</el-button>
+                      <span style="margin-left:42%;">测试</span>
+                      <span style="float:right;color:#999999">作品编号:{{workDetail.serial_id}}</span>
                     </div>
-                </el-tab-pane>
-            </el-tabs>
-
+                     <div class="workContainer">
+                       <div v-html="workDetail.works.content" class="content"></div>
+                       <div class="workDetail">
+                         <p>活动组别:{{workDetail.info.category}}</p>
+                         <p>活动项目:{{workDetail.info.project}}</p>
+                         <p>作者:{{author.join("、")}}</p>
+                         <p>作者邮箱:{{workDetail.works.email}}</p>
+                         <p>指导老师:{{teacher.join("、")}}</p>
+                         <p>作品封面:</p>
+                         <div><img :src="workDetail.works.cover" /></div>
+                         <p>报名登记表:</p>
+                         <div><img :src="workDetail.registration" /></div>
+                         <p v-show="attachment.length!=0">
+                           作品附件:
+                           <a
+                             target="_blank"
+                             v-for="(item,index) in attachment[0]"
+                             :key="index"
+                             :href="item.url"
+                           >{{item.title}}</a>
+                         </p>
+                       </div>
+                    
+                     </div>
             <el-tabs v-model="activeDetail">
                 <el-tab-pane label="评分信息" name="detail">
                     <div style="width:900px">
@@ -87,12 +88,10 @@ export default {
         return{
             activeName:'look',
             activeDetail:'detail',
-            form: {
-                activityName: '',
-                introduction:'',
-                regForm:[],
-                annex:[]
-            },
+            author: [],
+            teacher: [],
+            attachment: [],
+            workDetail: {},
             form2:{
                 score:Number(this.$route.query.score),//评分
                 introduction:this.$route.query.comment,//评语
@@ -116,18 +115,36 @@ export default {
             params.url=api.enroll;
             params.id=queryId;
             params.inscore=1;
-            params.expand="works";
+            params.expand="works,info";
             await this.axiosGet(params).then(res=>{
-                that.form.activityName=res.works.title;
-                that.form.introduction=res.works.content;
-                that.form.annex=res.works.attachment.map(res=>{
-                    return{
-                        "remark":res.remark,
-                        "url":res.url,
-                        "title":res.title,
-                    }
-                })
-                that.form.regForm=res.registration;
+                that.workDetail = res;
+                that.author = res.info.author.map(res => {
+                  return res.name;
+                });
+                that.teacher = res.info.mentor.map(res => {
+                  return res.name;
+                });
+                if (res.works.attachment.length != 0) {
+                  that.attachment.push(
+                    res.attachment.map(res => {
+                      return {
+                        title: res.title,
+                        url: res.url
+                      };
+                    })
+                  );
+                }
+
+                // that.form.activityName=res.works.title;
+                // that.form.introduction=res.works.content;
+                // that.form.annex=res.works.attachment.map(res=>{
+                //     return{
+                //         "remark":res.remark,
+                //         "url":res.url,
+                //         "title":res.title,
+                //     }
+                // })
+                // that.form.regForm=res.registration;
                 that.dialogVisible=false;
             }).catch(err=>{
                 if(err.status===404){
@@ -192,6 +209,9 @@ export default {
                 //     message: '下一份'
                 // });
             //});
+        },
+        goback(){
+            this.$router.push({path:'/workReview'})
         }
     }
 }
@@ -201,6 +221,25 @@ export default {
     width:1180px;
     margin:auto;
     margin-top:20px;
+    .workContainer{
+         margin: 20px 30px;
+    .workDetail {
+        margin: 20px 0;
+        text-align: left;
+        color: #333333;
+        font-size: 14px;
+        img{
+            width:30%;
+            height:200px;
+        }
+        p {
+          line-height: 30px;
+        a {
+          cursor: pointer;
+        }
+    }
+  }
+}
 }
 .remark{
     font-size:14px;
