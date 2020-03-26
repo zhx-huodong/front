@@ -157,6 +157,11 @@ export default {
       params.url = api.activityDetail
       params.expand =
           "detail,region,node,attachment,banner,category,categoryDetail,process,progress"
+      if(this.$store.state.account.nowRole.type==3){
+        params.inregion=1
+      } else if(this.$store.state.account.nowRole.type==2){
+        params.created_by=this.$store.state.account.user.id
+      }
       let res = await this.axiosGet(params)
         .then(res => {
           this.activityList = res.items;

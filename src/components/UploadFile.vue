@@ -93,6 +93,9 @@ export default {
     } else if (this.uploadType == "zip") {
       this.validList = ["zip"];
       this.fileIconUrl = require("../public/images/file-icon/zip.svg");
+    }else if(this.uploadType=="all"){
+      this.validList = ["png", "jpg", "jpeg","mp4","zip","mp3","doc", "docx", "pdf", "xls", "xls"];
+      this.fileIconUrl = require("../public/images/file-icon/default.svg");
     }
   },
   methods: {

@@ -71,12 +71,11 @@ export default {
       code: true,
       btnTag: "获取验证码",
       timer: null,
-      countDownNum: ""
+      countDownNum: "",//倒计时
+      memberTypeObj:{0:"超级管理员",2:"市级管理员",3:'区级管理员',4:"专家",11:"老师",12:"学生"}
     };
   },
-  computed: {
-   
-  },
+  computed: {},
   methods: {
     showDialog() {
       this.show = true;
@@ -99,7 +98,7 @@ export default {
       params.url = api.captcha;
       params.account = this.phoneNum;
       let res = await this.axiosGet(params).catch(err => err);
-      if (res === "已发送") {
+      if (res.msg === "已发送") {
         this.code = true;
         this.countDownNum = 60;
         this.btnTag = "s重新获取";
@@ -129,31 +128,54 @@ export default {
       params.url = api.account;
       params.account = this.phoneNum;
       params.code = this.phoneCode;
-      let res = await this.axiosGet(params).catch(err => err);
-      if (res.code == -1) {
-        this.$message({
-          message: res.message,
-          type: "warning"
-        });
-      } else {
-        this.$store.dispatch("INIT_SHOW", false);
-        setCookie("x-api-key", res.token);
+      await this.axiosGet(params)
+        .then(res => {
+          if (res.code == -1) {
+            this.$message({
+              message: res.message,
+              type: "warning"
+            });
+          } else {
+            this.$store.dispatch("INIT_SHOW", false);
+            setCookie("x-api-key", res.token);
 
-        const loading = this.$loading({
-          lock: true,
-          text: "登录中。。",
-          spinner: "el-icon-loading",
-          background: "rgba(0, 0, 0, 0.7)"
-        });
-        setTimeout(() => {
-          loading.close();
-          this.show = false;
-          let params = {};
-          params.id = res.id;
-          params.expand = "roleInfo";
-          this.getUserInfo(params);
-        }, 2000);
-      }
+            this.$store.dispatch("INIT_USER", res);
+            let userInfo = JSON.stringify(res);
+            localStorage.setItem("user", userInfo);
+
+            let members=res.members.map(items=>{
+              let memberItem={}
+              memberItem.type=items.type
+              memberItem.name=this.memberTypeObj[items.type]
+              if(items.current!=undefined){
+                memberItem.current=items.current
+                let nowRole = JSON.stringify(memberItem);
+                localStorage.setItem("nowRole", nowRole);
+                this.$store.dispatch("INIT_NOWROLE", memberItem);
+              }
+              return memberItem
+            })
+            let roles = JSON.stringify(members);
+            localStorage.setItem("roles", roles);
+            this.$store.dispatch("INIT_ROLES", members);
+
+            const loading = this.$loading({
+              lock: true,
+              text: "登录中。。",
+              spinner: "el-icon-loading",
+              background: "rgba(0, 0, 0, 0.7)"
+            });
+            setTimeout(() => {
+              loading.close();
+              this.show = false;
+              // let params = {};
+              // params.id = res.id;
+              // params.expand = "roleInfo";
+              // this.getUserInfo(params);
+            }, 2000);
+          }
+        })
+        .catch(err => err);
     },
     wxLogin() {
       let redirectUri =

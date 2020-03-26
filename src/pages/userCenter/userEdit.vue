@@ -7,11 +7,11 @@
                 <p>个人信息</p>
             </div>
             <div class="user-edit-body">
-                <el-form ref="form" :model="form" label-width="100px">
+                <el-form ref="form"  :model="form" label-width="100px">
                     <el-form-item label="头像：">
                         <template>
                             <div class="user-icom">
-                                <img src="../../public/images/ac1.png"></img>
+                                <el-image :src="form.userIcon" fit="cover"></el-image>
                                 <div class="upload-icon">
                                     <el-upload
                                         :before-upload="beforeupload"
@@ -21,10 +21,9 @@
                                         :headers="headers"
                                         :action="action"
                                         :name="filename"
-                                       
                                         :limit="1"
                                         list-type="picture">
-                                        <!-- {'x-api-key':headerkey} -->
+                                        
                                         <el-button size="small" type="primary">上传头像</el-button>
                                     </el-upload>
                                 </div>
@@ -40,33 +39,18 @@
                     </el-form-item>
                     <el-form-item label="身份角色：">
                         <el-tag
-                            :key="tag"
-                            v-for="tag in identityTags"
+                            :key="index"
+                            v-for="(tag,index) in identityTags"
                             closable
-                            :disable-transitions="false"
-                            @close="handleClose(tag)">
-                            {{tag}}
+                            :disable-transitions="false">
+                            {{tag.name}}
                         </el-tag>
-                        <el-input
-                            class="input-new-tag"
-                            v-if="identityVisible"
-                            v-model="identityValue"
-                            ref="saveTagInput"
-                            size="small"
-                            @keyup.enter.native="handleInputConfirm"
-                            @blur="handleInputConfirm"
-                            >
-                        </el-input>
-                        <el-button v-else class="button-new-tag" type="primary" plain size="small" @click="showInput">添加角色</el-button>
                     </el-form-item>
                     <el-form-item label="所在区域：">
                         <el-input v-model="form.areaName"></el-input>
                     </el-form-item>
                     <el-form-item label="所在班级：">
                         <el-input v-model="form.className"></el-input>
-                    </el-form-item>
-                    <el-form-item label="获得证书：">
-                        <el-input v-model="form.cerNum"></el-input>
                     </el-form-item>
 
                     <el-form-item>
@@ -96,28 +80,26 @@ export default {
             },
             action:api.uploadPic,
             form: {
-                userIcon:'',
+                userIcon:require('../../public/images/ac1.png'),
                 userName: '',
                 unitName: '',
                 areaName: '',
-                className: '',
-                cerNum: 5,
+                className: ''
             },
             identityTags: [],
             identityVisible: false,
             identityValue: '',
-            
         }
     },
     created(){
         console.log(localStorage.user!="")
         if(localStorage.user!=""){
             this.form.userName=JSON.parse(localStorage.getItem("user")).name;
+            this.identityTags=JSON.parse(localStorage.getItem("roles"))
         }
     },
     methods: {
         beforeupload(file){
-            // this.datas={upFile:file.name} 
             console.log(file.name)
             console.log(file)
         },
@@ -147,21 +129,6 @@ export default {
         this.identityTags.splice(this.identityTags.indexOf(tag), 1);
       },
 
-      showInput() {
-        this.identityVisible = true;
-        this.$nextTick(_ => {
-          this.$refs.saveTagInput.$refs.input.focus();
-        });
-      },
-
-      handleInputConfirm() {
-        let identityValue = this.identityValue;
-        if (identityValue) {
-          this.identityTags.push(identityValue);
-        }
-        this.identityVisible = false;
-        this.identityValue = '';
-      },
       //提交
       onSubmit(){
 
@@ -205,7 +172,7 @@ export default {
           .user-icom{
               display:flex;
               align-items:center;
-              img{
+              .el-image{
                   height:80px;
                   width:80px;
                   border-radius:8px;

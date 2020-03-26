@@ -47,6 +47,7 @@
           <el-input
             type="textarea"
             :rows="5"
+            v-model="production"
             placeholder="请填写创作过程"
             style="width:715px;"
           ></el-input>
@@ -54,6 +55,7 @@
         <el-form-item label="参考资源：">
           <el-input
             type="textarea"
+            v-model="reference"
             :rows="5"
             placeholder="请填写参考资源"
             style="width:715px;"
@@ -62,6 +64,7 @@
         <el-form-item label="制作用软件及运行环境：">
           <el-input
             type="textarea"
+            v-model="environment"
             :rows="5"
             placeholder="请填写创作过程"
             style="width:715px;"
@@ -70,6 +73,7 @@
         <el-form-item label="其他说明：">
           <el-input
             type="textarea"
+            v-model="remark"
             :rows="3"
             placeholder="请填写其他说明"
             style="width:715px;"
@@ -106,11 +110,11 @@
               <el-row v-for="(item,index) in authorList" :key="index">
                 <el-col :span="1" style="color:#999;">姓名:</el-col>
                 <el-col :span="4">
-                  <el-input size="small" :value="item.name"></el-input>
+                  <el-input size="small" v-model="item.name"></el-input>
                 </el-col>
                 <el-col :span="1" style="color:#999;" :offset="1">电话:</el-col>
                 <el-col :span="4">
-                  <el-input size="small" :value="item.mobile"></el-input>
+                  <el-input size="small" v-model="item.mobile"></el-input>
                 </el-col>
                 <el-col :span="2" :offset="1">
                   <el-button
@@ -134,11 +138,11 @@
               <el-row v-for="(item,index) in teacherList" :key="index">
                 <el-col :span="1" style="color:#999;">姓名:</el-col>
                 <el-col :span="4">
-                  <el-input size="small" :value="item.name"></el-input>
+                  <el-input size="small" v-model="item.name"></el-input>
                 </el-col>
                 <el-col :span="1" style="color:#999;" :offset="1">电话:</el-col>
                 <el-col :span="4">
-                  <el-input size="small" :value="item.mobile"></el-input>
+                  <el-input size="small" v-model="item.mobile"></el-input>
                 </el-col>
                 <el-col :span="2" :offset="1">
                   <el-button
@@ -212,13 +216,17 @@ export default {
       formats: [], //作品上传
       attachment: {}, //作品上传
       operate: this.$route.query.operate,
-      uploadTypeObj: { 1: "picture", 2: "video", 3: "work" },
-      uploadTypeChar: { 1: "图片", 2: "视频", 3: "普通文档" },
+      uploadTypeObj: { 1: "picture", 2: "video", 3: "work",4:'zip' },
+      uploadTypeChar: { 1: "图片", 2: "视频", 3: "普通文档",4:"压缩文件" },
       category_id: "",
       authorList: [{ name: "", mobile: "" }], //作者列表
       authorIds: [], //学生IDS
       teacherList: [{ name: "", mobile: "" }], //老师选择列表
       teacherIds: [], //老师ids
+      production:'',//创作过程
+      reference:'',//参考资料
+      environment:'',//制作软件及运行环境
+      remark:'',//其他说明
     };
   },
   created() {
@@ -258,8 +266,6 @@ export default {
           });
           console.log("我是", that.formats);
         }
-        // this.attachment=res.works.attachment
-
         that.form.cover.push({ url: res.works.cover });
 
         that.form.registration.push({ url: res.registration });
@@ -328,6 +334,10 @@ export default {
       let params = {};
       params.url = api.works;
       params.category_id = this.activityProjectDetail.id;
+      params.production=this.production
+      params.reference=this.reference
+      params.environment=this.environment
+      params.remark=this.remark
       if (this.form.title != "") {
         params.title = this.form.title;
       } else {
@@ -368,13 +378,16 @@ export default {
         });
         return;
       }
-      if (this.authorIds.length > 0) {
-        params.author = this.authorIds;
-      } else if (this.authorTags.length > 0 && this.operate != 0) {
-        params.author = this.authorTags.map(res => {
-          return res.id;
-        });
-      } else {
+
+      if (this.authorList.length > 0) {
+        params.author = this.authorList;
+      }
+      //  else if (this.authorTags.length > 0 && this.operate != 0) {
+      //   params.author = this.authorTags.map(res => {
+      //     return res.id;
+      //   });
+      // } 
+      else {
         this.$message({
           message: "请添加作者",
           type: "warning"
@@ -382,13 +395,14 @@ export default {
         return;
       }
 
-      if (this.operate != 0) {
-        params.mentor = this.teacherTags.map(res => {
-          return res.id;
-        });
-      } else {
-        params.mentor = this.teacherIds;
-      }
+      // if (this.operate != 0) {
+        params.mentor=this.teacherList
+        // params.mentor = this.teacherTags.map(res => {
+        //   return res.id;
+        // });
+      // } else {
+      //   params.mentor = this.teacherIds;
+      // }
 
       if (this.form.email !== "") {
         params.email = this.form.email;

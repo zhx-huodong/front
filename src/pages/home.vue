@@ -2,8 +2,6 @@
     <div class="home-center">
         <el-card style="min-height:650px;">
             <div class="home-wrap">
-                <!-- <upload-file></upload-file>
-                <upload-picture></upload-picture> -->
                 <div>
                     <type-select :gradeList="gradeList" :activityObjectList="activityObjectList" :regionList="regionList" @gradeObject='gradeObject' 
                     @regionObject="regionObject" @activityObject="activityObject" ></type-select>
@@ -28,7 +26,7 @@ export default {
     components: { CardList ,MyVideoPlayer,FilePreview,UploadFile,TypeSelect,UploadPicture},
     data() {
         return {
-            // videoSrc:'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4',
+            
             activityObjectList:[
                 {id:0,name:'全部'},
                 {id:1,name:'老师'},

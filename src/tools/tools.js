@@ -420,3 +420,11 @@ export function getSubSet(target,arr){
     }
     return result;
 }
+export function extname(filename){
+  if(!filename||typeof filename!='string'){
+     return false
+  };
+  let a = filename.split('').reverse().join('');
+  let b = a.substring(0,a.search(/\./)).split('').reverse().join('');
+  return b
+};

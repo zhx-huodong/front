@@ -1,15 +1,47 @@
 <template>
-  <div class="file-list">
-    <div class="file-preview" v-for="(item,index) in fileList" :key="index">
-      <div class="icon-name">
-        <img :src="fileIconUrl" alt />
-        <p>{{item.name||item.title}}</p>
-      </div>
+  <div class="container">
+    <!-- 图片 -->
+    <div class="picture-items" v-if="type==1">
+      <el-image :src="fileObj.url" fit="cover"></el-image>
       <div class="operate">
-        <el-button type="text" @click="onItemClick(item.url)">预览</el-button>
-        <el-button type="text">下载</el-button>
+        <p class="el-icon-zoom-in" @click="goToPreview(fileObj.url)"></p>
+      </div>
+      <p>{{fileObj.title||fileObj.name}}</p>
+    </div>
+    <!-- 视频 -->
+    <div class="picture-items" v-if="type==2">
+      <video :src="fileObj.url"></video>
+      <div class="operate">
+        <p class="el-icon-video-play" @click="goToPlay(fileObj.url)"></p>
+      </div>
+      <p>{{fileObj.title||fileObj.name}}</p>
+    </div>
+    <!-- 文件 -->
+    <div class="file-item" v-if="type==3">
+      <div class="file-preview">
+        <div class="icon-name">
+          <img :src="fileIconUrl" alt />
+          <p>{{fileObj.title||fileObj.name}}</p>
+        </div>
+        <div class="operate">
+          <el-button type="text" @click="goToDownLoad(fileObj.url)">下载</el-button>
+        </div>
       </div>
     </div>
+    <el-dialog
+      :visible.sync="dialogVisible"
+      width="800px"
+      :before-close="handleClose"
+      :show-close="false"
+    >
+      <div class="dialog-main">
+        <el-image :src="showUrl" v-if="type==1"></el-image>
+        <my-video-player :videoSrc="showUrl" ref="MyVideoPlayer" v-if="type==2"></my-video-player>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="closeDialog" size="small">关闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -18,37 +50,115 @@ const priviewReg = /\.(doc|docx|ppt|pptx|xls|xlsx|pdf|jpg|jpeg|png|bmp|zip|rar)$
 const pcPreviewReg = /\.(doc|docx|ppt|pptx|xls|xlsx|pdf|jpg|jpeg|png)$/;
 const officeFile = /\.(doc|docx|ppt|pptx|xls|xlsx)$/;
 const imageReg = /\.(jpg|jpeg|png)$/;
-const j = 1024;
-const kb = j;
-const mb = kb * j;
-const gb = mb * j;
-const tb = gb * j;
-import wx from "weixin-js-sdk";
+import MyVideoPlayer from "../components/MyVideoPlayer";
 export default {
+  components: { MyVideoPlayer },
   props: {
-    fileList: {
-      type: Array,
+    fileObj: {
+      type: Object,
       default() {
-        return [];
+        return {};
       }
     }
   },
   data() {
     return {
-      fileIconUrl: require("../public/images/file-icon/image.svg")
+      fileIconUrl: require("../public/images/file-icon/default.svg"),
+      dialogVisible: false,
+      type:1,
+      showUrl:'',
     };
   },
   mounted() {
-    console.log("fileList===", this.fileList);
+    console.log("filePreview===",this.fileObj)
+    if(this.extname(this.fileObj.url)=='jpg'||this.extname(this.fileObj.url)=='jpeg'||this.extname(this.fileObj.url)=='png'){
+      this.type=1
+    }else if(this.extname(this.fileObj.url)=='mp4'){
+      this.type=2
+    }else if(this.extname(this.fileObj.url)=='zip'){
+      this.type=3
+      this.fileIconUrl=require('../public/images/file-icon/zip.svg')
+    }else{
+      this.type=3
+      this.fileIconUrl=require('../public/images/file-icon/default.svg')
+    }
   },
   methods: {
-      onItemClick(url){
-          window.open(url)
+    //图片预览
+    goToPreview(url) {
+      this.dialogVisible = true;
+      this.showUrl=url
+    },
+    //视频播放
+    goToPlay(url){
+      this.dialogVisible = true;
+      this.showUrl=url
+      setTimeout(() => {
+        this.$refs.MyVideoPlayer.onPlayerPlay();
+      }, 1000);
+    },
+    //文件下载
+    goToDownLoad(url) {
+      window.open(url)
+    },
+    //关闭弹窗
+    closeDialog() {
+      this.dialogVisible = false;
+      if(this.type==2){
+        this.$refs.MyVideoPlayer.onPlayerPause();
       }
+      
+    },
+    handleClose(done) {},
   }
 };
 </script>
 <style lang="less" scoped>
+.picture-items {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+  width: 160px;
+  video{
+    width: 160px;
+    height: 100px;
+    border-radius: 4px;
+    border: 1px solid #198af3;
+  }
+  p {
+    font-size: 14px;
+    color: #666;
+  }
+  .el-image {
+    width: 160px;
+    height: 100px;
+    border: 1px solid #198af3;
+    border-radius: 4px;
+  }
+  .operate {
+    top: 0px;
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    display: none;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    p {
+      font-size: 28px;
+      margin: 0 10px;
+      color: #fff;
+      cursor: pointer;
+      line-height: 100px;
+    }
+  }
+}
+.picture-items:hover {
+  .operate {
+    display: block;
+  }
+}
 .file-preview {
   width: 100%;
   display: flex;
@@ -56,22 +166,28 @@ export default {
   justify-content: space-between;
   background-color: #ecf1f6;
   border-radius: 4px;
-  padding: 5px 10px;
+  padding-right: 10px;
   margin-bottom: 10px;
   .icon-name {
-    width: 40%;
+    // width: 40%;
     display: flex;
     flex-direction: row;
     align-items: center;
     img {
+      margin-left: 5px;
       height: 30px;
       width: 30px;
     }
     p {
-      margin-left: 20px;
+      margin-left: 10px;
+      color: #198af3;
+      font-size: 14px;
     }
   }
-  .operate {
+}
+.dialog-main{
+  .el-image{
+    width: 100%;
   }
 }
 </style>

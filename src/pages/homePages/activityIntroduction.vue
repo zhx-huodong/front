@@ -26,13 +26,12 @@
                 </div>
                 <div class="activity-int-item">
                   <div class="activity-int-content" v-html="activityObject.detail.content"></div>
-                  <!-- <el-image :src="activityObject.cover" fit="cover" style="width:650px;margin-top:20px;"></el-image> -->
                 </div>
               </div>
               <div class="activity-annex">
                 <p>相关附件：</p>
-                <div class="annex">
-                  <file-preview :fileList="activityObject.attachment"></file-preview>
+                <div class="annex" v-for="(item,index) in activityObject.attachment" :key="index">
+                  <file-preview :fileObj="item"></file-preview>
                 </div>
               </div>
               <el-divider></el-divider>
@@ -427,7 +426,6 @@ export default {
     async onlike(id) {
         let that=this;
         let params={};
-        //  console.log(that.apiKey);
         params.id=id;
         axios.get(api.like, 
          {params:params,
@@ -602,16 +600,18 @@ export default {
   }
   .activity-annex {
     display: flex;
-    flex-direction: row;
-    // align-items: center;
+    flex-direction: column;
     margin-top: 30px;
     p {
       font-size: 16px;
       color: #333;
     }
     .annex {
-      margin-left: 20px;
+      margin-left: 30px;
       width: 50%;
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
     }
   }
   .list-item {
@@ -623,7 +623,7 @@ export default {
     color: #333;
     margin-bottom: 20px;
     .list-item-content {
-      margin-left: 20px;
+      // margin-left: 20px;
     }
   }
   .tag {
