@@ -16,7 +16,7 @@
       <el-row>
         <el-col :span="6">
           <el-form-item label="所在学校：">
-            <el-input v-model="form.school" placeholder="请输入" size="small" style="width:160px"></el-input>
+            <el-input v-model="form.school" placeholder="请输入" size="small" ></el-input>
           </el-form-item>
         </el-col>
 
@@ -28,7 +28,7 @@
 
         <el-col :span="6">
           <el-form-item label="指导老师：">
-            <el-input v-model="form.mentor" placeholder="请输入指导老师" size="small" style="width:160px"></el-input>
+            <el-input v-model="form.mentor" placeholder="请输入指导老师" size="small" ></el-input>
           </el-form-item>
         </el-col>
 
@@ -38,7 +38,16 @@
               v-model="form.work_title"
               placeholder="请输入作品名称"
               size="small"
-              style="width:160px"
+              
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="作品编号：">
+            <el-input
+              v-model="form.work_id"
+              placeholder="请输入作品编号"
+              size="small"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -68,12 +77,13 @@
           tooltip-effect="dark"
           style="width: 100%"
           @selection-change="tableSelectionChange"
+           @cell-click="goToActDetail"
         >
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column label="序号" type="index" width="100" align="center"></el-table-column>
           <el-table-column prop="works.title" label="作品名称" show-overflow-tooltip>
             <template slot-scope="scope">
-              <el-button type="text" @click="goToActDetail(scope.row.id)"> {{scope.row.works.title}}</el-button>
+              <el-button type="text" > {{scope.row.works.title}}</el-button>
             </template>
           </el-table-column>
           <el-table-column prop="author_" label="指导老师"></el-table-column>
@@ -197,7 +207,8 @@ export default {
         school: "",
         work_title: "",
         mentor: "",
-        author: ""
+        author: "",
+        work_id:"",
       },
       tableData: [], //作品列表
       awardList: [], //奖品列表
@@ -300,6 +311,9 @@ export default {
       }
       if (this.form.author != "") {
         params.author = this.form.author;
+      }
+      if (this.form.work_id != "") {
+        params.serial_id = this.form.work_id;
       }
       if (this.period != 0 && this.period != "") {
         params.period = this.period;
@@ -642,12 +656,12 @@ export default {
       params.page = this.currentPage;
       this.getEnrollList(params);
     },
-     goToActDetail(id) {
+     goToActDetail(row) {
       // 跳转活动详情页
       this.$router.push({
         path: "/home/activityDetail",
         query: {
-          id: id,
+          id: row.id,
           look:0
         }
       });

@@ -146,7 +146,7 @@ export default {
     //获取活动列表
     async getActivityList() {
       let params = {};
-      params.process=this.process
+      params.process=this.process //注释掉是因为超级管理员看不到自己刚创建的活动
       if (this.time1.length != 0 && this.time2.length != 0) {
         params.upload_stime = this.time1 / 1000;
         params.upload_etime = this.time2 / 1000;
