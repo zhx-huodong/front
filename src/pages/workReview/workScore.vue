@@ -1,12 +1,14 @@
 <template>
     <div class="work-score-container">
         <el-card style="min-height:600px;">
-                  <div slot="header" class="clearfix">
+                  <!-- <div slot="header" class="clearfix">
                       <el-button type="defualt" size="mini" @click="goback">返回</el-button>
                       <span style="margin-left:42%;">测试</span>
                       <span style="float:right;color:#999999">作品编号:{{workDetail.serial_id}}</span>
-                    </div>
-                     <div class="workContainer">
+                    </div> -->
+                     <works-preview :id="queryId" inscore="1"></works-preview>
+
+                     <!-- <div class="workContainer">
                        <div v-html="workDetail.works.content" class="content"></div>
                        <div class="workDetail">
                          <p>活动组别:{{workDetail.info.category}}</p>
@@ -29,7 +31,7 @@
                          </p>
                        </div>
                     
-                     </div>
+                     </div> -->
             <el-tabs v-model="activeDetail">
                 <el-tab-pane label="评分信息" name="detail">
                     <div style="width:900px">
@@ -82,6 +84,7 @@
 <script>
 import api from "../../service/api";
 import { axiosGet, getCookie } from "../../tools/tools";
+import WorksPreview from '../homePages/WorksPreview'
 import axios from "axios";
 export default {
     data(){
@@ -97,16 +100,17 @@ export default {
                 introduction:this.$route.query.comment,//评语
             },
             apiKey:getCookie("x-api-key"),
-            queryId:this.$route.query.id,
+            queryId:Number(this.$route.query.id),
             dialogVisible:false,
         }
     },
+    components:{WorksPreview},
     mounted(){
 
     },
     created(){
         let that=this;
-        that.getWorkDetail(that.queryId);
+        // that.getWorkDetail(that.queryId);
     },
     methods:{
         async getWorkDetail(queryId){

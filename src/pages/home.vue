@@ -88,7 +88,7 @@ export default {
         async selectActive(){
             let params={}
             params.url=api.activityDetail
-            
+            params.process=1;
             if(this.activityObjectid!=0){
                 params.target=this.activityObjectid;
             }

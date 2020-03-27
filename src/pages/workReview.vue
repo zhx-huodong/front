@@ -13,12 +13,12 @@
                         <el-col :span="2">
                             <el-button type="primary" plain size="small" @click="downloadWork">下载作品</el-button>
                         </el-col>
-                        <el-col :span="3">
-                            <!-- <el-button type="primary" plain @click="goToImport" size="small">导入评分表</el-button> -->
+                        <!-- <el-col :span="3">
+                            <el-button type="primary" plain @click="goToImport" size="small">导入评分表</el-button>
                         </el-col>
                         <el-col :span="2">
-                            <!-- <el-button type="primary" plain @click="goToDownload" size="small">下载评分表</el-button> -->
-                        </el-col>
+                            <el-button type="primary" plain @click="goToDownload" size="small">下载评分表</el-button>
+                        </el-col> -->
                         <el-col :span="10" :offset="6">
                             <el-form :inline="true" :model="formInline" class="demo-form-inline" style="width:900px">
                                 <el-form-item label="作品编号：" >
@@ -326,6 +326,7 @@ export default {
         },
         //查看
         goToLook(row){
+            console.log(row);
             let query;
             this.$router.push({
                 path:'/workScore',

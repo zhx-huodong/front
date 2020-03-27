@@ -18,7 +18,9 @@
         </template>
       </div>
       <el-divider></el-divider>
-      <span style="font-size:16px;color:rgba(102,102,102,1);line-height:43px;">作品信息</span>
+      <works-preview :id="id"></works-preview>
+
+      <!-- <span style="font-size:16px;color:rgba(102,102,102,1);line-height:43px;">作品信息</span>
       <h2 style="text-align:center">{{workDetail.title}}</h2>
       <div style="width:700px;margin-left:220px;" v-html="workDetail.content"></div>
       <div style="text-align:center;margin-top:20px;">
@@ -35,17 +37,20 @@
           指导老师：
           <template v-for="item in workDetail.member.mentor">【{{item.name}}】</template>
         </p>
-        <p style="margin-top:10px;">作者邮箱：【{{workDetail.email}}】</p>
-      </div>
+        <p style="margin-top:10px;">作者邮箱：【{{workDetail.email}}】</p> -->
+      <!-- </div> -->
     </el-card>
   </div>
 </template>
 <script>
 import MyEditor from "../../components/MyEditor";
 import api from "../../service/api";
+import WorksPreview from '../homePages/WorksPreview'
+
 export default {
   components: {
-    MyEditor
+    MyEditor,
+    WorksPreview
   },
   data() {
     return {
