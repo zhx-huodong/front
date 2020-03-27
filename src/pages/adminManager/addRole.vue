@@ -5,11 +5,12 @@
                 <el-tab-pane label="添加角色" name="addRole">
                     <div class="add-role-item">
                         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                            
+                            <el-form-item label="手机号码" prop="mobile">
+                                <el-input v-model="ruleForm.mobile" placeholder="请输入手机号码" maxlength="11" size="small" :disabled="id!==undefined" @change="mobileChange"></el-input>
+                            </el-form-item>
                             <el-form-item label="姓名" prop="name">
                                 <el-input v-model="ruleForm.name" placeholder="请输入姓名" size="small" :disabled="id!==undefined"></el-input>
-                            </el-form-item>
-                            <el-form-item label="手机号码" prop="mobile">
-                                <el-input v-model="ruleForm.mobile" placeholder="请输入手机号码" size="small" :disabled="id!==undefined"></el-input>
                             </el-form-item>
                             <el-form-item label="管理权限" prop="type">
                                 <el-checkbox-group v-model="ruleForm.type" @change="typeChange">
@@ -45,13 +46,13 @@
                 activeName:'addRole',
                 ruleForm:{
                     name: '',
-                    mounted:'',
+                    mobile:'',
                     type: []
                 },
                 adminList:[],
                 rules: {
                     name: [
-                        { required: true, message: '请输入姓名', trigger: 'blur' },
+                        { required: true, message: '请输入姓名', trigger: 'change' },
                     ],
                     mobile: [
                         { required: true, message: '请输入手机号码', trigger: 'blur' },
@@ -88,6 +89,29 @@
             }
         },
         methods:{
+            //电话号码查询
+            async mobileChange(){
+                let params={}
+                params.url=api.user
+                params.expand='memberAuth,memberInfo,roleInfo'
+                if(this.ruleForm.mobile.length==11){
+                    params.mobile=this.ruleForm.mobile
+                    await this.axiosGet(params).then(res=>{
+                        if(res.items.length>0){
+                            this.id=res.items[0].id
+                            this.$message({
+                                type:'success',
+                                message:'该用户已存在，可以直接修改角色'
+                            })
+                            let params={}
+                            params.id=this.id
+                            params.expand='memberAuth,memberInfo,roleInfo'
+                            this.getUserInfo(params)
+                        }
+                        console.log("res===",res)
+                    }).catch(err=>err)
+                }
+            },
             //获取用户信息
             async getUserInfo(params){
                 params.url=api.user

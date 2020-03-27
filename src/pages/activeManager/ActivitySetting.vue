@@ -166,12 +166,6 @@ export default {
       default() {
         return 0;
       }
-    },
-    edit:{
-      type:Number,
-      default(){
-        return 0
-      }
     }
   },
   data() {
