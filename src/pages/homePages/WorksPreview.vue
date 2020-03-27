@@ -1,6 +1,7 @@
 <template>
   <div class="works-preview">
     <div class="title">
+      <el-button type="defualt" size="mini" @click="goback" style="position:absolute;left:0">返回</el-button>
       <p>{{activityDetail.works.title}}</p>
       <span style="position:absolute;right:100px;color:#999999;font-size:12px">作品编号:{{activityDetail.serial_id}}</span>
     </div>
@@ -91,6 +92,12 @@ export default {
       default() {
         return 0;
       }
+    },
+    inscore: {
+      type: String,
+      default() {
+        return "";
+      }
     }
   },
 
@@ -109,16 +116,24 @@ export default {
   methods: {
       //获取报名活动详情
     async getActivityDetail() {
+      console.log("进来")
       let params = {};
       params.url = api.enroll;
       params.id = this.id;
+      if(this.inscore!=""){
+          params.inscore = this.inscore;
+      }
       params.expand = "info,works,school,professional,award,process";
       await this.axiosGet(params)
         .then(res => {
           this.activityDetail = res;
+          console.log("看看",res)
         })
         .catch(err => err);
     },
+    goback(){
+       this.$router.go(-1);
+    }
   }
 };
 </script>

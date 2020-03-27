@@ -1,11 +1,12 @@
 <template>
   <div class="good-work-container">
     <el-card style="min-height:600px">
-      <div slot="header" class="clearfix">
+      <!-- <div slot="header" class="clearfix">
         <span>{{workDetail.title}}</span>
-        <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
-      </div>
-      <div class="workContainer">
+      </div> -->
+        <works-preview :id="activity_id"></works-preview>
+
+      <!-- <div class="workContainer">
         <div v-html="workDetail.content" class="content"></div>
         <div class="workDetail">
           <p>活动组别:{{category}}</p>
@@ -16,31 +17,26 @@
           <p v-show="attachment.length!=0">
             作品附件:
             <file-preview :fileList="attachment[0]"></file-preview>
-            <!-- <a
-              target="_blank"
-              v-for="(item,index) in attachment[0]"
-              :key="index"
-              :href="item.url"
-            >{{item.title}}</a> -->
           </p>
         </div>
         <div class="like_counts" @click="onlike(id)">
           <i class="el-icon-thumb"></i>
           <p>{{like_counts}}</p>
         </div>
-      </div>
+      </div> -->
     </el-card>
   </div>
 </template>
 <script>
 import axios from "axios";
 import api from "../../service/api";
+import WorksPreview from './WorksPreview'
 import { getCookie, axiosGet, axiosPost } from "../../tools/tools";
 export default {
   data() {
     return {
       id: this.$route.query.id,
-      // activity_id:this.$route.query.activity_id,
+      activity_id:this.$route.query.activity_id,
       workDetail: {
         // title:'',
       },
@@ -53,9 +49,11 @@ export default {
       apiKey: getCookie("x-api-key")
     };
   },
+  components:{WorksPreview},
+
   created() {
     this.goodWorkDetail();
-    this.goodWorkList();
+    // this.goodWorkList();
   },
   methods: {
     async goodWorkList() {
@@ -126,7 +124,6 @@ export default {
         });
     }
   },
-  components: {}
 };
 </script>
 <style lang="scss" scoped>

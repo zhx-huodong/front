@@ -336,6 +336,7 @@ export default {
           console.log(res);
           if (res.items.length > 0) {
             that.workTotle = res.items.length;
+            console.log("测试场",res.items)
             that.activityList = res.items.map(item => {
               let author = [];
               author = item.info.author.map(res => {
@@ -343,6 +344,7 @@ export default {
               });
               return {
                 id: item.works.id,
+                activity_id:item.id,
                 name: item.works.title,
                 cover: item.works.cover,
                 view_counts: item.view_counts,
@@ -496,9 +498,9 @@ export default {
           }
         });
     },
-    gotoGoodWorkDetail(id) {
+    gotoGoodWorkDetail(id,activity_id) {
       let that = this;
-      that.$router.push({ path: "/goodWorks", query: { id: id } });
+      that.$router.push({ path: "/goodWorks", query: { id: id ,activity_id:activity_id} });
     },
     //查看
     goToLook(id) {

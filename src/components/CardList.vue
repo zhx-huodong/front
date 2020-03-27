@@ -1,6 +1,6 @@
 <template>
   <div class="card-list">
-      <div class="card-item" v-for="(item,index) in cardList" :key="index" @click="toNext(item.id)">
+      <div class="card-item" v-for="(item,index) in cardList" :key="index" @click="toNext(item.id,item.activity_id)">
           <img :src="item.cover" />
           <div class="card-name" v-if="!isExcellent">
             <p>{{item.title}}</p>
@@ -47,8 +47,8 @@
     },
     methods: {
       // 下一步
-      toNext(id){
-        this.$emit('toNext',id)
+      toNext(id,activity_id){
+        this.$emit('toNext',id,activity_id)
       },
       //点赞
       onlike(id){
