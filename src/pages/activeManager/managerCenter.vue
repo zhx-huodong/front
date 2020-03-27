@@ -78,6 +78,7 @@ import ActivitySetting from "./ActivitySetting"; //活动设置
 import TypeSelect from "../../components/TypeSelect";
 import { axiosGet } from "../../tools/tools";
 import api from "../../service/api";
+import merge from 'webpack-merge';
 export default {
   components: {
     EnrollInfo,
@@ -111,6 +112,10 @@ export default {
     //导航栏
     tabClick(tag) {
       this.activeName = tag.name;
+      this.$router.push({
+        query:merge(this.$route.query,{'activeName':tag.name})
+    })
+
     },
     //发布公告
     goToRelease() {

@@ -224,13 +224,7 @@ export default {
       filename: "upFile",
       url: "",
       datas: {},
-      headers: {
-        "x-api-key": getCookie("x-api-key")
-      },
-      action: api.uploadPic,
-      action2: api.uploadFile,
       editIndex: "",
-      apipath: "http://api.huodong.eduinspector.com",
       cover: [], //活动图
       banner: [], //banner图
       attachment: [], //活动指南
@@ -246,7 +240,7 @@ export default {
 
   },
   created() {
-    if (this.id != 0) {
+    if (this.id != 0&&JSON.parse(sessionStorage.getItem("addActivityForm")) == null) {
         this.getActivityDetail();
     }else{
         this.getData();

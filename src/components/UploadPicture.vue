@@ -12,7 +12,7 @@
       </div>
       <div class="my-button" @click="uploadFile" v-if="pictureList.length<max">
         <p class="el-icon-upload"></p>
-        <span style="font-size:12px;">{{name}}</span>
+        <span style="font-size:14px;">{{name}}</span>
       </div>
       <cos
         ref="cos"
@@ -123,19 +123,19 @@ export default {
     cursor: pointer;
     display: flex;
     justify-content: center;
-    flex-direction: column;
+    flex-direction: row;
     text-align: center;
     align-items: center;
-    width: 160px;
-    height: 100px;
+    padding: 0 10px;
+    height: 40px;
     border: 1px solid #198af3;
     border-radius: 8px;
     p {
-      font-size: 38px;
+      font-size: 28px;
       color: #198af3;
     }
     span {
-      font-size: 14px;
+      font-size: 16px;
     }
   }
   .my-button:hover {

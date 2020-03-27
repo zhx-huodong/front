@@ -153,7 +153,7 @@ export default {
         content: "", //内容
         author_limit: "", //作者上限
         mentor_limit: "", //指导老师限制
-        formats: [{type:1,size:1,remark:'支持JPG、png、bmg等图片格式'}],
+        formats: [{type:1,size:1,remark:'支持JPG、PNG等图片格式'}],
         period: "" //学段设置
       },
       uploadFormatons: [

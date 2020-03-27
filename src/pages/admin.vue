@@ -263,6 +263,12 @@
                 }
                 this.schoolVal=''
                 this.getSchoolList(params)
+                params={
+                    'per-page':this.perPage
+                }
+                params.page=this.currentPage
+                params.mtype=parseInt(this.index)+1
+                this.getUserList(params)
             },
             //学校改变
             schoolChange(id){
