@@ -90,7 +90,7 @@ export default {
   data() {
     return {
       id: this.$route.query.id, //活动id
-      activeName: "third",
+      activeName: this.$route.query.activeName,
       tableData: [], //公告列表
       multipleSelection: [],
       perPage: 20, //每页数据条数

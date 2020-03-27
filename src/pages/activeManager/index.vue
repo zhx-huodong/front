@@ -209,6 +209,7 @@ export default {
         path: "/activeManager/managerCenter",
         query: {
           id: id,
+          activeName:'third'
         }
       });
     }

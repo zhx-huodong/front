@@ -257,7 +257,7 @@ export default {
     },
     //文件上传格式
     ChangeFormatsType(value,index) {
-      let remark=["支持JPG、png、bmg等图片格式","支持 MPG、MPEG、WMV、AVI、 MOV、  MP4等常用视频格式","支持word、pdf等常用格式","支持zip、rar等常用格式"]
+      let remark=["支持JPG、PNG等图片格式","支持 MP4等常用视频格式","支持word、pdf,excel等常用格式","支持zip等常用格式"]
       this.form.formats[index].remark = remark[value-1];
       console.log("index==",index,"value===",value)
       this.form.formats[index].type=value

@@ -4,7 +4,7 @@
       <div class="file-list-items" v-for="(item,index) in fileList" :key="index">
         <div class="name-img">
           <el-image :src="fileIconUrl" fit="cover"></el-image>
-          <div class="file-name">{{item.name}}</div>
+          <div class="file-name">{{item.name||item.title}}</div>
         </div>
 
         <div class="file-operate">
@@ -113,7 +113,6 @@ export default {
       myFile.name = data.filename;
       this.fileList.push(myFile);
       this.$emit("uploadSuccess", this.fileList);
-      console.log("this.fileList===", this.fileList);
     },
     //预览
     goToPreview(url) {

@@ -57,7 +57,7 @@
                 </div>
               </div>
               <p class="addclass" @click="toActiveEdit(index)">
-                <span>+</span>添加题目
+                <span>+</span>添加项目
               </p>
             </div>
           </div>
@@ -165,6 +165,12 @@ export default {
       type: Number,
       default() {
         return 0;
+      }
+    },
+    edit:{
+      type:Number,
+      default(){
+        return 0
       }
     }
   },

@@ -88,7 +88,7 @@
           >
             <upload-file
               :uploadType="uploadTypeObj[item.type]"
-              :myFileList="formats"
+              :myFileList="item.fileList"
               @uploadSuccess="(data)=>{return upsuccess(data,item.id,item.type)}"
               :name="'上传'+uploadTypeChar[item.type]+'格式作品'"
               :fileLimit="item.size"
@@ -207,7 +207,7 @@ export default {
         cover: [],
         registration: [],
         email: "",
-        school_id: "", //学校id
+        school_id: "" //学校id
       },
       inputtext: "", //富文本内容
       registration: "", //报名登记表
@@ -240,14 +240,17 @@ export default {
       environment: "", //制作软件及运行环境
       remark: "", //其他说明
       schoolList: [], //学校列表
-      period:this.$route.query.period,//学段id
+      period: this.$route.query.period, //学段id
+      works_id:'',//作品id
     };
   },
   created() {
     let params = {};
-    this.getObjectDetail();
+
     if (this.operate != 0) {
       this.getEnrollDetail();
+    } else {
+      this.getObjectDetail();
     }
   },
   mounted() {
@@ -274,21 +277,55 @@ export default {
       params.expand = "info,works,school,professional,award";
       await that.axiosGet(params).then(res => {
         this.category_id = res.category_id;
+        this.works_id=res.works.id
         that.form.activityProject = res.info.project;
         that.form.title = res.works.title;
-        that.inputtext = res.works.content;
+        that.inputtext = res.works.content.content;
+        that.production = res.works.content.production; //创作过程
+        that.reference = res.works.content.reference; //参考资料
+        that.environment = res.works.content.environment; //制作软件及运行环境
+        that.remark = res.works.content.remark; //其他说明
         that.form.email = res.works.email;
-        if (res.works.attachment.length > 0) {
-          res.works.attachment.map(res => {
-            that.formats.push({
-              id: res.id,
-              name: res.title,
-              url: res.url,
-              type: res.type
-            });
+        that.form.school_id = res.school_id;
+        that.authorList = res.works.member.author;
+        that.teacherList = res.works.member.mentor;
+        that.period = res.period;
+        that.activityProjectDetail.formats = [];
+
+        for (let i in res.works.attachment) {
+          let isHave = that.activityProjectDetail.formats.findIndex(items => {
+            return (items.id == res.works.attachment[i].id);
           });
-          console.log("我是", that.formats);
+          console.log("ishave==", isHave!=-1);
+          if (isHave == -1) {
+            let item = {};
+            item.id = res.works.attachment[i].id;
+            item.type = res.works.attachment[i].type;
+            item.remark = res.works.attachment[i].remark;
+            item.fileList = [
+              {
+                title: res.works.attachment[i].title,
+                url: res.works.attachment[i].url
+              }
+            ];
+            that.activityProjectDetail.formats.push(item);
+            that.attachment[item.id]=[{title:res.works.attachment[i].title,url:res.works.attachment[i].url}]  
+          } else {
+            for (let j in that.activityProjectDetail.formats) {
+              if (
+                res.works.attachment[i].id ==
+                that.activityProjectDetail.formats[j].id
+              ) {
+                that.activityProjectDetail.formats[j].fileList.push({
+                  url: res.works.attachment[i].url,
+                  title: res.works.attachment[i].title
+                });
+                that.attachment[res.works.attachment[i].id].push({url:res.works.attachment[i].url,title:res.works.attachment[i].title})
+              }
+            }
+          }
         }
+
         that.form.cover.push({ url: res.works.cover });
 
         that.form.registration.push({ url: res.registration });
@@ -346,10 +383,14 @@ export default {
       data.forEach(item => {
         let attachmentItem = {};
         attachmentItem.url = item.url;
-        attachmentItem.title = item.name;
+        if(item.name!=undefined){
+          attachmentItem.title = item.name;
+        }
+        if(item.title!=undefined){
+          attachmentItem.title = item.title;
+        }
         this.attachment[id].push(attachmentItem);
       });
-      console.log("this.attachment===", this.attachment);
     },
 
     //提交报名
@@ -404,13 +445,7 @@ export default {
 
       if (this.authorList.length > 0) {
         params.author = this.authorList;
-      }
-      //  else if (this.authorTags.length > 0 && this.operate != 0) {
-      //   params.author = this.authorTags.map(res => {
-      //     return res.id;
-      //   });
-      // }
-      else {
+      } else {
         this.$message({
           message: "请添加作者",
           type: "warning"
@@ -418,14 +453,7 @@ export default {
         return;
       }
 
-      // if (this.operate != 0) {
       params.mentor = this.teacherList;
-      // params.mentor = this.teacherTags.map(res => {
-      //   return res.id;
-      // });
-      // } else {
-      //   params.mentor = this.teacherIds;
-      // }
 
       if (this.form.email !== "") {
         params.email = this.form.email;
@@ -436,16 +464,16 @@ export default {
         });
         return;
       }
-      if(this.form.school_id!=''){
-        params.school_id=this.form.school_id
-      }else{
+      if (this.form.school_id != "") {
+        params.school_id = this.form.school_id;
+      } else {
         this.$message({
-          message:'请选择学校',
-          type:'warning'
-        })
-        return
+          message: "请选择学校",
+          type: "warning"
+        });
+        return;
       }
-      params.period=this.period
+      params.period = this.period;
       params.attachment = this.attachment;
       console.log("params===", params);
       if (this.operate == 0) {
@@ -473,7 +501,8 @@ export default {
           })
           .catch(err => err);
       } else {
-        params.id = this.activityProjectId;
+        // params.id = this.activityProjectId;
+        params.id=this.works_id
         params.category_id = this.category_id;
         console.log("修改===", params);
         await axiosPut(params)
