@@ -165,9 +165,9 @@ export default {
     border-radius: 4px;
     background-color: #ecf1f6;
     justify-content: space-between;
-    line-height: 50px;
+    line-height: 40px;
     width: 100%;
-    height: 50px;
+    height: 40px;
     .name-img {
       display: flex;
       align-items: center;
@@ -177,8 +177,8 @@ export default {
       }
       .el-image {
         margin-left: 5px;
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
       }
     }
     .file-operate {
@@ -191,7 +191,7 @@ export default {
         margin: 0 20px;
         color: #666;
         cursor: pointer;
-        line-height: 50px;
+        line-height: 40px;
       }
     }
   }
@@ -207,7 +207,7 @@ export default {
         margin: 0 20px;
         color: #666;
         cursor: pointer;
-        line-height: 50px;
+        line-height: 40px;
       }
     }
   }

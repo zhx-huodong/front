@@ -25,9 +25,8 @@ export default {
   data() {
     return {
       id: this.$route.query.id,
-      gradeListid: this.$route.query.gradeListid,
+      period: this.$route.query.period,
       activityName: this.$route.query.activityName,
-      imgUrl: this.$route.query.coverUrl,
       objectDetail: {} //活动详情
     };
   },
@@ -44,7 +43,8 @@ export default {
         query: {
           id: this.id,
           activityName: this.activityName,
-          operate:0
+          operate:0,
+          period:this.period
         }
       });
     },

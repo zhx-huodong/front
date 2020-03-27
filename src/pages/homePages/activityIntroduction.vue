@@ -9,10 +9,22 @@
           <el-tab-pane label="活动介绍">
             <el-card>
               <el-steps :active="process" align-center>
-                <el-step title="作品报名" :description="formatDateChar(activityObject.node[0].stime*1000)+'--'+formatDateChar(activityObject.node[0].etime*1000)"></el-step>
-                <el-step title="区域推荐" :description="formatDateChar(activityObject.node[1].stime*1000)+'--'+formatDateChar(activityObject.node[1].etime*1000)"></el-step>
-                <el-step title="市级审批" :description="formatDateChar(activityObject.node[2].stime*1000)+'--'+formatDateChar(activityObject.node[2].etime*1000)"></el-step>
-                <el-step title="作品展示" :description="formatDateChar(activityObject.node[3].stime*1000)+'--'+formatDateChar(activityObject.node[3].etime*1000)"></el-step>
+                <el-step
+                  title="作品报名"
+                  :description="formatDateChar(activityObject.node[0].stime*1000)+'--'+formatDateChar(activityObject.node[0].etime*1000)"
+                ></el-step>
+                <el-step
+                  title="区域推荐"
+                  :description="formatDateChar(activityObject.node[1].stime*1000)+'--'+formatDateChar(activityObject.node[1].etime*1000)"
+                ></el-step>
+                <el-step
+                  title="市级审批"
+                  :description="formatDateChar(activityObject.node[2].stime*1000)+'--'+formatDateChar(activityObject.node[2].etime*1000)"
+                ></el-step>
+                <el-step
+                  title="作品展示"
+                  :description="formatDateChar(activityObject.node[3].stime*1000)+'--'+formatDateChar(activityObject.node[3].etime*1000)"
+                ></el-step>
               </el-steps>
             </el-card>
             <el-card style="margin-top:10px;padding-bottom:30px;">
@@ -39,19 +51,31 @@
                 <div class="list-item-title">
                   <p>活动对象：</p>
                 </div>
-                <div class="list-item-content" v-for="(item,index) in targetList" :key="index" v-if="item.id==activityObject.target">【{{item.name}}】</div>
+                <div
+                  class="list-item-content"
+                  v-for="(item,index) in targetList"
+                  :key="index"
+                  v-if="item.id==activityObject.target"
+                >【{{item.name}}】</div>
               </div>
               <div class="list-item">
                 <div class="list-item-title">
                   <p>活动范围：</p>
                 </div>
-                <div class="list-item-content" v-for="(item,index) in activityObject.region" :key="index">【{{item.area_name}}】</div>
+                <div
+                  class="list-item-content"
+                  v-for="(item,index) in activityObject.region"
+                  :key="index"
+                >【{{item.area_name}}】</div>
               </div>
               <div class="tag">
                 <p>请选择以下内容参加活动</p>
               </div>
               <div style="margin-bottom:30px;">
-                <type-select :gradeList="activityObject.periodList" @gradeObject="PeriodgradeObject"></type-select>
+                <type-select
+                  :gradeList="activityObject.periodList"
+                  @gradeObject="PeriodgradeObject"
+                ></type-select>
               </div>
               <div class="tag">
                 <p>请选择参加活动项目</p>
@@ -68,11 +92,16 @@
                     <p>{{item.title}}</p>
                   </div>
                   <div class="lable" v-if="activityProjectList.length>0">
-                     <div class="lable-aside">
-                       <div class="lable-self" v-for="(item1, index1) in item.child" :key="index1"
-                       @click="otherObjectOne(item1.id, index1)" :class="{'type-active':activityNameIndex == index1,'not-click':item1.period&PeriodGradeObjectid!=0}">{{item1.name||item1.title}}</div>
-                     </div>
-                   </div>
+                    <div class="lable-aside">
+                      <div
+                        class="lable-self"
+                        v-for="(item1, index1) in item.child"
+                        :key="index1"
+                        @click="otherObjectOne(item1.id, index1)"
+                        :class="{'type-active':activityNameIndex == index1,'not-click':item1.period&PeriodGradeObjectid!=0}"
+                      >{{item1.name||item1.title}}</div>
+                    </div>
+                  </div>
                   <!-- <type-select :otherList="item.child"   @otherObject="otherObjectOne"></type-select> -->
                 </div>
               </div>
@@ -141,10 +170,15 @@
               <el-row>
                 <el-col>
                   <div class="emptyWork" v-if="activityList.length==0">
-                    <img src="../../assets/img2/empty.png">
+                    <img src="../../assets/img2/empty.png" />
                     <p>无相关作品</p>
                   </div>
-                  <card-list :cardList="activityList" :isExcellent="true" @onlike="onlike" @toNext="gotoGoodWorkDetail"></card-list>
+                  <card-list
+                    :cardList="activityList"
+                    :isExcellent="true"
+                    @onlike="onlike"
+                    @toNext="gotoGoodWorkDetail"
+                  ></card-list>
                 </el-col>
               </el-row>
             </el-card>
@@ -167,22 +201,24 @@ export default {
   components: { FilePreview, TypeSelect, CardList },
   data() {
     return {
-      bannerUrl: '',
+      bannerUrl: "",
       gradeList: [],
-      tableData: [],//公告列表
+      tableData: [], //公告列表
       multipleSelection: [],
       perPage: 20, //每页数据条数
       currentPage: 1, //当前页
-      totalCount: 0 ,//总条数
+      totalCount: 0, //总条数
       activityTypleList: [],
       activityProjectList: [],
-      activityNameIndex:0,//选择参加活动项目的id
-      activityTypleSelectID:'',
-      activityProjectSelectID:'',
-      gradeListTwo: [ { id: 0, name: '全部' },
-                { id: 1, name: '小学组' },
-                { id: 2, name: '初中组' },
-                { id: 3, name: '高中组' }],
+      activityNameIndex: 0, //选择参加活动项目的id
+      activityTypleSelectID: "",
+      activityProjectSelectID: "",
+      gradeListTwo: [
+        { id: 0, name: "全部" },
+        { id: 1, name: "小学组" },
+        { id: 2, name: "初中组" },
+        { id: 3, name: "高中组" }
+      ],
       activityObject: {},
       ClassList: [
         { name: "幼教组", id: 1 },
@@ -196,7 +232,7 @@ export default {
       targetList: [
         { name: "老师", id: 1 },
         { name: "学生", id: 2 },
-        { name: "家长", id: 4 },
+        { name: "家长", id: 4 }
       ],
       activityList: [
         {
@@ -231,192 +267,207 @@ export default {
         }
       ], // 活动列表
       gradeObjectid: "",
-      PeriodGradeObjectid:"",
-      id:this.$route.query.id,//获取详情id
-      apiKey:getCookie("x-api-key"),
-      process:1,//进度
-      workTotle:'',//优秀作品数量
+      PeriodGradeObjectid: "",
+      id: this.$route.query.id, //获取详情id
+      apiKey: getCookie("x-api-key"),
+      process: 1, //进度
+      workTotle: "" //优秀作品数量
     };
   },
   created() {
-      let params = {
-        "per-page": this.perPage,
-        "filter[activity_id]": this.$route.query.id
-      };
-      params.page = this.currentPage;
-      this.getActivityNoticeList(params);
-      this.goodWorkList();
-      this.getActivityList();
-
+    let params = {
+      "per-page": this.perPage,
+      "filter[activity_id]": this.$route.query.id
+    };
+    params.page = this.currentPage;
+    this.getActivityNoticeList(params);
+    this.goodWorkList();
+    this.getActivityList();
   },
   mounted() {
     this.getActivityInfo();
   },
   methods: {
     //获取所有的活动列表 主要是用做筛选
-        async getActivityList(){
-            let that=this;
-            let params={};
-            params.url=api.activity;
-            params.expand='category';
-            // params.inscore=1;
-            await this.axiosGet(params).then(res=>{
-                
-                that.activityTypleList=res.items.map(item=>{
-                    return {
-                        "id":item.category[0].id,
-                        "name":item.category[0].title,
-                    }
-                })
-                that.activityProjectList=res.items.map(item=>{
-                    return {
-                        "id":item.category[0].child[0].id,
-                        "name":item.category[0].child[0].title,
-                    }
-                })
-            })
-            that.activityTypleList.unshift({id:0,name:"全部"});
-            that.activityProjectList.unshift({id:0,name:"全部"});
-        },
-    async goodWorkList(){
-        let that=this;
-        let params={}
-        params.url=api.enroll
-        params.activity_id=this.id
-        params.position=4;//优秀作品展示
-        if(that.gradeObjectid!=''&&that.gradeObjectid!=0){
-               params.period=that.gradeObjectid;//按学段筛选 [筛选活动时有效] 按学段筛选：多个学段则相加 
-        }
-        if(that.activityTypleSelectID!=''&&that.activityTypleSelectID!=0){
-           params.category_id=that.activityTypleSelectID;//按分类筛选
-        }
-        if(that.activityProjectSelectID!=''&&that.activityProjectSelectID!=0){
-           params.item_id=that.activityProjectSelectID;//按项目筛选
-        }
-        params.expand="info,works,school,professional,award"
-        await this.axiosGet(params).then(res=>{
-          console.log(res);
-          if(res.items.length>0){
-            that.workTotle=res.items.length;
-            that.activityList=res.items.map(item=>{
-              let author=[];
-              author=item.info.author.map(res=>{
-                 return res.name
-              })
-              return{
-                "id": item.works.id,
-                "name": item.works.title,
-                "cover": item.works.cover,
-                "view_counts":item.view_counts,
-                "like_counts":item.like_counts,
-                "author":author.join(""),
-              }
-              console.log("item",item.works.id)
-            });
-          }else{
-            that.workTotle=0;
-            that.activityList=[];
-          }
-          
-        }).catch(err=>err)
+    async getActivityList() {
+      let that = this;
+      let params = {};
+      params.url = api.activity;
+      params.expand = "category";
+      // params.inscore=1;
+      await this.axiosGet(params).then(res => {
+        that.activityTypleList = res.items.map(item => {
+          return {
+            id: item.category[0].id,
+            name: item.category[0].title
+          };
+        });
+        that.activityProjectList = res.items.map(item => {
+          return {
+            id: item.category[0].child[0].id,
+            name: item.category[0].child[0].title
+          };
+        });
+      });
+      that.activityTypleList.unshift({ id: 0, name: "全部" });
+      that.activityProjectList.unshift({ id: 0, name: "全部" });
     },
-    getSubSet(target,arr){
-        var len = arr.length;
-        var result = [];
-        for(var i=0; i<len; i++){
-            var temp =[];
-            temp.push(arr[i])
-            var num=0
-            for(let k in temp){
-                num+=temp[k]
-            }
-            if(num==target){
-                result=temp
-            }
-            for(var j=i+1; j<len; j++){
-                temp = temp.concat(arr[j]);
-                var numTwo=0
-                for(let h in temp){
-                    numTwo+=temp[h]
-                }
-                if(numTwo==target){
-                    result=temp
-                }
-            }
-            
+    async goodWorkList() {
+      let that = this;
+      let params = {};
+      params.url = api.enroll;
+      params.activity_id = this.id;
+      params.position = 4; //优秀作品展示
+      if (that.gradeObjectid != "" && that.gradeObjectid != 0) {
+        params.period = that.gradeObjectid; //按学段筛选 [筛选活动时有效] 按学段筛选：多个学段则相加
+      }
+      if (that.activityTypleSelectID != "" && that.activityTypleSelectID != 0) {
+        params.category_id = that.activityTypleSelectID; //按分类筛选
+      }
+      if (
+        that.activityProjectSelectID != "" &&
+        that.activityProjectSelectID != 0
+      ) {
+        params.item_id = that.activityProjectSelectID; //按项目筛选
+      }
+      params.expand = "info,works,school,professional,award";
+      await this.axiosGet(params)
+        .then(res => {
+          console.log(res);
+          if (res.items.length > 0) {
+            that.workTotle = res.items.length;
+            that.activityList = res.items.map(item => {
+              let author = [];
+              author = item.info.author.map(res => {
+                return res.name;
+              });
+              return {
+                id: item.works.id,
+                name: item.works.title,
+                cover: item.works.cover,
+                view_counts: item.view_counts,
+                like_counts: item.like_counts,
+                author: author.join("")
+              };
+              console.log("item", item.works.id);
+            });
+          } else {
+            that.workTotle = 0;
+            that.activityList = [];
+          }
+        })
+        .catch(err => err);
+    },
+    getSubSet(target, arr) {
+      var len = arr.length;
+      var result = [];
+      for (var i = 0; i < len; i++) {
+        var temp = [];
+        temp.push(arr[i]);
+        var num = 0;
+        for (let k in temp) {
+          num += temp[k];
         }
-        return result;
+        if (num == target) {
+          result = temp;
+        }
+        for (var j = i + 1; j < len; j++) {
+          temp = temp.concat(arr[j]);
+          var numTwo = 0;
+          for (let h in temp) {
+            numTwo += temp[h];
+          }
+          if (numTwo == target) {
+            result = temp;
+          }
+        }
+      }
+      return result;
     },
     //获取活动详情
     async getActivityInfo() {
-        console.log(1);
-        let params = {};
-        params.url = api.activityDetail;
-        params.id = this.$route.query.id;
-        params.expand ="detail,region,node,attachment,banner,category,categoryDetail,process";
-        await this.axiosGet(params).then(res => {
-            this.bannerUrl = res.banner[0].url;
-            this.activityObject=res
-            this.activityObject.period
-            this.activityObject.periodList=[]
-            
-            let arr=[1,2,4,8,16,32,64]
-            let result=this.getSubSet(this.activityObject.period,arr)
-            for(let i in result){
-                for(let j in this.ClassList){
-                    if(result[i]==this.ClassList[j].id){
-                        this.activityObject.periodList.push(this.ClassList[j])
-                    }
-                }
-            }
-            this.PeriodGradeObjectid=this.activityObject.periodList[0].id;
-              let nowTime=Date.parse(new Date())
-              if((res.node[0].stime*1000)<=nowTime<=(res.node[0].etime*1000)){
-                  this.process=1
-              }else if((res.node[1].stime*1000)<=nowTime<=(res.node[1].etime*1000)){
-                  this.process=2
-              }else if((res.node[2].stime*1000)<=nowTime<=(res.node[2].etime*1000)){
-                  this.process=3
-              }else if((res.node[3].stime*1000)<=nowTime<=(res.node[3].etime*1000)){
-                  this.process=4
+      console.log(1);
+      let params = {};
+      params.url = api.activityDetail;
+      params.id = this.$route.query.id;
+      params.expand =
+        "detail,region,node,attachment,banner,category,categoryDetail,process";
+      await this.axiosGet(params)
+        .then(res => {
+          this.bannerUrl = res.banner[0].url;
+          this.activityObject = res;
+          this.activityObject.period;
+          this.activityObject.periodList = [];
+
+          let arr = [1, 2, 4, 8, 16, 32, 64];
+          let result = this.getSubSet(this.activityObject.period, arr);
+          for (let i in result) {
+            for (let j in this.ClassList) {
+              if (result[i] == this.ClassList[j].id) {
+                this.activityObject.periodList.push(this.ClassList[j]);
               }
+            }
+          }
+          this.PeriodGradeObjectid = this.activityObject.periodList[0].id;
+          let nowTime = Date.parse(new Date());
+          if (res.node[0].stime * 1000 <= nowTime <= res.node[0].etime * 1000) {
+            this.process = 1;
+          } else if (
+            res.node[1].stime * 1000 <=
+            nowTime <=
+            res.node[1].etime * 1000
+          ) {
+            this.process = 2;
+          } else if (
+            res.node[2].stime * 1000 <=
+            nowTime <=
+            res.node[2].etime * 1000
+          ) {
+            this.process = 3;
+          } else if (
+            res.node[3].stime * 1000 <=
+            nowTime <=
+            res.node[3].etime * 1000
+          ) {
+            this.process = 4;
+          }
           //  console.log("学段",this.activityObject.periodList);
-        }).catch(err => err);
+        })
+        .catch(err => err);
     },
 
     //学段筛选
     gradeObject(value) {
-      let that=this;
+      let that = this;
       that.gradeObjectid = value;
       that.goodWorkList();
     },
     //学段筛选出活动项目
-    PeriodgradeObject(value){
-      let that=this;
+    PeriodgradeObject(value) {
+      let that = this;
       that.PeriodGradeObjectid = value;
     },
     //活动类型
     activityTypleObject(value) {
-      let that=this;
-      that.activityTypleSelectID=value;
+      let that = this;
+      that.activityTypleSelectID = value;
       that.goodWorkList();
     },
     //活动项目
     activityProjectObject(value) {
-      let that=this;
-      that.activityProjectSelectID=value;
+      let that = this;
+      that.activityProjectSelectID = value;
       that.goodWorkList();
     },
     //其他
     otherObjectOne(id, index1) {
-      this.activityNameIndex=index1;
+      this.activityNameIndex = index1;
       this.$router.push({
         path: "/home/choiceActivity",
         query: {
-          gradeListid: this.PeriodGradeObjectid,
-          id:id,
-          coverUrl:this.activityObject.cover,
-          activityName:this.activityObject.title
+          period: this.PeriodGradeObjectid,
+          id: id,
+          activityName: this.activityObject.title
         }
       });
     },
@@ -424,36 +475,37 @@ export default {
     tableSelectionChange() {},
     //点赞
     async onlike(id) {
-        let that=this;
-        let params={};
-        params.id=id;
-        axios.get(api.like, 
-         {params:params,
-         headers: { 'x-api-key': that.apiKey }}
-        ).then(res=>{
-            if(res.data.code==0){
-              
-              for(let i=0;i<that.activityList.length;i++){
-                if(that.activityList[i].id==id){
-                  that.activityList[i].like_counts++;
-                }
+      let that = this;
+      let params = {};
+      params.id = id;
+      axios
+        .get(api.like, {
+          params: params,
+          headers: { "x-api-key": that.apiKey }
+        })
+        .then(res => {
+          if (res.data.code == 0) {
+            for (let i = 0; i < that.activityList.length; i++) {
+              if (that.activityList[i].id == id) {
+                that.activityList[i].like_counts++;
               }
-              console.log(that.activityList);
-            }else{
-              that.$message.error('点赞失败');
             }
-         });
+            console.log(that.activityList);
+          } else {
+            that.$message.error("点赞失败");
+          }
+        });
     },
-    gotoGoodWorkDetail(id){
-        let that=this;
-        that.$router.push({path:"/goodWorks",query:{id:id}});
+    gotoGoodWorkDetail(id) {
+      let that = this;
+      that.$router.push({ path: "/goodWorks", query: { id: id } });
     },
     //查看
     goToLook(id) {
       this.$router.push({
         path: "/home/seeInformation",
-        query:{
-          id:id
+        query: {
+          id: id
         }
       });
     },
@@ -556,20 +608,20 @@ export default {
           font-size: 18px;
         }
       }
-      .workTotle{
-         text-align: right;
-         font-size:14px;
-         color:rgba(153,153,153,1);
-         border-bottom:1px solid rgba(229,229,229,1);
-         padding-bottom:10px;
+      .workTotle {
+        text-align: right;
+        font-size: 14px;
+        color: rgba(153, 153, 153, 1);
+        border-bottom: 1px solid rgba(229, 229, 229, 1);
+        padding-bottom: 10px;
       }
-      .emptyWork{
+      .emptyWork {
         text-align: center;
-        margin-top:40px;
-        p{
-          color:#BFBFBF;
-          
-          font-size:14px;
+        margin-top: 40px;
+        p {
+          color: #bfbfbf;
+
+          font-size: 14px;
         }
       }
     }
@@ -635,34 +687,33 @@ export default {
     display: flex;
     flex-direction: column;
     margin-bottom: 30px;
-    .lable-aside{
-    margin-left: 90px;
-    
-      .type-active{
-        background-color: #2D97F0;
+    .lable-aside {
+      margin-left: 90px;
+
+      .type-active {
+        background-color: #2d97f0;
       }
-      .not-click{
+      .not-click {
         pointer-events: none;
-        background-color: #BFBFBF;
+        background-color: #bfbfbf;
       }
-    .lable-self{
-      padding:0 10px;
-      width:auto !important;
-      margin-top: 5px;
-      height: 30px;
-      line-height: 30px;
-      display: inline-block;
-      font-size: 14px;
-      text-align: center;
-      color: #888888;
-      border-radius: 4px;
-      margin-right: 10px;
-      &:hover {
-        cursor: pointer;
+      .lable-self {
+        padding: 0 10px;
+        width: auto !important;
+        margin-top: 5px;
+        height: 30px;
+        line-height: 30px;
+        display: inline-block;
+        font-size: 14px;
+        text-align: center;
+        color: #888888;
+        border-radius: 4px;
+        margin-right: 10px;
+        &:hover {
+          cursor: pointer;
+        }
       }
-      
     }
-  }
     .list-project-title {
       margin-left: 90px;
       font-size: 14px;

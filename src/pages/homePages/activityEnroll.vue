@@ -79,6 +79,23 @@
             style="width:715px;"
           ></el-input>
         </el-form-item>
+
+        <el-form-item label="作品上传：">
+          <div
+            style="width:700px;margin-bottom:20px;"
+            v-for="(item,index) in activityProjectDetail.formats"
+            :key="index"
+          >
+            <upload-file
+              :uploadType="uploadTypeObj[item.type]"
+              :myFileList="formats"
+              @uploadSuccess="(data)=>{return upsuccess(data,item.id,item.type)}"
+              :name="'上传'+uploadTypeChar[item.type]+'格式作品'"
+              :fileLimit="item.size"
+            ></upload-file>
+            <p style="color:#999;padding:0;margin:0;line-height:25px;">{{item.remark}}</p>
+          </div>
+        </el-form-item>
         <el-form-item label="报名登记：">
           <upload-picture
             :uploadType="'picture'"
@@ -88,22 +105,16 @@
             :name="'上传登记表JPG,PNG格式'"
           ></upload-picture>
         </el-form-item>
-        <el-form-item
-          label="作品上传"
-          v-for="(item,index) in activityProjectDetail.formats"
-          :key="index"
-        >
-          <div style="width:700px;">
-            <upload-file
-              :uploadType="uploadTypeObj[item.type]"
-              :myFileList="formats"
-              @uploadSuccess="(data)=>{return upsuccess(data,item.id,item.type)}"
-              :name="'上传'+uploadTypeChar[item.type]+'格式作品'"
-            ></upload-file>
-            <p style="color:#999;padding:0;margin:0;line-height:25px;">{{item.remark}}</p>
-          </div>
+        <el-form-item label="学校：">
+          <el-select v-model="form.school_id" filterable placeholder="请选择" size="small">
+            <el-option
+              v-for="item in schoolList"
+              :key="item.id"
+              :label="item.title"
+              :value="item.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
-
         <el-form-item label="作者：">
           <el-row>
             <el-col>
@@ -195,7 +206,8 @@ export default {
         title: "",
         cover: [],
         registration: [],
-        email: ""
+        email: "",
+        school_id: "", //学校id
       },
       inputtext: "", //富文本内容
       registration: "", //报名登记表
@@ -216,32 +228,43 @@ export default {
       formats: [], //作品上传
       attachment: {}, //作品上传
       operate: this.$route.query.operate,
-      uploadTypeObj: { 1: "picture", 2: "video", 3: "work",4:'zip' },
-      uploadTypeChar: { 1: "图片", 2: "视频", 3: "普通文档",4:"压缩文件" },
+      uploadTypeObj: { 1: "picture", 2: "video", 3: "work", 4: "zip" },
+      uploadTypeChar: { 1: "图片", 2: "视频", 3: "普通文档", 4: "压缩文件" },
       category_id: "",
       authorList: [{ name: "", mobile: "" }], //作者列表
       authorIds: [], //学生IDS
       teacherList: [{ name: "", mobile: "" }], //老师选择列表
       teacherIds: [], //老师ids
-      production:'',//创作过程
-      reference:'',//参考资料
-      environment:'',//制作软件及运行环境
-      remark:'',//其他说明
+      production: "", //创作过程
+      reference: "", //参考资料
+      environment: "", //制作软件及运行环境
+      remark: "", //其他说明
+      schoolList: [], //学校列表
+      period:this.$route.query.period,//学段id
     };
   },
   created() {
     let params = {};
-    if (this.operate == 0) {
-      this.getObjectDetail();
-    } else {
+    this.getObjectDetail();
+    if (this.operate != 0) {
       this.getEnrollDetail();
-      this.getObjectDetail();
     }
   },
   mounted() {
-  
+    this.getSchoolList();
   },
   methods: {
+    //获取学校列表
+    async getSchoolList() {
+      let params = {};
+      params.url = api.school;
+      params.ball = 1;
+      await this.axiosGet(params)
+        .then(res => {
+          this.schoolList = res.items;
+        })
+        .catch(err => err);
+    },
     //读取报名项目详情
     async getEnrollDetail() {
       let that = this;
@@ -334,10 +357,10 @@ export default {
       let params = {};
       params.url = api.works;
       params.category_id = this.activityProjectDetail.id;
-      params.production=this.production
-      params.reference=this.reference
-      params.environment=this.environment
-      params.remark=this.remark
+      params.production = this.production;
+      params.reference = this.reference;
+      params.environment = this.environment;
+      params.remark = this.remark;
       if (this.form.title != "") {
         params.title = this.form.title;
       } else {
@@ -386,7 +409,7 @@ export default {
       //   params.author = this.authorTags.map(res => {
       //     return res.id;
       //   });
-      // } 
+      // }
       else {
         this.$message({
           message: "请添加作者",
@@ -396,10 +419,10 @@ export default {
       }
 
       // if (this.operate != 0) {
-        params.mentor=this.teacherList
-        // params.mentor = this.teacherTags.map(res => {
-        //   return res.id;
-        // });
+      params.mentor = this.teacherList;
+      // params.mentor = this.teacherTags.map(res => {
+      //   return res.id;
+      // });
       // } else {
       //   params.mentor = this.teacherIds;
       // }
@@ -413,6 +436,16 @@ export default {
         });
         return;
       }
+      if(this.form.school_id!=''){
+        params.school_id=this.form.school_id
+      }else{
+        this.$message({
+          message:'请选择学校',
+          type:'warning'
+        })
+        return
+      }
+      params.period=this.period
       params.attachment = this.attachment;
       console.log("params===", params);
       if (this.operate == 0) {
@@ -496,8 +529,8 @@ export default {
       }
     },
     //删除作者
-    deleteAuthor(index){
-      this.authorList.splice(index,1)
+    deleteAuthor(index) {
+      this.authorList.splice(index, 1);
     },
 
     //添加老师
@@ -513,9 +546,9 @@ export default {
       }
     },
     //删除老师
-    deleteTeacher(index){
-      this.teacherList.splice(index,1)
-    },
+    deleteTeacher(index) {
+      this.teacherList.splice(index, 1);
+    }
   }
 };
 </script>

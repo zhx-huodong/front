@@ -14,40 +14,41 @@
     </el-row>
     <el-form ref="form" :model="form" :inline="true">
       <el-row>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="所在学校：">
-            <el-input v-model="form.school" placeholder="请输入" size="small" ></el-input>
+            <el-input v-model="form.school" placeholder="请输入" size="small" style="width:260px;"></el-input>
           </el-form-item>
         </el-col>
 
-        <el-col :span="4">
+        <el-col :span="8">
           <el-form-item label="作者：">
-            <el-input v-model="form.author" placeholder="请输入作者" size="small" style="width:120px"></el-input>
+            <el-input v-model="form.author" placeholder="请输入作者" size="small" style="width:260px;"></el-input>
           </el-form-item>
         </el-col>
 
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="指导老师：">
-            <el-input v-model="form.mentor" placeholder="请输入指导老师" size="small" ></el-input>
+            <el-input v-model="form.mentor" placeholder="请输入指导老师" size="small" style="width:260px;"></el-input>
           </el-form-item>
         </el-col>
 
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="作品名称：">
             <el-input
               v-model="form.work_title"
               placeholder="请输入作品名称"
               size="small"
-              
+              style="width:260px;"
             ></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="作品编号：">
             <el-input
               v-model="form.work_id"
               placeholder="请输入作品编号"
               size="small"
+              style="width:260px;"
             ></el-input>
           </el-form-item>
         </el-col>
