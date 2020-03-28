@@ -3,10 +3,13 @@
     <t-header></t-header>
     <div class="uni-layout-content">
       <div class="pages">
-        <router-view></router-view>
+        <keep-alive>
+          <router-view v-if="$route.meta.keepAlive"></router-view>
+        </keep-alive>
+        <router-view v-if="!$route.meta.keepAlive"></router-view>
       </div>
     </div>
-    <!-- <login ref="allLogin"></login> -->
+
   </div>
 </template>
 <script>
@@ -16,9 +19,7 @@
     name: 'uni-content',
     components: { tHeader, Login },
     watch: {
-      // '$store.state.login.show'(val) {
-      //   if (val) this.$refs.allLogin.showDialog();
-      // }
+      
     }
   };
 </script>
