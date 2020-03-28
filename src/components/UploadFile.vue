@@ -82,7 +82,7 @@ export default {
       this.validList = ["png", "jpg", "jpeg"];
       this.fileIconUrl = require("../public/images/file-icon/image.svg");
     } else if (this.uploadType == "video") {
-      this.validList = ["mp4"];
+      this.validList = ["mp4","avi","mpg","mpeg","flv","mov"];
       this.fileIconUrl = require("../public/images/file-icon/default.svg");
     } else if (this.uploadType == "audio") {
       this.validList = ["mp3"];
@@ -91,10 +91,10 @@ export default {
       this.validList = ["doc", "docx", "pdf", "xls", "xls"];
       this.fileIconUrl = require("../public/images/file-icon/default.svg");
     } else if (this.uploadType == "zip") {
-      this.validList = ["zip"];
+      this.validList = ["zip","rar"];
       this.fileIconUrl = require("../public/images/file-icon/zip.svg");
     }else if(this.uploadType=="all"){
-      this.validList = ["png", "jpg", "jpeg","mp4","zip","mp3","doc", "docx", "pdf", "xls", "xls"];
+      this.validList = ["png", "jpg", "jpeg","mp4","avi","mpg","mpeg","flv","mov","zip","rar","mp3","doc", "docx", "pdf", "xls", "xls"];
       this.fileIconUrl = require("../public/images/file-icon/default.svg");
     }
   },

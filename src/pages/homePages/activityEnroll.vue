@@ -301,12 +301,12 @@ export default {
 
         for (let i in res.works.attachment) {
           let isHave = that.activityProjectDetail.formats.findIndex(items => {
-            return (items.id == res.works.attachment[i].id);
+            return (items.id == res.works.attachment[i].category_file_id);
           });
           console.log("ishave==", isHave!=-1);
           if (isHave == -1) {
             let item = {};
-            item.id = res.works.attachment[i].id;
+            item.id = res.works.attachment[i].category_file_id;
             item.type = res.works.attachment[i].type;
             item.remark = res.works.attachment[i].remark;
             item.fileList = [
@@ -320,14 +320,14 @@ export default {
           } else {
             for (let j in that.activityProjectDetail.formats) {
               if (
-                res.works.attachment[i].id ==
+                res.works.attachment[i].category_file_id ==
                 that.activityProjectDetail.formats[j].id
               ) {
                 that.activityProjectDetail.formats[j].fileList.push({
                   url: res.works.attachment[i].url,
                   title: res.works.attachment[i].title
                 });
-                that.attachment[res.works.attachment[i].id].push({url:res.works.attachment[i].url,title:res.works.attachment[i].title})
+                that.attachment[res.works.attachment[i].category_file_id].push({url:res.works.attachment[i].url,title:res.works.attachment[i].title})
               }
             }
           }

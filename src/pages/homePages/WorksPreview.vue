@@ -64,10 +64,10 @@
               <div class="works-detail-item">
                   学校：{{activityDetail.school.title}}
               </div>
-              <div class="works-detail-item">
+              <div class="works-detail-item" v-if="activityDetail.works.member.author!=undefined">
                   作者：{{activityDetail.works.member.author.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}
               </div>
-              <div class="works-detail-item">
+              <div class="works-detail-item" v-if="activityDetail.works.member.mentor!=undefined">
                   指导老师：{{activityDetail.works.member.mentor.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}
               </div>
               <div class="works-detail-item">

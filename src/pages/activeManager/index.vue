@@ -40,13 +40,8 @@
                       【{{targetObj[item.target]}}】
                     </p>
                     <p>活动范围：
-                      <!-- <template v-for="subItem in item.region">【{{subItem.area_name}}】</template> -->
-                      <template v-if="item.region.length<12">
-                        <div
-                          class="list-item-content"
-                          v-for="(subItem,index1) in item.region"
-                          :key="index1"
-                        >【{{subItem.area_name}}】</div>
+                      <template v-if="item.region.length<12" v-for="(subItem,index1) in item.region">
+                        【{{subItem.area_name}}】
                       </template>
                       <template>
                         <span v-if="item.region.length>=12">【深圳市】</span>
@@ -298,5 +293,9 @@ export default {
 }
 .clearfix:after {
   clear: both;
+}
+.list-item-content{
+  display: flex;
+  flex-direction: row;
 }
 </style>

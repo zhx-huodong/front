@@ -267,7 +267,11 @@ export default {
         }
         for (let j in this.addActivityForm.attachment) {
           let attachmentItem={}
-          attachmentItem.name=this.addActivityForm.attachment[j].name
+          if(this.addActivityForm.attachment[j].name!=undefined){
+            attachmentItem.name=this.addActivityForm.attachment[j].name
+          }else if(this.addActivityForm.attachment[j].title!=undefined){
+            attachmentItem.name=this.addActivityForm.attachment[j].title
+          }  
           attachmentItem.url=this.addActivityForm.attachment[j].url
           this.attachment.push(attachmentItem);
         }

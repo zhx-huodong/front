@@ -78,7 +78,7 @@
                   :value="subItem.value"
                 ></el-option>
               </el-select>
-              <i class="el-icon-circle-close" style="font-size:25px;color:red;cursor:pointer;margin-left:200px" @click="deleteUploadType(index)"></i>
+              <i class="el-icon-circle-close" style="font-size:25px;color:red;cursor:pointer;margin-left:10px" @click="deleteUploadType(index)"></i>
               <!-- <el-button size="small" @click="deleteUploadType(index)"  style="background-color:#FA3636;color:#fff;margin-left:170px">删除</el-button> -->
             </el-form-item>
             <el-form-item>
@@ -262,7 +262,7 @@ export default {
     },
     //文件上传格式
     ChangeFormatsType(value,index) {
-      let remark=["支持JPG、PNG等图片格式","支持 MP4等常用视频格式","支持word、pdf,excel等常用格式","支持zip等常用格式"]
+      let remark=["支持JPG、PNG等图片格式","支持mp4,avi,mpg,mpeg,flv,mov等常用视频格式","支持word、pdf,excel等常用格式","支持zip,rar等常用格式"]
       this.form.formats[index].remark1 = remark[value-1];
       this.form.formats[index].remark=this.form.formats[index].remark1+","+this.form.formats[index].remark2;
       console.log("index==",index,"value===",value)

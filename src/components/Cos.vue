@@ -84,7 +84,7 @@ export default {
       var d = md.getDate();
       var key = "file/" + y + m + d + "/" + file.name;
       // 文件类型校验
-      if (this.validList.indexOf(type) == -1) {
+      if (this.validList.indexOf(type.toLowerCase()) == -1) {
         let validStr = this.validList.join("，");
         this.$message({
           type: "error",
