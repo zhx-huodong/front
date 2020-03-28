@@ -110,7 +110,7 @@
           <span class="limit">仅支持JPG,PNG格式</span>
         </el-form-item>
         <el-form-item label="学校：" :rules="{ required: true, message: '请填写学校', trigger: 'blur' }">
-          <el-select v-model="form.school_id" filterable placeholder="请选择" size="small">
+          <el-select v-model="form.school_id" filterable placeholder="请选择" size="small" @change="schoolChange">
             <el-option
               v-for="item in schoolList"
               :key="item.id"
@@ -133,13 +133,6 @@
                 </el-col>
                 <el-col :span="2" :offset="1">
                   <i class="el-icon-circle-close" style="font-size:18px;color:red;cursor:pointer" @click="deleteAuthor(index)"></i>
-
-                  <!-- <el-button
-                    size="small"
-                    type="text"
-                    style="color:red"
-                    @click="deleteAuthor(index)"
-                  >删除</el-button> -->
                 </el-col>
               </el-row>
             </el-col>
@@ -163,12 +156,7 @@
                 </el-col>
                 <el-col :span="2" :offset="1">
                   <i class="el-icon-circle-close" style="font-size:18px;color:red;cursor:pointer" @click="deleteTeacher(index)"></i>
-                  <!-- <el-button
-                    size="small"
-                    type="text"
-                    style="color:red"
-                    
-                  >删除</el-button> -->
+            
                 </el-col>
               </el-row>
             </el-col>
@@ -249,21 +237,45 @@ export default {
       schoolList: [], //学校列表
       period: this.$route.query.period, //学段id
       works_id:'',//作品id
+      school:'',//学校名称
     };
   },
   created() {
+   
+  },
+  mounted() {
     let params = {};
-
     if (this.operate != 0) {
       this.getEnrollDetail();
     } else {
       this.getObjectDetail();
     }
-  },
-  mounted() {
     this.getSchoolList();
   },
+  watch:{
+    //在页面离开时记录滚动位置
+    beforeRouteLeave (to, from, next) {
+      this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      next()
+    },
+    //进入该页面时，用之前保存的滚动位置赋值
+    beforeRouteEnter (to, from, next) {
+      next(vm => {
+        document.body.scrollTop = vm.scrollTop
+      })
+    },
+
+
+  },
   methods: {
+    //选择学校
+    schoolChange(data){
+      for(let i in this.schoolList){
+        if(this.schoolList[i].id==data){
+          this.school=this.schoolList[i].title
+        }
+      }
+    },
     //获取学校列表
     async getSchoolList() {
       let params = {};
@@ -484,29 +496,39 @@ export default {
       params.attachment = this.attachment;
       console.log("params===", params);
       if (this.operate == 0) {
-        await axiosPost(params)
-          .then(res => {
-            if (res.code == -1) {
-              this.$message({
-                message: res.message,
-                type: "warning"
-              });
-            } else if (res.title != undefined && res.title != "") {
-              this.$message({
-                message: "报名成功！！",
-                type: "success"
-              });
-              setTimeout(() => {
-                this.$router.push({
-                  path: "/home/submitEnroll"
-                });
-                // this.$router.go(-1);
-              }, 1000);
-            } else {
-              that.$router.go(-1);
-            }
-          })
-          .catch(err => err);
+        let detailObj=JSON.stringify(params)
+        this.$router.push({
+          path: "/home/enrollPreview",
+          query:{
+            detailObj:detailObj,
+            activityName:this.form.activityName,
+            activityProject:this.form.activityProject,
+            school:this.school
+          }
+        });
+        // await axiosPost(params)
+        //   .then(res => {
+        //     if (res.code == -1) {
+        //       this.$message({
+        //         message: res.message,
+        //         type: "warning"
+        //       });
+        //     } else if (res.title != undefined && res.title != "") {
+        //       this.$message({
+        //         message: "报名成功！！",
+        //         type: "success"
+        //       });
+        //       setTimeout(() => {
+        //         this.$router.push({
+        //           path: "/home/submitEnroll"
+        //         });
+                
+        //       }, 1000);
+        //     } else {
+        //       that.$router.go(-1);
+        //     }
+        //   })
+        //   .catch(err => err);
       } else {
         // params.id = this.activityProjectId;
         params.id=this.works_id
