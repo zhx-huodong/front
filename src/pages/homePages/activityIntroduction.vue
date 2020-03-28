@@ -77,7 +77,8 @@
               <div class="tag">
                 <p>请选择以下内容参加活动</p>
               </div>
-              <div style="margin-bottom:30px;">
+    
+              <div style="padding:10px 30px;margin-bottom:10px;">
                 <type-select
                   :gradeList="activityObject.periodList"
                   @gradeObject="PeriodgradeObject"
@@ -104,7 +105,7 @@
                         v-for="(item1, index1) in item.child"
                         :key="index1"
                         @click="otherObjectOne(item1.id, index1)"
-                        :class="{'type-active':activityNameIndex == index1,'not-click':item1.period&PeriodGradeObjectid!=0}"
+                        :class="{'type-active':activityNameIndex == index1,'not-click':(item1.period&PeriodGradeObjectid)!=0}"
                       >{{item1.name||item1.title}}</div>
                     </div>
                   </div>
@@ -162,7 +163,7 @@
               <el-row>
                 <el-col>
                   <type-select
-                    :gradeList="gradeListTwo"
+                    :gradeList="ClassList"
                     :activityTypleList="activityTypleList"
                     :activityProjectList="activityProjectList"
                     @gradeObject="gradeObject"
@@ -220,10 +221,14 @@ export default {
       activityTypleSelectID: "",
       activityProjectSelectID: "",
       gradeListTwo: [
-        { id: 0, name: "全部" },
-        { id: 1, name: "小学组" },
-        { id: 2, name: "初中组" },
-        { id: 3, name: "高中组" }
+        { name: "全部", id: 0 },
+        { name: "幼教组", id: 1 },
+        { name: "小学组", id: 2 },
+        { name: "初中组", id: 4 },
+        { name: "高中组", id: 8 },
+        { name: "特教组", id: 16 },
+        { name: "中职组", id: 32 },
+        { name: "高教组", id: 64 }
       ],
       activityObject: {},
       ClassList: [
@@ -300,20 +305,24 @@ export default {
       let params = {};
       params.url = api.activity;
       params.expand = "category";
-      // params.inscore=1;
+      params.id=that.id;
       await this.axiosGet(params).then(res => {
-        that.activityTypleList = res.items.map(item => {
+        that.activityTypleList = res.category.map(item => {
           return {
-            id: item.category[0].id,
-            name: item.category[0].title
+            id: item.id,
+            name: item.title,
+            child:item.child,
           };
         });
-        that.activityProjectList = res.items.map(item => {
-          return {
-            id: item.category[0].child[0].id,
-            name: item.category[0].child[0].title
-          };
-        });
+        for(let i=0;i<that.activityTypleList.length;i++){
+            that.activityTypleList[i].child.map(item => {
+               that.activityProjectList.push({
+                 id: item.id,
+                 name: item.title
+               });
+             });
+        }
+         console.log(that.activityProjectList);
       });
       that.activityTypleList.unshift({ id: 0, name: "全部" });
       that.activityProjectList.unshift({ id: 0, name: "全部" });
@@ -416,7 +425,8 @@ export default {
               }
             }
           }
-          this.PeriodGradeObjectid = this.activityObject.periodList[0].id;
+          // console.log("看看",this.activityObject);
+          this.PeriodGradeObjectid = this.activityObject.periodList[0].id;//一开始返回的是幼教组的id
           let nowTime = Date.parse(new Date());
           if (res.node[0].stime * 1000 <= nowTime <= res.node[0].etime * 1000) {
             this.process = 1;
@@ -638,6 +648,7 @@ export default {
     }
   }
   .activity-introduction-main {
+    padding:10px 30px;
     .activity-title {
       font-size: 18px;
       color: #333;
@@ -662,6 +673,7 @@ export default {
     }
   }
   .activity-annex {
+    padding:10px 30px;
     display: flex;
     flex-direction: column;
     margin-top: 30px;
@@ -678,23 +690,24 @@ export default {
     }
   }
   .list-item {
+    padding:10px 30px;
     display: flex;
     flex-direction: row;
     align-items: center;
     line-height: 30px;
     font-size: 14px;
     color: #333;
-    margin-bottom: 20px;
-    .list-item-content {
-      // margin-left: 20px;
-    }
+    margin-bottom: 10px;
+    
   }
   .tag {
+    padding:10px 30px;
     font-size: 14px;
     color: #666;
-    margin-bottom: 10px;
+    // margin-bottom: 10px;
   }
   .list-project {
+    padding:10px 30px;
     display: flex;
     flex-direction: column;
     margin-bottom: 30px;

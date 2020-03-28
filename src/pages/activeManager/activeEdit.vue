@@ -12,7 +12,7 @@
             </el-col>
           </el-form-item>
 
-          <div class="my-editer" style="margin-left: 23px;">
+          <div class="my-editerContain" style="margin-left: 23px;">
             <P style="width:70px;margin-left:25px">项目介绍:</P>
             <my-editor @editorChange="editorChange" :inputtext="this.form.content"></my-editor>
           </div>
@@ -37,7 +37,7 @@
               ></el-input-number>
             </el-col>
           </el-form-item>
-          <el-form-item label="学段设置 :" prop="actLimit">
+          <el-form-item label="学段设置 :" prop="periodList">
             <el-checkbox-group v-model="period" @change="periodChange">
               <el-checkbox
                 v-for="(item,index) in periodList"
@@ -47,7 +47,7 @@
             </el-checkbox-group>
           </el-form-item>
           <template v-for="(item,index) in form.formats" >
-            <el-form-item label="作品上传格式:" >
+            <el-form-item label="作品上传格式:" prop="formats">
               <el-select
                 v-model="item.type"
                 filterable
@@ -78,12 +78,9 @@
                   :value="subItem.value"
                 ></el-option>
               </el-select>
-              <el-button size="small" @click="deleteUploadType(index)" type="text" style="color:red;margin-left:160px">删除</el-button>
+              <i class="el-icon-circle-close" style="font-size:25px;color:red;cursor:pointer;margin-left:200px" @click="deleteUploadType(index)"></i>
+              <!-- <el-button size="small" @click="deleteUploadType(index)"  style="background-color:#FA3636;color:#fff;margin-left:170px">删除</el-button> -->
             </el-form-item>
-            <!-- <el-form-item>
-            <div style="color:#999999">备注:1.图片: 支持JPG、png、bmg等图片格式</div>
-
-            </el-form-item> -->
             <el-form-item>
               <el-input
                 v-model="item.remark"
@@ -129,12 +126,20 @@ export default {
         mentor_limit: [
           { required: true, message: "指导老师上限必填", trigger: "blur" }
         ],
-        actLimit: [
+        periodList: [
           {
             type: "array",
-            required: false,
+            required: true,
             message: "请至少选择一个",
             trigger: "change"
+          }
+        ],
+        formats:[
+          {
+            type: "array",
+            required: true,
+            message: "请选择作品格式",
+            
           }
         ]
       },
@@ -151,9 +156,9 @@ export default {
         title: "", //标题
         type: 2,
         content: "", //内容
-        author_limit: "", //作者上限
-        mentor_limit: "", //指导老师限制
-        formats: [{type:1,size:1,remark:'支持JPG、PNG等图片格式'}],
+        author_limit: "1", //作者上限
+        mentor_limit: "1", //指导老师限制
+        formats: [{type:1,size:1,remark:'支持JPG、PNG等图片格式,大小不超过1MB',remark1:'支持JPG、PNG等图片格式',remark2:'大小不超过1MB'}],
         period: "" //学段设置
       },
       uploadFormatons: [
@@ -247,7 +252,7 @@ export default {
   methods: {
     //增加文件上传入口
     addUploadType(){
-      let item={type:1,size:1,remark:''}
+      let item={type:1,size:1,remark:'支持JPG、PNG等图片格式,大小不超过1MB',remark1:'支持JPG、PNG等图片格式',remark2:'大小不超过1MB'}
       this.form.formats.push(item)
     },
     //删除问卷上传入口
@@ -258,12 +263,17 @@ export default {
     //文件上传格式
     ChangeFormatsType(value,index) {
       let remark=["支持JPG、PNG等图片格式","支持 MP4等常用视频格式","支持word、pdf,excel等常用格式","支持zip等常用格式"]
-      this.form.formats[index].remark = remark[value-1];
+      this.form.formats[index].remark1 = remark[value-1];
+      this.form.formats[index].remark=this.form.formats[index].remark1+","+this.form.formats[index].remark2;
       console.log("index==",index,"value===",value)
       this.form.formats[index].type=value
     },
     //大小限制
     ChangeFormatsSize(value,index) {
+      console.log(value,index);
+      let remark={'0':"大小不超过1MB",'5':"大小不超过5MB",'10':"大小不超过10MB",'20':"大小不超过50MB",'100':"大小不超过100MB",'500':"大小不超过500MB"};
+      this.form.formats[index].remark2 = remark[value];
+      this.form.formats[index].remark=this.form.formats[index].remark1+","+this.form.formats[index].remark2;
       console.log("index==",index,"value===",value)
       this.form.formats[index].size = value;
     },
@@ -314,7 +324,8 @@ export default {
         });
         return;
       }
-      if (this.form.period.length == 0) {
+      // console.log(this.form.period,this.period)
+      if (this.period.length == 0) {
         this.$message({
           message: "至少选择一个组",
           type: "error"
@@ -537,13 +548,18 @@ export default {
     }
   }
 }
-.my-editer {
+.my-editerContain {
   display: flex;
   flex-direction: row;
   margin-bottom: 10px;
+  
   p {
     font-size: 14px;
     color: #666;
   }
+}
+.my-editer{
+  max-width: 900px;
+  padding-left:4px;
 }
 </style>
