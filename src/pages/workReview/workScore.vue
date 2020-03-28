@@ -6,7 +6,7 @@
                       <span style="margin-left:42%;">测试</span>
                       <span style="float:right;color:#999999">作品编号:{{workDetail.serial_id}}</span>
                     </div> -->
-                     <works-preview :id="queryId" inscore="1"></works-preview>
+                     <works-preview :id="queryId" inscore="1" :workDetail="false"></works-preview>
 
                      <!-- <div class="workContainer">
                        <div v-html="workDetail.works.content" class="content"></div>

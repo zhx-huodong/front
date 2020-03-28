@@ -75,6 +75,9 @@ export default {
       await this.axiosGet(params)
         .then(res => {
           this.tableData = res.professional;
+          this.tableData.forEach(ite=>{
+            ite.score=ite.score/10;//把分数除10
+          })
           if (res.professional.length > 0) {
             let totalScore = 0;
             res.professional.forEach(item => {

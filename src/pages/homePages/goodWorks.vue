@@ -4,7 +4,7 @@
       <!-- <div slot="header" class="clearfix">
         <span>{{workDetail.title}}</span>
       </div> -->
-        <works-preview :id="activity_id" award=true></works-preview>
+        <works-preview :id="activity_id" :award="true" ></works-preview>
 
       <!-- <div class="workContainer">
         <div v-html="workDetail.content" class="content"></div>

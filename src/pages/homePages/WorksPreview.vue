@@ -50,8 +50,8 @@
                   <file-preview :fileObj="{name:'报名登记表',url:activityDetail.registration}"></file-preview>      
               </div>
           </div>
-          <el-divider></el-divider>
-          <div class="works-detail-main">
+          <el-divider v-if="workDetail"></el-divider>
+          <div class="works-detail-main" v-show="workDetail">
               <div class="works-detail-item" v-show="award">
                   获奖信息：{{getAward||'暂未获奖'}}
               </div>
@@ -106,6 +106,12 @@ export default {
       type:Boolean,
       default() {
         return false;
+      }
+    },
+    workDetail:{
+      type:Boolean,
+      default() {
+        return true;
       }
     }
   },

@@ -87,7 +87,7 @@
                             <el-table-column
                             label="所在区域"
                             show-overflow-tooltip>
-                                <template slot-scope="scope">{{ scope.row.memberInfo[0].school.areaInfo.areaName }}</template>
+                                <template slot-scope="scope">{{ scope.row.memberInfo[0].school.areaName }}</template>
                             </el-table-column>
                             <el-table-column
                             label="所在学校"
