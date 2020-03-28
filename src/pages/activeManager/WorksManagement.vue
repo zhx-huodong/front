@@ -358,6 +358,7 @@ export default {
           bexport: "1",
           expand:'info,works,school,professional,award'
         },
+        responseType: "blob",
         headers: {"x-api-key" : getCookie("x-api-key") }
       }).then(res=>{
         console.log("res===",res)

@@ -105,7 +105,7 @@
                         v-for="(item1, index1) in item.child"
                         :key="index1"
                         @click="otherObjectOne(item1.id, index1)"
-                        :class="{'type-active':activityNameIndex == index1,'not-click':(item1.period&PeriodGradeObjectid)!=0}"
+                        :class="{'type-active':(item1.period&PeriodGradeObjectid)==0,'not-click':(item1.period&PeriodGradeObjectid)!=0}"
                       >{{item1.name||item1.title}}</div>
                     </div>
                   </div>
@@ -413,18 +413,28 @@ export default {
         .then(res => {
           this.bannerUrl = res.banner[0].url;
           this.activityObject = res;
-          this.activityObject.period;
           this.activityObject.periodList = [];
-
-          let arr = [1, 2, 4, 8, 16, 32, 64];
-          let result = this.getSubSet(this.activityObject.period, arr);
-          for (let i in result) {
-            for (let j in this.ClassList) {
-              if (result[i] == this.ClassList[j].id) {
-                this.activityObject.periodList.push(this.ClassList[j]);
-              }
-            }
+          //处理学段
+          console.log("看看res",(res.period&this.ClassList[1].id)==this.ClassList[1].id)
+          for(let k=0;k<this.ClassList.length;k++){
+            console.log((res.period&this.ClassList[k].id)==this.ClassList[k].id)
+             //if((res.period&this.ClassList[k].id)!=0){
+             //    console("哈哈哈")
+                //  this.activityObject.periodList.push(this.ClassList[k]);
+             //}
+             if((res.period&this.ClassList[k].id)==this.ClassList[k].id){
+                console("哈哈哈")
+             }
           }
+          // let arr = [1, 2, 4, 8, 16, 32, 64];
+          // let result = this.getSubSet(this.activityObject.period, arr);
+          // for (let i in result) {
+          //   for (let j in this.ClassList) {
+          //     if (result[i] == this.ClassList[j].id) {
+          //       this.activityObject.periodList.push(this.ClassList[j]);
+          //     }
+          //   }
+          // }
           // console.log("看看",this.activityObject);
           this.PeriodGradeObjectid = this.activityObject.periodList[0].id;//一开始返回的是幼教组的id
           let nowTime = Date.parse(new Date());
