@@ -153,7 +153,7 @@ export default {
             ],
             activityProjectSelectID:'',
             gradeList:[
-                { id: 0, name: '全部' },
+                // { id: 0, name: '全部' },
                 { id: 1, name: '小学组' },
                 { id: 2, name: '初中组' },
                 { id: 3, name: '高中组' }
@@ -218,9 +218,9 @@ export default {
                     }
                 })
             })
-            that.activityNameList.unshift({id:0,name:"全部"});
-            that.activityTypleList.unshift({id:0,name:"全部"});
-            that.activityProjectList.unshift({id:0,name:"全部"});
+            // that.activityNameList.unshift({id:0,name:"全部"});
+            // that.activityTypleList.unshift({id:0,name:"全部"});
+            // that.activityProjectList.unshift({id:0,name:"全部"});
         },
         //获取所有的专家作品列表
         async getWorksList(){
