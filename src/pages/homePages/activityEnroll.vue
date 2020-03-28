@@ -5,7 +5,9 @@
         <p>活动报名</p>
       </div>
       <el-divider></el-divider>
-      <el-form ref="form" :model="form" label-width="200px">
+      <el-row>
+        <el-col :span="20" :offset="2">
+      <el-form ref="form" :model="form" label-width="100px">
         <el-form-item label="活动组别：">
           <el-input
             v-model="form.activityName"
@@ -174,6 +176,8 @@
         <el-col :span="5" :offset="5">
           <el-button type="primary" @click="submitEnroll()" size="small">提交报名</el-button>
           <el-button type="default" @click="goback()" size="small">取消</el-button>
+        </el-col>
+      </el-row>
         </el-col>
       </el-row>
     </el-card>
@@ -752,7 +756,7 @@ export default {
   display: flex;
   flex-direction: row;
   margin-bottom: 10px;
-  margin-left: 118px;
+  margin-left: 18px;
   p {
     width: 70px;
     font-size: 14px;
