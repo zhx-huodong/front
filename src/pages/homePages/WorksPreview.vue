@@ -105,15 +105,12 @@ export default {
         return false;
       }
     },
-<<<<<<< HEAD
-=======
     workDetail:{
       type:Boolean,
       default() {
         return true;
       }
     }
->>>>>>> 72de9ab713c4e3c249a54248393c362a82928d6a
   },
 
   data() {
