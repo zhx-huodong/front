@@ -15,11 +15,11 @@
                         </el-col>
                         <!-- <el-col :span="3">
                             <el-button type="primary" plain @click="goToImport" size="small">导入评分表</el-button>
-                        </el-col>
+                        </el-col> -->
                         <el-col :span="2">
                             <el-button type="primary" plain @click="goToDownload" size="small">下载评分表</el-button>
-                        </el-col> -->
-                        <el-col :span="10" :offset="6">
+                        </el-col>
+                        <el-col :span="10" :offset="4">
                             <el-form :inline="true" :model="formInline" class="demo-form-inline" style="width:900px">
                                 <el-form-item label="作品编号：" >
                                     <el-input v-model="formInline.work_id" placeholder="输入作品编号" style="width:250px" size="small"></el-input>
@@ -42,7 +42,8 @@
                             tooltip-effect="dark"
                             style="width: 100%"
                             v-loading="loading"
-                            @selection-change="tableSelectionChange">
+                            @selection-change="tableSelectionChange"
+                            >
                             <el-table-column
                             type="selection"
                             width="55">
@@ -302,8 +303,50 @@ export default {
         },
         //下载评分表
         goToDownload(){
-
+       let params = {};
+      var ids = [];
+      this.multipleSelection.forEach(item => {
+        ids.push(item.id);
+      });
+      if(ids.length==0){
+        return this.$message({
+          type:'error',
+          message:"请先勾选需要导出的作品"
+        })
+      }
+      axios.get(api.enroll, {
+        params: {
+          id: ids.join(","),
+          bexport: "1",
+          expand:'info,works,school,professional,award'
         },
+        headers: {"x-api-key" : getCookie("x-api-key") }
+      }).then(res=>{
+        console.log("res===",res)
+          if(res.status==200){
+           // let elink=document.createElement('a');
+           // elink.download="作品.xls";
+           // elink.href=res.data;
+           // elink.click();
+             this.downloadFile("评分表.xlsx",res.data);
+          }else{
+            return  this.$message({
+               type:'error',
+               message:'出错了'
+            })
+          }
+      });
+        },
+        downloadFile (fileName,data) {
+    	if (!data) { return }
+    	let url = window.URL.createObjectURL(new Blob([data]))
+    	let link = document.createElement('a')
+    	link.style.display = 'none'
+    	link.href = url;
+    	link.setAttribute('download', fileName)
+    	document.body.appendChild(link)
+    	link.click()
+    },
         //下载作品
         downloadWork(){
             let that=this;
@@ -397,6 +440,8 @@ export default {
             that.selectedCell=select.map((item)=>{
                 return item.id;
             })
+            this.multipleSelection = val;
+
             // console.log("ces",that.selectedCell);
         }
 			

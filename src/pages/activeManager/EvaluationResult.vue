@@ -117,6 +117,8 @@
           </el-table-column>
           <el-table-column label="获奖" width="100" show-overflow-tooltip>
             <template slot-scope="scope">
+                <el-button type="text" @click="goToSetAward(scope.row.id)" size="small">修改</el-button>
+
               <template v-if="scope.row.award.length>0">
                 <template v-for="item in scope.row.award">
                   {{item.title}}
@@ -337,11 +339,13 @@ export default {
         .then(res => {
           this.tableData = [];
           this.tableData = res.items;
+          console.log("ces",this.tableData);
           this.tableData.forEach(ite => {
             var title = "";
             var areaName = "";
             var author_ = "";
             var mentor_ = "";
+            ite.score=ite.score/10;//把分数除10
             ite.school.forEach(item => {
               title == ""
                 ? (title = item.title)

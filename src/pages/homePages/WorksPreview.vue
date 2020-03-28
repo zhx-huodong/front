@@ -48,22 +48,32 @@
               <file-preview :fileObj="{name:'报名登记表',url:activityDetail.registration}"></file-preview>
             </div>
           </div>
-          <el-divider></el-divider>
-          <div class="works-detail-main">
-            <div class="works-detail-item" v-show="award">获奖信息：{{getAward||'暂未获奖'}}</div>
-            <div class="works-detail-item">活动组别：{{activityDetail.info.activity}}</div>
-            <div class="works-detail-item">活动项目：{{activityDetail.info.project}}</div>
-            <div class="works-detail-item">学段：{{periodList[activityDetail.period]}}</div>
-            <div class="works-detail-item">学校：{{activityDetail.school.title}}</div>
-            <div
-              class="works-detail-item"
-              v-if="activityDetail.works.member.author!=undefined"
-            >作者：{{activityDetail.works.member.author.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}</div>
-            <div
-              class="works-detail-item"
-              v-if="activityDetail.works.member.mentor!=undefined"
-            >指导老师：{{activityDetail.works.member.mentor.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}</div>
-            <div class="works-detail-item" v-show="!award">邮箱：{{activityDetail.works.email}}</div>
+          <el-divider v-if="workDetail"></el-divider>
+          <div class="works-detail-main" v-show="workDetail">
+              <div class="works-detail-item" v-show="award">
+                  获奖信息：{{getAward||'暂未获奖'}}
+              </div>
+              <div class="works-detail-item">
+                  活动组别：{{activityDetail.info.activity}}
+              </div>
+              <div class="works-detail-item">
+                  活动项目：{{activityDetail.info.project}}
+              </div>
+              <div class="works-detail-item">
+                  学段：{{periodList[activityDetail.period]}}
+              </div>
+              <div class="works-detail-item">
+                  学校：{{activityDetail.school.title}}
+              </div>
+              <div class="works-detail-item" v-if="activityDetail.works.member.author!=undefined">
+                  作者：{{activityDetail.works.member.author.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}
+              </div>
+              <div class="works-detail-item" v-if="activityDetail.works.member.mentor!=undefined">
+                  指导老师：{{activityDetail.works.member.mentor.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}
+              </div>
+              <div class="works-detail-item" v-show="!award">
+                  邮箱：{{activityDetail.works.email}}
+              </div>
           </div>
         </div>
       </el-col>
@@ -95,6 +105,15 @@ export default {
         return false;
       }
     },
+<<<<<<< HEAD
+=======
+    workDetail:{
+      type:Boolean,
+      default() {
+        return true;
+      }
+    }
+>>>>>>> 72de9ab713c4e3c249a54248393c362a82928d6a
   },
 
   data() {

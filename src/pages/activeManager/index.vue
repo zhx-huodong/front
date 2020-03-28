@@ -41,7 +41,7 @@
                     </p>
                     <p>活动范围：
                       <template v-if="item.region.length<12" v-for="(subItem,index1) in item.region">
-                        【{{subItem.area_name}}】
+                        <span>【{{subItem.area_name}}】</span>
                       </template>
                       <template>
                         <span v-if="item.region.length>=12">【深圳市】</span>

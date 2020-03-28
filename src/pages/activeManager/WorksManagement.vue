@@ -360,13 +360,13 @@ export default {
         },
         headers: {"x-api-key" : getCookie("x-api-key") }
       }).then(res=>{
-        // console.log("res===",res)
+        console.log("res===",res)
           if(res.status==200){
-            let elink=document.createElement('a');
-            // elink.target="_blank"
-            elink.download="作品.xls";
-            elink.href=res.data;
-            elink.click();
+           // let elink=document.createElement('a');
+           // elink.download="作品.xls";
+           // elink.href=res.data;
+           // elink.click();
+             this.downloadFile("作品.xlsx",res.data);
           }else{
             return  this.$message({
                type:'error',
@@ -374,6 +374,16 @@ export default {
             })
           }
       });
+    },
+    downloadFile (fileName,data) {
+    	if (!data) { return }
+    	let url = window.URL.createObjectURL(new Blob([data]))
+    	let link = document.createElement('a')
+    	link.style.display = 'none'
+    	link.href = url;
+    	link.setAttribute('download', fileName)
+    	document.body.appendChild(link)
+    	link.click()
     },
     //退回作品
     async returnWorks() {
