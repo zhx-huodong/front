@@ -44,7 +44,6 @@ const submitEnroll=require('../pages/homePages/submitEnroll');
 const activityDetail = require('../pages/homePages/activityDetail');
 const workShow = require('../pages/activityProcess/workShow');
 const goodWorks=require('../pages/homePages/goodWorks'); //每个活动中的优秀作品
-const enrollPreview=require('../pages/homePages/enrollPreview'); //报名提交预览
 
 const admin=require('../pages/admin.vue'); // 超级管理员
 const roleManage=require('../pages/adminManager/roleManage.vue'); // 角色管理
@@ -111,7 +110,6 @@ const routes = [
       { path: '/home/submitEnroll',name:"报名成功", components: submitEnroll,meta: { title: '报名成功' ,keepAlive: false}},//报名成功
       { path: '/home/activityDetail',name:"活动详情", components: activityDetail,meta: { title: '活动详情',keepAlive: false }},//活动详情
       { path: '/userCenter/userEdit',name:"个人中心编辑", components: userEdit,meta: { title: '个人中心编辑' ,keepAlive: false}},//个人中心编辑
-      { path: '/home/enrollPreview',name:"报名预览", components: enrollPreview,meta: { title: '报名预览' ,keepAlive: true}},//报名预览
 
       { path: '/workShow',name:"活动详情展示", components: workShow,meta: { title: '活动详情展示' ,keepAlive: false}},//活动详情展示
 
