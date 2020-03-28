@@ -8,7 +8,7 @@
         </div>
 
         <div class="file-operate">
-          <p @click="goToPreview(item.url)">预览/下载</p>
+          <p @click="goToPreview(item.url)">下载</p>
           <p @click="goToDelete(index)" style="color:red;">删除</p>
         </div>
       </div>

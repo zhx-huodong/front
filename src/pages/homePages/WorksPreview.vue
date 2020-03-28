@@ -52,6 +52,9 @@
           </div>
           <el-divider></el-divider>
           <div class="works-detail-main">
+              <div class="works-detail-item" v-show="award">
+                  获奖信息：{{getAward||'暂未获奖'}}
+              </div>
               <div class="works-detail-item">
                   活动组别：{{activityDetail.info.activity}}
               </div>
@@ -70,7 +73,7 @@
               <div class="works-detail-item">
                   指导老师：{{activityDetail.works.member.mentor.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}
               </div>
-              <div class="works-detail-item">
+              <div class="works-detail-item" v-show="!award">
                   邮箱：{{activityDetail.works.email}}
               </div>
           </div>
@@ -98,14 +101,20 @@ export default {
       default() {
         return "";
       }
+    },
+    award:{
+      type:Boolean,
+      default() {
+        return false;
+      }
     }
   },
 
   data() {
     return {
         activityDetail:{},//报名详情信息
-        periodList: { 1: "幼教组" ,2: "小学组", 4: "初中组", 8: "高中组",  16: "特教组", 32: "中职组", 64: "高教组" }
-
+        periodList: { 1: "幼教组" ,2: "小学组", 4: "初中组", 8: "高中组",  16: "特教组", 32: "中职组", 64: "高教组" },
+        getAward:'',//所获奖项
     };
   },
   mounted() {
@@ -127,6 +136,9 @@ export default {
       await this.axiosGet(params)
         .then(res => {
           this.activityDetail = res;
+          if(this.activityDetail.award.length!=0){
+             this.getAward=this.activityDetail.award[0].title;
+          }
           console.log("看看",res)
         })
         .catch(err => err);

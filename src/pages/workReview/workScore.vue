@@ -37,18 +37,24 @@
                     <div style="width:900px">
                         <el-row>
                             <el-form ref="form" :model="form2" label-width="100px">
-                                <el-form-item label="评分：">
+                                <el-form-item label="评分：" :rules="{
+      required: true, message: '评分不能为空', trigger: 'blur'
+    }">
                                     <el-input
                                     onkeyup="value=value.replace(/[^\d]/g,'')"
-                                    placeholder="请输入评分"
+                                    placeholder="请输入0-100整数"
                                     v-model="form2.score"
                                     clearable
-                                    style="width:300px;"
+                                    style="width:200px;"
                                     size="small">
                                     </el-input>
+                                    <span style="padding-left:10px;">分</span>
+                                    <span style="color:#999999;margin-left:20px;">( 满分100，90以上优秀，80以上优良，70以上较好， 60以下较差 )</span>
                                 </el-form-item>
 
-                                <el-form-item label="评语：">
+                                <el-form-item label="评语：" :rules="{
+      required: true, message: '评语不能为空', trigger: 'blur'
+    }">
                                     <el-input
                                     type="textarea"
                                     :rows="6"
@@ -75,7 +81,7 @@
             >
             <span>当前已评完，继续评分?</span>
             <span slot="footer" class="dialog-footer">
-              <el-button @click="$router.go(-1)">取 消</el-button>
+              <el-button @click="$router.go(-1)">返 回</el-button>
               <el-button type="primary" @click="open">下一份</el-button>
             </span>
         </el-dialog>

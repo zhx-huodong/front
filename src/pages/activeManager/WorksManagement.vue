@@ -98,7 +98,7 @@
           tooltip-effect="dark"
           style="width: 100%"
           @selection-change="tableSelectionChange"
-          @cell-click="goToActDetail"
+          
         >
           >
           <el-table-column type="selection" width="55"></el-table-column>
@@ -110,7 +110,7 @@
           </el-table-column>
           <el-table-column prop="works.title" label="作品名称" show-overflow-tooltip>
             <template slot-scope="scope">
-              <el-button type="text"> {{scope.row.works.title}}</el-button>
+              <el-button type="text" @click="goToActDetail(scope.row)"> {{scope.row.works.title}}</el-button>
             </template>
           </el-table-column>
           
@@ -220,7 +220,8 @@ export default {
       item_id: "", //项目
       period: "", //学段
       category_id: "", //分类
-      ids: [] //id列表
+      ids: [],//id列表
+      excelSteam:'',//文件流
     };
   },
   watch: {
@@ -345,6 +346,12 @@ export default {
       this.multipleSelection.forEach(item => {
         ids.push(item.id);
       });
+      if(ids.length==0){
+        return this.$message({
+          type:'error',
+          message:"请先勾选需要导出的作品"
+        })
+      }
       axios.get(api.enroll, {
         params: {
           id: ids.join(","),
@@ -353,7 +360,19 @@ export default {
         },
         headers: {"x-api-key" : getCookie("x-api-key") }
       }).then(res=>{
-        console.log("res===",res)
+        // console.log("res===",res)
+          if(res.status==200){
+            let elink=document.createElement('a');
+            // elink.target="_blank"
+            elink.download="作品.xls";
+            elink.href=res.data;
+            elink.click();
+          }else{
+            return  this.$message({
+               type:'error',
+               message:'出错了'
+            })
+          }
       });
     },
     //退回作品
