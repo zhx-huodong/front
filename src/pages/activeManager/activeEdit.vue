@@ -37,7 +37,7 @@
               ></el-input-number>
             </el-col>
           </el-form-item>
-          <el-form-item label="学段设置 :" prop="periodList">
+          <el-form-item label="学段设置 :">
             <el-checkbox-group v-model="period" @change="periodChange">
               <el-checkbox
                 v-for="(item,index) in periodList"
@@ -125,14 +125,6 @@ export default {
         ],
         mentor_limit: [
           { required: true, message: "指导老师上限必填", trigger: "blur" }
-        ],
-        periodList: [
-          {
-            type: "array",
-            required: true,
-            message: "请至少选择一个",
-            trigger: "change"
-          }
         ],
         formats:[
           {
@@ -324,7 +316,6 @@ export default {
         });
         return;
       }
-      // console.log(this.form.period,this.period)
       if (this.period.length == 0) {
         this.$message({
           message: "至少选择一个组",

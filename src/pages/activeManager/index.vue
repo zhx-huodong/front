@@ -113,6 +113,25 @@ export default {
       let params = {};
       params.url = api.activity;
       params.id = id;
+      this.open(params)
+    },
+    //删除提示
+    open(params) {
+        this.$confirm(`此操作将永久删除该活动, 是否继续?`, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            this.deleteItem(params)
+        }).catch(() => {
+            this.$message({
+                type: 'info',
+                message: '已取消！'
+            });          
+        });
+    },
+    //删除
+    async deleteItem(params){
       await this.axiosDelete(params)
         .then(res => {
           if (res.status == 200) {
@@ -136,7 +155,7 @@ export default {
           });
         });
     },
-
+    //切换
     handleClick(tab) {
       if(tab.index==1){
         this.process=2
