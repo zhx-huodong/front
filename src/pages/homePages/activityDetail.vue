@@ -67,29 +67,16 @@ export default {
         .then(res => {
           this.activityDetail = res;
           let nowTime = Date.parse(new Date());
-          if (
-            res.info.nodes[0].stime * 1000 <=
-            nowTime <=
-            res.info.nodes[0].etime * 1000
-          ) {
+          if (res.info.nodes[0].stime * 1000 <=nowTime&& nowTime <=res.info.nodes[0].etime * 1000) {
             this.process = 1;
-          } else if (
-            res.info.nodes[1].stime * 1000 <=
-            nowTime <=
-            res.info.nodes[1].etime * 1000
-          ) {
+          }
+          if ( res.info.nodes[1].stime * 1000 <=nowTime&& nowTime <=res.info.nodes[1].etime * 1000) {
             this.process = 2;
-          } else if (
-            res.info.nodes[2].stime * 1000 <=
-            nowTime <=
-            res.info.nodes[2].etime * 1000
-          ) {
+          } 
+          if (res.info.nodes[2].stime * 1000 <=nowTime&& nowTime <=res.info.nodes[2].etime * 1000) {
             this.process = 3;
-          } else if (
-            res.info.nodes[3].stime * 1000 <=
-            nowTime <=
-            res.info.nodes[3].etime * 1000
-          ) {
+          }
+          if (res.info.nodes[3].stime * 1000 <=nowTime&& nowTime <=res.info.nodes[3].etime * 1000) {
             this.process = 4;
           }
         })

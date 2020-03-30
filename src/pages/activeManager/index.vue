@@ -208,6 +208,7 @@ export default {
       }
       this.getActivityList();
     },
+    
     //发布活动
     releaseActivity() {
       let addActivityForm = null;

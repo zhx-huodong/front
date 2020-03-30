@@ -445,28 +445,17 @@ export default {
               this.activityObject.category[i].child[j].periodList=this.getSubSet(this.activityObject.category[i].child[j].period, arr)
             }
           }
-          console.log("category===",this.activityObject.category)
-          
           let nowTime = Date.parse(new Date());
-          if (res.node[0].stime * 1000 <= nowTime <= res.node[0].etime * 1000) {
+          if (res.node[0].stime * 1000 <= nowTime&& nowTime<= res.node[0].etime * 1000) {
             this.process = 1;
-          } else if (
-            res.node[1].stime * 1000 <=
-            nowTime <=
-            res.node[1].etime * 1000
-          ) {
+          } 
+          if (res.node[1].stime * 1000 <=nowTime&& nowTime <=res.node[1].etime * 1000) {
             this.process = 2;
-          } else if (
-            res.node[2].stime * 1000 <=
-            nowTime <=
-            res.node[2].etime * 1000
-          ) {
+          } 
+          if (res.node[2].stime * 1000 <=nowTime&& nowTime <=res.node[2].etime * 1000) {
             this.process = 3;
-          } else if (
-            res.node[3].stime * 1000 <=
-            nowTime <=
-            res.node[3].etime * 1000
-          ) {
+          } 
+          if (res.node[3].stime * 1000 <=nowTime&& nowTime <=res.node[3].etime * 1000) {
             this.process = 4;
           }
         })
