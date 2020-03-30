@@ -64,7 +64,7 @@
       <el-button size="small" type="primary" @click="goToSetAwardMore()">设置奖项</el-button>
       <el-button size="small" type="primary" plain @click="goToRecommmend()">推荐省级</el-button>
       <el-button size="small" @click="downloadWorks()">下载作品</el-button>
-      <el-button size="small">下载excel</el-button>
+      <el-button size="small" @click="goToDownload()">导出excel</el-button>
       <el-button size="small" @click="goToShowWorkMore()">开启作品展示</el-button>
     </div>
     <div style="margin-top:16px;">
@@ -181,8 +181,11 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 import TypeSelect from "../../components/TypeSelect";
 import api from "../../service/api";
+import { getCookie, axiosGet, axiosPost } from "../../tools/tools";
+
 export default {
   components: { TypeSelect },
   props: {
@@ -396,6 +399,59 @@ export default {
         })
         .catch(err => err);
     },
+    //导出excel
+    goToDownload(){
+       let params = {};
+      var ids = [];
+      this.multipleSelection.forEach(item => {
+        ids.push(item.id);
+      });
+      if(ids.length==0){
+        return this.$message({
+          type:'error',
+          message:"请先勾选需要导出的作品"
+        })
+      }
+      axios.get(api.enroll, {
+        params: {
+          id: ids.join(","),
+          bexport: "1",
+          expand:'info,works,school,professional,award'
+        },
+        responseType: "blob",
+        headers: {"x-api-key" : getCookie("x-api-key") }
+      }).then(res=>{
+        console.log("res===",res)
+          if(res.status==200){
+           // let elink=document.createElement('a');
+           // elink.download="作品.xls";
+           // elink.href=res.data;
+           // elink.click();
+             this.downloadFile("评分表.xlsx",res.data);
+          }else if(res.code==-1){
+            return  this.$message({
+               type:'error',
+               message:res.message
+            })
+          }
+          else{
+              return  this.$message({
+               type:'error',
+               message:"导出出错"
+            })
+          }
+      });
+        },
+        downloadFile (fileName,data) {
+    	if (!data) { return }
+    	let url = window.URL.createObjectURL(new Blob([data]))
+    	let link = document.createElement('a')
+    	link.style.display = 'none'
+    	link.href = url;
+    	link.setAttribute('download', fileName)
+    	document.body.appendChild(link)
+    	link.click()
+    },
     //下载作品
     async downloadWorks() {
       let params = {};
@@ -416,6 +472,7 @@ export default {
         }
       });
     },
+
     //查看评分情况
     goToScoreDetail(id) {
       this.$router.push({
