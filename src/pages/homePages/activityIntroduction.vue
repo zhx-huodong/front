@@ -352,10 +352,20 @@ export default {
             that.workTotle = res.items.length;
             console.log("测试场", res.items);
             that.activityList = res.items.map(item => {
-              let author = [];
+              let author = [];//作者
+              let mentor=[];//指导老师
+              let award =[];//奖项 因为可能有多个
               author = item.info.author.map(res => {
                 return res.name;
               });
+              mentor = item.info.mentor.map(res => {
+                return res.name;
+              });
+              if(item.award.length>0){
+                  award= item.award.map(res => {
+                    return res.title;
+                  });
+              }
               return {
                 id: item.works.id,
                 activity_id: item.id,
@@ -363,14 +373,18 @@ export default {
                 cover: item.works.cover,
                 view_counts: item.view_counts,
                 like_counts: item.like_counts,
-                author: author.join("")
+                author: author.join("、"),
+                mentor: mentor.join("、"),
+                award: award.join("、"),
+                school:item.school.title,
               };
-              console.log("item", item.works.id);
+              // console.log("item", item.works.id);
             });
           } else {
             that.workTotle = 0;
             that.activityList = [];
           }
+          console.log("测试activityList",that.activityList);
         })
         .catch(err => err);
     },
