@@ -17,6 +17,8 @@
                   start-placeholder="开始日期"
                   end-placeholder="结束日期"
                   value-format="timestamp"
+                  clearable 
+                  @clear="clearTime"
                 ></el-date-picker>
               </el-form-item>
               <el-form-item label="活动名称：">
@@ -96,7 +98,7 @@ export default {
       form: {
         object: "",
         limit: "",
-        time: "",
+        time: [],
         acitvename: ""
       },
       targetObj: { 1: "老师",  2: "学生", 4: "家长"},
@@ -172,7 +174,11 @@ export default {
     async getActivityList() {
       let params = {};
       params.process=this.process //注释掉是因为超级管理员看不到自己刚创建的活动
-      if (this.time1.length != 0 && this.time2.length != 0) {
+      // if (this.form.time.length !=0&&this.form.time.length == 2) {
+      //   this.time1 = this.form.time[0];
+      //   this.time2 = this.form.time[1];
+      // }
+      if (this.time1 != "" && this.time2 != "") {
         params.upload_stime = this.time1 / 1000;
         params.upload_etime = this.time2 / 1000;
       }
@@ -190,23 +196,34 @@ export default {
       let res = await this.axiosGet(params)
         .then(res => {
           this.activityList = res.items;
+          // console.log("我看看这里",this.form.time);
           // 数据清除
-          {
-            this.time1 = "";
-            this.time2 = "";
-            this.form.time = "";
-            this.form.acitvename = "";
-          }
+          // {
+            // this.time1 = "";
+            // this.time2 = "";
+            // this.form.time = "";
+            // this.form.acitvename = "";
+            //我屏蔽掉的原因是因为搜索框那边点击搜索之后就置空了
+          // }
+          // this.form.time =[];
         })
         .catch(err => err);
     },
+    clearTime(){
+      this.form.time=[];
+    },
     //查询
     goToSearch() {
-      if (this.form.time.length == 2) {
+      // console.log(this.form.time);
+      if (this.form.time!=null) {
         this.time1 = this.form.time[0];
         this.time2 = this.form.time[1];
+      }else{
+        this.time1 ="";
+        this.time2 ="";
       }
       this.getActivityList();
+      
     },
     
     //发布活动

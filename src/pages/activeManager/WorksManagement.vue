@@ -78,7 +78,7 @@
       <el-button
         size="small"
         type="danger"
-        @click="returnWorks()"
+        @click="returnWorksDialog()"
         plain
         v-if="$store.state.account.nowRole.type==3"
       >退回作品</el-button>
@@ -170,7 +170,18 @@
         <my-transfer @edit="edit" @Noedit="Noedit" :workList="multipleSelection"></my-transfer>
       </div>
     </div>
+    <el-dialog
+      title="退回原因"
+      :visible.sync="RejectVisible"
+      width="30%">
+      <el-input placeholder="请输入退回原因" v-model="rejectReason"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="returnWorks">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
+  
 </template>
 <script>
 import MyTransfer from "../../components/MyTransfer";
@@ -222,6 +233,8 @@ export default {
       category_id: "", //分类
       ids: [],//id列表
       excelSteam:'',//文件流
+      rejectReason:'',//退回原因
+      RejectVisible:false,//退回原因窗口
     };
   },
   watch: {
@@ -387,16 +400,37 @@ export default {
     	link.click()
     },
     //退回作品
+    returnWorksDialog(){
+        let that=this;
+        this.multipleSelection.forEach(item => {
+          this.ids.push(item.id);
+        });
+        if(that.ids.length==0){
+          return that.$message({
+            type:'error',
+            message:"请先勾选需要退回的作品"
+          })
+        }
+        that.RejectVisible=true;
+    },
+    //退回作品
     async returnWorks() {
-      this.multipleSelection.forEach(item => {
-        this.ids.push(item.id);
-      });
+      let that=this;
+      if(that.rejectReason=="")
+      {
+        return that.$message({
+          type:'error',
+          message:"请先填写退回理由"
+        })
+      }
       let params = {};
       params.url = api.reject;
-      params.ids = this.ids;
+      params.ids = that.ids;
+      params.rejectReason=that.rejectReason;
       await this.axiosPost(params)
         .then(res => {
           if (res.code == 0) {
+            that.RejectVisible=false;
             this.$message({
               type: "success",
               message: "退回成功"

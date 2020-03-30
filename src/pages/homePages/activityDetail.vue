@@ -29,12 +29,12 @@
           <el-button
             type="primary"
             plain
-            size="small"
+            size="mini"
             @click="goToEdit"
             v-if="look!=0&&process==1"
           >修改</el-button>
         </div>
-        <works-preview :id="id"></works-preview>
+        <works-preview :id="id" :rejectReason="activityDetail.status==0"></works-preview>
     </el-card>
   </div>
 </template>

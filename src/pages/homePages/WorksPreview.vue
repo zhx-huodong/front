@@ -11,6 +11,10 @@
     <el-row>
       <el-col :span="20" :offset="2">
         <div class="content-main">
+          <div class="content-item" v-if="rejectReason">
+            <div class="sub-title" >退回详情</div>
+            <div class="content" v-html="activityDetail.comment"></div>
+          </div>
           <div class="content-item">
             <div class="sub-title">创作思想</div>
             <div class="content" v-html="activityDetail.works.content.content"></div>
@@ -119,6 +123,12 @@ export default {
       type:Boolean,
       default() {
         return true;
+      }
+    },
+    rejectReason:{
+      type:Boolean,
+      default() {
+        return false;
       }
     }
   },

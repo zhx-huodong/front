@@ -174,7 +174,7 @@
       </el-form>
       <el-row>
         <el-col :span="5" :offset="5">
-          <el-button type="primary" @click="submitEnroll()" size="small">提交报名</el-button>
+          <el-button type="primary" @click="submitEnroll()" size="small">修改提交</el-button>
           <el-button type="default" @click="goback()" size="small">取消</el-button>
         </el-col>
       </el-row>
@@ -754,6 +754,7 @@ export default {
 }
 .works-preview {
   .title {
+    width: 97%;
     display: flex;
     justify-content: center;
     align-items: center;
