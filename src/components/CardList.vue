@@ -12,11 +12,16 @@
               <div class="flow-like">
                 <p class="el-icon-view">{{item.view_counts}}</p>
                 <p class="el-icon-thumb" @click="onlike(item.id)">{{item.like_counts}}</p>
+              <p class="award">{{item.award}}</p>
+
               </div>
-              <div class="author">
-                <el-image :src="imgUrl"></el-image>
-                <p>{{item.author}}</P>
-              </div>
+              <!-- <div class="author"> -->
+                <!-- <el-image :src="imgUrl"></el-image> -->
+                <div class="school">{{item.school}}</div>
+                <div class="author">作者：{{item.author}}</div>
+                <div class="teacher">指导老师：{{item.mentor}}</div>
+
+              <!-- </div> -->
           </div>
       </div>
   </div>
@@ -102,30 +107,39 @@
           flex-direction:row;
           margin-bottom:10px;
           justify-content:space-between;
-          width:100px;
+          width:200px;
           p{
-            font-size:12px;
-            color:#666;
+            font-size:14px;
+            color:#BBBBBB;
           }
           p:last-chil{
             margin-left:10px;
           }
-        }
-        .author{
-          display:flex;
-          flex-direction:row;
-          margin-bottom:10px;
-          .el-image{
-            height:20px;
-            width:20px;
-            border-radius:10px;
-          }
-          p{
-            margin-left:10px;
-            font-size:12px;
-            color:#333;
+          .award{
+            margin-top:-4px;
           }
         }
+        .school,.author,.teacher{
+           text-align: left;
+           color:#999999;
+           font-size:14px;
+           line-height: 20px;
+        }
+        // .author{
+        //   display:flex;
+        //   flex-direction:row;
+        //   margin-bottom:10px;
+        //   .el-image{
+        //     height:20px;
+        //     width:20px;
+        //     border-radius:10px;
+        //   }
+        //   p{
+        //     margin-left:10px;
+        //     font-size:12px;
+        //     color:#333;
+        //   }
+        // }
       }
     }
   }

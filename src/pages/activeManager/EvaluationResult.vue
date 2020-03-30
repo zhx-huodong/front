@@ -80,16 +80,22 @@
           @selection-change="tableSelectionChange"
            
         >
-          <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column label="序号" type="index" width="100" align="center"></el-table-column>
+           <el-table-column type="selection" width="55"></el-table-column>
+           <!-- <el-table-column label="序号" type="index" width="100" align="center"></el-table-column> -->
+           <el-table-column prop="" width="130" label="作品编号">
+            <template slot-scope="scope">
+              {{scope.row.serial_id}}
+            </template>
+          </el-table-column>
           <el-table-column prop="works.title" label="作品名称" show-overflow-tooltip>
             <template slot-scope="scope">
               <el-button type="text" @click="goToActDetail(scope.row)"> {{scope.row.works.title}}</el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="author_" label="指导老师"></el-table-column>
-          <el-table-column prop="title_" label="所在学校" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="areaName" label="所在地区"></el-table-column>
+          <el-table-column prop="author_" label="作者"></el-table-column>
+          <el-table-column prop="mentor_" label="指导老师"></el-table-column>
+          <el-table-column prop="school.areaName" label="所在地区" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="school.title" label="所在学校" show-overflow-tooltip></el-table-column>
 
           <el-table-column label="得分" width="80">
             <template slot-scope="scope">
@@ -341,31 +347,39 @@ export default {
           this.tableData = res.items;
           console.log("ces",this.tableData);
           this.tableData.forEach(ite => {
-            var title = "";
-            var areaName = "";
-            var author_ = "";
-            var mentor_ = "";
+            // var title = "";
+            // var areaName = "";
+            // var author_ = "";
+            // var mentor_ = "";
             ite.score=ite.score/10;//把分数除10
-            ite.school.forEach(item => {
-              title == ""
-                ? (title = item.title)
-                : (title = title + "," + item.title);
-              areaName = item.areaInfo.areaName;
-            });
-            ite.works.member.author.forEach(item => {
-              author_ == ""
-                ? (author_ = item.name)
-                : (author_ = author_ + "," + item.name);
-            });
-            ite.works.member.mentor.forEach(item => {
-              mentor_ == ""
-                ? (mentor_ = item.name)
-                : (mentor = mentor_ + "," + item.name);
-            });
-            ite.mentor_ = mentor_;
-            ite.author_ = author_;
-            ite.areaName = areaName;
-            ite.title_ = title;
+            let author_=ite.info.author.map(item=>{
+              return item.name;
+            })
+            let mentor_=ite.info.mentor.map(item=>{
+              return item.name;
+            })
+            ite.author_=author_.join("、");
+            ite.mentor_=mentor_.join("、");
+            // ite.school.forEach(item => {
+            //   title == ""
+            //     ? (title = item.title)
+            //     : (title = title + "," + item.title);
+            //   areaName = item.areaInfo.areaName;
+            // });
+            // ite.works.member.author.forEach(item => {
+            //   author_ == ""
+            //     ? (author_ = item.name)
+            //     : (author_ = author_ + "," + item.name);
+            // });
+            // ite.works.member.mentor.forEach(item => {
+            //   mentor_ == ""
+            //     ? (mentor_ = item.name)
+            //     : (mentor = mentor_ + "," + item.name);
+            // });
+            // ite.mentor_ = mentor_;
+            // ite.author_ = author_;
+            // ite.areaName = areaName;
+            // ite.title_ = title;
           });
           this.totalCount = res._meta.totalCount;
         })

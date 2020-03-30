@@ -102,8 +102,8 @@
         >
           >
           <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column label="序号" type="index" width="80" align="center"></el-table-column>
-          <el-table-column prop="" label="作品编号" show-overflow-tooltip>
+          <!-- <el-table-column label="序号" type="index" width="80" align="center"></el-table-column> -->
+          <el-table-column prop="" width="130" label="作品编号">
             <template slot-scope="scope">
               {{scope.row.serial_id}}
             </template>
@@ -116,8 +116,8 @@
           
           <el-table-column prop="author_" label="作者"></el-table-column>
           <el-table-column prop="mentor_" label="指导老师"></el-table-column>
-          <el-table-column prop="areaName" label="所在地区" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="title_" label="所在学校" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="school.areaName" label="所在地区" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="school.title" label="所在学校" show-overflow-tooltip></el-table-column>
           <el-table-column prop="info.category" label="活动分类" show-overflow-tooltip></el-table-column>
           <el-table-column prop="info.project" label="活动项目" show-overflow-tooltip></el-table-column>
           <el-table-column
@@ -550,33 +550,44 @@ export default {
                  }
               })
           })
-          console.log("Ces",this.tableData);
-          this.tableData.forEach(ite => {
-            var title = "";
-            var areaName = "";
-            var author_ = "";
-            var mentor_ = "";
-            ite.school.forEach(item => {
-              title == ""
-                ? (title = item.title)
-                : (title = title + "," + item.title);
-              areaName = item.areaInfo.areaName;
-            });
-            ite.works.member.author.forEach(item => {
-              author_ == ""
-                ? (author_ = item.name)
-                : (author_ = author_ + "," + item.name);
-            });
-            ite.works.member.mentor.forEach(item => {
-              mentor_ == ""
-                ? (mentor_ = item.name)
-                : (mentor = mentor_ + "," + item.name);
-            });
-            ite.mentor_ = mentor_;
-            ite.author_ = author_;
-            ite.areaName = areaName;
-            ite.title_ = title;
-          });
+          for(let i=0;i<this.tableData.length;i++){
+            let author_=this.tableData[i].info.author.map(item=>{
+              return item.name;
+            })
+            let mentor_=this.tableData[i].info.mentor.map(item=>{
+              return item.name;
+            })
+            this.tableData[i].author_=author_.join("、");
+            this.tableData[i].mentor_=mentor_.join("、");
+          }
+
+
+          // this.tableData.forEach(ite => {
+          //   var title = "";
+          //   var areaName = "";
+          //   var author_ = "";
+          //   var mentor_ = "";
+          //   ite.school.forEach(item => {
+          //     title == ""
+          //       ? (title = item.title)
+          //       : (title = title + "," + item.title);
+          //     areaName = item.areaInfo.areaName;
+          //   });
+          //   ite.works.member.author.forEach(item => {
+          //     author_ == ""
+          //       ? (author_ = item.name)
+          //       : (author_ = author_ + "," + item.name);
+          //   });
+          //   ite.works.member.mentor.forEach(item => {
+          //     mentor_ == ""
+          //       ? (mentor_ = item.name)
+          //       : (mentor = mentor_ + "," + item.name);
+          //   });
+          //   ite.mentor_ = mentor_;
+          //   ite.author_ = author_;
+          //   ite.areaName = areaName;
+          //   ite.title_ = title;
+          // });
           this.totalCount = res._meta.totalCount;
         })
         .catch(err => err);
