@@ -41,7 +41,6 @@
                         <el-tag
                             :key="index"
                             v-for="(tag,index) in identityTags"
-                            closable
                             :disable-transitions="false">
                             {{tag.name}}
                         </el-tag>
@@ -64,7 +63,6 @@
     </div>
 </template>
 <script>
-// import axios from 'axios';
 import api from '../../service/api';
 import UploadFile from '../../components/UploadFile';
 import { setCookie, getCookie } from '../../tools/tools';
@@ -92,13 +90,23 @@ export default {
         }
     },
     created(){
-        console.log(localStorage.user!="")
         if(localStorage.user!=""){
             this.form.userName=JSON.parse(localStorage.getItem("user")).name;
             this.identityTags=JSON.parse(localStorage.getItem("roles"))
         }
+        this.gitUserInfo()
     },
     methods: {
+        //获取用户详情信息
+        async gitUserInfo(){
+            let params={}
+            params.url=api.user
+            params.id=JSON.parse(localStorage.getItem("user")).id
+            params.expand="memberAuth,memberInfo,roleInfo"
+            await this.axiosGet(params).then(res=>{
+                console.log("res====",res)
+            }).catch(err=>err)
+        },
         beforeupload(file){
             console.log(file.name)
             console.log(file)
@@ -120,8 +128,10 @@ export default {
                 url:api.uploadPic,
                 upFile:fileurl,
             };
-        let res = await this.axiosPostPIC(params).catch(err => err);
-        console.log(res)
+        await this.axiosPostPIC(params).then(res=>{
+            console.log(res)
+        }).catch(err => err);
+        
        },
        
      
