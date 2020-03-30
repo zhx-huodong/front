@@ -42,7 +42,7 @@
               <file-preview :fileObj="item"></file-preview>
             </div>
           </div>
-          <div class="content-item">
+          <div class="content-item" v-if="!award">
             <div class="sub-title">报名登记表:</div>
             <div class="content">
               <file-preview :fileObj="{name:'报名登记表',url:activityDetail.registration}"></file-preview>
