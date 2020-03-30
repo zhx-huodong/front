@@ -145,7 +145,7 @@
               </template>
               <template v-else>
                 已推荐市级
-                <el-button type="text" style="color:red;" @click="goToDisRecommmendItem(scope.row.id)">取消推荐</el-button>
+                <el-button type="text" style="color:red;" @click="goToDisRecommmendItem(scope.row.id,scope.row.award,scope.row.professional)">取消推荐</el-button>
               </template>
             </template>
           </el-table-column>
@@ -176,7 +176,7 @@
       width="30%">
       <el-input placeholder="请输入退回原因" v-model="rejectReason"></el-input>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button @click="RejectVisible = false">取 消</el-button>
         <el-button type="primary" @click="returnWorks">确 定</el-button>
       </span>
     </el-dialog>
@@ -405,6 +405,16 @@ export default {
         this.multipleSelection.forEach(item => {
           this.ids.push(item.id);
         });
+        for(let i=0;i<this.tableData.length;i++){
+           for(let j=0;j<this.ids.length;j++){
+             if(this.ids[j]==this.tableData[i].id&&(this.tableData[i].award!=0||this.tableData[i].professional!=0)){
+                return that.$message({
+                  type:'error',
+                  message:"您选择的作品中包含已评分不能退回的作品"
+                })
+             }
+           }
+        }
         if(that.ids.length==0){
           return that.$message({
             type:'error',
@@ -508,7 +518,14 @@ export default {
       }).catch(err=>err)
     },
     //取消推荐
-    async goToDisRecommmendItem(id){
+    async goToDisRecommmendItem(id,award,professional){
+      if(award.length!=0||professional.length!=0){
+        return   this.$message({
+               type: "warning",
+               message: "作品已分配专家评分不能取消推荐市级"
+             });
+        
+      }
       this.ids=[]
       this.ids.push(id)
       let params = {};
@@ -568,7 +585,7 @@ export default {
         params.position=1
       }
       params.url = api.enroll;
-      params.expand = "info,works,school,professional";
+      params.expand = "info,works,school,professional,award";
       params.activity_id = this.id;
       await this.axiosGet(params)
         .then(res => {
