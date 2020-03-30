@@ -1,6 +1,6 @@
 <template>
   <div class="activity-introduction-container">
-    <div class="banner-container">
+    <div class="banner-container" v-if="bannerUrl!=''">
       <el-image :src="bannerUrl" fit="cover"></el-image>
     </div>
     <div class="sub-nav">
@@ -410,7 +410,9 @@ export default {
         "detail,region,node,attachment,banner,category,categoryDetail,process";
       await this.axiosGet(params)
         .then(res => {
-          this.bannerUrl = res.banner[0].url;
+          if(res.banner[0]!=undefined){
+            this.bannerUrl = res.banner[0].url;
+          } 
           this.activityObject = res;
           this.activityObject.periodList = [];
           let arr = [1, 2, 4, 8, 16, 32, 64];
