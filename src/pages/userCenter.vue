@@ -23,7 +23,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column label="状态">
-                  <template slot-scope="scope">{{ scope.row.info.process }}</template>
+                  <template slot-scope="scope"><p style="color:#1985F3;">{{ scope.row.process }}</p></template>
                 </el-table-column>
                 <el-table-column label="报名日期">
                   <template
@@ -118,6 +118,17 @@ export default {
         .then(res => {
           this.tableData = res.items;
           this.totalCount = res._meta.totalCount;
+          for(let i in this.tableData){
+            if(this.tableData[i].award.length>0){
+              this.tableData[i].process='已获奖'
+            }else if(this.tableData[i].score!=0){
+              this.tableData[i].process="已评分"
+            }else if(this.tableData[i].status==0){
+              this.tableData[i].process="已退回"
+            }else{
+              this.tableData[i].process="已提交"
+            }
+          }
         })
         .catch(err => err);
     },
