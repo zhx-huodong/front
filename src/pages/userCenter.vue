@@ -17,13 +17,13 @@
                   </template>
                 </el-table-column>
                 <el-table-column label="主办方">市区</el-table-column>
-                <el-table-column label="作者">
+                <el-table-column label="作者" show-overflow-tooltip>
                   <template slot-scope="scope">
                     <template v-for="item in (scope.row.works.member.author)">{{item.name}}</template>
                   </template>
                 </el-table-column>
-                <el-table-column prop="Status" label="状态">
-                  <template slot-scope="scope">{{ statusMap[scope.row.status] }}</template>
+                <el-table-column label="状态">
+                  <template slot-scope="scope">{{ scope.row.info.process }}</template>
                 </el-table-column>
                 <el-table-column label="报名日期">
                   <template

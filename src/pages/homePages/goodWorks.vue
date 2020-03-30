@@ -1,29 +1,7 @@
 <template>
   <div class="good-work-container">
     <el-card style="min-height:600px">
-      <!-- <div slot="header" class="clearfix">
-        <span>{{workDetail.title}}</span>
-      </div> -->
-        <works-preview :id="activity_id" :award="true" ></works-preview>
-
-      <!-- <div class="workContainer">
-        <div v-html="workDetail.content" class="content"></div>
-        <div class="workDetail">
-          <p>活动组别:{{category}}</p>
-          <p>活动项目:{{project}}</p>
-          <p>作者:{{author.join("、")}}</p>
-          <p>作者邮箱:{{workDetail.email}}</p>
-          <p>指导老师:{{teacher.join("、")}}</p>
-          <p v-show="attachment.length!=0">
-            作品附件:
-            <file-preview :fileList="attachment[0]"></file-preview>
-          </p>
-        </div>
-        <div class="like_counts" @click="onlike(id)">
-          <i class="el-icon-thumb"></i>
-          <p>{{like_counts}}</p>
-        </div>
-      </div> -->
+      <works-preview :id="activity_id" :award="true" ></works-preview>
     </el-card>
   </div>
 </template>

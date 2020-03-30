@@ -44,10 +44,10 @@
         </el-form-item>
 
         <div class="my-editerContain">
-          <P>创作思想：</P>
+          <P><span style="color:red;font-size:14px;">*</span>创作思想:</P>
           <my-editor @editorChange="editorChange" :inputtext="inputtext"></my-editor>
         </div>
-        <el-form-item label="创作过程：" :rules="{ required: true, message: '请填写创作过程', trigger: 'blur' }">
+        <el-form-item label="创作过程：">
           <el-input
             type="textarea"
             :rows="5"
@@ -56,7 +56,7 @@
             style="width:715px;"
           ></el-input>
         </el-form-item>
-        <el-form-item label="参考资源：" :rules="{ required: true, message: '请填写参考资源', trigger: 'blur' }">
+        <el-form-item label="参考资源：">
           <el-input
             type="textarea"
             v-model="reference"
@@ -65,7 +65,7 @@
             style="width:715px;"
           ></el-input>
         </el-form-item>
-        <el-form-item label="制作用软件及运行环境：" :rules="{ required: true, message: '请填写制作用软件及运行环境', trigger: 'blur' }">
+        <el-form-item label="制作用软件及运行环境：">
           <el-input
             type="textarea"
             v-model="environment"
@@ -74,7 +74,7 @@
             style="width:715px;"
           ></el-input>
         </el-form-item>
-        <el-form-item label="其他说明：" :rules="{ required: true, message: '请填写其他说明', trigger: 'blur' }">
+        <el-form-item label="其他说明：">
           <el-input
             type="textarea"
             v-model="remark"
@@ -193,22 +193,28 @@
           <el-col :span="20" :offset="2">
             <div class="content-main">
               <div class="content-item">
+                <div class="sub-title">作品封面</div>
+                <div class="content" >
+                  <el-image :src="detailObj.cover" :fit="cover"></el-image>
+                </div>
+              </div>
+              <div class="content-item">
                 <div class="sub-title">创作思想</div>
                 <div class="content" v-html="detailObj.content"></div>
               </div>
-              <div class="content-item">
+              <div class="content-item" v-if="detailObj.production!=''">
                 <div class="sub-title">创作过程</div>
                 <div class="content">{{detailObj.production}}</div>
               </div>
-              <div class="content-item">
+              <div class="content-item" v-if="detailObj.reference!=''">
                 <div class="sub-title">参考资源</div>
                 <div class="content">{{detailObj.reference}}</div>
               </div>
-              <div class="content-item">
+              <div class="content-item" v-if="detailObj.environment!=''">
                 <div class="sub-title">制作用软件及运行环境</div>
                 <div class="content">{{detailObj.environment}}</div>
               </div>
-              <div class="content-item">
+              <div class="content-item" v-if="detailObj.remark!=''">
                 <div class="sub-title">其他说明</div>
                 <div class="content">{{detailObj.remark}}</div>
               </div>
@@ -583,38 +589,6 @@ export default {
       if (this.operate == 0) {
         this.showPreview=true
         this.detailObj=params
-        // this.$router.push({
-        //   path: "/home/enrollPreview",
-        //   query:{
-        //     detailObj:detailObj,
-        //     activityName:this.form.activityName,
-        //     activityProject:this.form.activityProject,
-        //     school:this.school
-        //   }
-        // });
-        // await axiosPost(params)
-        //   .then(res => {
-        //     if (res.code == -1) {
-        //       this.$message({
-        //         message: res.message,
-        //         type: "warning"
-        //       });
-        //     } else if (res.title != undefined && res.title != "") {
-        //       this.$message({
-        //         message: "报名成功！！",
-        //         type: "success"
-        //       });
-        //       setTimeout(() => {
-        //         this.$router.push({
-        //           path: "/home/submitEnroll"
-        //         });
-                
-        //       }, 1000);
-        //     } else {
-        //       that.$router.go(-1);
-        //     }
-        //   })
-        //   .catch(err => err);
       } else {
         params.id=this.works_id
         params.category_id = this.category_id;
@@ -756,9 +730,9 @@ export default {
   display: flex;
   flex-direction: row;
   margin-bottom: 10px;
-  margin-left: 18px;
+  margin-left: 10px;
   p {
-    width: 70px;
+    width: 80px;
     font-size: 14px;
     color: #666;
   }

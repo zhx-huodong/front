@@ -15,19 +15,19 @@
             <div class="sub-title">创作思想</div>
             <div class="content" v-html="activityDetail.works.content.content"></div>
           </div>
-          <div class="content-item">
+          <div class="content-item" v-if="activityDetail.works.content.production">
             <div class="sub-title">创作过程</div>
             <div class="content">{{activityDetail.works.content.production}}</div>
           </div>
-          <div class="content-item">
+          <div class="content-item" v-if="activityDetail.works.content.reference!=''">
             <div class="sub-title">参考资源</div>
             <div class="content">{{activityDetail.works.content.reference}}</div>
           </div>
-          <div class="content-item">
+          <div class="content-item" v-if="activityDetail.works.content.environment!=''">
             <div class="sub-title">制作用软件及运行环境</div>
             <div class="content">{{activityDetail.works.content.environment}}</div>
           </div>
-          <div class="content-item">
+          <div class="content-item" v-if="activityDetail.works.content.remark!=''">
             <div class="sub-title">其他说明</div>
             <div class="content">{{activityDetail.works.content.remark}}</div>
           </div>
@@ -50,7 +50,7 @@
           </div>
           <el-divider v-if="workDetail"></el-divider>
           <div class="works-detail-main" v-show="workDetail">
-              <div class="works-detail-item" v-show="award">
+              <div class="works-detail-item">
                   获奖信息：{{getAward||'暂未获奖'}}
               </div>
               <div class="works-detail-item">
@@ -65,12 +65,22 @@
               <div class="works-detail-item">
                   学校：{{activityDetail.school.title}}
               </div>
-              <div class="works-detail-item" v-if="activityDetail.works.member.author!=undefined">
-                  作者：{{activityDetail.works.member.author.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}
-              </div>
-              <div class="works-detail-item" v-if="activityDetail.works.member.mentor!=undefined">
-                  指导老师：{{activityDetail.works.member.mentor.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}
-              </div>
+              <template v-if="!award">
+                <div class="works-detail-item" v-if="activityDetail.works.member.author!=undefined">
+                    作者：{{activityDetail.works.member.author.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}
+                </div>
+                <div class="works-detail-item" v-if="activityDetail.works.member.mentor!=undefined">
+                    指导老师：{{activityDetail.works.member.mentor.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}
+                </div>
+              </template>
+              <template v-if="award">
+                <div class="works-detail-item" v-if="activityDetail.works.member.author!=undefined">
+                    作者：{{activityDetail.works.member.author.map(item=>{return item.name}).join('、')}}
+                </div>
+                <div class="works-detail-item" v-if="activityDetail.works.member.mentor!=undefined">
+                    指导老师：{{activityDetail.works.member.mentor.map(item=>{return item.name}).join('、')}}
+                </div>
+              </template>
               <div class="works-detail-item" v-show="!award">
                   邮箱：{{activityDetail.works.email}}
               </div>
