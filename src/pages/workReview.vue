@@ -330,10 +330,16 @@ export default {
            // elink.href=res.data;
            // elink.click();
              this.downloadFile("评分表.xlsx",res.data);
-          }else{
+          }else if(res.code==-1){
             return  this.$message({
                type:'error',
-               message:'出错了'
+               message:res.message
+            })
+          }
+          else{
+              return  this.$message({
+               type:'error',
+               message:"导出出错"
             })
           }
       });
