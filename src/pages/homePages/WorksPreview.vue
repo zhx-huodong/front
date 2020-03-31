@@ -12,8 +12,8 @@
       <el-col :span="20" :offset="2">
         <div class="content-main">
           <div class="content-item" v-if="rejectReason">
-            <div class="sub-title" >退回详情</div>
-            <div class="content" v-html="activityDetail.comment"></div>
+            <div class="sub-title" style="color:red;">退回详情</div>
+            <div class="content" v-html="activityDetail.comment" style="color:red;"></div>
           </div>
           <div class="content-item">
             <div class="sub-title">创作思想</div>

@@ -31,7 +31,7 @@
             plain
             size="mini"
             @click="goToEdit"
-            v-if="look!=0&&process==1"
+            v-if="look!=0&&process<=2"
           >修改</el-button>
         </div>
         <works-preview :id="id" :rejectReason="activityDetail.status==0"></works-preview>
