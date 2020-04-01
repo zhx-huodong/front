@@ -155,9 +155,13 @@ export default {
             activityProjectSelectID:'',
             gradeList:[
                 // { id: 0, name: '全部' },
-                { id: 1, name: '小学组' },
-                { id: 2, name: '初中组' },
-                { id: 3, name: '高中组' }
+                {name:"幼教组",id:1},
+                {name:"小学组",id:2},
+                {name:"初中组",id:4},
+                {name:"高中组",id:8},
+                {name:"特教组",id:16},
+                {name:"中职组",id:32},
+                {name:"高教组",id:64},
             ],
             gradeSelectID:'',//学段选择的id
             formInline: {

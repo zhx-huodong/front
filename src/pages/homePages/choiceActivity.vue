@@ -2,7 +2,7 @@
   <div class="choice-activity-container">
     <el-card style="min-height:600px">
       <div class="title">
-        <p>{{objectDetail.title}}</p>
+        <p >{{objectDetail.title}}</p>
       </div>
       <el-divider></el-divider>
       <el-row>
@@ -75,8 +75,9 @@ export default {
     align-items: center;
     justify-content: center;
     p {
-      font-size: 16px;
+      font-size: 20px;
       color: #333;
+      font-weight:700;
     }
   }
   .content {

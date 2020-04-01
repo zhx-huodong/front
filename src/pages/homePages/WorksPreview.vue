@@ -4,7 +4,7 @@
       <el-button type="defualt" size="mini" @click="goback" style="position:absolute;left:0">返回</el-button>
       <p>{{activityDetail.works.title}}</p>
       <span
-        style="position:absolute;right:100px;color:#999999;font-size:12px"
+        style="position:absolute;right:50px;color:#999999;font-size:12px"
       >作品编号:{{activityDetail.serial_id}}</span>
     </div>
     <el-divider></el-divider>
@@ -12,8 +12,8 @@
       <el-col :span="20" :offset="2">
         <div class="content-main">
           <div class="content-item" v-if="rejectReason">
-            <div class="sub-title" style="color:red;">退回详情</div>
-            <div class="content" v-html="activityDetail.comment" style="color:red;"></div>
+            <div class="sub-title" style="color:red;font-weight:700">退回详情</div>
+            <div class="content" v-html="activityDetail.comment" style="color:red;font-weight:700"></div>
           </div>
           <div class="content-item">
             <div class="sub-title">创作思想</div>
@@ -54,7 +54,7 @@
           </div>
           <el-divider v-if="workDetail"></el-divider>
           <div class="works-detail-main" v-show="workDetail">
-              <div class="works-detail-item">
+              <div class="works-detail-item"  style="color:red;font-weight:700">
                   获奖信息：{{getAward||'暂未获奖'}}
               </div>
               <div class="works-detail-item">
@@ -176,6 +176,7 @@ export default {
     },
     goback() {
       this.$router.go(-1);
+      this.$emit('goback');
     }
   }
 };
@@ -183,6 +184,7 @@ export default {
 <style lang="less" scoped>
 .works-preview {
   .title {
+    width:97%;
     display: flex;
     justify-content: center;
     align-items: center;

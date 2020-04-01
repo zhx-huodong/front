@@ -34,7 +34,7 @@
             v-if="look!=0&&process<=2"
           >修改</el-button>
         </div>
-        <works-preview :id="id" :rejectReason="activityDetail.status==0"></works-preview>
+        <works-preview :id="id" @goback="goback" :rejectReason="activityDetail.status==0"></works-preview>
     </el-card>
   </div>
 </template>
@@ -57,6 +57,9 @@ export default {
     this.getActivityDetail();
   },
   methods: {
+    goback(){
+      this.$router.push("/userCenter");
+    },
     //获取报名活动详情
     async getActivityDetail() {
       let params = {};

@@ -56,11 +56,13 @@ export default {
     justify-content: center;
     flex-direction: column;
     p {
-      font-size: 16px;
+      font-weight:700;
+      font-size: 20px;
       color: #333;
     }
   }
   .content {
+    margin: auto;
     width: 600px;
     p {
       line-height: 30px;

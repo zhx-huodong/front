@@ -75,7 +75,7 @@
               </div>
 
               <div class="tag">
-                <p>请选择以下内容参加活动</p>
+                <p style="font-size:16px;font-weight:700">请选择以下内容参加活动</p>
               </div>
     
               <div style="padding:10px 30px;margin-bottom:10px;">
@@ -85,7 +85,7 @@
                 ></type-select>
               </div>
               <div class="tag">
-                <p>请选择参加活动项目</p>
+                <p style="font-size:16px;font-weight:700">请选择参加活动项目</p>
               </div>
               <div class="list-item" style="margin-bottom:0;">
                 <div class="list-item-title">
