@@ -46,13 +46,13 @@
                         </el-tag>
                     </el-form-item>
                     <el-form-item label="所在区域：">
-                        <el-input v-model="form.areaName"></el-input>
+                        <el-input disabled v-model="form.areaName"></el-input>
                     </el-form-item>
-                    <el-form-item label="所在班级：">
+                    <el-form-item label="所在班级：" v-show="flag==2">
                         <el-input v-model="form.className"></el-input>
                     </el-form-item>
 
-                    <el-form-item>
+                    <el-form-item v-show="flag!=10">
                         <el-button type="primary" @click="onSubmit">保存</el-button>
                         <el-button>取消</el-button>
                     </el-form-item>
@@ -84,9 +84,11 @@ export default {
                 areaName: '',
                 className: ''
             },
+            userInfo:{},
             identityTags: [],
             identityVisible: false,
             identityValue: '',
+            flag:0,
         }
     },
     created(){
@@ -99,12 +101,40 @@ export default {
     methods: {
         //获取用户详情信息
         async gitUserInfo(){
+            let that=this;
             let params={}
             params.url=api.user
             params.id=JSON.parse(localStorage.getItem("user")).id
             params.expand="memberAuth,memberInfo,roleInfo"
             await this.axiosGet(params).then(res=>{
-                console.log("res====",res)
+                //说明不是管理员
+                if(res.roleInfo.length==0){
+                    if(res.memberInfo[0].type==1){
+                        that.flag=1;//是老师
+                        that.form.unitName=res.memberInfo[0].school.title;
+                        that.form.areaName=res.memberInfo[0].school.areaName;
+                        that.identityTags=[{name:"老师"}]
+                    }else if(res.memberInfo[0].type==2){
+                        that.flag=2;//是学生
+                        that.form.unitName=res.memberInfo[0].school.title;
+                        that.form.areaName=res.memberInfo[0].school.areaName;
+                        that.form.className=res.memberInfo[0].school.classes[0].class_alias;
+                        that.identityTags=[{name:"学生"}];
+                    }
+                    else if(res.memberInfo[0].type==3){
+                        that.flag=3;//是家长
+                        that.form.unitName=res.memberInfo[0].school.title;
+                        that.form.areaName=res.memberInfo[0].school.areaName;
+                        that.identityTags=[{name:"家长"}];
+                    }
+                    
+                }else{
+                    //是管理员
+                    that.flag=10;
+                    that.form.unitName="暂无";
+                    that.form.areaName="暂无";
+                    // this.form.unitName=res.memberInfo[0].school.areaName
+                }
             }).catch(err=>err)
         },
         beforeupload(file){
