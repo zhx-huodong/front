@@ -88,7 +88,7 @@ export default {
       this.validList = ["mp3"];
       this.fileIconUrl = require("../public/images/file-icon/default.svg");
     } else if (this.uploadType == "work") {
-      this.validList = ["doc", "docx", "pdf", "xls", "xls"];
+      this.validList = ["doc", "docx", "pdf", "xls", "xlsx"];
       this.fileIconUrl = require("../public/images/file-icon/default.svg");
     } else if (this.uploadType == "zip") {
       this.validList = ["zip","rar"];
