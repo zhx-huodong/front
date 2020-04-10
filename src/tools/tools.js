@@ -1,13 +1,19 @@
 import axios from 'axios';
 import store from '../store';
-import config from './config'
 
-// let devHost = 'https://api.huodong.eduinspector.com';
-// let proHost='https://cxyy.szdj.edu.cn/api'
-// const isLocal =  location.hostname === 'localhost'||location.hostname === 'huodong.eduinspector.com';
-// let host = isLocal ?  '' :  proHost;
+let devHost = '';
+let testHost = 'https://api.huodong.eduinspector.com';
+let proHost='https://cxyy.szdj.edu.cn/api'
+let host ='';
+if (location.hostname==='localhost') {
+	host=devHost
+}else if(location.hostname === 'huodong.eduinspector.com'){
+	host=testHost
+}else if (location.hostname === 'cxyy.szdj.edu.cn') {
+	host=proHost
+}
 
-axios.defaults.baseURL =config.host
+axios.defaults.baseURL =host
 
 export function getCookie(name) {
   let arr = document.cookie.match(new RegExp('(^| )' + name + '=([^;]*)(;|$)'));
