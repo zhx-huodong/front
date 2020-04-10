@@ -32,12 +32,12 @@
 				regionList: [],
 				award: 0, // 奖项
 				region: 0, // 活动类型
-				gradeGroup: 0, // 学段
+				gradeGroup: 0, // 组别
         subject: 0, // 学科类型
         activityList: [],
 				ActivityId: '',
         ActivityName: '',
-				SchoolSection: '', // 学段
+				SchoolSection: '', // 组别
 				currentPage: 1, // 初始页
 				pagesize: 10,
 				totalCount: 0
@@ -68,7 +68,7 @@
         this.activityList = res.Data.WorkList;
         this.totalCount = res.Data.Total;
 			},
-      async getGradeGroup() { // 获取学段列表
+      async getGradeGroup() { // 获取组别列表
         let res = await this.axiosGet({
           url: '/v1/activity/GetGradeGroup'
         }).catch(err => err);

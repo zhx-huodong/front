@@ -72,7 +72,7 @@
           { DivisionId: 0, Name: '全部' }
         ],
 				region: '', // 区域
-				gradeGroup: '', // 学段
+				gradeGroup: '', // 组别
 				activityObject: '', // 活动对象
 				activityList: [],
 				excellentWork: 'activityDetail',
@@ -83,13 +83,13 @@
 				total: 0,
         filter: {
           Role: 0, // 活动对象
-          GradeGroup: 0, // 学段
+          GradeGroup: 0, // 组别
           District: 0 // 区域
         }
 			};
 		},
 		async created() {
-			this.getGradeGroupList(); // 获取学段列表
+			this.getGradeGroupList(); // 获取组别列表
 			this.getRegionList(); // 获取区域列表
       		this.getActivityList();
 		},

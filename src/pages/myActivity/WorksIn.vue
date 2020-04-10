@@ -68,7 +68,7 @@
         regionList: [],
         award: 0, // 奖项
         region: 0, // 区域
-        gradeGroup: 0, // 学段
+        gradeGroup: 0, // 组别
         subject: 0, // 学科类型
         PageSize: 10,
         currentPage: 1,
@@ -185,7 +185,7 @@
         this.currentPage = val;
         this.getAwardsList();
       },
-      async getGradeGroup() { // 获取学段列表
+      async getGradeGroup() { // 获取组别列表
         let res = await this.axiosGet({
           url: '/v1/activity/GetGradeGroup'
         }).catch(err => err);
@@ -209,7 +209,7 @@
         this.award = value;
         this.getAwardsList();
       },
-      async gradeGroupMgr(value) { // 学段
+      async gradeGroupMgr(value) { // 组别
         this.gradeGroup = value;
         this.getAwardsList();
       },

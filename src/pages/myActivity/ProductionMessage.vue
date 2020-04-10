@@ -78,7 +78,7 @@
         checkedList: [], // 勾选的作品id列表
         curStatus: '',
         region: 0, // 区域
-        gradeGroup: 0, // 学段
+        gradeGroup: 0, // 组别
         subject: 0, // 学科类型
         IsActivityAdmin: false,
         IsDivisionAdmin: false
@@ -177,7 +177,7 @@
           }
         });
       },
-      async getGradeGroup() { // 获取学段列表
+      async getGradeGroup() { // 获取组别列表
         let res = await this.axiosGet({
           url: '/v1/activity/GetGradeGroup'
         }).catch(err => err);
@@ -197,7 +197,7 @@
           { DivisionId: 0, Name: '全部' }
         ].concat(res.Data.DivisionList || []);
       },
-      async gradeGroupMgr(value) { // 学段
+      async gradeGroupMgr(value) { // 组别
         this.gradeGroup = value;
         this.getWorkList();
       },

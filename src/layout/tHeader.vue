@@ -214,6 +214,18 @@ export default {
               this.normalTabs[i].hide = true;
             }
           }
+        } else if (
+          this.$store.state.account.nowRole.type == 11 ||
+          this.$store.state.account.nowRole.type == 12 ||
+          this.$store.state.account.nowRole.type == 13
+        ) {
+          for (let i in this.normalTabs) {
+            if (this.normalTabs[i].key == "workReview") {
+              this.normalTabs[i].hide = true;
+            } else if (this.normalTabs[i].key == "activeManager") {
+              this.normalTabs[i].hide = true;
+            }
+          }
         }
         this.tabs = this.normalTabs;
         this.$router.push("/home");
@@ -239,6 +251,12 @@ export default {
             let memberItem = {};
             memberItem.type = items.type;
             memberItem.name = this.memberTypeObj[items.type];
+            if (items.school_id != undefined) {
+              memberItem.school_id = items.school_id;
+            }
+            if (items.school_title != undefined) {
+              memberItem.school_title = items.school_title;
+            }
             if (items.current != undefined) {
               memberItem.current = items.current;
               let nowRole = JSON.stringify(memberItem);

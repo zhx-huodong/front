@@ -1,12 +1,13 @@
 import axios from 'axios';
 import store from '../store';
+import config from './config'
 
+// let devHost = 'https://api.huodong.eduinspector.com';
+// let proHost='https://cxyy.szdj.edu.cn/api'
+// const isLocal =  location.hostname === 'localhost'||location.hostname === 'huodong.eduinspector.com';
+// let host = isLocal ?  '' :  proHost;
 
-let devHost = 'http://api.huodong.eduinspector.com';
-const isLocal =  location.hostname === 'localhost';
-let host = isLocal ?  '' : devHost ;
-
-axios.defaults.baseURL =host
+axios.defaults.baseURL =config.host
 
 export function getCookie(name) {
   let arr = document.cookie.match(new RegExp('(^| )' + name + '=([^;]*)(;|$)'));

@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="lable" v-if="gradeList.length>0&&otherList.length<=0">
-      <div class="lable-title">学段:</div>
+      <div class="lable-title">组别:</div>
       <div class="lable-aside">
         <div class="lable-self" v-for="(item, index) in gradeList" :key="index"
         @click="onGradeList(item.id, index)" :class="{'type-active':gradeIndex == index}">{{item.name}}</div>
@@ -76,7 +76,7 @@ export default {
     
       activityNameObject:{},//活动名称
       activityTypleObject: {}, // 活动类型
-      gradeObject: {}, // 学段
+      gradeObject: {}, // 组别
       activityProjectObject:{},//活动项目
       activityObject:{},//活动对象
       regionObject:{},//区域
