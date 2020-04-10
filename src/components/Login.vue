@@ -72,7 +72,7 @@ export default {
       btnTag: "获取验证码",
       timer: null,
       countDownNum: "",//倒计时
-      memberTypeObj:{0:"超级管理员",2:"市级管理员",3:'区级管理员',4:"专家",11:"老师",12:"学生"}
+      memberTypeObj:{0:"超级管理员",2:"市级管理员",3:'区级管理员',4:"专家",11:"老师",12:"学生",13:"家长"}
     };
   },
   computed: {},

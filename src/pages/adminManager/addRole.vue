@@ -197,19 +197,18 @@
                  if(this.ruleForm.type.indexOf(4)>-1&&this.area.length>0){
                      params.area_id=this.area;
                  }
-                //  if(this.ruleForm.type==3){
-                //      params.area_id=[77];
-                //  }
                 console.log("area",this.area);
                 if(this.id!=undefined){
                     params.id=this.id
                     let res = await this.axiosPut(params).catch(err => err);
-                    console.log("put=",res)
                     if(res.name!=''&&res.name!=undefined){
                         this.$message({
                             type: 'success',
                             message: '编辑成功！'
                         });
+                        setTimeout(()=>{
+                            this.$router.go(-1)
+                        },1000)
                     }else{
                         this.$message({
                             type: 'warning',
@@ -222,6 +221,10 @@
                             type: 'warning',
                             message: err[0].message
                         });
+                        setTimeout(()=>{
+                            this.$router.go(-1)
+                        },1000)
+                        
                     });
                     if(res.name!=''&&res.name!=undefined){
                         this.$message({
@@ -238,6 +241,7 @@
                 
                 
             },
+            //取消
             cancel(){
                 this.$router.go(-1)
             }
