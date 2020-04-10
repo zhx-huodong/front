@@ -16,10 +16,13 @@
                     <!-- <el-button type="text" @click="goToActDetail(scope.row)">{{scope.row.ActivityName}}</el-button> -->
                   </template>
                 </el-table-column>
-                <el-table-column label="主办方">市区</el-table-column>
+                <el-table-column label="组别">
+                  <template slot-scope="scope">{{gradeObj[scope.row.period]}}</template>
+                </el-table-column>
                 <el-table-column label="作者" show-overflow-tooltip>
                   <template slot-scope="scope">
-                    <template v-for="item in (scope.row.works.member.author)">{{item.name}}</template>
+                    <template>{{scope.row.works.member.author.map(item=>{return item.name}).join('、')}}</template>
+                    <!-- <template v-for="item in (scope.row.works.member.author)">{{item.name}}</template> -->
                   </template>
                 </el-table-column>
                 <el-table-column label="状态">
@@ -54,13 +57,13 @@
             </div>
             <div class="user-info-wrap" v-if="user">
               <div class="user-head-left">
-                <img v-if="user.Avatar" :src="user.Avatar" />
-                <div class="head-img" v-else></div>
+                <img v-if="user.avatar!=''" :src="user.avatar" />
+                <img v-else src="../public/images/userIcon.png"/>
               </div>
               <div class="user-head-right">
-                <div class="user-name">{{user.name}}</div>
+                <div class="user-name">{{user.name}}<p style="color:#666;font-size:12px;margin-left:10px;">{{nowRole.name}}</p></div>
                 <div class="user-tel">{{user.mobile}}</div>
-                <div class="user-tel">{{user.School}}</div>
+                <div class="user-tel">{{nowRole.school_title}}</div>
               </div>
             </div>
             <div class="user-info-atlas">
@@ -85,7 +88,9 @@ export default {
       totalCount: 0,
       tableData: [],
       statusMap: {},
-      abilityOpt: {}
+      abilityOpt: {},
+      gradeObj:{1:"幼教组",2:"小学组",4:"初中组",8:"高中组",16:"特教组",32:"中职组",64:"高教组"},//组别
+      nowRole:JSON.parse(localStorage.getItem("nowRole"))
     };
   },
   computed: {
@@ -107,6 +112,8 @@ export default {
     });
     let params = {};
     this.getActivityList(params);
+    console.log("user====",this.$store.state.account.user)
+    
   },
   methods: {
     //获取报名活动列表
@@ -304,14 +311,19 @@ export default {
             background: khaki;
             border-radius: 4px;
             margin-right: 20px;
+            border-radius: 40px;
             img {
               width: 100%;
               height: 100%;
+              
             }
           }
           .user-head-right {
             .user-name {
               font-size: 16px;
+              display: flex;
+              flex-direction: row;
+              align-items: center;
             }
             .user-tel {
               font-size: 14px;

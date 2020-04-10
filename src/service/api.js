@@ -1,6 +1,10 @@
 
-const base='/api';
-// const base='';
+let base=''
+if (location.hostname==='localhost') {
+    base='/api';
+}else{
+    base='';
+}
 
 const captcha=`${base}/login/captcha`;//获取短信验证码
 const account=`${base}/login/account`;//手机验证码登录
@@ -32,7 +36,7 @@ const uploadKey=`http://api.huodong.eduinspector.com/upload/cos-key`;//文件上
 const uploadFile=`http://api.huodong.eduinspector.com/upload/file`;//文件上传
 const getCosKeys=`http://api.huodong.eduinspector.com/upload/get-cos-keys`;//获取腾讯云cos签名 
 
-export default {
+let api={
     captcha,
     account,
     role,
@@ -60,3 +64,4 @@ export default {
     like,
     switchToken
 }
+export default api

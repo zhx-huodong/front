@@ -92,8 +92,8 @@
               <el-button type="text" @click="goToActDetail(scope.row)"> {{scope.row.works.title}}</el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="author_" label="作者"></el-table-column>
-          <el-table-column prop="mentor_" label="指导老师"></el-table-column>
+          <el-table-column prop="author_" label="作者" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="mentor_" label="指导老师" show-overflow-tooltip></el-table-column>
           <el-table-column prop="school.areaName" label="所在地区" show-overflow-tooltip></el-table-column>
           <el-table-column prop="school.title" label="所在学校" show-overflow-tooltip></el-table-column>
 
@@ -123,9 +123,8 @@
           </el-table-column>
           <el-table-column label="获奖" width="100" show-overflow-tooltip>
             <template slot-scope="scope">
-                <el-button type="text" @click="goToSetAward(scope.row.id)" size="small">修改</el-button>
-
               <template v-if="scope.row.award.length>0">
+                <el-button type="text" @click="goToSetAward(scope.row.id)" size="small">修改</el-button>
                 <template v-for="item in scope.row.award">
                   {{item.title}}
                 </template >
@@ -211,7 +210,7 @@ export default {
         { name: "特教组", id: 16 },
         { name: "中职组", id: 32 },
         { name: "高教组", id: 64 }
-      ], //学段
+      ], //组别
       activityProjectList: [{ id: 0, name: "全部" }], //活动项目列表
       activityTypleList: [{ id: 0, name: "全部" }], //活动分类列表
       regionList: [{ id: 0, name: "全部" }], //区域列表
@@ -266,7 +265,7 @@ export default {
         })
         .catch(err => err);
     },
-    //学段改变
+    //组别改变
     async gradeObject(val) {
       this.period = val;
       let params = {

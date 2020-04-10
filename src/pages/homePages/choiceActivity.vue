@@ -10,7 +10,7 @@
           <div class="content" v-html="objectDetail.content"></div>
           <el-row>
             <el-col :span="3" :offset="11" style="margin-top:20px;">
-              <el-button type="primary" size="small" @click="goToActivityEnroll">我要报名</el-button>
+              <el-button type="primary" size="small" @click="goToActivityEnroll">下一步</el-button>
             </el-col>
           </el-row>
         </el-col>

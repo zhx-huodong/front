@@ -241,7 +241,7 @@
               <div class="works-detail-main">
                 <div class="works-detail-item">活动组别：{{form.activityName}}</div>
                 <div class="works-detail-item">活动项目：{{form.activityProject}}</div>
-                <div class="works-detail-item">学段：{{periodList[detailObj.period]}}</div>
+                <div class="works-detail-item">组别：{{periodList[detailObj.period]}}</div>
                 <div class="works-detail-item">学校：{{school}}</div>
                 <div
                   class="works-detail-item"
@@ -326,7 +326,7 @@ export default {
       environment: "", //制作软件及运行环境
       remark: "", //其他说明
       schoolList: [], //学校列表
-      period: this.$route.query.period, //学段id
+      period: this.$route.query.period, //组别id
       works_id:'',//作品id
       school:'',//学校名称
       periodList: {
@@ -343,7 +343,10 @@ export default {
     };
   },
   created() {
-   
+   if(this.$store.state.account.nowRole.school_id!=undefined){
+     this.form.school_id=this.$store.state.account.nowRole.school_id
+     this.school=this.$store.state.account.nowRole.school_title
+   }
   },
   mounted() {
     let params = {};
@@ -746,7 +749,7 @@ export default {
   min-width: 200px!important;
 }
 .limit{
-  color:#999999;
+  color:red;
   font-size:14px;
 }
 .leftpad{

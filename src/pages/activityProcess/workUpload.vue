@@ -15,7 +15,7 @@
     </div>
     <div class="hint-title">
       <span>请输入作品名称</span>
-      <el-select class="subject" v-model="TermId" placeholder="选择学段" :disabled="disabled" style="width: 150px">
+      <el-select class="subject" v-model="TermId" placeholder="选择组别" :disabled="disabled" style="width: 150px">
         <el-option v-for="el in gradeOptions" :key="el.Id" :label="el.Name" :value="el.Id"></el-option>
       </el-select>
       <el-select class="subject" v-model="SubjectId" placeholder="选择学科" :disabled="disabled" style="width: 150px">
@@ -121,7 +121,7 @@
         auditStatus: '', // 作品审核状态（STAGE_WORK_AUDIT WORK_AUDIT_REJECT WORK_AUDIT_ACCEPT）
         Current: '',
         workId: '',
-        gradeOptions: [], // 学段列表
+        gradeOptions: [], // 组别列表
         subjectOptions: [], // 学科列表
         TermId: '',
         SubjectId: '',

@@ -70,16 +70,16 @@ export default {
         .then(res => {
           this.activityDetail = res;
           let nowTime = Date.parse(new Date());
-          if (res.info.nodes[0].stime * 1000 <=nowTime&& nowTime <=res.info.nodes[0].etime * 1000) {
+          if (res.info.nodes[0].stime * 1000 <=nowTime) {
             this.process = 1;
           }
-          if ( res.info.nodes[1].stime * 1000 <=nowTime&& nowTime <=res.info.nodes[1].etime * 1000) {
+          if ( res.info.nodes[1].stime * 1000 <=nowTime) {
             this.process = 2;
           } 
-          if (res.info.nodes[2].stime * 1000 <=nowTime&& nowTime <=res.info.nodes[2].etime * 1000) {
+          if (res.info.nodes[2].stime * 1000 <=nowTime) {
             this.process = 3;
           }
-          if (res.info.nodes[3].stime * 1000 <=nowTime&& nowTime <=res.info.nodes[3].etime * 1000) {
+          if (res.info.nodes[3].stime * 1000 <=nowTime) {
             this.process = 4;
           }
         })
@@ -96,6 +96,22 @@ export default {
   }
 };
 </script>
+<style lang="less">
+.activity-container{
+  .el-step.is-center .el-step__description{
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+  }
+  .el-step__icon{
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 24px !important;
+  }
+  .el-step.is-horizontal .el-step__line {
+    top:18px !important;
+  }
+}
+</style>
 <style lang="less" scoped>
 .activity-container {
   width: 1180px;

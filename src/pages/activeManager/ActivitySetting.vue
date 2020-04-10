@@ -14,10 +14,22 @@
         </el-form-item>
 
         <el-form-item label="活动图:">
-          <upload-picture :uploadType="'picture'" :max="1" :myPictureList="cover" @uploadSuccess="coverSuccess" :name="'上传活动封面图'"></upload-picture>
+          <upload-picture
+            :uploadType="'picture'"
+            :max="1"
+            :myPictureList="cover"
+            @uploadSuccess="coverSuccess"
+            :name="'上传活动封面图'"
+          ></upload-picture>
         </el-form-item>
         <el-form-item label="banner图:">
-          <upload-picture :uploadType="'picture'" :max="1" :myPictureList="banner" @uploadSuccess="bannerSuccess" :name="'上传banner图(1920*460)'"></upload-picture>
+          <upload-picture
+            :uploadType="'picture'"
+            :max="1"
+            :myPictureList="banner"
+            @uploadSuccess="bannerSuccess"
+            :name="'上传banner图(1920*460)'"
+          ></upload-picture>
         </el-form-item>
 
         <div class="my-editer">
@@ -26,10 +38,16 @@
         </div>
         <el-form-item label="活动指南:">
           <div style="width:710px">
-            <upload-file :uploadType="'all'" :myFileList="attachment" :max="5" @uploadSuccess="attachmentSuccess" :name="'上传活动指南'"></upload-file>
+            <upload-file
+              :uploadType="'all'"
+              :myFileList="attachment"
+              :max="5"
+              @uploadSuccess="attachmentSuccess"
+              :name="'上传活动指南'"
+            ></upload-file>
           </div>
         </el-form-item>
-        
+
         <el-form-item label="活动类型 :">
           <span class="mybtn" @click="addclassFlag=true,edit_1=false">+添加类别</span>
           <div class="myOut" v-for="(item,index) in addActivityForm.category" :key="index">
@@ -156,10 +174,10 @@
 import api from "../../service/api";
 import MyEditor from "../../components/MyEditor";
 import { getCookie } from "../../tools/tools";
-import UploadPicture from '../../components/UploadPicture';
-import UploadFile from '../../components/UploadFile';
+import UploadPicture from "../../components/UploadPicture";
+import UploadFile from "../../components/UploadFile";
 export default {
-  components: { MyEditor,UploadPicture,UploadFile },
+  components: { MyEditor, UploadPicture, UploadFile },
   props: {
     id: {
       type: Number,
@@ -202,19 +220,19 @@ export default {
       editorOption: {},
       value: "",
       regionList: [
-        {"id":"732","pid":"77","type":"3","name":"市直属"},
-        {"id":"726","pid":"77","type":"3","name":"福田区"},
-        {"id":"727","pid":"77","type":"3","name":"罗湖区"},
-        {"id":"728","pid":"77","type":"3","name":"南山区"},
-        {"id":"729","pid":"77","type":"3","name":"宝安区"},
-        {"id":"730","pid":"77","type":"3","name":"龙岗区"},
-        {"id":"731","pid":"77","type":"3","name":"盐田区"},
-        {"id":"733","pid":"77","type":"3","name":"龙华区"},
-        {"id":"734","pid":"77","type":"3","name":"坪山区"},
-        {"id":"735","pid":"77","type":"3","name":"光明区"},
-        {"id":"736","pid":"77","type":"3","name":"大鹏新区"},
-        {"id":"3789","pid":"77","type":"3","name":"深汕合作区"},
-],
+        { id: "732", pid: "77", type: "3", name: "市直属" },
+        { id: "726", pid: "77", type: "3", name: "福田区" },
+        { id: "727", pid: "77", type: "3", name: "罗湖区" },
+        { id: "728", pid: "77", type: "3", name: "南山区" },
+        { id: "729", pid: "77", type: "3", name: "宝安区" },
+        { id: "730", pid: "77", type: "3", name: "龙岗区" },
+        { id: "731", pid: "77", type: "3", name: "盐田区" },
+        { id: "733", pid: "77", type: "3", name: "龙华区" },
+        { id: "734", pid: "77", type: "3", name: "坪山区" },
+        { id: "735", pid: "77", type: "3", name: "光明区" },
+        { id: "736", pid: "77", type: "3", name: "大鹏新区" },
+        { id: "3789", pid: "77", type: "3", name: "深汕特别合作区" }
+      ],
       filename: "upFile",
       url: "",
       datas: {},
@@ -230,22 +248,20 @@ export default {
       exhibit: [] //作品展示时间
     };
   },
-  watch: {
-
-  },
+  watch: {},
   created() {
-    if (this.id != 0&&JSON.parse(sessionStorage.getItem("addActivityForm")) == null) {
-        this.getActivityDetail();
-    }else{
-        this.getData();
+    if (
+      this.id != 0 &&
+      JSON.parse(sessionStorage.getItem("addActivityForm")) == null
+    ) {
+      this.getActivityDetail();
+    } else {
+      this.getData();
     }
-      
   },
 
   computed: {},
-  mounted() {
-
-  },
+  mounted() {},
   methods: {
     //获取数据
     getData() {
@@ -266,13 +282,13 @@ export default {
           });
         }
         for (let j in this.addActivityForm.attachment) {
-          let attachmentItem={}
-          if(this.addActivityForm.attachment[j].name!=undefined){
-            attachmentItem.name=this.addActivityForm.attachment[j].name
-          }else if(this.addActivityForm.attachment[j].title!=undefined){
-            attachmentItem.name=this.addActivityForm.attachment[j].title
-          }  
-          attachmentItem.url=this.addActivityForm.attachment[j].url
+          let attachmentItem = {};
+          if (this.addActivityForm.attachment[j].name != undefined) {
+            attachmentItem.name = this.addActivityForm.attachment[j].name;
+          } else if (this.addActivityForm.attachment[j].title != undefined) {
+            attachmentItem.name = this.addActivityForm.attachment[j].title;
+          }
+          attachmentItem.url = this.addActivityForm.attachment[j].url;
           this.attachment.push(attachmentItem);
         }
         for (let k in this.addActivityForm.region) {
@@ -331,7 +347,10 @@ export default {
           });
           this.addActivityForm.attachment = [];
           res.attachment.forEach(items => {
-            this.addActivityForm.attachment.push({url:items.url,name:items.title});
+            this.addActivityForm.attachment.push({
+              url: items.url,
+              name: items.title
+            });
           });
           this.addActivityForm.banner = [];
           res.banner.forEach(items => {
@@ -433,10 +452,10 @@ export default {
     },
     //活动图success
     coverSuccess(data) {
-      console.log("活动图===",data)
+      console.log("活动图===", data);
       this.addActivityForm.cover = "";
       data.forEach(item => {
-        this.addActivityForm.cover = item.url
+        this.addActivityForm.cover = item.url;
       });
       sessionStorage.setItem(
         "addActivityForm",
@@ -454,15 +473,15 @@ export default {
         JSON.stringify(this.addActivityForm)
       );
     },
- 
+
     //活动指南
     attachmentSuccess(data) {
       this.addActivityForm.attachment = [];
-     
+
       data.forEach(item => {
-        let attachmentItem={}
-        attachmentItem.url=item.url
-        attachmentItem.title=item.name
+        let attachmentItem = {};
+        attachmentItem.url = item.url;
+        attachmentItem.title = item.name;
         this.addActivityForm.attachment.push(attachmentItem);
       });
 
@@ -471,7 +490,7 @@ export default {
         JSON.stringify(this.addActivityForm)
       );
     },
-   
+
     handlePreview(file) {
       window.open(file.url);
     },

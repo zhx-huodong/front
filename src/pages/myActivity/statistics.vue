@@ -40,7 +40,7 @@
       return {
         applyNumOpt: {}, // 报名人数
         xuekeOpt: {}, // 学科分布
-        xueduanOpt: {}, // 学段分布
+        xueduanOpt: {}, // 组别分布
         areaData: [], // 区列表
         schoolData: [], // 学校列表
         activityId: '' // 活动id
@@ -146,7 +146,7 @@
           show: true,
           chart: { type: 'column' },
           title: {
-            text: '学段分布'
+            text: '组别分布'
           },
           yAxis: {
             title: {
@@ -166,7 +166,7 @@
           },
           series: [
             {
-              name: '学段',
+              name: '组别',
               data: data
             }
           ]

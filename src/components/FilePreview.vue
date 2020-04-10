@@ -23,8 +23,12 @@
           <img :src="fileIconUrl" alt />
           <p>{{fileObj.title||fileObj.name}}</p>
         </div>
-        <div class="operate">
-          <el-button type="text" @click="goToDownLoad(fileObj.url)">下载</el-button>
+        <div class="operate" v-if="showDownLoad">
+          <!-- <el-button type="text" @click="goToDownLoad(fileObj.url)">下载</el-button> -->
+          <el-link target="_blank" :href="fileObj.url" :underline="false" style="margin-left:15px">
+            <el-button type="text">下载</el-button>
+          </el-link>
+
         </div>
       </div>
     </div>
@@ -58,6 +62,12 @@ export default {
       type: Object,
       default() {
         return {};
+      }
+    },
+    showDownLoad:{
+      type:Boolean,
+      default(){
+        return true
       }
     }
   },
@@ -99,7 +109,14 @@ export default {
     },
     //文件下载
     goToDownLoad(url) {
-      window.open(url)
+      // window.open(url)
+      var elemIF = document.createElement('iframe')
+      elemIF.src = url
+      elemIF.style.display = 'none'
+      document.body.appendChild(elemIF)
+      // let a = document.createElement('a')
+      // a.href =url
+      // a.click();
     },
     //关闭弹窗
     closeDialog() {
@@ -120,11 +137,13 @@ export default {
   text-align: center;
   position: relative;
   width: 160px;
+  
   video{
     width: 160px;
     height: 100px;
     border-radius: 4px;
     border: 1px solid #198af3;
+    // background: #000;
   }
   p {
     font-size: 14px;
@@ -135,6 +154,7 @@ export default {
     height: 100px;
     border: 1px solid #198af3;
     border-radius: 4px;
+    // background: #000;
   }
   .operate {
     top: 0px;
