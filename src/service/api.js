@@ -29,7 +29,7 @@ const recommend=`${base}/works-admin/recommend`;//设置报名作品的状态(�
 const awards=`${base}/works-admin/awards`;//颁奖
 const like=`${base}/works-admin/like`;//点赞
 const switchToken=`${base}/user-admin/switch-token`;//切换角色
-const getCosKeys=`${base}upload/get-cos-keys`;//获取腾讯云cos签名 
+const getCosKeys=`${base}/upload/get-cos-keys`;//获取腾讯云cos签名 
 
 const uploadPic=`http://api.huodong.eduinspector.com/upload/image`;//图片上传
 const uploadKey=`http://api.huodong.eduinspector.com/upload/cos-key`;//文件上传
