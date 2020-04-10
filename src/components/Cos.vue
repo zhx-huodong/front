@@ -20,10 +20,7 @@ export default {
       cos: "",
       dialog: "", // 上传中...提示Dialog
       myFile: "",
-      cosConfig: {
-        bucket: "huodong-1257864005",
-        region: "ap-guangzhou"
-      },
+      cosConfig: config.cosConfig,
       fileList: []
     };
   },
