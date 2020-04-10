@@ -61,9 +61,9 @@
               ></el-pagination>
             </el-row>
           </el-tab-pane>
-          <el-tab-pane label="活动统计" name="six">
+          <!-- <el-tab-pane label="活动统计" name="six">
             <activity-statistics :id="id"></activity-statistics>
-          </el-tab-pane>
+          </el-tab-pane> -->
         </el-tabs>
       </div>
     </el-card>

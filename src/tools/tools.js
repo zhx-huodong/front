@@ -401,31 +401,24 @@ export function formatTime(totalSecond) {
 }
 //把一个数拆分成指定数的数组
 export function getSubSet(target,arr){
-    var len = arr.length;
-    var result = [];
-    for(var i=0; i<len; i++){
-        var temp =[];
-        temp.push(arr[i])
+    for (var a2 = []; a2.push([]) < arr.length;);
+    var l = Math.pow(2, arr.length)-1;
+    for (var i = 1; i <= l; i++) {
+        var t = [];
+        for (var s=i,k=0; s>0; s>>=1,k++)
+            if (s&1==1)
+                t.push(arr[k]);
+        a2[t.length-1].push(t);
+        var result=[]
         var num=0
-        for(let k in temp){
-            num+=temp[k]
+        for(let h in t){
+            num+=t[h]
         }
-        if(num==target){
-            result=temp
+        if(num===target){
+            result=t
+            return result
         }
-        for(var j=i+1; j<len; j++){
-            temp = temp.concat(arr[j]);
-            var numTwo=0
-            for(let h in temp){
-                numTwo+=temp[h]
-            }
-            if(numTwo==target){
-                result=temp
-            }
-        }
-        
     }
-    return result;
 }
 export function extname(filename){
   if(!filename||typeof filename!='string'){

@@ -297,7 +297,6 @@ export default {
             });
           });
         }
-        console.log(that.activityProjectList);
       });
       that.activityTypleList.unshift({ id: 0, name: "全部" });
       that.activityProjectList.unshift({ id: 0, name: "全部" });
@@ -323,10 +322,10 @@ export default {
       params.expand = "info,works,school,professional,award";
       await this.axiosGet(params)
         .then(res => {
-          console.log(res);
+          
           if (res.items.length > 0) {
             that.workTotle = res.items.length;
-            console.log("测试场", res.items);
+            
             that.activityList = res.items.map(item => {
               let author = []; //作者
               let mentor = []; //指导老师
@@ -354,45 +353,17 @@ export default {
                 award: award.join("、"),
                 school: item.school.title
               };
-              // console.log("item", item.works.id);
+             
             });
           } else {
             that.workTotle = 0;
             that.activityList = [];
           }
-          console.log("测试activityList", that.activityList);
         })
         .catch(err => err);
     },
-    getSubSet(target, arr) {
-      var len = arr.length;
-      var result = [];
-      for (var i = 0; i < len; i++) {
-        var temp = [];
-        temp.push(arr[i]);
-        var num = 0;
-        for (let k in temp) {
-          num += temp[k];
-        }
-        if (num == target) {
-          result = temp;
-        }
-        for (var j = i + 1; j < len; j++) {
-          temp = temp.concat(arr[j]);
-          var numTwo = 0;
-          for (let h in temp) {
-            numTwo += temp[h];
-          }
-          if (numTwo == target) {
-            result = temp;
-          }
-        }
-      }
-      return result;
-    },
     //获取活动详情
     async getActivityInfo() {
-      console.log(1);
       let params = {};
       params.url = api.activityDetail;
       params.id = this.$route.query.id;
@@ -406,7 +377,8 @@ export default {
           this.activityObject = res;
           this.activityObject.periodList = [];
           let arr = [1, 2, 4, 8, 16, 32, 64];
-          let result = this.getSubSet(this.activityObject.period, arr);
+          let result = this.getSubSet(res.period, arr);
+          console.log("getSubSet===",this.getSubSet(res.period, arr))
           for (let i in result) {
             for (let j in this.ClassList) {
               if (result[i] == this.ClassList[j].id) {
@@ -418,12 +390,7 @@ export default {
           //处理项目
           for (let i in this.activityObject.category) {
             for (let j in this.activityObject.category[i].child) {
-              this.activityObject.category[i].child[
-                j
-              ].periodList = this.getSubSet(
-                this.activityObject.category[i].child[j].period,
-                arr
-              );
+              this.activityObject.category[i].child[j].periodList = this.getSubSet(this.activityObject.category[i].child[j].period,arr);
             }
           }
           let nowTime = Date.parse(new Date());
@@ -509,7 +476,6 @@ export default {
                 that.activityList[i].like_counts++;
               }
             }
-            console.log(that.activityList);
           } else {
             that.$message.error("点赞失败");
           }
