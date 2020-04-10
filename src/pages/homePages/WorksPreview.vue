@@ -43,7 +43,7 @@
               v-for="(item,index) in activityDetail.works.attachment"
               :key="index"
             >
-              <file-preview :fileObj="item"></file-preview>
+              <file-preview :fileObj="item" :showDownLoad="false"></file-preview>
             </div>
           </div>
           <div class="content-item" v-if="!award">
@@ -64,7 +64,7 @@
                   活动项目：{{activityDetail.info.project}}
               </div>
               <div class="works-detail-item">
-                  学段：{{periodList[activityDetail.period]}}
+                  组别：{{periodList[activityDetail.period]}}
               </div>
               <div class="works-detail-item">
                   学校：{{activityDetail.school.title}}

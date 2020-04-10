@@ -46,12 +46,12 @@
       <!-- <el-tab-pane label="微信登录" name="wx">
             <div id="weixin-code"></div>
       </el-tab-pane>-->
-      <!-- <el-tab-pane label="账号注册" name="register">
+      <el-tab-pane label="账号注册" name="register">
             <div class="register">
                 <el-image :src="codeUrl"></el-image>
                 <p>请使用微信【扫一扫】扫码注册</p>
             </div>
-      </el-tab-pane>-->
+      </el-tab-pane>
     </el-tabs>
   </el-dialog>
 </template>
@@ -147,6 +147,12 @@ export default {
               let memberItem={}
               memberItem.type=items.type
               memberItem.name=this.memberTypeObj[items.type]
+              if(items.school_id!=undefined){
+                memberItem.school_id=items.school_id
+              }
+              if(items.school_title!=undefined){
+                memberItem.school_title=items.school_title
+              }
               if(items.current!=undefined){
                 memberItem.current=items.current
                 let nowRole = JSON.stringify(memberItem);
@@ -168,10 +174,6 @@ export default {
             setTimeout(() => {
               loading.close();
               this.show = false;
-              // let params = {};
-              // params.id = res.id;
-              // params.expand = "roleInfo";
-              // this.getUserInfo(params);
             }, 2000);
           }
         })

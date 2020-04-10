@@ -37,7 +37,7 @@
               ></el-input-number>
             </el-col>
           </el-form-item>
-          <el-form-item label="学段设置 :">
+          <el-form-item label="组别设置 :">
             <el-checkbox-group v-model="period" @change="periodChange">
               <el-checkbox
                 v-for="(item,index) in periodList"
@@ -151,7 +151,7 @@ export default {
         author_limit: "1", //作者上限
         mentor_limit: "1", //指导老师限制
         formats: [{type:1,size:1,remark:'支持JPG、PNG等图片格式,大小不超过1MB',remark1:'支持JPG、PNG等图片格式',remark2:'大小不超过1MB'}],
-        period: "" //学段设置
+        period: "" //组别设置
       },
       uploadFormatons: [
         {
@@ -200,7 +200,7 @@ export default {
       flag: "",
       limitSet: false,
       inputtext: "",
-      period: [], //学段
+      period: [], //组别
       size: "", //文件大小
       remark: "", //备注
       type: "", //文件类型
@@ -282,9 +282,9 @@ export default {
       this.$router.go(-1);
     },
 
-    //学段选择
+    //组别选择
     periodChange(value) {
-      console.log("学段===",value)
+      console.log("组别===",value)
       this.form.period = "";
       this.period = value;
       let period = 0;

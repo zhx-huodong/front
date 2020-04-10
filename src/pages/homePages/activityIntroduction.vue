@@ -7,7 +7,7 @@
       <div class="sub-nav-main">
         <el-tabs type="border-card">
           <el-tab-pane label="活动介绍">
-            <el-card>
+            <el-card class="my-card">
               <el-steps :active="process" align-center>
                 <el-step
                   title="作品报名"
@@ -27,7 +27,7 @@
                 ></el-step>
               </el-steps>
             </el-card>
-            <el-card style="margin-top:10px;padding-bottom:30px;">
+            <div class="my-card card-body">
               <div class="title">
                 <p>{{activityObject.title}}</p>
               </div>
@@ -46,7 +46,6 @@
                   <file-preview :fileObj="item"></file-preview>
                 </div>
               </div>
-              <el-divider></el-divider>
               <div class="list-item">
                 <div class="list-item-title">
                   <p>活动对象：</p>
@@ -73,48 +72,55 @@
                   <div v-if="activityObject.region.length>=12">【深圳市】</div>
                 </template>
               </div>
-
-              <div class="tag">
-                <p style="font-size:16px;font-weight:700">请选择以下内容参加活动</p>
-              </div>
-    
-              <div style="padding:10px 30px;margin-bottom:10px;">
-                <type-select
-                  :gradeList="activityObject.periodList"
-                  @gradeObject="PeriodgradeObject"
-                ></type-select>
-              </div>
-              <div class="tag">
-                <p style="font-size:16px;font-weight:700">请选择参加活动项目</p>
-              </div>
-              <div class="list-item" style="margin-bottom:0;">
-                <div class="list-item-title">
-                  <p>活动项目：</p>
+              <div class="enrolment">
+                <div class="enrolment-top">
+                  <p @click="goToEnroment()" v-if="!showEnrolment">我要报名</p>
+                  <span v-if="showEnrolment">报名区域</span>
                 </div>
-                <div class="list-item-content"></div>
-              </div>
-              <div v-for="(item,index) in activityObject.category" :key="index">
-                <div class="list-project">
-                  <div class="list-project-title">
-                    <p>{{item.title}}</p>
+                <div class="enrolment-area" v-if="showEnrolment">
+                  <div class="tag">
+                    <p style="font-size:16px;font-weight:700;color:red;">请选择您所在的组别</p>
                   </div>
-                  <div class="lable" v-if="activityProjectList.length>0">
-                    <div class="lable-aside">
-                      <div
-                        class="lable-self"
-                        v-for="(item1, index1) in item.child"
-                        :key="index1"
-                        @click="otherObjectOne(item1.id, index1)"
-                        :class="{'type-active':(item1.periodList.indexOf(PeriodGradeObjectid)>-1),'not-click':(item1.periodList.indexOf(PeriodGradeObjectid)==-1)}"
-                      >{{item1.name||item1.title}}</div>
+
+                  <div style="padding:10px 30px;margin-bottom:10px;">
+                    <type-select
+                      :gradeList="activityObject.periodList"
+                      @gradeObject="PeriodgradeObject"
+                    ></type-select>
+                  </div>
+                  <div class="tag">
+                    <p style="font-size:16px;font-weight:700;color:red;">请选择您所要参加活动项目</p>
+                  </div>
+                  <div class="list-item" style="margin-bottom:0;">
+                    <div class="list-item-title">
+                      <p>活动项目：</p>
+                    </div>
+                    <div class="list-item-content"></div>
+                  </div>
+                  <div v-for="(item,index) in activityObject.category" :key="index">
+                    <div class="list-project">
+                      <div class="list-project-title">
+                        <p>{{item.title}}</p>
+                      </div>
+                      <div class="lable" v-if="activityProjectList.length>0">
+                        <div class="lable-aside">
+                          <div
+                            class="lable-self"
+                            v-for="(item1, index1) in item.child"
+                            :key="index1"
+                            @click="otherObjectOne(item1.id, index1)"
+                            :class="{'type-active':(item1.periodList.indexOf(PeriodGradeObjectid)>-1),'not-click':(item1.periodList.indexOf(PeriodGradeObjectid)==-1)}"
+                          >{{item1.name||item1.title}}</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </el-card>
+            </div>
           </el-tab-pane>
           <el-tab-pane label="通知公告">
-            <el-card style="padding-bottom:30px;">
+            <el-card style="padding-bottom:30px;" class="my-card">
               <div class="title">
                 <p>消息公告</p>
               </div>
@@ -158,11 +164,11 @@
             </el-card>
           </el-tab-pane>
           <el-tab-pane label="优秀作品">
-            <el-card style="padding-bottom:30px; width:1180px;">
+            <el-card style="padding-bottom:30px;" class="my-card">
               <el-row>
                 <el-col>
                   <type-select
-                    :gradeList="ClassList"
+                    :gradeList="gradeListTwo"
                     :activityTypleList="activityTypleList"
                     :activityProjectList="activityProjectList"
                     @gradeObject="gradeObject"
@@ -244,44 +250,14 @@ export default {
         { name: "学生", id: 2 },
         { name: "家长", id: 4 }
       ],
-      activityList: [
-        {
-          id: 1,
-          name: "深圳市中小学电脑制作大赛",
-          imgUrl: require("../../public/images/ac1.png")
-        },
-        {
-          id: 2,
-          name: "深圳市中小学电脑机器人活动",
-          imgUrl: require("../../public/images/ac2.png")
-        },
-        {
-          id: 3,
-          name: "深圳市中小学网络夏令营",
-          imgUrl: require("../../public/images/ac3.png")
-        },
-        {
-          id: 4,
-          name: "深圳市中小学微课大赛",
-          imgUrl: require("../../public/images/ac4.png")
-        },
-        {
-          id: 5,
-          name: "深圳市中小学说课大赛",
-          imgUrl: require("../../public/images/ac5.png")
-        },
-        {
-          id: 6,
-          name: "深圳市AI知识大赛",
-          imgUrl: require("../../public/images/ac6.png")
-        }
-      ], // 活动列表
+      activityList: [], // 活动列表
       gradeObjectid: "",
       PeriodGradeObjectid: "",
       id: this.$route.query.id, //获取详情id
       apiKey: getCookie("x-api-key"),
       process: 1, //进度
-      workTotle: "" //优秀作品数量
+      workTotle: "", //优秀作品数量
+      showEnrolment:false,//展示报名区域
     };
   },
   created() {
@@ -304,24 +280,24 @@ export default {
       let params = {};
       params.url = api.activity;
       params.expand = "category";
-      params.id=that.id;
+      params.id = that.id;
       await this.axiosGet(params).then(res => {
         that.activityTypleList = res.category.map(item => {
           return {
             id: item.id,
             name: item.title,
-            child:item.child,
+            child: item.child
           };
         });
-        for(let i=0;i<that.activityTypleList.length;i++){
-            that.activityTypleList[i].child.map(item => {
-               that.activityProjectList.push({
-                 id: item.id,
-                 name: item.title
-               });
-             });
+        for (let i = 0; i < that.activityTypleList.length; i++) {
+          that.activityTypleList[i].child.map(item => {
+            that.activityProjectList.push({
+              id: item.id,
+              name: item.title
+            });
+          });
         }
-         console.log(that.activityProjectList);
+        console.log(that.activityProjectList);
       });
       that.activityTypleList.unshift({ id: 0, name: "全部" });
       that.activityProjectList.unshift({ id: 0, name: "全部" });
@@ -333,7 +309,7 @@ export default {
       params.activity_id = this.id;
       params.position = 4; //优秀作品展示
       if (that.gradeObjectid != "" && that.gradeObjectid != 0) {
-        params.period = that.gradeObjectid; //按学段筛选 [筛选活动时有效] 按学段筛选：多个学段则相加
+        params.period = that.gradeObjectid; //按组别筛选 [筛选活动时有效] 按组别筛选：多个组别则相加
       }
       if (that.activityTypleSelectID != "" && that.activityTypleSelectID != 0) {
         params.category_id = that.activityTypleSelectID; //按分类筛选
@@ -352,19 +328,19 @@ export default {
             that.workTotle = res.items.length;
             console.log("测试场", res.items);
             that.activityList = res.items.map(item => {
-              let author = [];//作者
-              let mentor=[];//指导老师
-              let award =[];//奖项 因为可能有多个
+              let author = []; //作者
+              let mentor = []; //指导老师
+              let award = []; //奖项 因为可能有多个
               author = item.info.author.map(res => {
                 return res.name;
               });
               mentor = item.info.mentor.map(res => {
                 return res.name;
               });
-              if(item.award.length>0){
-                  award= item.award.map(res => {
-                    return res.title;
-                  });
+              if (item.award.length > 0) {
+                award = item.award.map(res => {
+                  return res.title;
+                });
               }
               return {
                 id: item.works.id,
@@ -376,7 +352,7 @@ export default {
                 author: author.join("、"),
                 mentor: mentor.join("、"),
                 award: award.join("、"),
-                school:item.school.title,
+                school: item.school.title
               };
               // console.log("item", item.works.id);
             });
@@ -384,7 +360,7 @@ export default {
             that.workTotle = 0;
             that.activityList = [];
           }
-          console.log("测试activityList",that.activityList);
+          console.log("测试activityList", that.activityList);
         })
         .catch(err => err);
     },
@@ -424,9 +400,9 @@ export default {
         "detail,region,node,attachment,banner,category,categoryDetail,process";
       await this.axiosGet(params)
         .then(res => {
-          if(res.banner[0]!=undefined){
+          if (res.banner[0] != undefined) {
             this.bannerUrl = res.banner[0].url;
-          } 
+          }
           this.activityObject = res;
           this.activityObject.periodList = [];
           let arr = [1, 2, 4, 8, 16, 32, 64];
@@ -438,37 +414,54 @@ export default {
               }
             }
           }
-          this.PeriodGradeObjectid = this.activityObject.periodList[0].id;//一开始返回默认组的id
+          this.PeriodGradeObjectid = this.activityObject.periodList[0].id; //一开始返回默认组的id
           //处理项目
-          for(let i in this.activityObject.category){
-            for(let j in this.activityObject.category[i].child){
-              this.activityObject.category[i].child[j].periodList=this.getSubSet(this.activityObject.category[i].child[j].period, arr)
+          for (let i in this.activityObject.category) {
+            for (let j in this.activityObject.category[i].child) {
+              this.activityObject.category[i].child[
+                j
+              ].periodList = this.getSubSet(
+                this.activityObject.category[i].child[j].period,
+                arr
+              );
             }
           }
           let nowTime = Date.parse(new Date());
-          if (res.node[0].stime * 1000 <= nowTime&& nowTime<= res.node[0].etime * 1000) {
+          if (
+            res.node[0].stime * 1000 <= nowTime
+          ) {
             this.process = 1;
-          } 
-          if (res.node[1].stime * 1000 <=nowTime&& nowTime <=res.node[1].etime * 1000) {
+          }
+          if (
+            res.node[1].stime * 1000 <= nowTime 
+          ) {
             this.process = 2;
-          } 
-          if (res.node[2].stime * 1000 <=nowTime&& nowTime <=res.node[2].etime * 1000) {
+          }
+          if (
+            res.node[2].stime * 1000 <= nowTime
+          ) {
             this.process = 3;
-          } 
-          if (res.node[3].stime * 1000 <=nowTime&& nowTime <=res.node[3].etime * 1000) {
+          }
+          if (
+            res.node[3].stime * 1000 <= nowTime
+          ) {
             this.process = 4;
           }
         })
         .catch(err => err);
     },
 
-    //学段筛选
+    //组别筛选
     gradeObject(value) {
       let that = this;
-      that.gradeObjectid = value;
+      if(value==0){
+        that.gradeObjectid = '';
+      }else{
+        that.gradeObjectid = value;
+      }
       that.goodWorkList();
     },
-    //学段筛选出活动项目
+    //组别筛选出活动项目
     PeriodgradeObject(value) {
       let that = this;
       that.PeriodGradeObjectid = value;
@@ -589,6 +582,10 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    //展示报名区域
+    goToEnroment(){
+      this.showEnrolment=true;
     }
   }
 };
@@ -607,6 +604,20 @@ export default {
     background-color: #198af3 !important;
   }
 }
+.my-card{
+  .el-step.is-center .el-step__description{
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+  }
+  .el-step__icon{
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 24px !important;
+  }
+  .el-step.is-horizontal .el-step__line {
+    top:18px !important;
+  }
+}
 </style>
 <style lang="less" scoped>
 .activity-introduction-container {
@@ -616,7 +627,8 @@ export default {
   margin-bottom: 50px;
   .sub-nav {
     .sub-nav-main {
-      width: 1220px;
+      // width: 1220px;
+      width: 100%;
       margin: auto;
       .el-tabs--border-card {
         border: none;
@@ -632,6 +644,7 @@ export default {
         justify-content: center;
         align-items: center;
         text-align: center;
+        padding-top: 15px;
         p {
           color: #333333;
           font-size: 18px;
@@ -655,8 +668,16 @@ export default {
       }
     }
   }
+  .my-card{
+    width: 1120px;
+    margin: auto;
+  }
+  .card-body{
+    box-shadow:0 2px 12px 0 rgba(0,0,0,.1);
+    margin-top: 20px;
+  }
   .activity-introduction-main {
-    padding:10px 30px;
+    padding: 10px 30px;
     .activity-title {
       font-size: 18px;
       color: #333;
@@ -681,7 +702,7 @@ export default {
     }
   }
   .activity-annex {
-    padding:10px 30px;
+    padding: 10px 30px;
     display: flex;
     flex-direction: column;
     margin-top: 30px;
@@ -698,7 +719,7 @@ export default {
     }
   }
   .list-item {
-    padding:10px 30px;
+    padding: 10px 30px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -706,16 +727,15 @@ export default {
     font-size: 14px;
     color: #333;
     margin-bottom: 10px;
-    
   }
   .tag {
-    padding:10px 30px;
+    padding: 10px 30px;
     font-size: 14px;
     color: #666;
     // margin-bottom: 10px;
   }
   .list-project {
-    padding:10px 30px;
+    padding: 10px 30px;
     display: flex;
     flex-direction: column;
     margin-bottom: 30px;
@@ -755,6 +775,39 @@ export default {
   .page-div {
     display: flex;
     justify-content: center;
+  }
+  .enrolment{
+    border: 2px solid #3A8FF5;
+  }
+  .enrolment-top{
+    background:url('../../public/images/enrolment-back.png');
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    P{
+      color: rgba(255,255,255,1);
+      font-weight: bold;
+      cursor: pointer;
+      padding: 0 20px;
+      line-height: 30px;
+      background:linear-gradient(rgba(73,200,253,1),rgba(40,144,246,1));
+      border:1px solid rgba(255,255,255,0.5);
+      border-radius:15px;
+    }
+    p:hover{
+      background:linear-gradient(rgba(73,200,253,0.8),rgba(40,144,246,0.8));
+      color: rgba(255,255,255,0.8);
+    }
+    span{
+      color: rgba(255,255,255,1);
+      font-weight: bold;
+    }
+  }
+  .enrolment-area{
+    padding: 20px 0;
   }
 }
 </style>

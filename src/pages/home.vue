@@ -2,10 +2,10 @@
     <div class="home-center">
         <el-card style="min-height:650px;">
             <div class="home-wrap">
-                <div>
+                <!-- <div>
                     <type-select :gradeList="gradeList" :activityObjectList="activityObjectList" :regionList="regionList" @gradeObject='gradeObject' 
                     @regionObject="regionObject" @activityObject="activityObject" ></type-select>
-                </div>
+                </div> -->
                 <div class="home-activity-list" v-if="activityList">
                     <card-list :cardList="list" @toNext="toNext"></card-list>
                 </div>
@@ -117,7 +117,7 @@ export default {
             this.selectActive();
            
         },
-        //学段
+        //组别
         async gradeObject(value) {
             this.gradeObjectid=value
              this.selectActive();
@@ -149,7 +149,7 @@ export default {
             margin-bottom: 20px;
         }
         .home-activity-list{
-            margin-top:30px;
+            // margin-top:30px;
         }
         
     }

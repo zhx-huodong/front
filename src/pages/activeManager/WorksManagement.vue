@@ -114,12 +114,17 @@
             </template>
           </el-table-column>
           
-          <el-table-column prop="author_" label="作者"></el-table-column>
-          <el-table-column prop="mentor_" label="指导老师"></el-table-column>
+          <el-table-column prop="author_" label="作者" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="mentor_" label="指导老师" show-overflow-tooltip></el-table-column>
           <el-table-column prop="school.areaName" label="所在地区" show-overflow-tooltip></el-table-column>
           <el-table-column prop="school.title" label="所在学校" show-overflow-tooltip></el-table-column>
           <el-table-column prop="info.category" label="活动分类" show-overflow-tooltip></el-table-column>
           <el-table-column prop="info.project" label="活动项目" show-overflow-tooltip></el-table-column>
+          <el-table-column label="组别" show-overflow-tooltip>
+            <template slot-scope="scope">
+              {{gradeObj[scope.row.period]}}
+            </template>
+          </el-table-column>
           <el-table-column
             label="分配专家"
             show-overflow-tooltip
@@ -210,7 +215,7 @@ export default {
         { name: "特教组", id: 16 },
         { name: "中职组", id: 32 },
         { name: "高教组", id: 64 }
-      ], //学段
+      ], //组别
       activityProjectList: [{ id: 0, name: "全部" }], //活动项目列表
       activityTypleList: [{ id: 0, name: "全部" }], //活动分类列表
       regionList: [{ id: 0, name: "全部" }], //区域列表
@@ -229,12 +234,13 @@ export default {
       currentPage: 1,
       region: "", //区域
       item_id: "", //项目
-      period: "", //学段
+      period: "", //组别
       category_id: "", //分类
       ids: [],//id列表
       excelSteam:'',//文件流
       rejectReason:'',//退回原因
       RejectVisible:false,//退回原因窗口
+      gradeObj:{1:"幼教组",2:"小学组",4:"初中组",8:"高中组",16:"特教组",32:"中职组",64:"高教组"},//组别
     };
   },
   watch: {
@@ -279,7 +285,7 @@ export default {
         })
         .catch(err => err);
     },
-    //学段改变
+    //组别改变
     async gradeObject(val) {
       console.log(val);
       this.period = val;
