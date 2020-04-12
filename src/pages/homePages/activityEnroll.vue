@@ -8,10 +8,10 @@
       <el-row>
         <el-col :span="20" :offset="2">
       <el-form ref="form" :model="form" label-width="100px">
-        <el-form-item label="活动组别：">
+        <el-form-item label="活动名称：">
           <el-input
             v-model="form.activityName"
-            placeholder="请输入活动组别"
+            placeholder="请输入活动名称"
             style="width:400px;"
             size="small"
             :disabled="true"
@@ -239,7 +239,7 @@
               </div>
               <el-divider></el-divider>
               <div class="works-detail-main">
-                <div class="works-detail-item">活动组别：{{form.activityName}}</div>
+                <div class="works-detail-item">活动名称：{{form.activityName}}</div>
                 <div class="works-detail-item">活动项目：{{form.activityProject}}</div>
                 <div class="works-detail-item">组别：{{periodList[detailObj.period]}}</div>
                 <div class="works-detail-item">学校：{{school}}</div>
@@ -508,6 +508,7 @@ export default {
 
     //提交报名
     async submitEnroll() {
+      let that=this
       let params = {};
       params.url = api.works;
       params.category_id = this.activityProjectDetail.id;
@@ -608,9 +609,11 @@ export default {
                 message: "修改成功！！",
                 type: "success"
               });
-              setTimeout(() => {}, 1000);
+              setTimeout(() => {
+                that.$router.go(-2);
+              }, 1000);
             } else {
-              that.$router.go(-1);
+              that.$router.go(-2);
             }
           })
           .catch(err => err);
@@ -631,12 +634,9 @@ export default {
                 message: "报名成功！！",
                 type: "success"
               });
-              setTimeout(() => {
-                this.$router.push({
-                  path: "/home/submitEnroll"
-                });
-                
-              }, 1000);
+              this.$router.push({
+                path: "/home/submitEnroll"
+              }); 
             } else {
               that.$router.go(-1);
             }

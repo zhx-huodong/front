@@ -257,7 +257,7 @@ export default {
       apiKey: getCookie("x-api-key"),
       process: 1, //进度
       workTotle: "", //优秀作品数量
-      showEnrolment:false,//展示报名区域
+      showEnrolment: false //展示报名区域
     };
   },
   created() {
@@ -322,10 +322,9 @@ export default {
       params.expand = "info,works,school,professional,award";
       await this.axiosGet(params)
         .then(res => {
-          
           if (res.items.length > 0) {
             that.workTotle = res.items.length;
-            
+
             that.activityList = res.items.map(item => {
               let author = []; //作者
               let mentor = []; //指导老师
@@ -353,7 +352,6 @@ export default {
                 award: award.join("、"),
                 school: item.school.title
               };
-             
             });
           } else {
             that.workTotle = 0;
@@ -378,7 +376,7 @@ export default {
           this.activityObject.periodList = [];
           let arr = [1, 2, 4, 8, 16, 32, 64];
           let result = this.getSubSet(res.period, arr);
-          console.log("getSubSet===",this.getSubSet(res.period, arr))
+          console.log("getSubSet===", this.getSubSet(res.period, arr));
           for (let i in result) {
             for (let j in this.ClassList) {
               if (result[i] == this.ClassList[j].id) {
@@ -390,28 +388,25 @@ export default {
           //处理项目
           for (let i in this.activityObject.category) {
             for (let j in this.activityObject.category[i].child) {
-              this.activityObject.category[i].child[j].periodList = this.getSubSet(this.activityObject.category[i].child[j].period,arr);
+              this.activityObject.category[i].child[
+                j
+              ].periodList = this.getSubSet(
+                this.activityObject.category[i].child[j].period,
+                arr
+              );
             }
           }
           let nowTime = Date.parse(new Date());
-          if (
-            res.node[0].stime * 1000 <= nowTime
-          ) {
+          if (res.node[0].stime * 1000 <= nowTime) {
             this.process = 1;
           }
-          if (
-            res.node[1].stime * 1000 <= nowTime 
-          ) {
+          if (res.node[1].stime * 1000 <= nowTime) {
             this.process = 2;
           }
-          if (
-            res.node[2].stime * 1000 <= nowTime
-          ) {
+          if (res.node[2].stime * 1000 <= nowTime) {
             this.process = 3;
           }
-          if (
-            res.node[3].stime * 1000 <= nowTime
-          ) {
+          if (res.node[3].stime * 1000 <= nowTime) {
             this.process = 4;
           }
         })
@@ -421,9 +416,9 @@ export default {
     //组别筛选
     gradeObject(value) {
       let that = this;
-      if(value==0){
-        that.gradeObjectid = '';
-      }else{
+      if (value == 0) {
+        that.gradeObjectid = "";
+      } else {
         that.gradeObjectid = value;
       }
       that.goodWorkList();
@@ -550,8 +545,8 @@ export default {
         });
     },
     //展示报名区域
-    goToEnroment(){
-      this.showEnrolment=true;
+    goToEnroment() {
+      this.showEnrolment = true;
     }
   }
 };
@@ -569,19 +564,24 @@ export default {
     color: #fff !important;
     background-color: #198af3 !important;
   }
+  .el-tabs__nav-scroll {
+    width: 1180px !important;
+    margin: auto !important;
+  }
 }
-.my-card{
-  .el-step.is-center .el-step__description{
+
+.my-card {
+  .el-step.is-center .el-step__description {
     padding-right: 0 !important;
     padding-left: 0 !important;
   }
-  .el-step__icon{
+  .el-step__icon {
     width: 40px !important;
     height: 40px !important;
     font-size: 24px !important;
   }
   .el-step.is-horizontal .el-step__line {
-    top:18px !important;
+    top: 18px !important;
   }
 }
 </style>
@@ -593,7 +593,6 @@ export default {
   margin-bottom: 50px;
   .sub-nav {
     .sub-nav-main {
-      // width: 1220px;
       width: 100%;
       margin: auto;
       .el-tabs--border-card {
@@ -634,12 +633,12 @@ export default {
       }
     }
   }
-  .my-card{
-    width: 1120px;
+  .my-card {
+    width: 1180px;
     margin: auto;
   }
-  .card-body{
-    box-shadow:0 2px 12px 0 rgba(0,0,0,.1);
+  .card-body {
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     margin-top: 20px;
   }
   .activity-introduction-main {
@@ -742,37 +741,40 @@ export default {
     display: flex;
     justify-content: center;
   }
-  .enrolment{
-    border: 2px solid #3A8FF5;
+  .enrolment {
+    border: 2px solid #3a8ff5;
   }
-  .enrolment-top{
-    background:url('../../public/images/enrolment-back.png');
+  .enrolment-top {
+    background: url("../../public/images/enrolment-back.png");
     background-repeat: no-repeat;
     width: 100%;
     height: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
-    P{
-      color: rgba(255,255,255,1);
+    p {
+      color: rgba(255, 255, 255, 1);
       font-weight: bold;
       cursor: pointer;
       padding: 0 20px;
       line-height: 30px;
-      background:linear-gradient(rgba(73,200,253,1),rgba(40,144,246,1));
-      border:1px solid rgba(255,255,255,0.5);
-      border-radius:15px;
+      background: linear-gradient(rgba(73, 200, 253, 1), rgba(40, 144, 246, 1));
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 15px;
     }
-    p:hover{
-      background:linear-gradient(rgba(73,200,253,0.8),rgba(40,144,246,0.8));
-      color: rgba(255,255,255,0.8);
+    p:hover {
+      background: linear-gradient(
+        rgba(73, 200, 253, 0.8),
+        rgba(40, 144, 246, 0.8)
+      );
+      color: rgba(255, 255, 255, 0.8);
     }
-    span{
-      color: rgba(255,255,255,1);
+    span {
+      color: rgba(255, 255, 255, 1);
       font-weight: bold;
     }
   }
-  .enrolment-area{
+  .enrolment-area {
     padding: 20px 0;
   }
 }

@@ -42,7 +42,7 @@
             ></el-input>
           </el-form-item>
         </el-col>
-         <el-col :span="8">
+        <el-col :span="8">
           <el-form-item label="作品编号：">
             <el-input
               v-model="form.work_id"
@@ -82,11 +82,8 @@
         plain
         v-if="$store.state.account.nowRole.type==3"
       >退回作品</el-button>
-      
     </el-row>
-    
-       
-   
+
     <div style="margin-top:16px;">
       <template>
         <!-- 序号 报名时间 报名人 联系电话 所在地区 所在学校 -->
@@ -98,22 +95,19 @@
           tooltip-effect="dark"
           style="width: 100%"
           @selection-change="tableSelectionChange"
-          
         >
           >
           <el-table-column type="selection" width="55"></el-table-column>
           <!-- <el-table-column label="序号" type="index" width="80" align="center"></el-table-column> -->
-          <el-table-column prop="" width="130" label="作品编号">
-            <template slot-scope="scope">
-              {{scope.row.serial_id}}
-            </template>
+          <el-table-column prop width="130" label="作品编号">
+            <template slot-scope="scope">{{scope.row.serial_id}}</template>
           </el-table-column>
           <el-table-column prop="works.title" label="作品名称" show-overflow-tooltip>
             <template slot-scope="scope">
-              <el-button type="text" @click="goToActDetail(scope.row)"> {{scope.row.works.title}}</el-button>
+              <el-button type="text" @click="goToActDetail(scope.row)">{{scope.row.works.title}}</el-button>
             </template>
           </el-table-column>
-          
+
           <el-table-column prop="author_" label="作者" show-overflow-tooltip></el-table-column>
           <el-table-column prop="mentor_" label="指导老师" show-overflow-tooltip></el-table-column>
           <el-table-column prop="school.areaName" label="所在地区" show-overflow-tooltip></el-table-column>
@@ -121,9 +115,7 @@
           <el-table-column prop="info.category" label="活动分类" show-overflow-tooltip></el-table-column>
           <el-table-column prop="info.project" label="活动项目" show-overflow-tooltip></el-table-column>
           <el-table-column label="组别" show-overflow-tooltip>
-            <template slot-scope="scope">
-              {{gradeObj[scope.row.period]}}
-            </template>
+            <template slot-scope="scope">{{gradeObj[scope.row.period]}}</template>
           </el-table-column>
           <el-table-column
             label="分配专家"
@@ -133,7 +125,6 @@
             <template slot-scope="scope">
               <template
                 v-if="scope.row.professional.length>0"
-               
               >{{scope.row.professionalArr.join("、")}}</template>
               <template v-else>未分配</template>
             </template>
@@ -150,7 +141,11 @@
               </template>
               <template v-else>
                 已推荐市级
-                <el-button type="text" style="color:red;" @click="goToDisRecommmendItem(scope.row.id,scope.row.award,scope.row.professional)">取消推荐</el-button>
+                <el-button
+                  type="text"
+                  style="color:red;"
+                  @click="goToDisRecommmendItem(scope.row.id,scope.row.award,scope.row.professional)"
+                >取消推荐</el-button>
               </template>
             </template>
           </el-table-column>
@@ -175,10 +170,7 @@
         <my-transfer @edit="edit" @Noedit="Noedit" :workList="multipleSelection"></my-transfer>
       </div>
     </div>
-    <el-dialog
-      title="退回原因"
-      :visible.sync="RejectVisible"
-      width="30%">
+    <el-dialog title="退回原因" :visible.sync="RejectVisible" width="30%">
       <el-input placeholder="请输入退回原因" v-model="rejectReason"></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="RejectVisible = false">取 消</el-button>
@@ -186,7 +178,6 @@
       </span>
     </el-dialog>
   </div>
-  
 </template>
 <script>
 import MyTransfer from "../../components/MyTransfer";
@@ -206,16 +197,6 @@ export default {
   },
   data() {
     return {
-      gradeList: [
-        { id: 0, name: "全部" },
-        { name: "幼教组", id: 1 },
-        { name: "小学组", id: 2 },
-        { name: "初中组", id: 4 },
-        { name: "高中组", id: 8 },
-        { name: "特教组", id: 16 },
-        { name: "中职组", id: 32 },
-        { name: "高教组", id: 64 }
-      ], //组别
       activityProjectList: [{ id: 0, name: "全部" }], //活动项目列表
       activityTypleList: [{ id: 0, name: "全部" }], //活动分类列表
       regionList: [{ id: 0, name: "全部" }], //区域列表
@@ -225,7 +206,7 @@ export default {
         work_title: "",
         mentor: "",
         author: "",
-        work_id:"",//作品编号
+        work_id: "" //作品编号
       },
       tableData: [],
       dialogVisible: false,
@@ -236,11 +217,29 @@ export default {
       item_id: "", //项目
       period: "", //组别
       category_id: "", //分类
-      ids: [],//id列表
-      excelSteam:'',//文件流
-      rejectReason:'',//退回原因
-      RejectVisible:false,//退回原因窗口
-      gradeObj:{1:"幼教组",2:"小学组",4:"初中组",8:"高中组",16:"特教组",32:"中职组",64:"高教组"},//组别
+      ids: [], //id列表
+      excelSteam: "", //文件流
+      rejectReason: "", //退回原因
+      RejectVisible: false, //退回原因窗口
+      gradeObj: {
+        1: "幼教组",
+        2: "小学组",
+        4: "初中组",
+        8: "高中组",
+        16: "特教组",
+        32: "中职组",
+        64: "高教组"
+      }, //组别
+      gradeList: [{ id: 0, name: "全部" }], //组别
+      ClassList: [
+        { name: "幼教组", id: 1 },
+        { name: "小学组", id: 2 },
+        { name: "初中组", id: 4 },
+        { name: "高中组", id: 8 },
+        { name: "特教组", id: 16 },
+        { name: "中职组", id: 32 },
+        { name: "高教组", id: 64 }
+      ]
     };
   },
   watch: {
@@ -253,12 +252,13 @@ export default {
     this.getEnrollList(params);
   },
   mounted() {
-    console.log("id===", this.id);
     this.getActivityDetail();
   },
   methods: {
     //获取详情
     async getActivityDetail() {
+      this.activityProjectList = [{ id: 0, name: "全部" }]; //活动项目列表
+      this.activityTypleList = [{ id: 0, name: "全部" }]; //活动分类列表
       let params = {};
       params.url = api.activity;
       params.id = this.id;
@@ -266,28 +266,48 @@ export default {
         "detail,region,node,attachment,banner,category,categoryDetail";
       await axiosGet(params)
         .then(res => {
-          console.log(res.categoryDetail);
+          let arr = [1, 2, 4, 8, 16, 32, 64];
+          let result = this.getSubSet(res.period, arr);
+          for (let h in result) {
+            for (let g in this.ClassList) {
+              if (result[h] == this.ClassList[g].id) {
+                this.gradeList.push(this.ClassList[g]);
+              }
+            }
+          }
           if (res.categoryDetail.length > 0) {
-            res.categoryDetail.forEach(element => {
-              this.activityTypleList.push({
-                id: element.id,
-                name: element.title
-              });
-              element.child.forEach(ite => {
-                this.activityProjectList.push({ id: ite.id, name: ite.title });
-              });
-            });
+            for (let i in res.categoryDetail) {
+              let typeItem = {};
+              typeItem.id = res.categoryDetail[i].id;
+              typeItem.name = res.categoryDetail[i].title;
+              typeItem.activityProjectList = [];
+              for (let j in res.categoryDetail[i].child) {
+                let projectItem = {};
+                projectItem.id = res.categoryDetail[i].child[j].id;
+                projectItem.name = res.categoryDetail[i].child[j].title;
+                typeItem.activityProjectList.push(projectItem);
+              }
+              this.activityTypleList.push(typeItem);
+            }
+            for (let i in this.activityTypleList) {
+              if (
+                this.activityTypleList[i].activityProjectList != undefined &&
+                this.activityTypleList[i].activityProjectList.length > 0
+              ) {
+                this.activityProjectList = this.activityProjectList.concat(
+                  this.activityTypleList[i].activityProjectList
+                );
+              }
+            }
             res.region.forEach(item => {
               this.regionList.push({ id: item.id, name: item.area_name });
             });
-            console.log(this.activityTypleList);
           }
         })
         .catch(err => err);
     },
     //组别改变
     async gradeObject(val) {
-      console.log(val);
       this.period = val;
       let params = {
         "per-page": this.perPage
@@ -297,7 +317,6 @@ export default {
     },
     //活动项目
     async activityProjectObject(val) {
-      console.log(val);
       this.item_id = val;
       let params = {
         "per-page": this.perPage
@@ -307,7 +326,29 @@ export default {
     },
     //活动类别
     async activityTypleObject(val) {
-      console.log(val);
+      if (val != 0) {
+        for (let i in this.activityTypleList) {
+          if (val == this.activityTypleList[i].id) {
+            this.activityProjectList = this.activityTypleList[
+              i
+            ].activityProjectList;
+          }
+        }
+        this.item_id=this.activityProjectList[0].id
+      } else if (val == 0) {
+        this.activityProjectList = [{ id: 0, name: "全部" }];
+        for (let i in this.activityTypleList) {
+          if (
+            this.activityTypleList[i].activityProjectList != undefined &&
+            this.activityTypleList[i].activityProjectList.length > 0
+          ) {
+            this.activityProjectList = this.activityProjectList.concat(
+              this.activityTypleList[i].activityProjectList
+            );
+          }
+        }
+        this.item_id=0
+      }
       this.category_id = val;
       let params = {
         "per-page": this.perPage
@@ -317,7 +358,6 @@ export default {
     },
     //区域
     async regionObject(val) {
-      console.log(val);
       this.region = val;
       let params = {
         "per-page": this.perPage
@@ -345,108 +385,117 @@ export default {
       this.multipleSelection.forEach(item => {
         ids.push(item.id);
       });
-      axios.get(api.enroll, {
-        params: {
-          id: ids.join(","),
-          bdownload: "1",
-          expand:'works'
-        },
-        headers: {"x-api-key" : getCookie("x-api-key") }
-      }).then(res=>{
-        if(res.data.code==0){
-          window.open(res.data.url)
-        }
-      });
+      axios
+        .get(api.enroll, {
+          params: {
+            id: ids.join(","),
+            bdownload: "1",
+            expand: "works"
+          },
+          headers: { "x-api-key": getCookie("x-api-key") }
+        })
+        .then(res => {
+          if (res.data.code == 0) {
+            window.open(res.data.url);
+          }
+        });
     },
     //导出
     async exportWorks() {
-       let params = {};
+      let params = {};
       var ids = [];
       this.multipleSelection.forEach(item => {
         ids.push(item.id);
       });
-      if(ids.length==0){
+      if (ids.length == 0) {
         return this.$message({
-          type:'error',
-          message:"请先勾选需要导出的作品"
-        })
+          type: "error",
+          message: "请先勾选需要导出的作品"
+        });
       }
-      axios.get(api.enroll, {
-        params: {
-          id: ids.join(","),
-          bexport: "1",
-          expand:'info,works,school,professional,award'
-        },
-        responseType: "blob",
-        headers: {"x-api-key" : getCookie("x-api-key") }
-      }).then(res=>{
-        console.log("res===",res)
-          if(res.status==200){
-           // let elink=document.createElement('a');
-           // elink.download="作品.xls";
-           // elink.href=res.data;
-           // elink.click();
-             this.downloadFile("作品.xlsx",res.data);
-          }else{
-            return  this.$message({
-               type:'error',
-               message:'出错了'
-            })
+      axios
+        .get(api.enroll, {
+          params: {
+            id: ids.join(","),
+            bexport: "1",
+            expand: "info,works,school,professional,award"
+          },
+          responseType: "blob",
+          headers: { "x-api-key": getCookie("x-api-key") }
+        })
+        .then(res => {
+          console.log("res===", res);
+          if (res.status == 200) {
+            // let elink=document.createElement('a');
+            // elink.download="作品.xls";
+            // elink.href=res.data;
+            // elink.click();
+            this.downloadFile("作品.xlsx", res.data);
+          } else {
+            return this.$message({
+              type: "error",
+              message: "出错了"
+            });
           }
-      });
+        });
     },
-    downloadFile (fileName,data) {
-    	if (!data) { return }
-    	let url = window.URL.createObjectURL(new Blob([data]))
-    	let link = document.createElement('a')
-    	link.style.display = 'none'
-    	link.href = url;
-    	link.setAttribute('download', fileName)
-    	document.body.appendChild(link)
-    	link.click()
+    downloadFile(fileName, data) {
+      if (!data) {
+        return;
+      }
+      let url = window.URL.createObjectURL(new Blob([data]));
+      let link = document.createElement("a");
+      link.style.display = "none";
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
     },
     //退回作品
-    returnWorksDialog(){
-        let that=this;
-        this.multipleSelection.forEach(item => {
-          this.ids.push(item.id);
+    returnWorksDialog() {
+      let that = this;
+      this.multipleSelection.forEach(item => {
+        this.ids.push(item.id);
+      });
+      for (let i = 0; i < this.tableData.length; i++) {
+        for (let j = 0; j < this.ids.length; j++) {
+          if (
+            this.ids[j] == this.tableData[i].id &&
+            (this.tableData[i].award != 0 ||
+              this.tableData[i].professional != 0)
+          ) {
+            return that.$message({
+              type: "error",
+              message: "您选择的作品中包含已评分不能退回的作品"
+            });
+          }
+        }
+      }
+      if (that.ids.length == 0) {
+        return that.$message({
+          type: "error",
+          message: "请先勾选需要退回的作品"
         });
-        for(let i=0;i<this.tableData.length;i++){
-           for(let j=0;j<this.ids.length;j++){
-             if(this.ids[j]==this.tableData[i].id&&(this.tableData[i].award!=0||this.tableData[i].professional!=0)){
-                return that.$message({
-                  type:'error',
-                  message:"您选择的作品中包含已评分不能退回的作品"
-                })
-             }
-           }
-        }
-        if(that.ids.length==0){
-          return that.$message({
-            type:'error',
-            message:"请先勾选需要退回的作品"
-          })
-        }
-        that.RejectVisible=true;
+      }
+      that.RejectVisible = true;
     },
     //退回作品
     async returnWorks() {
-      let that=this;
-      if(that.rejectReason=="")
-      {
+      let that = this;
+      if (that.rejectReason == "") {
         return that.$message({
-          type:'error',
-          message:"请先填写退回理由"
-        })
+          type: "error",
+          message: "请先填写退回理由"
+        });
       }
       let params = {};
       params.url = api.reject;
       params.ids = that.ids;
-      params.rejectReason=that.rejectReason;
+      params.rejectReason = that.rejectReason;
       await this.axiosPost(params)
         .then(res => {
           if (res.code == 0) {
-            that.RejectVisible=false;
+            that.RejectVisible = false;
             this.$message({
               type: "success",
               message: "退回成功"
@@ -466,18 +515,19 @@ export default {
         .catch(err => err);
     },
     //推荐市级
-    async goToRecommmend(){
-      this.ids=[]
+    async goToRecommmend() {
+      this.ids = [];
       this.multipleSelection.forEach(item => {
         this.ids.push(item.id);
       });
       let params = {};
       params.url = api.recommend;
       params.ids = this.ids;
-      params.position=1
-      params.value=1
-      await this.axiosPost(params).then(res=>{
-        if (res.code == 0) {
+      params.position = 1;
+      params.value = 1;
+      await this.axiosPost(params)
+        .then(res => {
+          if (res.code == 0) {
             this.$message({
               type: "success",
               message: "推荐成功！！"
@@ -493,19 +543,21 @@ export default {
               message: res.message
             });
           }
-      }).catch(err=>err)
+        })
+        .catch(err => err);
     },
     //推荐市级单条
-    async goToRecommmendItem(id){
-      this.ids=[]
-      this.ids.push(id)
+    async goToRecommmendItem(id) {
+      this.ids = [];
+      this.ids.push(id);
       let params = {};
       params.url = api.recommend;
       params.ids = this.ids;
-      params.position=1
-      params.value=1
-      await this.axiosPost(params).then(res=>{
-        if (res.code == 0) {
+      params.position = 1;
+      params.value = 1;
+      await this.axiosPost(params)
+        .then(res => {
+          if (res.code == 0) {
             this.$message({
               type: "success",
               message: "推荐成功！！"
@@ -521,26 +573,27 @@ export default {
               message: res.message
             });
           }
-      }).catch(err=>err)
+        })
+        .catch(err => err);
     },
     //取消推荐
-    async goToDisRecommmendItem(id,award,professional){
-      if(award.length!=0||professional.length!=0){
-        return   this.$message({
-               type: "warning",
-               message: "作品已分配专家评分不能取消推荐市级"
-             });
-        
+    async goToDisRecommmendItem(id, award, professional) {
+      if (award.length != 0 || professional.length != 0) {
+        return this.$message({
+          type: "warning",
+          message: "作品已分配专家评分不能取消推荐市级"
+        });
       }
-      this.ids=[]
-      this.ids.push(id)
+      this.ids = [];
+      this.ids.push(id);
       let params = {};
       params.url = api.recommend;
       params.ids = this.ids;
-      params.position=1
-      params.value=0
-      await this.axiosPost(params).then(res=>{
-        if (res.code == 0) {
+      params.position = 1;
+      params.value = 0;
+      await this.axiosPost(params)
+        .then(res => {
+          if (res.code == 0) {
             this.$message({
               type: "success",
               message: "推荐成功！！"
@@ -556,7 +609,8 @@ export default {
               message: res.message
             });
           }
-      }).catch(err=>err)
+        })
+        .catch(err => err);
     },
     //获取作品
     async getEnrollList(params) {
@@ -587,37 +641,36 @@ export default {
       if (this.region != 0 && this.region != "77") {
         params.region = this.region;
       }
-      if(this.$store.state.account.nowRole.type!=3){
-        params.position=1
+      if (this.$store.state.account.nowRole.type != 3) {
+        params.position = 1;
       }
       params.url = api.enroll;
       params.expand = "info,works,school,professional,award";
       params.activity_id = this.id;
       await this.axiosGet(params)
         .then(res => {
-          this.tableData=[]
+          this.tableData = [];
           this.tableData = res.items;
-          this.tableData.map(res=>{
+          this.tableData.map(res => {
             // console.log(res);
-             res.professionalArr=res.professional.map(res1=>{
-                 if(res1.name!=undefined){
-                    return res1.name;
-                 }else{
-                   return [];
-                 }
-              })
-          })
-          for(let i=0;i<this.tableData.length;i++){
-            let author_=this.tableData[i].info.author.map(item=>{
+            res.professionalArr = res.professional.map(res1 => {
+              if (res1.name != undefined) {
+                return res1.name;
+              } else {
+                return [];
+              }
+            });
+          });
+          for (let i = 0; i < this.tableData.length; i++) {
+            let author_ = this.tableData[i].info.author.map(item => {
               return item.name;
-            })
-            let mentor_=this.tableData[i].info.mentor.map(item=>{
+            });
+            let mentor_ = this.tableData[i].info.mentor.map(item => {
               return item.name;
-            })
-            this.tableData[i].author_=author_.join("、");
-            this.tableData[i].mentor_=mentor_.join("、");
+            });
+            this.tableData[i].author_ = author_.join("、");
+            this.tableData[i].mentor_ = mentor_.join("、");
           }
-
 
           // this.tableData.forEach(ite => {
           //   var title = "";
@@ -689,17 +742,17 @@ export default {
       params.page = this.currentPage;
       this.getEnrollList(params);
     },
-     goToActDetail(row) {
-       console.log(row)
+    goToActDetail(row) {
+      console.log(row);
       // 跳转活动详情页
       this.$router.push({
         path: "/home/activityDetail",
         query: {
           id: row.id,
-          look:0
+          look: 0
         }
       });
-    },
+    }
   }
 };
 </script>

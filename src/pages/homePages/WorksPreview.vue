@@ -58,7 +58,7 @@
                   获奖信息：{{getAward||'暂未获奖'}}
               </div>
               <div class="works-detail-item">
-                  活动组别：{{activityDetail.info.activity}}
+                  活动名称：{{activityDetail.info.activity}}
               </div>
               <div class="works-detail-item">
                   活动项目：{{activityDetail.info.project}}

@@ -218,14 +218,21 @@ export default {
           allChoiceItem.activityTypleList = activityTypleList;
           that.activityNameList.push(allChoiceItem);
         }
-        that.activityNameSelectID=that.activityNameList[0].id
-        that.gradeList = that.activityNameList[0].gradeList;
-        that.gradeSelectID= that.activityNameList[0].gradeList[0].id
-        that.activityTypleList = that.activityNameList[0].activityTypleList;
-        that.activityTypleSelectID = that.activityNameList[0].activityTypleList[0].id
-        that.activityProjectList =that.activityNameList[0].activityTypleList[0].activityProjectList;
-        that.activityProjectSelectID=that.activityNameList[0].activityTypleList[0].activityProjectList[0].id
-        that.getWorksList();
+        if (that.activityNameList.length > 0) {
+          that.activityNameSelectID = that.activityNameList[0].id;
+          that.gradeList = that.activityNameList[0].gradeList;
+          that.gradeSelectID = that.activityNameList[0].gradeList[0].id;
+          that.activityTypleList = that.activityNameList[0].activityTypleList;
+          that.activityTypleSelectID =
+            that.activityNameList[0].activityTypleList[0].id;
+          that.activityProjectList =
+            that.activityNameList[0].activityTypleList[0].activityProjectList;
+          that.activityProjectSelectID =
+            that.activityNameList[0].activityTypleList[0].activityProjectList[0].id;
+          that.getWorksList();
+        }else{
+          that.loading = false;
+        }
       });
     },
     //获取所有的专家作品列表
@@ -280,14 +287,12 @@ export default {
               }
             );
           }
-
           that.pages.per_page = res._meta.pageCount;
           that.pages.now_page = res._meta.currentPage;
           that.pages.total = res._meta.totalCount;
           that.loading = false;
         })
         .catch(err => {
-          console.log(err);
           that.loading = false;
         });
     },
@@ -426,34 +431,44 @@ export default {
     async activityNameObject(value) {
       let that = this;
       that.activityNameSelectID = value;
-      for(let i in that.activityNameList){
-        if(that.activityNameList[i].id==value){
+      for (let i in that.activityNameList) {
+        if (that.activityNameList[i].id == value) {
           that.gradeList = that.activityNameList[i].gradeList;
-          that.gradeSelectID= that.activityNameList[0].gradeList[0].id
+          that.gradeSelectID = that.activityNameList[0].gradeList[0].id;
           that.activityTypleList = that.activityNameList[i].activityTypleList;
-          that.activityTypleSelectID = that.activityNameList[i].activityTypleList[0].id
-          that.activityProjectList =that.activityNameList[i].activityTypleList[0].activityProjectList;
-          that.activityProjectSelectID=that.activityNameList[i].activityTypleList[0].activityProjectList[0].id
+          that.activityTypleSelectID =
+            that.activityNameList[i].activityTypleList[0].id;
+          that.activityProjectList =
+            that.activityNameList[i].activityTypleList[0].activityProjectList;
+          that.activityProjectSelectID =
+            that.activityNameList[
+              i
+            ].activityTypleList[0].activityProjectList[0].id;
         }
       }
       that.getWorksList();
-
     },
     //活动分类
     async activityTypleObject(value) {
       let that = this;
       that.activityTypleSelectID = value;
-      for(let i in that.activityNameList){
-          if(that.activityNameSelectID==that.activityNameList[i].id){
-              for(let j in that.activityNameList[i].activityTypleList){
-                  if(that.activityNameList[i].activityTypleList[j].id==value){
-                      that.activityProjectList=that.activityNameList[i].activityTypleList[j].activityProjectList
-                      that.activityProjectSelectID=that.activityNameList[i].activityTypleList[j].activityProjectList[0].id
-                  }
-              }
+      for (let i in that.activityNameList) {
+        if (that.activityNameSelectID == that.activityNameList[i].id) {
+          for (let j in that.activityNameList[i].activityTypleList) {
+            if (that.activityNameList[i].activityTypleList[j].id == value) {
+              that.activityProjectList =
+                that.activityNameList[i].activityTypleList[
+                  j
+                ].activityProjectList;
+              that.activityProjectSelectID =
+                that.activityNameList[i].activityTypleList[
+                  j
+                ].activityProjectList[0].id;
+            }
           }
+        }
       }
-      that.getWorksList();  
+      that.getWorksList();
     },
     //组别
     async gradeObject(value) {
