@@ -122,6 +122,11 @@ export default {
       position: absolute;
       right: 20px;
     }
- 
+  .title{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+  }
 }
 </style>

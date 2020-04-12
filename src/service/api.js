@@ -31,10 +31,18 @@ const like=`${base}/works-admin/like`;//点赞
 const switchToken=`${base}/user-admin/switch-token`;//切换角色
 const getCosKeys=`${base}/upload/get-cos-keys`;//获取腾讯云cos签名 
 
-const uploadPic=`http://api.huodong.eduinspector.com/upload/image`;//图片上传
-const uploadKey=`http://api.huodong.eduinspector.com/upload/cos-key`;//文件上传
-const uploadFile=`http://api.huodong.eduinspector.com/upload/file`;//文件上传
-
+let uploadPic=``;//图片上传
+let uploadKey=``;//文件上传
+let uploadFile=``;//文件上传
+if (location.hostname==='localhost'||location.hostname==='huodong.eduinspector.com') {
+    uploadPic=`https://api.huodong.eduinspector.com/upload/image`;//图片上传
+    uploadKey=`https://api.huodong.eduinspector.com/upload/cos-key`;//文件上传
+    uploadFile=`https://api.huodong.eduinspector.com/upload/file`;//文件上传
+}else{
+    uploadPic=`https://cxyy.szdj.edu.cn/api/upload/image`;//图片上传
+    uploadKey=`https://cxyy.szdj.edu.cn/api/upload/cos-key`;//文件上传
+    uploadFile=`https://cxyy.szdj.edu.cn/api/upload/file`;//文件上传
+}
 
 let api={
     captcha,
