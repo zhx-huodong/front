@@ -61,8 +61,19 @@ export default {
     regionList:{ type:Array,default:function(){return []}},
     otherList:{ type:Array,default:function(){return []}},
     otherName:{ type:String,default:function(){return ''}},
-    gradeList:{ type:Array,default:function(){return []}}
- 
+    gradeList:{ type:Array,default:function(){return []}},
+    // activityTypleIndex:{
+    //   type:Number,
+    //   default(){
+    //     return 0
+    //   }
+    // },
+    // activityProjectIndex:{
+    //   type:Number,
+    //   default(){
+    //     return 0
+    //   }
+    // }
   },
   data() {
     return {

@@ -100,7 +100,7 @@ export default {
       let res = await this.axiosGet(params).catch(err => err);
       if (res.msg === "已发送") {
         this.code = true;
-        this.countDownNum = 60;
+        this.countDownNum = 120;
         this.btnTag = "s重新获取";
         this.countDown();
       } else {

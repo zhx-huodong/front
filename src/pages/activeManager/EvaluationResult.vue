@@ -201,16 +201,6 @@ export default {
       perPage: 20, //每页条数
       totalCount: 0, //总数
       multipleSelection: [], //列表选择
-      gradeList: [
-        { id: 0, name: "全部" },
-        { name: "幼教组", id: 1 },
-        { name: "小学组", id: 2 },
-        { name: "初中组", id: 4 },
-        { name: "高中组", id: 8 },
-        { name: "特教组", id: 16 },
-        { name: "中职组", id: 32 },
-        { name: "高教组", id: 64 }
-      ], //组别
       activityProjectList: [{ id: 0, name: "全部" }], //活动项目列表
       activityTypleList: [{ id: 0, name: "全部" }], //活动分类列表
       regionList: [{ id: 0, name: "全部" }], //区域列表
@@ -227,6 +217,25 @@ export default {
       awardDialogVisible: false, //设置奖项弹窗
       enroll_ids:[],//ids
       award_ids:[],//奖项id
+      gradeObj: {
+        1: "幼教组",
+        2: "小学组",
+        4: "初中组",
+        8: "高中组",
+        16: "特教组",
+        32: "中职组",
+        64: "高教组"
+      }, //组别
+      gradeList: [{ id: 0, name: "全部" }], //组别
+      ClassList: [
+        { name: "幼教组", id: 1 },
+        { name: "小学组", id: 2 },
+        { name: "初中组", id: 4 },
+        { name: "高中组", id: 8 },
+        { name: "特教组", id: 16 },
+        { name: "中职组", id: 32 },
+        { name: "高教组", id: 64 }
+      ]
     };
   },
   created() {
@@ -240,27 +249,51 @@ export default {
   methods: {
     //获取详情
     async getActivityDetail() {
+      this.activityProjectList = [{ id: 0, name: "全部" }]; //活动项目列表
+      this.activityTypleList = [{ id: 0, name: "全部" }]; //活动分类列表
       let params = {};
       params.url = api.activity;
       params.id = this.id;
       params.expand =
         "detail,region,node,attachment,banner,category,categoryDetail";
-      await this.axiosGet(params)
+      await axiosGet(params)
         .then(res => {
+          let arr = [1, 2, 4, 8, 16, 32, 64];
+          let result = this.getSubSet(res.period, arr);
+          for (let h in result) {
+            for (let g in this.ClassList) {
+              if (result[h] == this.ClassList[g].id) {
+                this.gradeList.push(this.ClassList[g]);
+              }
+            }
+          }
           if (res.categoryDetail.length > 0) {
-            res.categoryDetail.forEach(element => {
-              this.activityTypleList.push({
-                id: element.id,
-                name: element.title
-              });
-              element.child.forEach(ite => {
-                this.activityProjectList.push({ id: ite.id, name: ite.title });
-              });
-            });
+            for (let i in res.categoryDetail) {
+              let typeItem = {};
+              typeItem.id = res.categoryDetail[i].id;
+              typeItem.name = res.categoryDetail[i].title;
+              typeItem.activityProjectList = [];
+              for (let j in res.categoryDetail[i].child) {
+                let projectItem = {};
+                projectItem.id = res.categoryDetail[i].child[j].id;
+                projectItem.name = res.categoryDetail[i].child[j].title;
+                typeItem.activityProjectList.push(projectItem);
+              }
+              this.activityTypleList.push(typeItem);
+            }
+            for (let i in this.activityTypleList) {
+              if (
+                this.activityTypleList[i].activityProjectList != undefined &&
+                this.activityTypleList[i].activityProjectList.length > 0
+              ) {
+                this.activityProjectList = this.activityProjectList.concat(
+                  this.activityTypleList[i].activityProjectList
+                );
+              }
+            }
             res.region.forEach(item => {
               this.regionList.push({ id: item.id, name: item.area_name });
             });
-            console.log(this.activityTypleList);
           }
         })
         .catch(err => err);
@@ -285,6 +318,29 @@ export default {
     },
     //活动类别
     async activityTypleObject(val) {
+      if (val != 0) {
+        for (let i in this.activityTypleList) {
+          if (val == this.activityTypleList[i].id) {
+            this.activityProjectList = this.activityTypleList[
+              i
+            ].activityProjectList;
+          }
+        }
+        this.item_id=this.activityProjectList[0].id
+      } else if (val == 0) {
+        this.activityProjectList = [{ id: 0, name: "全部" }];
+        for (let i in this.activityTypleList) {
+          if (
+            this.activityTypleList[i].activityProjectList != undefined &&
+            this.activityTypleList[i].activityProjectList.length > 0
+          ) {
+            this.activityProjectList = this.activityProjectList.concat(
+              this.activityTypleList[i].activityProjectList
+            );
+          }
+        }
+        this.item_id=0
+      }
       this.category_id = val;
       let params = {
         "per-page": this.perPage

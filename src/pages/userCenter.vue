@@ -101,19 +101,17 @@ export default {
   created() {},
   mounted() {
     let list = [
-      { Name: "沟通能力", Value: 80 },
-      { Name: "逻辑思维", Value: 70 },
-      { Name: "实践创新", Value: 80 },
-      { Name: "艺术", Value: 60 },
-      { Name: "人文底蕴", Value: 90 }
+      { Name: "沟通能力", Value: 0 },
+      { Name: "逻辑思维", Value: 0 },
+      { Name: "实践创新", Value: 0 },
+      { Name: "艺术", Value: 0 },
+      { Name: "人文底蕴", Value: 0 }
     ];
     this.$nextTick(function() {
       this.renderChart(list);
     });
     let params = {};
     this.getActivityList(params);
-    console.log("user====",this.$store.state.account.user)
-    
   },
   methods: {
     //获取报名活动列表
