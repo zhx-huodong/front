@@ -453,8 +453,9 @@ export default {
       params.url = api.switchToken;
       await this.axiosGet(params)
         .then(res => {
-          console.log("获取角色数据===", res);
-          setCookie("x-api-key", res.token);
+          if(res.token!=undefined){
+            setCookie("x-api-key", res.token);
+          }
           that.$store.dispatch("INIT_USER", res);
           let userInfo = JSON.stringify(res);
           localStorage.setItem("user", userInfo);

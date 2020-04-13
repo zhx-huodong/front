@@ -7,7 +7,7 @@
       <el-divider></el-divider>
       <el-row>
         <el-col :span="20" :offset="2">
-      <el-form ref="form" :model="form" label-width="100px">
+      <el-form ref="form" :model="form" label-width="120px">
         <el-form-item label="活动名称：">
           <el-input
             v-model="form.activityName"
@@ -100,7 +100,7 @@
             <p class="limit">{{item.remark}}</p>
           </div>
         </el-form-item>
-        <el-form-item label="报名登记：" :rules="{ required: true, message: '请上传报名登记', trigger: 'blur' }">
+        <el-form-item label="报名登记表：" :rules="{ required: true, message: '请上传报名登记', trigger: 'blur' }">
           <upload-picture
             :uploadType="'picture'"
             :max="1"
@@ -733,7 +733,7 @@ export default {
   display: flex;
   flex-direction: row;
   margin-bottom: 10px;
-  margin-left: 10px;
+  margin-left: 30px;
   p {
     width: 80px;
     font-size: 14px;

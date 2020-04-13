@@ -110,13 +110,25 @@ export function removeClass(dom, className) {
   dom.className = newClassName.join(' ');
 }
 
+//退出登录
+export function logout() {
+  setCookie("x-api-key", "");
+  localStorage.removeItem("user");
+  localStorage.removeItem("roles");
+  localStorage.removeItem("nowRole");
+  location.href = "/";
+}
+
+
 function axiosGetParam(param) {
   let url = param.id===undefined? param.url : `${param.url}/${param.id}`;
   let options = param;
   delete options.id;
   delete options.url;
   let headers = {};
-  if (getCookie('x-api-key')) headers['x-api-key'] = getCookie('x-api-key');
+  if (getCookie('x-api-key')!=undefined&&getCookie('x-api-key')!='') {
+    headers['x-api-key'] = getCookie('x-api-key');
+  }
   return {
     url: url,
     param: options,
@@ -135,8 +147,28 @@ export function axiosGet(param, isExpire = true, headers_) {
       headers: headers
     }).then(res => {
       resolve(res.data);
+      if(res.data.code!=undefined){
+        if (res.data.code == 403) {
+            this.$message({
+              type: "warning",
+              message: res.data.message
+            });
+            setTimeout(()=>{
+              logout()
+            },1000)
+          } else if (res.data.code == 404) {
+            this.$message({
+              type: "warning",
+              message: res.data.message
+            });
+            setTimeout(()=>{
+              logout()
+            },1000)
+          }
+      }
     }).catch(err => {
-      let resp = err.response;
+      console.log("err==",err)
+      var resp = err.response;
       if (resp &&
         (resp.statusText == 'Unauthorized' || resp.data.ErrorCode == 'UserNotLogin' ||
           resp.data.ErrorCode == 'User.SessionError') && isExpire) {
@@ -174,8 +206,27 @@ export function axiosPost(param, isExpire = true, headers_) {
     }).then(res => {
       let data = res.data;
       resolve(data);
+      if(res.data.code!=undefined){
+        if (res.data.code == 403) {
+            this.$message({
+              type: "warning",
+              message: res.data.message
+            });
+            setTimeout(()=>{
+              logout()
+            },1000)
+          } else if (res.data.code == 404) {
+            this.$message({
+              type: "warning",
+              message: res.data.message
+            });
+            setTimeout(()=>{
+              logout()
+            },1000)
+          }
+      }
     }).catch(err => {
-      let resp = err.response;
+      var resp = err.response;
       if (resp &&
         (resp.statusText == 'Unauthorized' || resp.data.ErrorCode == 'UserNotLogin' ||
           resp.data.ErrorCode == 'User.SessionError') && isExpire) {
@@ -200,8 +251,27 @@ export function axiosPostPIC(param, isExpire = true, ) {
     }).then(res => {
       let data = res.data;
       resolve(data);
+      if(res.data.code!=undefined){
+        if (res.data.code == 403) {
+            this.$message({
+              type: "warning",
+              message: res.data.message
+            });
+            setTimeout(()=>{
+              logout()
+            },1000)
+          } else if (res.data.code == 404) {
+            this.$message({
+              type: "warning",
+              message: res.data.message
+            });
+            setTimeout(()=>{
+              logout()
+            },1000)
+          }
+      }
     }).catch(err => {
-      let resp = err.response;
+      var resp = err.response;
       if (resp &&
         (resp.statusText == 'Unauthorized' || resp.data.ErrorCode == 'UserNotLogin' ||
           resp.data.ErrorCode == 'User.SessionError') && isExpire) {
@@ -239,8 +309,27 @@ export function axiosDelete(param, isExpire = true, headers_) {
       headers: headers
     }).then(res => {
       resolve(res.data);
+      if(res.data.code!=undefined){
+        if (res.data.code == 403) {
+            this.$message({
+              type: "warning",
+              message: res.data.message
+            });
+            setTimeout(()=>{
+              logout()
+            },1000)
+          } else if (res.data.code == 404) {
+            this.$message({
+              type: "warning",
+              message: res.data.message
+            });
+            setTimeout(()=>{
+              logout()
+            },1000)
+          }
+      }
     }).catch(err => {
-      let resp = err.response;
+      var resp = err.response;
       if (resp &&
         (resp.statusText == 'Unauthorized' || resp.data.ErrorCode == 'UserNotLogin' ||
           resp.data.ErrorCode == 'User.SessionError') && isExpire) {
@@ -277,8 +366,27 @@ export function axiosPut(param, isExpire = true, headers_) {
     options.param,
     {headers: headers}).then(res => {
       resolve(res.data);
+      if(res.data.code!=undefined){
+        if (res.data.code == 403) {
+            this.$message({
+              type: "warning",
+              message: res.data.message
+            });
+            setTimeout(()=>{
+              logout()
+            },1000)
+          } else if (res.data.code == 404) {
+            this.$message({
+              type: "warning",
+              message: res.data.message
+            });
+            setTimeout(()=>{
+              logout()
+            },1000)
+          }
+      }
     }).catch(err => {
-      let resp = err.response;
+      var resp = err.response;
       if (resp &&
         (resp.statusText == 'Unauthorized' || resp.data.ErrorCode == 'UserNotLogin' ||
           resp.data.ErrorCode == 'User.SessionError') && isExpire) {
@@ -297,8 +405,8 @@ function expire() {
     localStorage.removeItem('user');
     localStorage.removeItem('roles');
     localStorage.removeItem('nowRole');
-    // location.href = '/';
-    store.dispatch('INIT_SHOW', true);
+    location.href = '/';
+    // store.dispatch('INIT_SHOW', true);
   }
 }
 

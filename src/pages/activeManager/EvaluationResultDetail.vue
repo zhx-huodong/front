@@ -19,26 +19,6 @@
       </div>
       <el-divider></el-divider>
       <works-preview :id="id"></works-preview>
-
-      <!-- <span style="font-size:16px;color:rgba(102,102,102,1);line-height:43px;">作品信息</span>
-      <h2 style="text-align:center">{{workDetail.title}}</h2>
-      <div style="width:700px;margin-left:220px;" v-html="workDetail.content"></div>
-      <div style="text-align:center;margin-top:20px;">
-        <el-image :src="workDetail.cover" style="width:700px;"></el-image>
-      </div>
-      <div style="width:700px;margin-left:220px;">
-        <p style="margin-top:10px;">活动组别：【{{activityInfo.activity}}】</p>
-        <p style="margin-top:10px;">活动项目： 【{{activityInfo.project}}】</p>
-        <p style="margin-top:10px;">
-          作者：
-          <template v-for="item in workDetail.member.author">【{{item.name}}】</template>
-        </p>
-        <p style="margin-top:10px;">
-          指导老师：
-          <template v-for="item in workDetail.member.mentor">【{{item.name}}】</template>
-        </p>
-        <p style="margin-top:10px;">作者邮箱：【{{workDetail.email}}】</p> -->
-      <!-- </div> -->
     </el-card>
   </div>
 </template>

@@ -478,11 +478,8 @@ export default {
       }).then(res=>{
         console.log("res===",res)
           if(res.status==200){
-           // let elink=document.createElement('a');
-           // elink.download="作品.xls";
-           // elink.href=res.data;
-           // elink.click();
-             this.downloadFile("评分表.xlsx",res.data);
+           let name=res.headers['content-disposition'].split('=')[1]
+            this.downloadFile(name, res.data);
           }else if(res.code==-1){
             return  this.$message({
                type:'error',

@@ -2,6 +2,7 @@
   <div class="choice-activity-container">
     <el-card style="min-height:600px">
       <div class="title">
+        <el-button type="defualt" size="mini" @click="goback" style="position:absolute;left:0">返回</el-button>
         <p >{{objectDetail.title}}</p>
       </div>
       <el-divider></el-divider>
@@ -60,6 +61,9 @@ export default {
           console.log(res);
         })
         .catch(err => err);
+    },
+    goback() {
+      this.$router.go(-1);
     }
   }
 };
@@ -71,6 +75,7 @@ export default {
   margin-top: 20px;
   margin-bottom: 20px;
   .title {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
