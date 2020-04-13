@@ -371,7 +371,8 @@ export default {
           params: {
             id: that.selectedCell.join(","),
             bdownload: "1",
-            inscore: "1"
+            inscore: "1",
+            expand:'works'
           },
           headers: { "x-api-key": that.apiKey }
         })
