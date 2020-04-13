@@ -27,7 +27,7 @@
                 ></el-step>
               </el-steps>
             </el-card>
-            <div class="my-card card-body" >
+            <div class="my-card card-body">
               <div class="title">
                 <p>{{activityObject.title}}</p>
               </div>
@@ -72,7 +72,7 @@
                   <div v-if="activityObject.region.length>=12">【深圳市】</div>
                 </template>
               </div>
-              <div class="enrolment" >
+              <div class="enrolment">
                 <div class="enrolment-top">
                   <p @click="goToEnroment()" v-if="!showEnrolment">我要报名</p>
                   <span v-if="showEnrolment">报名区域</span>
@@ -224,9 +224,7 @@ export default {
       activityNameIndex: 0, //选择参加活动项目的id
       activityTypleSelectID: "",
       activityProjectSelectID: "",
-      gradeListTwo: [
-        { name: "全部", id: 0 },
-      ],
+      gradeListTwo: [{ name: "全部", id: 0 }],
       activityObject: {},
       ClassList: [
         { name: "幼教组", id: 1 },
@@ -275,30 +273,30 @@ export default {
       params.id = that.id;
       await this.axiosGet(params).then(res => {
         if (res.categoryDetail.length > 0) {
-            for (let i in res.categoryDetail) {
-              let typeItem = {};
-              typeItem.id = res.categoryDetail[i].id;
-              typeItem.name = res.categoryDetail[i].title;
-              typeItem.activityProjectList = [];
-              for (let j in res.categoryDetail[i].child) {
-                let projectItem = {};
-                projectItem.id = res.categoryDetail[i].child[j].id;
-                projectItem.name = res.categoryDetail[i].child[j].title;
-                typeItem.activityProjectList.push(projectItem);
-              }
-              this.activityTypleList.push(typeItem);
+          for (let i in res.categoryDetail) {
+            let typeItem = {};
+            typeItem.id = res.categoryDetail[i].id;
+            typeItem.name = res.categoryDetail[i].title;
+            typeItem.activityProjectList = [];
+            for (let j in res.categoryDetail[i].child) {
+              let projectItem = {};
+              projectItem.id = res.categoryDetail[i].child[j].id;
+              projectItem.name = res.categoryDetail[i].child[j].title;
+              typeItem.activityProjectList.push(projectItem);
             }
-            for (let i in this.activityTypleList) {
-              if (
-                this.activityTypleList[i].activityProjectList != undefined &&
-                this.activityTypleList[i].activityProjectList.length > 0
-              ) {
-                this.activityProjectList = this.activityProjectList.concat(
-                  this.activityTypleList[i].activityProjectList
-                );
-              }
+            this.activityTypleList.push(typeItem);
+          }
+          for (let i in this.activityTypleList) {
+            if (
+              this.activityTypleList[i].activityProjectList != undefined &&
+              this.activityTypleList[i].activityProjectList.length > 0
+            ) {
+              this.activityProjectList = this.activityProjectList.concat(
+                this.activityTypleList[i].activityProjectList
+              );
             }
           }
+        }
       });
       that.activityTypleList.unshift({ id: 0, name: "全部" });
       that.activityProjectList.unshift({ id: 0, name: "全部" });
@@ -383,7 +381,7 @@ export default {
             for (let j in this.ClassList) {
               if (result[i] == this.ClassList[j].id) {
                 this.activityObject.periodList.push(this.ClassList[j]);
-                this.gradeListTwo.push(this.ClassList[j])
+                this.gradeListTwo.push(this.ClassList[j]);
               }
             }
           }
@@ -412,7 +410,6 @@ export default {
           if (res.node[3].stime * 1000 <= nowTime) {
             this.process = 4;
           }
-          
         })
         .catch(err => err);
     },
@@ -442,7 +439,7 @@ export default {
             ].activityProjectList;
           }
         }
-        this.activityProjectSelectID=this.activityProjectList[0].id
+        this.activityProjectSelectID = this.activityProjectList[0].id;
       } else if (val == 0) {
         this.activityProjectList = [{ id: 0, name: "全部" }];
         for (let i in this.activityTypleList) {
@@ -455,7 +452,7 @@ export default {
             );
           }
         }
-        this.activityProjectSelectID=0
+        this.activityProjectSelectID = 0;
       }
       let that = this;
       that.activityTypleSelectID = val;
@@ -573,11 +570,21 @@ export default {
     },
     //展示报名区域
     goToEnroment() {
-      this.showEnrolment = true;
-      this.$nextTick(() => {
-        let enrolment=this.$refs["enrolment"];
-        document.documentElement.scrollTop  = enrolment.scrollHeight
-      });
+      if (
+        JSON.parse(localStorage.getItem("user")) != undefined &&
+        JSON.parse(localStorage.getItem("user")) != null
+      ) {
+        this.showEnrolment = true;
+        this.$nextTick(() => {
+          let enrolment = this.$refs["enrolment"];
+          document.documentElement.scrollTop = enrolment.scrollHeight;
+        });
+      }else{
+        this.$message({
+          type:'warning',
+          message:'请登录后再进行操作'
+        })
+      }
     }
   }
 };
