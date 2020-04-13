@@ -8,10 +8,9 @@
       }
     },
     watch: {
-      user(val) {
-        if (val.IsPlatformAdmin) this.$router.push('/home');
-        else this.$router.push('/home');
-      }
+      // user(val) {
+      //   this.$router.push('/home');
+      // }
     }
   };
 </script>

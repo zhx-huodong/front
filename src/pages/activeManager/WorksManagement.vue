@@ -424,13 +424,9 @@ export default {
           headers: { "x-api-key": getCookie("x-api-key") }
         })
         .then(res => {
-          console.log("res===", res);
           if (res.status == 200) {
-            // let elink=document.createElement('a');
-            // elink.download="作品.xls";
-            // elink.href=res.data;
-            // elink.click();
-            this.downloadFile("作品.xlsx", res.data);
+            let name=res.headers['content-disposition'].split('=')[1]
+            this.downloadFile(name, res.data);
           } else {
             return this.$message({
               type: "error",

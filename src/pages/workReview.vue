@@ -333,11 +333,8 @@ export default {
         .then(res => {
           console.log("res===", res);
           if (res.status == 200) {
-            // let elink=document.createElement('a');
-            // elink.download="作品.xls";
-            // elink.href=res.data;
-            // elink.click();
-            this.downloadFile("评分表.xlsx", res.data);
+            let name=res.headers['content-disposition'].split('=')[1]
+            this.downloadFile(name, res.data);
           } else if (res.code == -1) {
             return this.$message({
               type: "error",
@@ -431,11 +428,12 @@ export default {
     //活动名称
     async activityNameObject(value) {
       let that = this;
+      // that.gradeSelectID=0
       that.activityNameSelectID = value;
       for (let i in that.activityNameList) {
         if (that.activityNameList[i].id == value) {
           that.gradeList = that.activityNameList[i].gradeList;
-          that.gradeSelectID = that.activityNameList[0].gradeList[0].id;
+          that.gradeSelectID = that.activityNameList[i].gradeList[0].id;
           that.activityTypleList = that.activityNameList[i].activityTypleList;
           that.activityTypleSelectID =
             that.activityNameList[i].activityTypleList[0].id;

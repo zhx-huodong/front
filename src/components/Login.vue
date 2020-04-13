@@ -98,7 +98,7 @@ export default {
       params.url = api.captcha;
       params.account = this.phoneNum;
       let res = await this.axiosGet(params).catch(err => err);
-      if (res.msg === "已发送") {
+      if (res.msg === "已发送"||res.code==0) {
         this.code = true;
         this.countDownNum = 120;
         this.btnTag = "s重新获取";
@@ -137,8 +137,9 @@ export default {
             });
           } else {
             this.$store.dispatch("INIT_SHOW", false);
-            setCookie("x-api-key", res.token);
-
+            if(res.token!=undefined){
+              setCookie("x-api-key", res.token);
+            }
             this.$store.dispatch("INIT_USER", res);
             let userInfo = JSON.stringify(res);
             localStorage.setItem("user", userInfo);
@@ -174,6 +175,8 @@ export default {
             setTimeout(() => {
               loading.close();
               this.show = false;
+              this.phoneNum='';
+              this.phoneCode='';
             }, 2000);
           }
         })

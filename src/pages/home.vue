@@ -107,7 +107,8 @@ export default {
             this.$router.push({
                 path: '/home/activityIntroduction',
                 query: {
-                    id: id
+                    id: id,
+                    activeName:'first'
                 }
             });
         },

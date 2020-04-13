@@ -5,8 +5,8 @@
     </div>
     <div class="sub-nav">
       <div class="sub-nav-main">
-        <el-tabs type="border-card">
-          <el-tab-pane label="活动介绍">
+        <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
+          <el-tab-pane label="活动介绍" name="first">
             <el-card class="my-card">
               <el-steps :active="process" align-center>
                 <el-step
@@ -119,7 +119,7 @@
               </div>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="通知公告">
+          <el-tab-pane label="通知公告" name="second">
             <el-card style="padding-bottom:30px;" class="my-card">
               <div class="title">
                 <p>消息公告</p>
@@ -163,7 +163,7 @@
               </el-row>
             </el-card>
           </el-tab-pane>
-          <el-tab-pane label="优秀作品">
+          <el-tab-pane label="优秀作品" name="third">
             <el-card style="padding-bottom:30px;" class="my-card">
               <el-row>
                 <el-col>
@@ -207,11 +207,12 @@ import TypeSelect from "../../components/TypeSelect";
 import CardList from "../../components/CardList";
 import { getTimestamp } from "../../tools/tools";
 import { getCookie, axiosGet, axiosPost } from "../../tools/tools";
-
+import merge from 'webpack-merge';
 export default {
   components: { FilePreview, TypeSelect, CardList },
   data() {
     return {
+      activeName: "first",
       bannerUrl: "",
       gradeList: [],
       tableData: [], //公告列表
@@ -262,8 +263,18 @@ export default {
   },
   mounted() {
     this.getActivityInfo();
+    if(this.$route.query.activeName!=undefined){
+      this.activeName=this.$route.query.activeName
+    }
   },
   methods: {
+    //切换
+    handleClick(tab) {
+      this.activeName=tab.name
+      this.$router.push({
+        query:merge(this.$route.query,{'activeName':tab.name})
+    })
+    },
     //获取所有的活动列表 主要是用做筛选
     async getActivityList() {
       let that = this;
@@ -472,7 +483,8 @@ export default {
         query: {
           period: this.PeriodGradeObjectid,
           id: id,
-          activityName: this.activityObject.title
+          activityName: this.activityObject.title,
+          activeName:this.activeName
         }
       });
     },
@@ -504,7 +516,7 @@ export default {
       let that = this;
       that.$router.push({
         path: "/goodWorks",
-        query: { id: id, activity_id: activity_id }
+        query: { id: id, activity_id: activity_id,activeName:this.activeName}
       });
     },
     //查看
@@ -512,7 +524,8 @@ export default {
       this.$router.push({
         path: "/home/seeInformation",
         query: {
-          id: id
+          id: id,
+          activityName:this.activeName
         }
       });
     },

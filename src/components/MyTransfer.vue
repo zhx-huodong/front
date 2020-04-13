@@ -27,7 +27,7 @@
       <div>
         <div v-for="(item,index) in addList" :key="index">
           <div
-            style="width:75px;height:30px;background:rgba(255,255,255,1);border:1px solid rgba(229,229,229,1);border-radius:4px;margin-left:30px; margin-bottom:5px;"
+            style="width:130px;height:30px;background:rgba(255,255,255,1);border:1px solid rgba(229,229,229,1);border-radius:4px;margin-left:30px; margin-bottom:5px;"
           >
             <p
               style="font-size:14px;color:rgba(51,51,51,1);line-height:30px;text-align:center"

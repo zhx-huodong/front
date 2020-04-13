@@ -43,7 +43,7 @@
               v-for="(item,index) in activityDetail.works.attachment"
               :key="index"
             >
-              <file-preview :fileObj="item" :showDownLoad="false"></file-preview>
+              <file-preview :fileObj="item" :showDownLoad="showDownLoad"></file-preview>
             </div>
           </div>
           <div class="content-item" v-if="!award">
@@ -130,7 +130,13 @@ export default {
       default() {
         return false;
       }
-    }
+    },
+    showDownLoad:{
+      type:Boolean,
+      default() {
+        return true;
+      }
+    },
   },
 
   data() {

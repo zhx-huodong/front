@@ -26,7 +26,9 @@
                   </template>
                 </el-table-column>
                 <el-table-column label="状态">
-                  <template slot-scope="scope"><p style="color:#1985F3;">{{ scope.row.process }}</p></template>
+                  <template slot-scope="scope">
+                    <p style="color:#1985F3;">{{ scope.row.process }}</p>
+                  </template>
                 </el-table-column>
                 <el-table-column label="报名日期">
                   <template
@@ -58,10 +60,13 @@
             <div class="user-info-wrap" v-if="user">
               <div class="user-head-left">
                 <img v-if="user.avatar!=''" :src="user.avatar" />
-                <img v-else src="../public/images/userIcon.png"/>
+                <img v-else src="../public/images/userIcon.png" />
               </div>
               <div class="user-head-right">
-                <div class="user-name">{{user.name}}<p style="color:#666;font-size:12px;margin-left:10px;">{{nowRole.name}}</p></div>
+                <div class="user-name">
+                  {{user.name}}
+                  <p style="color:#666;font-size:12px;margin-left:10px;">{{nowRole.name}}</p>
+                </div>
                 <div class="user-tel">{{user.mobile}}</div>
                 <div class="user-tel">{{nowRole.school_title}}</div>
               </div>
@@ -78,6 +83,7 @@
 <script>
 import HighCharts from "../components/highcharts";
 import api from "../service/api";
+import { setCookie, getCookie } from "../tools/tools";
 export default {
   name: "activity-center",
   components: { HighCharts },
@@ -89,8 +95,16 @@ export default {
       tableData: [],
       statusMap: {},
       abilityOpt: {},
-      gradeObj:{1:"幼教组",2:"小学组",4:"初中组",8:"高中组",16:"特教组",32:"中职组",64:"高教组"},//组别
-      nowRole:JSON.parse(localStorage.getItem("nowRole"))
+      gradeObj: {
+        1: "幼教组",
+        2: "小学组",
+        4: "初中组",
+        8: "高中组",
+        16: "特教组",
+        32: "中职组",
+        64: "高教组"
+      }, //组别
+      nowRole: JSON.parse(localStorage.getItem("nowRole"))
     };
   },
   computed: {
@@ -114,6 +128,7 @@ export default {
     this.getActivityList(params);
   },
   methods: {
+    
     //获取报名活动列表
     async getActivityList(params) {
       params.url = api.enroll;
@@ -121,19 +136,21 @@ export default {
       params.expand = "info,works,school,professional,award";
       await this.axiosGet(params)
         .then(res => {
-          this.tableData = res.items;
-          this.totalCount = res._meta.totalCount;
-          for(let i in this.tableData){
-            if(this.tableData[i].award.length>0){
-              this.tableData[i].process='已获奖'
-            }else if(this.tableData[i].score!=0){
-              this.tableData[i].process="已评分"
-            }else if(this.tableData[i].status==0){
-              this.tableData[i].process="已退回"
-            }else{
-              this.tableData[i].process="已提交"
+           
+            this.tableData = res.items;
+            this.totalCount = res._meta.totalCount;
+            for (let i in this.tableData) {
+              if (this.tableData[i].award.length > 0) {
+                this.tableData[i].process = "已获奖";
+              } else if (this.tableData[i].score != 0) {
+                this.tableData[i].process = "已评分";
+              } else if (this.tableData[i].status == 0) {
+                this.tableData[i].process = "已退回";
+              } else {
+                this.tableData[i].process = "已提交";
+              }
             }
-          }
+          
         })
         .catch(err => err);
     },
@@ -313,7 +330,6 @@ export default {
             img {
               width: 100%;
               height: 100%;
-              
             }
           }
           .user-head-right {

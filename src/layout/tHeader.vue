@@ -67,7 +67,7 @@ export default {
         { key: "home", name: "首页", hide: false },
         { key: "activeManager", name: "活动管理", hide: true },
         { key: "workReview", name: "专家评审", hide: true },
-        { key: "userCenter", name: "个人中心", hide: false }
+        { key: "userCenter", name: "个人中心", hide: true }
       ],
       adminTabs: [
         { key: "admin", name: "用户管理", hide: false },
@@ -87,7 +87,7 @@ export default {
         4: "专家",
         11: "老师",
         12: "学生",
-        13:"家长"
+        13: "家长"
       }
     };
   },
@@ -107,7 +107,7 @@ export default {
   },
   created() {},
   mounted() {
-    if (getCookie("x-api-key")) {
+    if (getCookie("x-api-key")!=undefined&&getCookie("x-api-key")) {
       this.$store.dispatch(
         "INIT_USER",
         JSON.parse(localStorage.getItem("user"))
@@ -137,7 +137,7 @@ export default {
     },
     getNowRole(newval, oldval) {
       if (newval.type !== oldval.type) {
-        if (getCookie("x-api-key")) {
+        if (getCookie("x-api-key")!=undefined&&getCookie("x-api-key")!='') {
           this.$store.dispatch(
             "INIT_USER",
             JSON.parse(localStorage.getItem("user"))
@@ -187,64 +187,77 @@ export default {
     },
     //检查角色类型
     checkRole() {
-      if (this.$store.state.account.nowRole.type == 0) {
-        this.tabs = this.adminTabs;
-        this.activeTab = "admin";
-        this.$router.push("/admin");
-        this.levelList = [
-          { path: "/admin", name: "用户管理", meta: { title: "用户管理" } }
-        ];
-      } else {
-        if (
-          this.$store.state.account.nowRole.type == 1 ||
-          this.$store.state.account.nowRole.type == 2 ||
-          this.$store.state.account.nowRole.type == 3
-        ) {
-          for (let i in this.normalTabs) {
-            if (this.normalTabs[i].key == "activeManager") {
-              this.normalTabs[i].hide = false;
-            } else if (this.normalTabs[i].key == "workReview") {
-              this.normalTabs[i].hide = true;
+      if (this.$store.state.account.nowRole.type != undefined&&this.$store.state.account.nowRole.type!=null) {
+        console.log("this.$store.state.account.nowRole===",this.$store.state.account.nowRole)
+        if (this.$store.state.account.nowRole.type == 0) {
+          this.tabs = this.adminTabs;
+          this.activeTab = "admin";
+          this.$router.push("/admin");
+          this.levelList = [
+            { path: "/admin", name: "用户管理", meta: { title: "用户管理" } }
+          ];
+        } else {
+          if (
+            this.$store.state.account.nowRole.type == 1 ||
+            this.$store.state.account.nowRole.type == 2 ||
+            this.$store.state.account.nowRole.type == 3
+          ) {
+            for (let i in this.normalTabs) {
+              if (this.normalTabs[i].key == "activeManager") {
+                this.normalTabs[i].hide = false;
+              } else if (this.normalTabs[i].key == "workReview") {
+                this.normalTabs[i].hide = true;
+              }
+              if (this.normalTabs[i].key == "userCenter") {
+                this.normalTabs[i].hide = false;
+              }
+            }
+          } else if (this.$store.state.account.nowRole.type == 4) {
+            for (let i in this.normalTabs) {
+              if (this.normalTabs[i].key == "workReview") {
+                this.normalTabs[i].hide = false;
+              } else if (this.normalTabs[i].key == "activeManager") {
+                this.normalTabs[i].hide = true;
+              }
+              if (this.normalTabs[i].key == "userCenter") {
+                this.normalTabs[i].hide = false;
+              }
+            }
+          } else if (
+            this.$store.state.account.nowRole.type == 11 ||
+            this.$store.state.account.nowRole.type == 12 ||
+            this.$store.state.account.nowRole.type == 13
+          ) {
+            for (let i in this.normalTabs) {
+              if (this.normalTabs[i].key == "workReview") {
+                this.normalTabs[i].hide = true;
+              } else if (this.normalTabs[i].key == "activeManager") {
+                this.normalTabs[i].hide = true;
+              }
+              if (this.normalTabs[i].key == "userCenter") {
+                this.normalTabs[i].hide = false;
+              }
             }
           }
-        } else if (this.$store.state.account.nowRole.type == 4) {
-          for (let i in this.normalTabs) {
-            if (this.normalTabs[i].key == "workReview") {
-              this.normalTabs[i].hide = false;
-            } else if (this.normalTabs[i].key == "activeManager") {
-              this.normalTabs[i].hide = true;
-            }
-          }
-        } else if (
-          this.$store.state.account.nowRole.type == 11 ||
-          this.$store.state.account.nowRole.type == 12 ||
-          this.$store.state.account.nowRole.type == 13
-        ) {
-          for (let i in this.normalTabs) {
-            if (this.normalTabs[i].key == "workReview") {
-              this.normalTabs[i].hide = true;
-            } else if (this.normalTabs[i].key == "activeManager") {
-              this.normalTabs[i].hide = true;
-            }
-          }
+          this.tabs = this.normalTabs;
+          this.$router.push("/home");
+          this.activeTab = "home";
+          this.levelList = [
+            { path: "/home", name: "首页", meta: { title: "首页" } }
+          ];
         }
-        this.tabs = this.normalTabs;
-        this.$router.push("/home");
-        this.activeTab = "home";
-        this.levelList = [
-          { path: "/home", name: "首页", meta: { title: "首页" } }
-        ];
       }
     },
     //角色切换
     async roleClick(type) {
-      console.log("type===", type);
       let params = {};
       params.type = type;
       params.url = api.switchToken;
       await this.axiosGet(params)
         .then(res => {
-          setCookie("x-api-key", res.token);
+          if(res.token!=undefined){
+            setCookie("x-api-key", res.token);
+          }
           this.$store.dispatch("INIT_USER", res);
           let userInfo = JSON.stringify(res);
           localStorage.setItem("user", userInfo);

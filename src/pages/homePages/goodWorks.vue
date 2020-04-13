@@ -1,7 +1,8 @@
 <template>
   <div class="good-work-container">
     <el-card style="min-height:600px">
-      <works-preview :id="activity_id" :award="true" ></works-preview>
+      <works-preview :id="activity_id" :award="true" :showDownLoad='false'></works-preview>
+      <div class="like_counts"><p @click="onlike" class="el-icon-thumb">点赞</p></div>
     </el-card>
   </div>
 </template>
@@ -79,11 +80,10 @@ export default {
         .catch(err => err);
     },
     //点赞
-    async onlike(id) {
+    async onlike() {
       let that = this;
       let params = {};
-      //  console.log(that.apiKey);
-      params.id = id;
+      params.id = this.id;
       axios
         .get(api.like, {
           params: params,
@@ -136,7 +136,9 @@ export default {
       }
     }
   }
-  .like_counts {
+  
+}
+.like_counts {
     cursor: pointer;
     margin: 0 auto;
     display: flex;
@@ -145,14 +147,14 @@ export default {
     align-items: center;
     width: 65px;
     height: 40px;
-    margin-top: 100px;
+    margin-top: 30px;
     background: rgba(255, 227, 0, 1);
     border-radius: 24px;
     p {
+      line-height: 40px;
       font-size: 12px;
     }
   }
-}
 </style>
 <style lang="scss">
 #goodWorks {
