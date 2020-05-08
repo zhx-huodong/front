@@ -16,7 +16,7 @@
             <P style="width:70px;margin-left:25px">项目介绍:</P>
             <my-editor @editorChange="editorChange" :inputtext="this.form.content"></my-editor>
           </div>
-          <el-form-item label="学生人数上限:" prop="author_limit">
+          <el-form-item label="作者人数上限:" prop="author_limit">
             <el-col :span="9">
               <el-input-number
                 v-model="form.author_limit"
@@ -195,6 +195,23 @@ export default {
         {
           value: 500,
           label: "500MB"
+        },
+        {
+          value: 700,
+          label: "700MB"
+        },
+        {
+          value: 800,
+          label: "800MB"
+        },
+        {
+          value: 1024,
+          label: "1GB"
+        }
+        ,
+        {
+          value: 2048,
+          label: "2GB"
         }
       ],
       flag: "",
@@ -263,7 +280,7 @@ export default {
     //大小限制
     ChangeFormatsSize(value,index) {
       console.log(value,index);
-      let remark={'0':"大小不超过1MB",'5':"大小不超过5MB",'10':"大小不超过10MB",'20':"大小不超过50MB",'100':"大小不超过100MB",'500':"大小不超过500MB"};
+      let remark={'0':"大小不超过1MB",'5':"大小不超过5MB",'10':"大小不超过10MB",'20':"大小不超过50MB",'100':"大小不超过100MB",'500':"大小不超过500MB",'700':"大小不超过700MB",'800':"大小不超过800MB",'1024':"大小不超过1GB",'2048':"大小不超过2GB"};
       this.form.formats[index].remark2 = remark[value];
       this.form.formats[index].remark=this.form.formats[index].remark1+","+this.form.formats[index].remark2;
       console.log("index==",index,"value===",value)

@@ -15,6 +15,12 @@
             <div class="sub-title" style="color:red;font-weight:700">退回详情</div>
             <div class="content" v-html="activityDetail.comment" style="color:red;font-weight:700"></div>
           </div>
+          <div class="content-item" v-if="activityDetail.works.cover!=''">
+              <div class="sub-title">作品封面</div>
+              <div class="content" >
+                <el-image :src="activityDetail.works.cover" :fit="cover"></el-image>
+              </div>
+            </div>
           <div class="content-item">
             <div class="sub-title">创作思想</div>
             <div class="content" v-html="activityDetail.works.content.content"></div>
