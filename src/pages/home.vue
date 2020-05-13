@@ -6,8 +6,12 @@
                     <type-select :gradeList="gradeList" :activityObjectList="activityObjectList" :regionList="regionList" @gradeObject='gradeObject' 
                     @regionObject="regionObject" @activityObject="activityObject" ></type-select>
                 </div> -->
-                <div class="home-activity-list" v-if="activityList">
+                <div class="home-activity-list" v-if="list.length>0">
                     <card-list :cardList="list" @toNext="toNext"></card-list>
+                </div>
+                <div v-else class="no-data">
+                    <img src="../public/images/empty.png" alt="">
+                    <div>没有相关活动</div>
                 </div>
             </div> 
         </el-card> 
@@ -49,14 +53,7 @@ export default {
                     {"id":"736","pid":"77","type":"3","name":"大鹏区"}
                 
             ],
-            activityList: [
-                { id: 1, name: '深圳市中小学电脑制作大赛', imgUrl: require('../public/images/ac1.png') }, 
-                { id: 2, name: '深圳市中小学电脑机器人活动', imgUrl: require('../public/images/ac2.png') }, 
-                { id: 3, name: '深圳市中小学网络夏令营', imgUrl: require('../public/images/ac3.png') }, 
-                { id: 4, name: '深圳市中小学微课大赛', imgUrl: require('../public/images/ac4.png') }, 
-                { id: 5, name: '深圳市中小学说课大赛', imgUrl: require('../public/images/ac5.png') }, 
-                { id: 6, name: '深圳市AI知识大赛', imgUrl: require('../public/images/ac6.png') }
-            ], // 活动列表
+            activityList: [], // 活动列表
             // gradeList:[
             //     { id: 0, name: '全部' },
             //     { id: 1, name: '小学组' },
@@ -149,9 +146,21 @@ export default {
             border-radius: 4px;
             margin-bottom: 20px;
         }
-        .home-activity-list{
-            // margin-top:30px;
-        }
+       .no-data{
+           width: 100%;
+           display: flex;
+           justify-content: center;
+           flex-direction: column;
+           align-items: center;
+           img{
+               width: 200px;
+               height: 100%;
+           }
+           font-size: 32px;
+        //    font-weight: bold;
+           color: #DCDCDC;
+           margin-top: 100px;
+       }
         
     }
 }

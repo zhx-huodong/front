@@ -54,9 +54,9 @@
                         <el-col :span="2">
                             <el-button type="danger" plain size="small" @click="goToBatchForbidden">批量禁用</el-button>
                         </el-col>
-                        <el-col :span="2">
+                        <!-- <el-col :span="2">
                             <el-button type="danger" plain size="small" @click="goToBatchDelete">批量删除</el-button>
-                        </el-col>
+                        </el-col> -->
                     </el-row>
                     <el-row>
                         <el-table
@@ -129,7 +129,7 @@
                                     <el-button  type="text" size="small" style="color:#999;">已禁用</el-button>
                                     <el-button @click="goToRelieve(scope.row.id)" type="text" size="small">解禁</el-button>
                                 </template>
-                                <el-button @click="goToDelete(scope.row.id)" type="text" size="small" style="color:red;">删除</el-button>
+                                <el-button @click="goToDelete(scope.row.id,scope.row.openid)" type="text" size="small" style="color:red;">删除</el-button>
                             </template>
                             </el-table-column>
                         </el-table>
@@ -333,12 +333,13 @@
                 this.open(id,status)
             },
             //删除
-            goToDelete(id){
+            goToDelete(id,openid){
+                let openId='del_'+openid+"_"+Date.parse(new Date())/1000
                 let status=-1
-                this.open(id,status)
+                this.open(id,status,openId)
             },
             //提示框
-            open(id,status) {
+            open(id,status,openid) {
                 let tag=''
                 if(status==0){
                     tag='禁止该用户使用改系统'
@@ -353,6 +354,7 @@
                     let params={}
                     params.id=id
                     params.status=status
+                    params.openid=openid
                     this.updateUser(params) 
                 }).catch(() => {
                     this.$message({
