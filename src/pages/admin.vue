@@ -354,7 +354,7 @@
                     let params={}
                     params.id=id
                     params.status=status
-                    params.openid=openid
+                    // params.openid=openid
                     this.updateUser(params) 
                 }).catch(() => {
                     this.$message({
