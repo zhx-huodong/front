@@ -47,6 +47,11 @@
             ></upload-file>
           </div>
         </el-form-item>
+        <el-form-item label="活动对象 :">
+          <el-checkbox-group v-model="target" @change="targetCheckedChange">
+            <el-checkbox v-for="item in targetList" :label="item" :key="item.id">{{item.name}}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
 
         <el-form-item label="活动类型 :">
           <span class="mybtn" @click="addclassFlag=true,edit_1=false">+添加类别</span>
@@ -90,11 +95,7 @@
             <el-checkbox v-for="item in regionList" :label="item" :key="item.id">{{item.name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="活动对象 :">
-          <el-checkbox-group v-model="target" @change="targetCheckedChange">
-            <el-checkbox v-for="item in targetList" :label="item" :key="item.id">{{item.name}}</el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
+        
         <el-form-item label="作品上传 :">
           <el-date-picker
             v-model="upload"
@@ -199,8 +200,7 @@ export default {
       isIndeterminate2: true,
       targetList: [
         { name: "老师", id: 1, checked: false },
-        { name: "学生", id: 2, checked: false },
-        { name: "家长", id: 4, checked: false }
+        { name: "学生", id: 2, checked: false }
       ],
       addActivityForm: {
         title: "",

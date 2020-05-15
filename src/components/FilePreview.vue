@@ -2,7 +2,7 @@
   <div class="container">
     <!-- 图片 -->
     <div class="picture-items" v-if="type==1">
-      <el-image :src="fileObj.url" fit="cover"></el-image>
+      <el-image :src="fileObj.url" fit="contain"></el-image>
       <div class="operate">
         <p class="el-icon-zoom-in" @click="goToPreview(fileObj.url)"></p>
       </div>
@@ -144,6 +144,7 @@ export default {
     border-radius: 4px;
     border: 1px solid #198af3;
     // background: #000;
+    background: rgba(0, 0, 0, 0.8);
   }
   p {
     font-size: 14px;
@@ -155,6 +156,7 @@ export default {
     border: 1px solid #198af3;
     border-radius: 4px;
     // background: #000;
+    background: rgba(0, 0, 0, 0.8);
   }
   .operate {
     top: 0px;

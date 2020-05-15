@@ -248,6 +248,7 @@ export default {
     },
     //活动管理
     goToManagerCenter(id) {
+      sessionStorage.setItem("addActivityForm",null)
       this.$router.push({
         path: "/activeManager/managerCenter",
         query: {
