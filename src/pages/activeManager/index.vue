@@ -39,7 +39,9 @@
                     <p class="font1">{{item.title}}</p>
                     <p>
                       活动对象：
-                      【{{targetObj[item.target]}}】
+                      <template v-for="subItem in item.target">
+                        【{{targetObj[subItem]}}】
+                      </template>
                     </p>
                     <p>活动范围：
                       <template v-if="item.region.length<12" v-for="(subItem,index1) in item.region">
@@ -195,17 +197,11 @@ export default {
       }
       let res = await this.axiosGet(params)
         .then(res => {
+          let arr=[1,2]
+          for(let i in res.items){
+            res.items[i].target=this.getSubSet(res.items[i].target,arr)
+          }
           this.activityList = res.items;
-          // console.log("我看看这里",this.form.time);
-          // 数据清除
-          // {
-            // this.time1 = "";
-            // this.time2 = "";
-            // this.form.time = "";
-            // this.form.acitvename = "";
-            //我屏蔽掉的原因是因为搜索框那边点击搜索之后就置空了
-          // }
-          // this.form.time =[];
         })
         .catch(err => err);
     },

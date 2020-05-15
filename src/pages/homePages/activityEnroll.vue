@@ -43,6 +43,95 @@
           </template>
         </el-form-item>
 
+        <el-form-item label="作品上传：" :rules="{ required: true, message: '请上传作品', trigger: 'blur' }">
+          <div
+            style="width:700px;margin-bottom:20px;"
+            v-for="(item,index) in activityProjectDetail.formats"
+            :key="index"
+          >
+            <upload-file
+              :uploadType="uploadTypeObj[item.type]"
+              :myFileList="item.fileList"
+              @uploadSuccess="(data)=>{return upsuccess(data,item.id,item.type)}"
+              :name="'上传'+uploadTypeChar[item.type]+'格式作品'"
+              :fileLimit="item.size"
+            ></upload-file>
+            <p class="limit">{{item.remark}}</p>
+          </div>
+        </el-form-item>
+        <el-form-item label="报名登记表：" :rules="{ required: true, message: '请上传报名登记', trigger: 'blur' }">
+          <upload-picture
+            :uploadType="'picture'"
+            :max="1"
+            :myPictureList="form.registration"
+            @uploadSuccess="registrationSuccess"
+            :name="'上传登记表'"
+            style="min-width:200px;"
+          ></upload-picture>
+          <span class="limit">仅支持JPG,PNG格式</span>
+        </el-form-item>
+
+        <el-form-item label="学校：" :rules="{ required: true, message: '请填写学校', trigger: 'blur' }">
+          <el-select v-model="form.school_id" filterable placeholder="请选择" size="small" @change="schoolChange">
+            <el-option
+              v-for="item in schoolList"
+              :key="item.id"
+              :label="item.title"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="作者：" :rules="{ required: true, message: '请填写作者', trigger: 'blur' }">
+          <el-row>
+            <el-col>
+              <el-row v-for="(item,index) in authorList" :key="index">
+                <el-col :span="1" style="color:#999;">姓名:</el-col>
+                <el-col :span="4">
+                  <el-input size="small" v-model="item.name"></el-input>
+                </el-col>
+                <el-col :span="1" style="color:#999;" :offset="1">电话:</el-col>
+                <el-col :span="4">
+                  <el-input size="small" v-model="item.mobile"></el-input>
+                </el-col>
+                <el-col :span="2" :offset="1">
+                  <i class="el-icon-circle-close" style="font-size:18px;color:red;cursor:pointer" @click="deleteAuthor(index)"></i>
+                </el-col>
+              </el-row>
+            </el-col>
+            <el-col>
+              <el-button size="small" type="primary" @click="addAuthor()">添加</el-button>
+              <span class="limit leftpad">限制{{author_limit}}人</span>
+            </el-col>
+          </el-row>
+        </el-form-item>
+        <el-form-item label="指导老师：">
+          <el-row>
+            <el-col>
+              <el-row v-for="(item,index) in teacherList" :key="index">
+                <el-col :span="1" style="color:#999;">姓名:</el-col>
+                <el-col :span="4">
+                  <el-input size="small" v-model="item.name"></el-input>
+                </el-col>
+                <el-col :span="1" style="color:#999;" :offset="1">电话:</el-col>
+                <el-col :span="4">
+                  <el-input size="small" v-model="item.mobile"></el-input>
+                </el-col>
+                <el-col :span="2" :offset="1">
+                  <i class="el-icon-circle-close" style="font-size:18px;color:red;cursor:pointer" @click="deleteTeacher(index)"></i>
+            
+                </el-col>
+              </el-row>
+            </el-col>
+            <el-col>
+              <el-button size="small" type="primary" @click="addTeacher()">添加</el-button>
+              <span class="limit leftpad">限制{{mentor_limit}}人</span>
+            </el-col>
+          </el-row>
+        </el-form-item>
+        <el-form-item label="作者邮箱：" :rules="{ required: true, message: '请填写作者邮箱', trigger: 'blur' }">
+          <el-input v-model="form.email" placeholder="请输入电子邮箱" style="width:400px;" size="small"></el-input>
+        </el-form-item>
+
         <div class="my-editerContain">
           <P><span style="color:red;font-size:14px;">*</span>创作思想:</P>
           <my-editor @editorChange="editorChange" :inputtext="inputtext"></my-editor>
@@ -84,93 +173,8 @@
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="作品上传：" :rules="{ required: true, message: '请上传作品', trigger: 'blur' }">
-          <div
-            style="width:700px;margin-bottom:20px;"
-            v-for="(item,index) in activityProjectDetail.formats"
-            :key="index"
-          >
-            <upload-file
-              :uploadType="uploadTypeObj[item.type]"
-              :myFileList="item.fileList"
-              @uploadSuccess="(data)=>{return upsuccess(data,item.id,item.type)}"
-              :name="'上传'+uploadTypeChar[item.type]+'格式作品'"
-              :fileLimit="item.size"
-            ></upload-file>
-            <p class="limit">{{item.remark}}</p>
-          </div>
-        </el-form-item>
-        <el-form-item label="报名登记表：" :rules="{ required: true, message: '请上传报名登记', trigger: 'blur' }">
-          <upload-picture
-            :uploadType="'picture'"
-            :max="1"
-            :myPictureList="form.registration"
-            @uploadSuccess="registrationSuccess"
-            :name="'上传登记表'"
-            style="min-width:200px;"
-          ></upload-picture>
-          <span class="limit">仅支持JPG,PNG格式</span>
-        </el-form-item>
-        <el-form-item label="学校：" :rules="{ required: true, message: '请填写学校', trigger: 'blur' }">
-          <el-select v-model="form.school_id" filterable placeholder="请选择" size="small" @change="schoolChange">
-            <el-option
-              v-for="item in schoolList"
-              :key="item.id"
-              :label="item.title"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="作者：" :rules="{ required: true, message: '请填写作者', trigger: 'blur' }">
-          <el-row>
-            <el-col>
-              <el-row v-for="(item,index) in authorList" :key="index">
-                <el-col :span="1" style="color:#999;">姓名:</el-col>
-                <el-col :span="4">
-                  <el-input size="small" v-model="item.name"></el-input>
-                </el-col>
-                <el-col :span="1" style="color:#999;" :offset="1">电话:</el-col>
-                <el-col :span="4">
-                  <el-input size="small" v-model="item.mobile"></el-input>
-                </el-col>
-                <el-col :span="2" :offset="1">
-                  <i class="el-icon-circle-close" style="font-size:18px;color:red;cursor:pointer" @click="deleteAuthor(index)"></i>
-                </el-col>
-              </el-row>
-            </el-col>
-            <el-col>
-              <el-button size="small" type="primary" @click="addAuthor()">添加</el-button>
-              <span class="limit leftpad">限制{{author_limit}}人</span>
-            </el-col>
-          </el-row>
-        </el-form-item>
-        <el-form-item label="指导老师：" :rules="{ required: true, message: '请填写指导老师', trigger: 'blur' }">
-          <el-row>
-            <el-col>
-              <el-row v-for="(item,index) in teacherList" :key="index">
-                <el-col :span="1" style="color:#999;">姓名:</el-col>
-                <el-col :span="4">
-                  <el-input size="small" v-model="item.name"></el-input>
-                </el-col>
-                <el-col :span="1" style="color:#999;" :offset="1">电话:</el-col>
-                <el-col :span="4">
-                  <el-input size="small" v-model="item.mobile"></el-input>
-                </el-col>
-                <el-col :span="2" :offset="1">
-                  <i class="el-icon-circle-close" style="font-size:18px;color:red;cursor:pointer" @click="deleteTeacher(index)"></i>
-            
-                </el-col>
-              </el-row>
-            </el-col>
-            <el-col>
-              <el-button size="small" type="primary" @click="addTeacher()">添加</el-button>
-              <span class="limit leftpad">限制{{mentor_limit}}人</span>
-            </el-col>
-          </el-row>
-        </el-form-item>
-        <el-form-item label="作者邮箱：" :rules="{ required: true, message: '请填写作者邮箱', trigger: 'blur' }">
-          <el-input v-model="form.email" placeholder="请输入电子邮箱" style="width:400px;" size="small"></el-input>
-        </el-form-item>
+        
+        
       </el-form>
       <el-row>
         <el-col :span="5" :offset="5">
@@ -777,6 +781,11 @@ export default {
         font-size: 14px;
         color: #666;
         line-height: 30px;
+        .el-image{
+          height: 180px;
+          width: 260px;
+          border-radius: 8px;
+        }
       }
     }
   }

@@ -18,7 +18,7 @@
                   :description="formatDateChar(activityObject.node[1].stime*1000)+'--'+formatDateChar(activityObject.node[1].etime*1000)"
                 ></el-step>
                 <el-step
-                  title="市级审批"
+                  title="市级评审"
                   :description="formatDateChar(activityObject.node[2].stime*1000)+'--'+formatDateChar(activityObject.node[2].etime*1000)"
                 ></el-step>
                 <el-step
@@ -52,10 +52,9 @@
                 </div>
                 <div
                   class="list-item-content"
-                  v-for="(item,index) in targetList"
+                  v-for="(item,index) in activityObject.target"
                   :key="index"
-                  v-if="item.id==activityObject.target"
-                >【{{item.name}}】</div>
+                >【{{targetObj[item]}}】</div>
               </div>
               <div class="list-item">
                 <div class="list-item-title">
@@ -236,6 +235,7 @@ export default {
         { name: "中职组", id: 32 },
         { name: "高教组", id: 64 }
       ],
+      targetObj: { 1: "老师",  2: "学生", 4: "家长"},
       targetList: [
         { name: "老师", id: 1 },
         { name: "学生", id: 2 },
@@ -408,6 +408,7 @@ export default {
               );
             }
           }
+          this.activityObject.target=this.getSubSet(this.activityObject.target,[1,2]);
           let nowTime = Date.parse(new Date());
           if (res.node[0].stime * 1000 <= nowTime) {
             this.process = 1;

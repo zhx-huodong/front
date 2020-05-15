@@ -301,11 +301,16 @@ export default {
         this.checkAll = this.region.length == this.regionList.length;
         this.isIndeterminate = !(this.region.length == this.regionList.length);
         if (this.addActivityForm.target != "") {
-          for (let h in this.targetList) {
-            if (this.targetList[h].id == this.addActivityForm.target) {
-              this.target.push(this.targetList[h]);
+          let arr=[1,2]
+          let newTargetList=this.getSubSet(this.addActivityForm.target,arr)
+          for(let g in newTargetList){
+            for (let h in this.targetList) {
+              if (this.targetList[h].id == newTargetList[g]) {
+                this.target.push(this.targetList[h]);
+              }
             }
           }
+          
         }
         this.inputtext = this.addActivityForm.content;
         if (this.addActivityForm.upload.stime != undefined) {
@@ -529,11 +534,15 @@ export default {
     },
     //活动对象
     targetCheckedChange(val) {
-      this.target = [];
-      this.target.push(val[val.length - 1]);
+      
+      this.target = val;
+      // this.target.push(val[val.length - 1]);
+      let targetNum=0
       for (let i in this.target) {
-        this.addActivityForm.target = this.target[i].id;
+        targetNum += parseInt(this.target[i].id);
       }
+      this.addActivityForm.target=targetNum
+      console.log("val===",this.addActivityForm,"target====",this.target)
       sessionStorage.setItem(
         "addActivityForm",
         JSON.stringify(this.addActivityForm)

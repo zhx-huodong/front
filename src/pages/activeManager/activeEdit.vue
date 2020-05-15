@@ -123,9 +123,6 @@ export default {
         author_limit: [
           { required: true, message: "学生上限必填", trigger: "blur" }
         ],
-        mentor_limit: [
-          { required: true, message: "指导老师上限必填", trigger: "blur" }
-        ],
         formats:[
           {
             type: "array",
