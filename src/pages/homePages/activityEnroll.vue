@@ -26,50 +26,6 @@
             :disabled="true"
           ></el-input>
         </el-form-item>
-        <el-form-item label="作品名称：" :rules="{ required: true, message: '请输入作品名称', trigger: 'blur' }">
-          <el-input v-model="form.title" placeholder="请输入作品名称" style="width:400px;" size="small"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="作品封面：" :rules="{ required: true, message: '请上传作品封面', trigger: 'blur' }">
-          <template>
-            <upload-picture
-              :uploadType="'picture'"
-              :max="1"
-              :myPictureList="form.cover"
-              @uploadSuccess="coverSuccess"
-              :name="'上传作品封面'"
-            ></upload-picture>
-            <span class="limit">仅支持JPG,PNG格式</span>
-          </template>
-        </el-form-item>
-
-        <el-form-item label="作品上传：" :rules="{ required: true, message: '请上传作品', trigger: 'blur' }">
-          <div
-            style="width:700px;margin-bottom:20px;"
-            v-for="(item,index) in activityProjectDetail.formats"
-            :key="index"
-          >
-            <upload-file
-              :uploadType="uploadTypeObj[item.type]"
-              :myFileList="item.fileList"
-              @uploadSuccess="(data)=>{return upsuccess(data,item.id,item.type)}"
-              :name="'上传'+uploadTypeChar[item.type]+'格式作品'"
-              :fileLimit="item.size"
-            ></upload-file>
-            <p class="limit">{{item.remark}}</p>
-          </div>
-        </el-form-item>
-        <el-form-item label="报名登记表：" :rules="{ required: true, message: '请上传报名登记', trigger: 'blur' }">
-          <upload-picture
-            :uploadType="'picture'"
-            :max="1"
-            :myPictureList="form.registration"
-            @uploadSuccess="registrationSuccess"
-            :name="'上传登记表'"
-            style="min-width:200px;"
-          ></upload-picture>
-          <span class="limit">仅支持JPG,PNG格式</span>
-        </el-form-item>
 
         <el-form-item label="学校：" :rules="{ required: true, message: '请填写学校', trigger: 'blur' }">
           <el-select v-model="form.school_id" filterable placeholder="请选择" size="small" @change="schoolChange">
@@ -104,7 +60,12 @@
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item label="指导老师：">
+
+        <el-form-item label="作者邮箱：" :rules="{ required: true, message: '请填写作者邮箱', trigger: 'blur' }">
+          <el-input v-model="form.email" placeholder="请输入电子邮箱" style="width:400px;" size="small"></el-input>
+        </el-form-item>
+
+        <el-form-item label="指导老师：" v-if="mentor_limit>0">
           <el-row>
             <el-col>
               <el-row v-for="(item,index) in teacherList" :key="index">
@@ -128,11 +89,14 @@
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item label="作者邮箱：" :rules="{ required: true, message: '请填写作者邮箱', trigger: 'blur' }">
-          <el-input v-model="form.email" placeholder="请输入电子邮箱" style="width:400px;" size="small"></el-input>
+
+        <el-form-item label="作品名称：" :rules="{ required: true, message: '请输入作品名称', trigger: 'blur' }">
+          <el-input v-model="form.title" placeholder="请输入作品名称" style="width:400px;" size="small"
+          ></el-input>
         </el-form-item>
 
-        <div class="my-editerContain">
+
+        <!-- <div class="my-editerContain">
           <P><span style="color:red;font-size:14px;">*</span>创作思想:</P>
           <my-editor @editorChange="editorChange" :inputtext="inputtext"></my-editor>
         </div>
@@ -171,10 +135,79 @@
             placeholder="请填写其他说明"
             style="width:715px;"
           ></el-input>
+        </el-form-item> -->
+
+        <el-form-item>
+            <div v-for="(item,index) in fields" :key="index">
+              <single-text-box
+                :dataObj="item"
+                v-if="item.type==1"
+              ></single-text-box>
+              <multi-text-box
+                :dataObj="item"
+                v-if="item.type==2"
+              ></multi-text-box>
+              <number-box
+                :dataObj="item"
+                v-if="item.type==3"
+              ></number-box>
+              <select-box
+                :dataObj="item"
+                v-if="item.type==9"
+              ></select-box>
+              <single-check-box
+                :dataObj="item"
+                v-if="item.type==7"
+              ></single-check-box>
+              <multi-check-box
+                :dataObj="item"
+                v-if="item.type==8"
+              ></multi-check-box>
+            </div>
+          </el-form-item>
+
+        <el-form-item label="报名登记表：" :rules="{ required: true, message: '请上传报名登记', trigger: 'blur' }">
+          <upload-picture
+            :uploadType="'picture'"
+            :max="10"
+            :myPictureList="form.registration"
+            @uploadSuccess="registrationSuccess"
+            :name="'上传登记表'"
+            style="min-width:200px;"
+          ></upload-picture>
+          <span class="limit">仅支持JPG,PNG格式</span>
         </el-form-item>
 
-        
-        
+        <el-form-item label="作品封面：" :rules="{ required: true, message: '请上传作品封面', trigger: 'blur' }">
+          <template>
+            <upload-picture
+              :uploadType="'picture'"
+              :max="1"
+              :myPictureList="form.cover"
+              @uploadSuccess="coverSuccess"
+              :name="'上传作品封面'"
+            ></upload-picture>
+            <span class="limit">仅支持JPG,PNG格式</span>
+          </template>
+        </el-form-item>
+
+        <el-form-item label="作品上传：" :rules="{ required: true, message: '请上传作品', trigger: 'blur' }">
+          <div
+            style="width:700px;margin-bottom:20px;"
+            v-for="(item,index) in activityProjectDetail.formats"
+            :key="index"
+          >
+            <upload-file
+              :uploadType="uploadTypeObj[item.type]"
+              :myFileList="item.fileList"
+              @uploadSuccess="(data)=>{return upsuccess(data,item.id,item.type)}"
+              :name="'上传'+uploadTypeChar[item.type]+'格式作品'"
+              :fileLimit="item.size"
+            ></upload-file>
+            <p class="limit">{{item.remark}}</p>
+          </div>
+        </el-form-item>
+
       </el-form>
       <el-row>
         <el-col :span="5" :offset="5">
@@ -280,8 +313,14 @@ import { getCookie, axiosGet, axiosPost, axiosPut } from "../../tools/tools";
 import UploadPicture from "../../components/UploadPicture";
 import UploadFile from "../../components/UploadFile";
 import FilePreview from "../../components/FilePreview";
+import SingleTextBox from "../../components/SingleTextBox";
+import MultiTextBox from "../../components/MultiTextBox";
+import NumberBox from "../../components/NumberBox";
+import SelectBox from "../../components/SelectBox";
+import SingleCheckBox from "../../components/SingleCheckBox";
+import MultiCheckBox from "../../components/MultiCheckBox";
 export default {
-  components: { MyEditor, UploadPicture, UploadFile,FilePreview },
+  components: { MyEditor, UploadPicture, UploadFile,FilePreview,SingleTextBox,MultiTextBox,NumberBox,SelectBox,SingleCheckBox,MultiCheckBox },
   data() {
     return {
       headers: {
@@ -343,7 +382,8 @@ export default {
         64: "高教组"
       },
       showPreview:false,
-      detailObj:{}
+      detailObj:{},
+      fields:[],//自定义内容类型
     };
   },
   created() {
@@ -466,13 +506,14 @@ export default {
       let params = {};
       params.url = api.activityCategory;
       params.id = this.activityProjectId;
-      params.expand = "content,formats";
+      params.expand = "content,formats,fields";
       await this.axiosGet(params)
         .then(res => {
           this.activityProjectDetail = res;
           this.form.activityProject = res.title;
           this.author_limit = res.author_limit;
           this.mentor_limit = res.mentor_limit;
+          this.fields=res.fields
         })
         .catch(err => err);
     },
