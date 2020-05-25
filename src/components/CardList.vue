@@ -78,6 +78,7 @@
         border-radius:8px;
       }
       .card-name{
+        width:260px;
         p{
           margin:0;
           padding:0;

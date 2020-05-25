@@ -7,99 +7,136 @@
       <el-divider></el-divider>
       <el-row>
         <el-col :span="20" :offset="2">
-      <el-form ref="form" :model="form" label-width="120px">
-        <el-form-item label="活动名称：">
-          <el-input
-            v-model="form.activityName"
-            placeholder="请输入活动名称"
-            style="width:400px;"
-            size="small"
-            :disabled="true"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="活动项目：">
-          <el-input
-            v-model="form.activityProject"
-            placeholder="请输入活动项目"
-            style="width:400px;"
-            size="small"
-            :disabled="true"
-          ></el-input>
-        </el-form-item>
+          <el-form ref="form" :model="form" label-width="120px">
+            <el-form-item label="活动名称：">
+              <el-input
+                v-model="form.activityName"
+                placeholder="请输入活动名称"
+                style="width:400px;"
+                size="small"
+                :disabled="true"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="活动项目：">
+              <el-input
+                v-model="form.activityProject"
+                placeholder="请输入活动项目"
+                style="width:400px;"
+                size="small"
+                :disabled="true"
+              ></el-input>
+            </el-form-item>
 
-        <el-form-item label="学校：" :rules="{ required: true, message: '请填写学校', trigger: 'blur' }">
-          <el-select v-model="form.school_id" filterable placeholder="请选择" size="small" @change="schoolChange">
-            <el-option
-              v-for="item in schoolList"
-              :key="item.id"
-              :label="item.title"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="作者：" :rules="{ required: true, message: '请填写作者', trigger: 'blur' }">
-          <el-row>
-            <el-col>
-              <el-row v-for="(item,index) in authorList" :key="index">
-                <el-col :span="1" style="color:#999;">姓名:</el-col>
-                <el-col :span="4">
-                  <el-input size="small" v-model="item.name"></el-input>
+            <el-form-item
+              label="学校："
+              :rules="{ required: true, message: '请填写学校', trigger: 'blur' }"
+            >
+              <el-select
+                v-model="form.school_id"
+                filterable
+                placeholder="请选择"
+                size="small"
+                @change="schoolChange"
+              >
+                <el-option
+                  v-for="item in schoolList"
+                  :key="item.id"
+                  :label="item.title"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item
+              label="作者："
+              :rules="{ required: true, message: '请填写作者', trigger: 'blur' }"
+            >
+              <el-row>
+                <el-col>
+                  <el-row v-for="(item,index) in authorList" :key="index">
+                    <el-col :span="1" style="color:#999;">姓名:</el-col>
+                    <el-col :span="4">
+                      <el-input size="small" v-model="item.name"></el-input>
+                    </el-col>
+                    <el-col :span="1" style="color:#999;" :offset="1">电话:</el-col>
+                    <el-col :span="4">
+                      <el-input size="small" v-model="item.mobile"></el-input>
+                    </el-col>
+                    <el-col :span="2" :offset="1">
+                      <i
+                        class="el-icon-circle-close"
+                        style="font-size:18px;color:red;cursor:pointer"
+                        @click="deleteAuthor(index)"
+                      ></i>
+                    </el-col>
+                  </el-row>
                 </el-col>
-                <el-col :span="1" style="color:#999;" :offset="1">电话:</el-col>
-                <el-col :span="4">
-                  <el-input size="small" v-model="item.mobile"></el-input>
-                </el-col>
-                <el-col :span="2" :offset="1">
-                  <i class="el-icon-circle-close" style="font-size:18px;color:red;cursor:pointer" @click="deleteAuthor(index)"></i>
-                </el-col>
-              </el-row>
-            </el-col>
-            <el-col>
-              <el-button size="small" type="primary" @click="addAuthor()">添加</el-button>
-              <span class="limit leftpad">限制{{author_limit}}人</span>
-            </el-col>
-          </el-row>
-        </el-form-item>
-
-        <el-form-item label="作者邮箱：" :rules="{ required: true, message: '请填写作者邮箱', trigger: 'blur' }">
-          <el-input v-model="form.email" placeholder="请输入电子邮箱" style="width:400px;" size="small"></el-input>
-        </el-form-item>
-
-        <el-form-item label="指导老师：" v-if="mentor_limit>0">
-          <el-row>
-            <el-col>
-              <el-row v-for="(item,index) in teacherList" :key="index">
-                <el-col :span="1" style="color:#999;">姓名:</el-col>
-                <el-col :span="4">
-                  <el-input size="small" v-model="item.name"></el-input>
-                </el-col>
-                <el-col :span="1" style="color:#999;" :offset="1">电话:</el-col>
-                <el-col :span="4">
-                  <el-input size="small" v-model="item.mobile"></el-input>
-                </el-col>
-                <el-col :span="2" :offset="1">
-                  <i class="el-icon-circle-close" style="font-size:18px;color:red;cursor:pointer" @click="deleteTeacher(index)"></i>
-            
+                <el-col>
+                  <el-button size="small" type="primary" @click="addAuthor()">添加</el-button>
+                  <span class="limit leftpad">限制{{author_limit}}人</span>
                 </el-col>
               </el-row>
-            </el-col>
-            <el-col>
-              <el-button size="small" type="primary" @click="addTeacher()">添加</el-button>
-              <span class="limit leftpad">限制{{mentor_limit}}人</span>
-            </el-col>
-          </el-row>
-        </el-form-item>
+            </el-form-item>
 
-        <el-form-item label="作品名称：" :rules="{ required: true, message: '请输入作品名称', trigger: 'blur' }">
-          <el-input v-model="form.title" placeholder="请输入作品名称" style="width:400px;" size="small"
-          ></el-input>
-        </el-form-item>
+            <el-form-item
+              label="作者邮箱："
+              :rules="{ required: true, message: '请填写作者邮箱', trigger: 'blur' }"
+            >
+              <el-input
+                v-model="form.email"
+                placeholder="请输入电子邮箱"
+                style="width:400px;"
+                size="small"
+              ></el-input>
+            </el-form-item>
 
+            <el-form-item label="指导老师：" v-if="mentor_limit>0">
+              <el-row>
+                <el-col>
+                  <el-row v-for="(item,index) in teacherList" :key="index">
+                    <el-col :span="1" style="color:#999;">姓名:</el-col>
+                    <el-col :span="4">
+                      <el-input size="small" v-model="item.name"></el-input>
+                    </el-col>
+                    <el-col :span="1" style="color:#999;" :offset="1">电话:</el-col>
+                    <el-col :span="4">
+                      <el-input size="small" v-model="item.mobile"></el-input>
+                    </el-col>
+                    <el-col :span="2" :offset="1">
+                      <i
+                        class="el-icon-circle-close"
+                        style="font-size:18px;color:red;cursor:pointer"
+                        @click="deleteTeacher(index)"
+                      ></i>
+                    </el-col>
+                  </el-row>
+                </el-col>
+                <el-col>
+                  <el-button size="small" type="primary" @click="addTeacher()">添加</el-button>
+                  <span class="limit leftpad">限制{{mentor_limit}}人</span>
+                </el-col>
+              </el-row>
+            </el-form-item>
 
-        <!-- <div class="my-editerContain">
-          <P><span style="color:red;font-size:14px;">*</span>创作思想:</P>
-          <my-editor @editorChange="editorChange" :inputtext="inputtext"></my-editor>
-        </div>
+            <el-form-item
+              label="作品名称："
+              :rules="{ required: true, message: '请输入作品名称', trigger: 'blur' }"
+            >
+              <el-input
+                v-model="form.title"
+                placeholder="请输入作品名称"
+                style="width:400px;"
+                size="small"
+              ></el-input>
+            </el-form-item>
+
+            <div class="my-editerContain">
+              <P>
+                <span style="color:red;font-size:14px;">*</span>作品介绍:
+              </P>
+              <my-editor @editorChange="editorChange" :inputtext="inputtext"></my-editor>
+            </div>
+
+            <!-- 
         <el-form-item label="创作过程：">
           <el-input
             type="textarea"
@@ -135,86 +172,106 @@
             placeholder="请填写其他说明"
             style="width:715px;"
           ></el-input>
-        </el-form-item> -->
+            </el-form-item>-->
 
-        <el-form-item>
-            <div v-for="(item,index) in fields" :key="index">
-              <single-text-box
-                :dataObj="item"
-                v-if="item.type==1"
-              ></single-text-box>
-              <multi-text-box
-                :dataObj="item"
-                v-if="item.type==2"
-              ></multi-text-box>
-              <number-box
-                :dataObj="item"
-                v-if="item.type==3"
-              ></number-box>
-              <select-box
-                :dataObj="item"
-                v-if="item.type==9"
-              ></select-box>
-              <single-check-box
-                :dataObj="item"
-                v-if="item.type==7"
-              ></single-check-box>
-              <multi-check-box
-                :dataObj="item"
-                v-if="item.type==8"
-              ></multi-check-box>
-            </div>
-          </el-form-item>
+            <el-form-item label-width="25px">
+              <div v-for="(item,index) in fields" :key="index">
+                <single-text-box
+                  :dataObj="item"
+                  :myVal="item.myVal"
+                  @myValChange="val=>{myValChange(val,item)}"
+                  v-if="item.type==1"
+                ></single-text-box>
+                <multi-text-box
+                  :dataObj="item"
+                  :myVal="item.myVal"
+                  @myValChange="val=>{myValChange(val,item)}"
+                  v-if="item.type==2"
+                ></multi-text-box>
+                <number-box
+                  :dataObj="item"
+                  :myVal="item.myVal"
+                  @myValChange="val=>{myValChange(val,item)}"
+                  v-if="item.type==3"
+                ></number-box>
+                <select-box
+                  :dataObj="item"
+                  :myVal="item.myVal"
+                  @myValChange="val=>{myValChange(val,item)}"
+                  v-if="item.type==9"
+                ></select-box>
+                <single-check-box
+                  :dataObj="item"
+                  :myVal="item.myVal"
+                  @myValChange="val=>{myValChange(val,item)}"
+                  v-if="item.type==7"
+                ></single-check-box>
+                <multi-check-box
+                  :dataObj="item"
+                  :myVal="item.myVal"
+                  @myValChange="val=>{myValChange(val,item)}"
+                  v-if="item.type==8"
+                ></multi-check-box>
+              </div>
+            </el-form-item>
 
-        <el-form-item label="报名登记表：" :rules="{ required: true, message: '请上传报名登记', trigger: 'blur' }">
-          <upload-picture
-            :uploadType="'picture'"
-            :max="10"
-            :myPictureList="form.registration"
-            @uploadSuccess="registrationSuccess"
-            :name="'上传登记表'"
-            style="min-width:200px;"
-          ></upload-picture>
-          <span class="limit">仅支持JPG,PNG格式</span>
-        </el-form-item>
+            <el-form-item
+              label="报名登记表："
+              :rules="{ required: true, message: '请上传报名登记', trigger: 'blur' }"
+            >
+              <upload-picture
+                :uploadType="'picture'"
+                :max="10"
+                :myPictureList="form.registration"
+                @uploadSuccess="registrationSuccess"
+                :name="'上传登记表'"
+                style="min-width:200px;"
+              ></upload-picture>
+              <span class="limit">仅支持JPG,PNG格式</span>
+            </el-form-item>
 
-        <el-form-item label="作品封面：" :rules="{ required: true, message: '请上传作品封面', trigger: 'blur' }">
-          <template>
-            <upload-picture
-              :uploadType="'picture'"
-              :max="1"
-              :myPictureList="form.cover"
-              @uploadSuccess="coverSuccess"
-              :name="'上传作品封面'"
-            ></upload-picture>
-            <span class="limit">仅支持JPG,PNG格式</span>
-          </template>
-        </el-form-item>
+            <el-form-item
+              label="作品封面："
+              :rules="{ required: true, message: '请上传作品封面', trigger: 'blur' }"
+            >
+              <template>
+                <upload-picture
+                  :uploadType="'picture'"
+                  :max="1"
+                  :myPictureList="form.cover"
+                  @uploadSuccess="coverSuccess"
+                  :name="'上传作品封面'"
+                ></upload-picture>
+                <span class="limit">仅支持JPG,PNG格式</span>
+              </template>
+            </el-form-item>
 
-        <el-form-item label="作品上传：" :rules="{ required: true, message: '请上传作品', trigger: 'blur' }">
-          <div
-            style="width:700px;margin-bottom:20px;"
-            v-for="(item,index) in activityProjectDetail.formats"
-            :key="index"
-          >
-            <upload-file
-              :uploadType="uploadTypeObj[item.type]"
-              :myFileList="item.fileList"
-              @uploadSuccess="(data)=>{return upsuccess(data,item.id,item.type)}"
-              :name="'上传'+uploadTypeChar[item.type]+'格式作品'"
-              :fileLimit="item.size"
-            ></upload-file>
-            <p class="limit">{{item.remark}}</p>
-          </div>
-        </el-form-item>
-
-      </el-form>
-      <el-row>
-        <el-col :span="5" :offset="5">
-          <el-button type="primary" @click="submitEnroll()" size="small">提交</el-button>
-          <el-button type="default" @click="goback()" size="small">取消</el-button>
-        </el-col>
-      </el-row>
+            <el-form-item
+              label="作品上传："
+              :rules="{ required: true, message: '请上传作品', trigger: 'blur' }"
+            >
+              <div
+                style="width:700px;margin-bottom:20px;"
+                v-for="(item,index) in activityProjectDetail.formats"
+                :key="index"
+              >
+                <upload-file
+                  :uploadType="uploadTypeObj[item.type]"
+                  :myFileList="item.fileList"
+                  @uploadSuccess="(data)=>{return upsuccess(data,item.id,item.type)}"
+                  :name="'上传'+uploadTypeChar[item.type]+'格式作品'"
+                  :fileLimit="item.size"
+                ></upload-file>
+                <p class="limit">{{item.remark}}</p>
+              </div>
+            </el-form-item>
+          </el-form>
+          <el-row>
+            <el-col :span="5" :offset="5">
+              <el-button type="primary" @click="submitEnroll()" size="small">提交</el-button>
+              <el-button type="default" @click="goback()" size="small">取消</el-button>
+            </el-col>
+          </el-row>
         </el-col>
       </el-row>
     </el-card>
@@ -223,7 +280,6 @@
       <div class="works-preview">
         <div class="title">
           <p>{{detailObj.title}}</p>
-   
         </div>
         <el-divider></el-divider>
         <el-row>
@@ -231,14 +287,16 @@
             <div class="content-main">
               <div class="content-item">
                 <div class="sub-title">作品封面</div>
-                <div class="content" >
+                <div class="content">
                   <el-image :src="detailObj.cover" :fit="cover"></el-image>
                 </div>
               </div>
               <div class="content-item">
-                <div class="sub-title">创作思想</div>
+                <div class="sub-title">作品介绍</div>
                 <div class="content" v-html="detailObj.content"></div>
               </div>
+
+              <!-- 
               <div class="content-item" v-if="detailObj.production!=''">
                 <div class="sub-title">创作过程</div>
                 <div class="content">{{detailObj.production}}</div>
@@ -254,18 +312,51 @@
               <div class="content-item" v-if="detailObj.remark!=''">
                 <div class="sub-title">其他说明</div>
                 <div class="content">{{detailObj.remark}}</div>
-              </div>
+              </div>-->
+
+              <el-form>
+                <el-form-item label-width="0">
+                  <div v-for="(item,index) in fields" :key="index">
+                    <single-text-box
+                      :dataObj="item"
+                      :myVal="item.myVal"
+                      v-if="item.type==1&&item.myVal!=''"
+                    ></single-text-box>
+                    <multi-text-box
+                      :dataObj="item"
+                      :myVal="item.myVal"
+                      v-if="item.type==2&&item.myVal!=''"
+                    ></multi-text-box>
+                    <number-box
+                      :dataObj="item"
+                      :myVal="item.myVal"
+                      v-if="item.type==3&&item.myVal!=''"
+                    ></number-box>
+                    <select-box
+                      :dataObj="item"
+                      :myVal="item.myVal"
+                      v-if="item.type==9&&item.myVal!=''"
+                    ></select-box>
+                    <single-check-box
+                      :dataObj="item"
+                      :myVal="item.myVal"
+                      v-if="item.type==7&&item.myVal!=''"
+                    ></single-check-box>
+                    <multi-check-box
+                      :dataObj="item"
+                      :myVal="item.myVal"
+                      v-if="item.type==8&&item.myVal!=''"
+                    ></multi-check-box>
+                  </div>
+                </el-form-item>
+              </el-form>
 
               <div class="content-item" style="width:50%">
                 <div class="sub-title">作品:</div>
-                <div
-                  class="content"
-                  v-for="(item,index) in detailObj.attachment"
-                  :key="index"
-                >
-                <template v-for="subItm in detailObj.attachment[index]">
-                  <file-preview :fileObj="subItm"></file-preview>
-                </template>
+                <div class="content" v-for="(item,index) in detailObj.attachment" :key="index">
+                  <template v-for="subItm in detailObj.attachment[index]">
+                    <file-preview :fileObj="subItm"></file-preview>
+                  </template>
                 </div>
               </div>
               <div class="content-item">
@@ -288,19 +379,18 @@
                   class="works-detail-item"
                   v-if="detailObj.mentor!=undefined"
                 >指导老师：{{detailObj.mentor.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}</div>
-                <div class="works-detail-item" >邮箱：{{detailObj.email}}</div>
+                <div class="works-detail-item">邮箱：{{detailObj.email}}</div>
               </div>
             </div>
-             <el-row>
-                <el-col :span="4" :offset="10" style="margin-top:30px;"> 
+            <el-row>
+              <el-col :span="4" :offset="10" style="margin-top:30px;">
                 <el-button type="primary" @click="previewSubmitEnroll()" size="small">确认报名</el-button>
-                <el-button @click="closePreview()" size="small">返回</el-button>  
-                </el-col>
+                <el-button @click="closePreview()" size="small">返回</el-button>
+              </el-col>
             </el-row>
           </el-col>
         </el-row>
       </div>
-
     </el-card>
 
     <!-- ------------------ -->
@@ -320,7 +410,18 @@ import SelectBox from "../../components/SelectBox";
 import SingleCheckBox from "../../components/SingleCheckBox";
 import MultiCheckBox from "../../components/MultiCheckBox";
 export default {
-  components: { MyEditor, UploadPicture, UploadFile,FilePreview,SingleTextBox,MultiTextBox,NumberBox,SelectBox,SingleCheckBox,MultiCheckBox },
+  components: {
+    MyEditor,
+    UploadPicture,
+    UploadFile,
+    FilePreview,
+    SingleTextBox,
+    MultiTextBox,
+    NumberBox,
+    SelectBox,
+    SingleCheckBox,
+    MultiCheckBox
+  },
   data() {
     return {
       headers: {
@@ -370,8 +471,8 @@ export default {
       remark: "", //其他说明
       schoolList: [], //学校列表
       period: this.$route.query.period, //组别id
-      works_id:'',//作品id
-      school:'',//学校名称
+      works_id: "", //作品id
+      school: "", //学校名称
       periodList: {
         1: "幼教组",
         2: "小学组",
@@ -381,16 +482,16 @@ export default {
         32: "中职组",
         64: "高教组"
       },
-      showPreview:false,
-      detailObj:{},
-      fields:[],//自定义内容类型
+      showPreview: false,
+      detailObj: {},
+      fields: [] //自定义内容类型
     };
   },
   created() {
-   if(this.$store.state.account.nowRole.school_id!=undefined){
-     this.form.school_id=this.$store.state.account.nowRole.school_id
-     this.school=this.$store.state.account.nowRole.school_title
-   }
+    if (this.$store.state.account.nowRole.school_id != undefined) {
+      this.form.school_id = this.$store.state.account.nowRole.school_id;
+      this.school = this.$store.state.account.nowRole.school_title;
+    }
   },
   mounted() {
     let params = {};
@@ -401,16 +502,22 @@ export default {
     }
     this.getSchoolList();
   },
-  watch:{
-    
-
-  },
+  watch: {},
   methods: {
+    //自定义内容类型
+    myValChange(val, item) {
+      console.log("自定义内容类型val====", val, "item===", item);
+      for (let i in this.fields) {
+        if (this.fields[i].id == item.id) {
+          this.fields[i].myVal = val;
+        }
+      }
+    },
     //选择学校
-    schoolChange(data){
-      for(let i in this.schoolList){
-        if(this.schoolList[i].id==data){
-          this.school=this.schoolList[i].title
+    schoolChange(data) {
+      for (let i in this.schoolList) {
+        if (this.schoolList[i].id == data) {
+          this.school = this.schoolList[i].title;
         }
       }
     },
@@ -434,7 +541,7 @@ export default {
       params.expand = "info,works,school,professional,award";
       await that.axiosGet(params).then(res => {
         this.category_id = res.category_id;
-        this.works_id=res.works.id
+        this.works_id = res.works.id;
         that.form.activityProject = res.info.project;
         that.form.title = res.works.title;
         that.inputtext = res.works.content.content;
@@ -451,9 +558,9 @@ export default {
 
         for (let i in res.works.attachment) {
           let isHave = that.activityProjectDetail.formats.findIndex(items => {
-            return (items.id == res.works.attachment[i].category_file_id);
+            return items.id == res.works.attachment[i].category_file_id;
           });
-          console.log("ishave==", isHave!=-1);
+          console.log("ishave==", isHave != -1);
           if (isHave == -1) {
             let item = {};
             item.id = res.works.attachment[i].category_file_id;
@@ -466,7 +573,12 @@ export default {
               }
             ];
             that.activityProjectDetail.formats.push(item);
-            that.attachment[item.id]=[{title:res.works.attachment[i].title,url:res.works.attachment[i].url}]  
+            that.attachment[item.id] = [
+              {
+                title: res.works.attachment[i].title,
+                url: res.works.attachment[i].url
+              }
+            ];
           } else {
             for (let j in that.activityProjectDetail.formats) {
               if (
@@ -477,7 +589,10 @@ export default {
                   url: res.works.attachment[i].url,
                   title: res.works.attachment[i].title
                 });
-                that.attachment[res.works.attachment[i].category_file_id].push({url:res.works.attachment[i].url,title:res.works.attachment[i].title})
+                that.attachment[res.works.attachment[i].category_file_id].push({
+                  url: res.works.attachment[i].url,
+                  title: res.works.attachment[i].title
+                });
               }
             }
           }
@@ -513,7 +628,12 @@ export default {
           this.form.activityProject = res.title;
           this.author_limit = res.author_limit;
           this.mentor_limit = res.mentor_limit;
-          this.fields=res.fields
+
+          this.fields = res.fields.map(items => {
+            items.required = items.required == 1 ? true : false;
+            items.myVal = "";
+            return items;
+          });
         })
         .catch(err => err);
     },
@@ -541,10 +661,10 @@ export default {
       data.forEach(item => {
         let attachmentItem = {};
         attachmentItem.url = item.url;
-        if(item.name!=undefined){
+        if (item.name != undefined) {
           attachmentItem.title = item.name;
         }
-        if(item.title!=undefined){
+        if (item.title != undefined) {
           attachmentItem.title = item.title;
         }
         this.attachment[id].push(attachmentItem);
@@ -553,7 +673,7 @@ export default {
 
     //提交报名
     async submitEnroll() {
-      let that=this
+      let that = this;
       let params = {};
       params.url = api.works;
       params.category_id = this.activityProjectDetail.id;
@@ -632,14 +752,31 @@ export default {
         });
         return;
       }
+      params.fields = {};
+      for (let i in this.fields) {
+        if (this.fields[i].myVal != "") {
+          let key = this.fields[i].id;
+          let value = this.fields[i].myVal;
+          params.fields[key] = value;
+        } else {
+          if (this.fields[i].required == 1) {
+            this.$message({
+              message: this.fields[i].title + "是必填",
+              type: "warning"
+            });
+            return;
+          }
+        }
+      }
       params.period = this.period;
       params.attachment = this.attachment;
       console.log("params===", params);
+      // return;
       if (this.operate == 0) {
-        this.showPreview=true
-        this.detailObj=params
+        this.showPreview = true;
+        this.detailObj = params;
       } else {
-        params.id=this.works_id
+        params.id = this.works_id;
         params.category_id = this.category_id;
         console.log("修改===", params);
         await axiosPut(params)
@@ -665,32 +802,32 @@ export default {
       }
     },
     //确认报名
-    async previewSubmitEnroll(){
-      let params= this.detailObj
+    async previewSubmitEnroll() {
+      let params = this.detailObj;
       await axiosPost(params)
-          .then(res => {
-            if (res.code == -1) {
-              this.$message({
-                message: res.message,
-                type: "warning"
-              });
-            } else if (res.title != undefined && res.title != "") {
-              this.$message({
-                message: "报名成功！！",
-                type: "success"
-              });
-              this.$router.push({
-                path: "/home/submitEnroll"
-              }); 
-            } else {
-              that.$router.go(-1);
-            }
-          })
-          .catch(err => err);
+        .then(res => {
+          if (res.code == -1) {
+            this.$message({
+              message: res.message,
+              type: "warning"
+            });
+          } else if (res.title != undefined && res.title != "") {
+            this.$message({
+              message: "报名成功！！",
+              type: "success"
+            });
+            this.$router.push({
+              path: "/home/submitEnroll"
+            });
+          } else {
+            that.$router.go(-1);
+          }
+        })
+        .catch(err => err);
     },
     //关闭预览
-    closePreview(){
-      this.showPreview=false
+    closePreview() {
+      this.showPreview = false;
     },
     //富文本编辑器
     editorChange(data) {
@@ -785,20 +922,20 @@ export default {
     color: #666;
   }
 }
-.my-editer{
+.my-editer {
   margin-left: 10px;
   max-width: 900px;
 }
 //上传图片视频等按钮的样式
-.my-button{
-  min-width: 200px!important;
+.my-button {
+  min-width: 200px !important;
 }
-.limit{
-  color:red;
-  font-size:14px;
+.limit {
+  color: red;
+  font-size: 14px;
 }
-.leftpad{
-  padding-left:20px;
+.leftpad {
+  padding-left: 20px;
 }
 .works-preview {
   .title {
@@ -822,7 +959,7 @@ export default {
         font-size: 14px;
         color: #666;
         line-height: 30px;
-        .el-image{
+        .el-image {
           height: 180px;
           width: 260px;
           border-radius: 8px;

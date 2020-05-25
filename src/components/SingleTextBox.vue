@@ -1,11 +1,8 @@
 <template>
-  <div :class="dataObj.isEdit? 'active':'single-text-box-container'">
+  <div :class="[dataObj.isEdit? 'active':'single-text-box-container',showOperation? '':'no-show']">
     <el-row>
-      <el-col :span="3" class="title">
-        <i v-if="dataObj.required">*</i>{{dataObj.title}}：
-      </el-col>
-      <el-col :span="14">
-        <el-input placeholder="请输入内容" style="width:500px;"></el-input>
+      <el-col :span="17" class="title">
+        <i v-if="dataObj.required">*</i>{{dataObj.title}}&nbsp;
       </el-col>
       <el-col :span="4" :offset="3" class="operate-item" v-if="showOperation">
         <i class="el-icon-top" @click="toUp"></i>
@@ -13,7 +10,10 @@
         <i class="el-icon-edit" @click="toEdit"></i>
         <i class="el-icon-delete" @click="delectItem"></i>
       </el-col>
-      <el-col :span="12" :offset="3" style="color:#7F7F7F;">备注：{{dataObj.description}}</el-col>
+      <el-col :span="12" :offset="2">
+        <el-input placeholder="请输入内容" style="width:600px;" v-model="val" @input="myValChange"></el-input>
+      </el-col>
+      <el-col :span="12" :offset="2" style="color:#7F7F7F;">备注：{{dataObj.description}}</el-col>
     </el-row>
   </div>
 </template>
@@ -31,12 +31,19 @@ export default {
         default(){
             return {}
         }
+    },
+    myVal:{
+      
     }
   },
   data() {
-    return {};
+    return {
+      val:'',
+    };
   },
-  mounted() {},
+  mounted() {
+    this.val=this.myVal
+  },
   methods: {
     //上移
     toUp() {
@@ -53,6 +60,10 @@ export default {
     //删除
     delectItem() {
       this.$emit("delectItem");
+    },
+    //自定义内容类型
+    myValChange(){
+      this.$emit("myValChange",this.val)
     }
   }
 };
@@ -65,6 +76,14 @@ export default {
   border: 1px solid rgba(229, 229, 229, 1);
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.09);
   margin-top: 10px;
+  .operate-item{
+    display: none;
+  }
+}
+.single-text-box-container:hover,.active:hover{
+  .operate-item{
+    display: block;
+  }
 }
 .active {
   border: 1px solid rgba(38, 114, 255, 1);
@@ -72,6 +91,12 @@ export default {
   padding: 20px 20px 0 20px;
   border-radius: 10px;
   margin-top: 10px;
+}
+.no-show{
+  // border: 0;
+  // box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+  // margin-top: 0px;
+  // padding: 0px;
 }
 .title {
   color: #323232;
@@ -82,6 +107,7 @@ export default {
   }
 }
 .operate-item {
+  display: none;
   i {
     font-size: 24px;
     color: #c5c5c5;
