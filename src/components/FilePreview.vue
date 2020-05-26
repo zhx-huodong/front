@@ -131,6 +131,9 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.container{
+  padding: 0 10px 10px 0;
+}
 .picture-items {
   display: flex;
   flex-direction: column;
@@ -144,7 +147,7 @@ export default {
     border-radius: 4px;
     border: 1px solid #198af3;
     // background: #000;
-    background: rgba(0, 0, 0, 0.8);
+    // background: rgba(0, 0, 0, 0.8);
   }
   p {
     font-size: 14px;
@@ -156,7 +159,7 @@ export default {
     border: 1px solid #198af3;
     border-radius: 4px;
     // background: #000;
-    background: rgba(0, 0, 0, 0.8);
+    // background: rgba(0, 0, 0, 0.8);
   }
   .operate {
     top: 0px;

@@ -173,7 +173,7 @@
                 v-model="item.remark"
                 placeholder="输入备注"
                 @input="ChangeFormatsRemark(index)"
-                style="width:500px"
+                style="width:900px"
                 type="textarea"
                 :rows="2"
               ></el-input>

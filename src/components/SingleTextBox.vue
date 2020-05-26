@@ -1,5 +1,6 @@
 <template>
   <div :class="[dataObj.isEdit? 'active':'single-text-box-container',showOperation? '':'no-show']">
+    <div class="mark" v-if="!canWrite"></div>
     <el-row>
       <el-col :span="17" class="title">
         <i v-if="dataObj.required">*</i>{{dataObj.title}}&nbsp;
@@ -11,7 +12,7 @@
         <i class="el-icon-delete" @click="delectItem"></i>
       </el-col>
       <el-col :span="12" :offset="2">
-        <el-input placeholder="请输入内容" style="width:600px;" v-model="val" @input="myValChange"></el-input>
+        <el-input placeholder="请输入内容" style="width:420px;" v-model="val" @input="myValChange" size="small"></el-input>
       </el-col>
       <el-col :span="12" :offset="2" style="color:#7F7F7F;">备注：{{dataObj.description}}</el-col>
     </el-row>
@@ -31,6 +32,12 @@ export default {
         default(){
             return {}
         }
+    },
+    canWrite:{
+      type:Boolean,
+      default(){
+        return true
+      }
     },
     myVal:{
       
@@ -79,6 +86,16 @@ export default {
   .operate-item{
     display: none;
   }
+  position: relative;
+  .mark{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    // background-color: blue;
+    z-index: 800;
+  }
 }
 .single-text-box-container:hover,.active:hover{
   .operate-item{
@@ -97,6 +114,11 @@ export default {
   // box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
   // margin-top: 0px;
   // padding: 0px;
+  padding: 20px 20px 0 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(229, 229, 229, 1);
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+  margin-top: 10px;
 }
 .title {
   color: #323232;

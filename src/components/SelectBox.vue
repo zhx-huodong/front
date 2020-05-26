@@ -1,5 +1,6 @@
 <template>
   <div :class="[dataObj.isEdit? 'active':'select-box-container',showOperation? '':'no-show']">
+    <div class="mark" v-if="!canWrite"></div>
     <el-row>
       <el-col :span="17" class="title">
         <i v-if="dataObj.required">*</i>{{dataObj.title}}&nbsp;
@@ -39,6 +40,12 @@ export default {
         default(){
             return {}
         }
+    },
+    canWrite:{
+      type:Boolean,
+      default(){
+        return true
+      }
     },
     myVal:{
       
@@ -87,6 +94,16 @@ export default {
   .operate-item{
     display: none;
   }
+  position: relative;
+  .mark{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    // background-color: blue;
+    z-index: 800;
+  }
 }
 .select-box-container:hover,.active:hover{
   .operate-item{
@@ -105,6 +122,11 @@ export default {
   // box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
   // margin-top: 0px;
   // padding: 0px;
+  padding: 20px 20px 0 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(229, 229, 229, 1);
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+  margin-top: 10px;
 }
 .title {
   color: #323232;

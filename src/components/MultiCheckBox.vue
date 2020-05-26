@@ -1,5 +1,6 @@
 <template>
   <div :class="[dataObj.isEdit? 'active':'multi-check-box-container',showOperation? '':'no-show']">
+    <div class="mark" v-if="!canWrite"></div>
     <el-row>
       <el-col :span="17" class="title">
         <i v-if="dataObj.required">*</i>{{dataObj.title}}&nbsp;
@@ -14,7 +15,7 @@
       <el-col :offset="2">
         <el-checkbox-group v-model="val" @change="myValChange">
             <template v-for="(item,index) in dataObj.options">
-                <el-checkbox :label="item.text"></el-checkbox>
+                <el-checkbox :label="item.value">{{item.text}}</el-checkbox>
             </template>
         </el-checkbox-group>
       </el-col>
@@ -36,6 +37,12 @@ export default {
         default(){
             return {}
         }
+    },
+    canWrite:{
+      type:Boolean,
+      default(){
+        return true
+      }
     },
     myVal:{
      
@@ -84,6 +91,16 @@ export default {
   .operate-item{
     display: none;
   }
+  position: relative;
+  .mark{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    // background-color: blue;
+    z-index: 800;
+  }
 }
 .multi-check-box-container:hover,.active:hover{
   .operate-item{
@@ -102,6 +119,11 @@ export default {
   // box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
   // margin-top: 0px;
   // padding: 0px;
+  padding: 20px 20px 0 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(229, 229, 229, 1);
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+  margin-top: 10px;
 }
 .title {
   color: #323232;

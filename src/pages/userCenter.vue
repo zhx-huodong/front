@@ -71,9 +71,9 @@
                 <div class="user-tel">{{nowRole.school_title}}</div>
               </div>
             </div>
-            <div class="user-info-atlas">
+            <!-- <div class="user-info-atlas" >
               <high-charts :options="abilityOpt"></high-charts>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

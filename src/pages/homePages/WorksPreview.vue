@@ -16,11 +16,11 @@
             <div class="content" v-html="activityDetail.comment" style="color:red;font-weight:700"></div>
           </div>
           <div class="content-item" v-if="activityDetail.works.cover!=''">
-              <div class="sub-title">作品封面</div>
-              <div class="content" >
-                <el-image :src="activityDetail.works.cover" :fit="cover"></el-image>
-              </div>
+            <div class="sub-title">作品封面</div>
+            <div class="content">
+              <el-image :src="activityDetail.works.cover" :fit="cover"></el-image>
             </div>
+          </div>
           <div class="content-item">
             <div class="sub-title">创作思想</div>
             <div class="content" v-html="activityDetail.works.content.content"></div>
@@ -42,58 +42,87 @@
             <div class="content">{{activityDetail.works.content.remark}}</div>
           </div>
 
+          <el-form>
+            <el-form-item label-width="0">
+              <div v-for="(item,index) in fields" :key="index">
+                <single-text-box
+                  :dataObj="item"
+                  :myVal="item.myVal"
+                  :canWrite="false"
+                  v-if="item.type==1&&item.myVal!=''"
+                ></single-text-box>
+                <multi-text-box
+                  :dataObj="item"
+                  :myVal="item.myVal"
+                  :canWrite="false"
+                  v-if="item.type==2&&item.myVal!=''"
+                ></multi-text-box>
+                <number-box :canWrite="false" :dataObj="item" :myVal="item.myVal" v-if="item.type==3&&item.myVal!=''"></number-box>
+                <select-box :canWrite="false" :dataObj="item" :myVal="item.myVal" v-if="item.type==9&&item.myVal!=''"></select-box>
+                <single-check-box
+                  :dataObj="item"
+                  :myVal="item.myVal"
+                  :canWrite="false"
+                  v-if="item.type==7&&item.myVal!=''"
+                ></single-check-box>
+                <multi-check-box
+                  :dataObj="item"
+                  :myVal="item.myVal"
+                  :canWrite="false"
+                  v-if="item.type==8&&item.myVal!=''"
+                ></multi-check-box>
+              </div>
+            </el-form-item>
+          </el-form>
+
           <div class="content-item" style="width:50%">
             <div class="sub-title">作品:</div>
-            <div
-              class="content"
-              v-for="(item,index) in activityDetail.works.attachment"
-              :key="index"
-            >
-              <file-preview :fileObj="item" :showDownLoad="showDownLoad"></file-preview>
+            <div class="content filePreview">
+              <template v-for="item in activityDetail.works.attachment">
+                <file-preview :fileObj="item" :showDownLoad="showDownLoad"></file-preview>
+              </template>
             </div>
           </div>
           <div class="content-item" v-if="!award">
             <div class="sub-title">报名登记表:</div>
-            <div class="content">
-              <file-preview :fileObj="{name:'报名登记表',url:activityDetail.registration}"></file-preview>
+            <div class="content filePreview">
+              <template v-for="subItem in activityDetail.registration">
+                <file-preview :fileObj="subItem"></file-preview>
+              </template>
+              <!-- <file-preview :fileObj="{name:'报名登记表',url:activityDetail.registration}"></file-preview> -->
             </div>
           </div>
           <el-divider v-if="workDetail"></el-divider>
           <div class="works-detail-main" v-show="workDetail">
-              <div class="works-detail-item"  style="color:red;font-weight:700">
-                  获奖信息：{{getAward||'暂未获奖'}}
-              </div>
-              <div class="works-detail-item">
-                  活动名称：{{activityDetail.info.activity}}
-              </div>
-              <div class="works-detail-item">
-                  活动项目：{{activityDetail.info.project}}
-              </div>
-              <div class="works-detail-item">
-                  组别：{{periodList[activityDetail.period]}}
-              </div>
-              <div class="works-detail-item">
-                  学校：{{activityDetail.school.title}}
-              </div>
-              <template v-if="!award">
-                <div class="works-detail-item" v-if="activityDetail.works.member.author!=undefined">
-                    作者：{{activityDetail.works.member.author.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}
-                </div>
-                <div class="works-detail-item" v-if="activityDetail.works.member.mentor!=undefined">
-                    指导老师：{{activityDetail.works.member.mentor.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}
-                </div>
-              </template>
-              <template v-if="award">
-                <div class="works-detail-item" v-if="activityDetail.works.member.author!=undefined">
-                    作者：{{activityDetail.works.member.author.map(item=>{return item.name}).join('、')}}
-                </div>
-                <div class="works-detail-item" v-if="activityDetail.works.member.mentor!=undefined">
-                    指导老师：{{activityDetail.works.member.mentor.map(item=>{return item.name}).join('、')}}
-                </div>
-              </template>
-              <div class="works-detail-item" v-show="!award">
-                  邮箱：{{activityDetail.works.email}}
-              </div>
+            <div
+              class="works-detail-item"
+              style="color:red;font-weight:700"
+            >获奖信息：{{getAward||'暂未获奖'}}</div>
+            <div class="works-detail-item">活动名称：{{activityDetail.info.activity}}</div>
+            <div class="works-detail-item">活动项目：{{activityDetail.info.project}}</div>
+            <div class="works-detail-item">组别：{{periodList[activityDetail.period]}}</div>
+            <div class="works-detail-item">学校：{{activityDetail.school.title}}</div>
+            <template v-if="!award">
+              <div
+                class="works-detail-item"
+                v-if="activityDetail.works.member.author!=undefined"
+              >作者：{{activityDetail.works.member.author.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}</div>
+              <div
+                class="works-detail-item"
+                v-if="activityDetail.works.member.mentor!=undefined"
+              >指导老师：{{activityDetail.works.member.mentor.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}</div>
+            </template>
+            <template v-if="award">
+              <div
+                class="works-detail-item"
+                v-if="activityDetail.works.member.author!=undefined"
+              >作者：{{activityDetail.works.member.author.map(item=>{return item.name}).join('、')}}</div>
+              <div
+                class="works-detail-item"
+                v-if="activityDetail.works.member.mentor!=undefined"
+              >指导老师：{{activityDetail.works.member.mentor.map(item=>{return item.name}).join('、')}}</div>
+            </template>
+            <div class="works-detail-item" v-show="!award">邮箱：{{activityDetail.works.email}}</div>
           </div>
         </div>
       </el-col>
@@ -104,8 +133,22 @@
 import api from "../../service/api.js";
 import { getCookie } from "../../tools/tools";
 import FilePreview from "../../components/FilePreview";
+import SingleTextBox from "../../components/SingleTextBox";
+import MultiTextBox from "../../components/MultiTextBox";
+import NumberBox from "../../components/NumberBox";
+import SelectBox from "../../components/SelectBox";
+import SingleCheckBox from "../../components/SingleCheckBox";
+import MultiCheckBox from "../../components/MultiCheckBox";
 export default {
-  components: { FilePreview },
+  components: {
+    FilePreview,
+    SingleTextBox,
+    MultiTextBox,
+    NumberBox,
+    SelectBox,
+    SingleCheckBox,
+    MultiCheckBox
+  },
   props: {
     id: {
       type: Number,
@@ -125,24 +168,24 @@ export default {
         return false;
       }
     },
-    workDetail:{
-      type:Boolean,
+    workDetail: {
+      type: Boolean,
       default() {
         return true;
       }
     },
-    rejectReason:{
-      type:Boolean,
+    rejectReason: {
+      type: Boolean,
       default() {
         return false;
       }
     },
-    showDownLoad:{
-      type:Boolean,
+    showDownLoad: {
+      type: Boolean,
       default() {
         return true;
       }
-    },
+    }
   },
 
   data() {
@@ -157,12 +200,13 @@ export default {
         32: "中职组",
         64: "高教组"
       },
-      getAward: "" //所获奖项
+      getAward: "", //所获奖项,
+      fields: []
     };
   },
   mounted() {
     this.$nextTick(() => {
-        this.getActivityDetail();
+      this.getActivityDetail();
     });
   },
   methods: {
@@ -182,13 +226,28 @@ export default {
           if (this.activityDetail.award.length != 0) {
             this.getAward = this.activityDetail.award[0].title;
           }
-          console.log("看看", res);
+          this.activityDetail.registration = [];
+          for (let i in res.info.registrations) {
+            this.activityDetail.registration.push({
+              name: "",
+              url: res.info.registrations[i]
+            });
+          }
+          this.fields = res.info.fields.map(items => {
+            items.required = items.required == 1 ? true : false;
+            if (items.type == 7 || items.type == 9) {
+              items.myVal = parseInt(items.data);
+            } else {
+              items.myVal = items.data;
+            }
+            return items;
+          });
         })
         .catch(err => err);
     },
     goback() {
       this.$router.go(-1);
-      this.$emit('goback');
+      this.$emit("goback");
     }
   }
 };
@@ -196,7 +255,7 @@ export default {
 <style lang="less" scoped>
 .works-preview {
   .title {
-    width:97%;
+    width: 97%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -216,6 +275,11 @@ export default {
         font-size: 14px;
         color: #666;
         line-height: 30px;
+        .el-image {
+          height: 180px;
+          width: 260px;
+          border-radius: 8px;
+        }
       }
     }
   }
@@ -229,5 +293,9 @@ export default {
       margin-bottom: 10px;
     }
   }
+}
+.filePreview {
+  display: flex;
+  flex-wrap: wrap;
 }
 </style>
