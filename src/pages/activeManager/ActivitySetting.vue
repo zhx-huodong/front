@@ -168,7 +168,7 @@
     >
       <div style=":display: inline-block;">
         <span>类别名称：</span>
-        <el-input v-model="title" placeholder="请输出"></el-input>
+        <el-input v-model="title" placeholder="请输入类别名称"></el-input>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addclassFlag = false,edit_1=false">取 消</el-button>

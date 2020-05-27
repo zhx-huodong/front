@@ -13,14 +13,14 @@
         <i class="el-icon-delete" @click="delectItem"></i>
       </el-col>
       
-      <el-col :offset="2">
+      <el-col>
         <el-radio-group v-model="val" @change="myValChange">
           <template v-for="(item,index) in dataObj.options">
             <el-radio :label="item.value">{{item.text}}</el-radio>
           </template>
         </el-radio-group>
       </el-col>
-      <el-col :span="12" :offset="2" style="color:#7F7F7F;" v-if="dataObj.description!=''">备注：{{dataObj.description}}</el-col>
+      <el-col :span="24"style="color:#7F7F7F;" v-if="dataObj.description!=''">备注：{{dataObj.description}}</el-col>
     </el-row>
   </div>
 </template>
@@ -109,15 +109,15 @@ export default {
   }
 }
 .no-show{
-  // border: 0;
-  // box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
-  // margin-top: 0px;
-  // padding: 0px;
-  padding: 20px 20px 0 20px;
-  border-radius: 10px;
-  border: 1px solid rgba(229, 229, 229, 1);
+  border: 0;
   box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
-  margin-top: 10px;
+  margin-top: 0px;
+  padding: 0px;
+  // padding: 20px 20px 0 20px;
+  // border-radius: 10px;
+  // border: 1px solid rgba(229, 229, 229, 1);
+  // box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+  // margin-top: 10px;
 }
 .active {
   border: 1px solid rgba(38, 114, 255, 1);

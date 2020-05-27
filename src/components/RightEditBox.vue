@@ -121,7 +121,6 @@ export default {
       this.fields[this.editIndex].options.splice(val,1)
     },
     addOption() {
-      console.log("添加选项");
       this.fields[this.editIndex].options.push({ text: "选项"+(this.fields[this.editIndex].options.length+1), value: this.fields[this.editIndex].options.length+1 })
     },
     editConform(){

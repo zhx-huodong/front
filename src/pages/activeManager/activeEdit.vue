@@ -387,7 +387,7 @@ export default {
       let enrollTemplateItem = {
         type: val,
         title: "请填写标题",
-        description: "",
+        description: "备注",
         required: false,
         enable:1,
         visible:1,

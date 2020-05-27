@@ -2,19 +2,20 @@
   <div :class="[dataObj.isEdit? 'active':'single-text-box-container',showOperation? '':'no-show']">
     <div class="mark" v-if="!canWrite"></div>
     <el-row>
-      <el-col :span="17" class="title">
-        <i v-if="dataObj.required">*</i>{{dataObj.title}}&nbsp;
+      <el-col :span="3" class="title">
+        <i v-if="dataObj.required">*</i>{{dataObj.title}}：&nbsp;
       </el-col>
-      <el-col :span="4" :offset="3" class="operate-item" v-if="showOperation">
+      <el-col :span="12">
+        <el-input placeholder="请输入内容" style="width:600px;" v-model="val" @input="myValChange" size="small"></el-input>
+      </el-col>
+      <el-col :span="4" :offset="5" class="operate-item" v-if="showOperation">
         <i class="el-icon-top" @click="toUp"></i>
         <i class="el-icon-bottom" @click="toDown"></i>
         <i class="el-icon-edit" @click="toEdit"></i>
         <i class="el-icon-delete" @click="delectItem"></i>
       </el-col>
-      <el-col :span="12" :offset="2">
-        <el-input placeholder="请输入内容" style="width:420px;" v-model="val" @input="myValChange" size="small"></el-input>
-      </el-col>
-      <el-col :span="12" :offset="2" style="color:#7F7F7F;" v-if="dataObj.description!=''">备注：{{dataObj.description}}</el-col>
+      
+      <el-col :span="21" :offset="3" style="color:#7F7F7F;" v-if="dataObj.description!=''">备注：{{dataObj.description}}</el-col>
     </el-row>
   </div>
 </template>
@@ -110,15 +111,15 @@ export default {
   margin-top: 10px;
 }
 .no-show{
-  // border: 0;
-  // box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
-  // margin-top: 0px;
-  // padding: 0px;
-  padding: 20px 20px 0 20px;
-  border-radius: 10px;
-  border: 1px solid rgba(229, 229, 229, 1);
+  border: 0;
   box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
-  margin-top: 10px;
+  margin-top: 0px;
+  padding: 0px;
+  // padding: 20px 20px 0 20px;
+  // border-radius: 10px;
+  // border: 1px solid rgba(229, 229, 229, 1);
+  // box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+  // margin-top: 10px;
 }
 .title {
   color: #323232;

@@ -147,7 +147,7 @@ export default {
     font-size: 14px;
     color: #333333;
     margin-right: 20px;
-    text-align: justify;
+    // text-align: justify;
     margin-top: 10px;
     float: left;
   }

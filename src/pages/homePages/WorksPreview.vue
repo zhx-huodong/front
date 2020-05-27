@@ -42,7 +42,7 @@
             <div class="content">{{activityDetail.works.content.remark}}</div>
           </div>
 
-          <el-form>
+          <!-- <el-form>
             <el-form-item label-width="0">
               <div v-for="(item,index) in fields" :key="index">
                 <single-text-box
@@ -73,11 +73,32 @@
                 ></multi-check-box>
               </div>
             </el-form-item>
-          </el-form>
+          </el-form>-->
+
+          <template v-for="item in fields">
+            <div class="content-item" v-if="item.type==1||item.type==2||item.type==3">
+              <div class="sub-title">{{item.title}}</div>
+              <div class="content">{{item.data}}</div>
+            </div>
+            <div class="content-item" v-if="item.type==7||item.type==9">
+              <div class="sub-title">{{item.title}}</div>
+              <template v-for="subItem in item.options">
+                <div class="content" v-if="item.data==subItem.value">{{subItem.text}}</div>
+              </template>
+            </div>
+            <div class="content-item" v-if="item.type==8">
+              <div class="sub-title">{{item.title}}</div>
+              <template v-for="myItem in item.data">
+                <template v-for="subItem in item.options">
+                  <div class="content" v-if="myItem==subItem.value">{{subItem.text}}</div>
+                </template>
+              </template>
+            </div>
+          </template>
 
           <div class="content-item" style="width:50%">
             <div class="sub-title">作品:</div>
-            <div class="content filePreview">
+            <div class="content">
               <template v-for="item in activityDetail.works.attachment">
                 <file-preview :fileObj="item" :showDownLoad="showDownLoad"></file-preview>
               </template>

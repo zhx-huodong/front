@@ -19,7 +19,7 @@
                 <!-- <el-image :src="imgUrl"></el-image> -->
                 <div class="school">{{item.school}}</div>
                 <div class="author">作者：{{item.author}}</div>
-                <div class="teacher">指导老师：{{item.mentor}}</div>
+                <div class="teacher" v-if="item.mentor.length>0">指导老师：{{item.mentor}}</div>
 
               <!-- </div> -->
           </div>

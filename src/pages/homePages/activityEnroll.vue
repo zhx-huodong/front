@@ -7,7 +7,7 @@
       <el-divider></el-divider>
       <el-row>
         <el-col :span="20" :offset="2">
-          <el-form ref="form" :model="form" label-width="120px">
+          <el-form ref="form" :model="form" label-width="120px" label-position="left">
             <el-form-item label="活动名称：">
               <el-input
                 v-model="form.activityName"
@@ -53,9 +53,14 @@
               <el-row>
                 <el-col>
                   <el-row v-for="(item,index) in authorList" :key="index">
-                    <el-col :span="1" style="color:#999">姓名:</el-col>
-                    <el-col :span="10">
-                      <el-input style="width:365px" size="small" v-model="item.name"></el-input>
+                    <el-col :span="2" style="color:#999">姓名:</el-col>
+                    <el-col :span="9">
+                      <el-input
+                        style="width:330px"
+                        size="small"
+                        placeholder="请输入姓名"
+                        v-model="item.name"
+                      ></el-input>
                     </el-col>
                     <el-col :span="12" :offset="1">
                       <i
@@ -64,13 +69,15 @@
                         @click="deleteAuthor(index)"
                       ></i>
                     </el-col>
-                    <el-col :span="1" style="color:#999;">电话:</el-col>
-                    <el-col :span="12">
+                    <el-col :span="2" style="color:#999;">电话:</el-col>
+                    <el-col :span="11">
                       <el-input
-                        style="width:365px"
+                        style="width:330px"
+                        placeholder="请输入手机号码"
                         size="small"
                         v-model="item.mobile"
                         maxlength="11"
+                        @input="mobileChange(item.mobile)"
                       ></el-input>
                     </el-col>
                   </el-row>
@@ -98,9 +105,14 @@
               <el-row>
                 <el-col>
                   <el-row v-for="(item,index) in teacherList" :key="index">
-                    <el-col :span="1" style="color:#999;">姓名:</el-col>
-                    <el-col :span="10">
-                      <el-input size="small" style="width:365px" v-model="item.name"></el-input>
+                    <el-col :span="2" style="color:#999;">姓名:</el-col>
+                    <el-col :span="9">
+                      <el-input
+                        size="small"
+                        style="width:330px"
+                        placeholder="请输入姓名"
+                        v-model="item.name"
+                      ></el-input>
                     </el-col>
                     <el-col :span="12" :offset="1">
                       <i
@@ -109,13 +121,15 @@
                         @click="deleteTeacher(index)"
                       ></i>
                     </el-col>
-                    <el-col :span="1" style="color:#999;">电话:</el-col>
-                    <el-col :span="12">
+                    <el-col :span="2" style="color:#999;">电话:</el-col>
+                    <el-col :span="11">
                       <el-input
                         size="small"
-                        style="width:365px"
+                        style="width:330px"
                         v-model="item.mobile"
+                        placeholder="请输入手机号"
                         maxlength="11"
+                        @input="mobileChange(item.mobile)"
                       ></el-input>
                     </el-col>
                   </el-row>
@@ -183,7 +197,7 @@
               ></el-input>
             </el-form-item>
 
-            <el-form-item label-width="25px">
+            <el-form-item label-width="0">
               <div v-for="(item,index) in fields" :key="index">
                 <single-text-box
                   :dataObj="item"
@@ -321,11 +335,32 @@
                 <div class="sub-title">其他说明</div>
                 <div class="content">{{detailObj.remark}}</div>
               </div>
+              <template v-for="item in fields">
+                <div class="content-item" v-if="item.type==1||item.type==2||item.type==3">
+                  <div class="sub-title">{{item.title}}</div>
+                  <div class="content">{{item.myVal}}</div>
+                </div>
+                <div class="content-item" v-if="item.type==7||item.type==9">
+                  <div class="sub-title">{{item.title}}</div>
+                  <template v-for="subItem in item.options">
+                    <div class="content" v-if="item.myVal==subItem.value">{{subItem.text}}</div>
+                  </template>  
+                </div>
+                <div class="content-item" v-if="item.type==8">
+                  <div class="sub-title">{{item.title}}</div>
+                  <template v-for="myItem in item.myVal">
+                  <template v-for="subItem in item.options">
+                    <div class="content" v-if="myItem==subItem.value">{{subItem.text}}</div>
+                  </template>
+                  </template>
+                </div>
+
+              </template>
 
               <el-form>
                 <el-form-item label-width="0">
                   <div v-for="(item,index) in fields" :key="index">
-                    <single-text-box
+                    <!-- <single-text-box
                       :dataObj="item"
                       :myVal="item.myVal"
                       :canWrite="false"
@@ -336,8 +371,8 @@
                       :myVal="item.myVal"
                       :canWrite="false"
                       v-if="item.type==2&&item.myVal!=''"
-                    ></multi-text-box>
-                    <number-box
+                    ></multi-text-box> -->
+                    <!-- <number-box
                       :dataObj="item"
                       :myVal="item.myVal"
                       :canWrite="false"
@@ -360,7 +395,7 @@
                       :myVal="item.myVal"
                       :canWrite="false"
                       v-if="item.type==8&&item.myVal.length>0"
-                    ></multi-check-box>
+                    ></multi-check-box> -->
                   </div>
                 </el-form-item>
               </el-form>
@@ -520,6 +555,25 @@ export default {
   },
   watch: {},
   methods: {
+    // 验证手机
+    mobileChange(mobile) {
+      var re = /^[0-9]+.?[0-9]*$/;
+      var reg = /^1[3456789]\d{9}$/;
+      if(re.test(mobile)){
+        if (mobile.length >= 11 && !reg.test(mobile)) {
+          this.$message({
+            message: "请输入正确的手机号码格式",
+            type: "warning"
+          });
+        }
+      }else{
+        this.$message({
+            message: "请输入正确的手机号码格式",
+            type: "warning"
+          });
+      }
+      
+    },
     //自定义内容类型
     myValChange(val, item) {
       console.log("自定义内容类型val====", val, "item===", item);
@@ -663,7 +717,7 @@ export default {
             if (items.type == 8) {
               items.myVal = [];
             } else {
-              items.myVal = '';
+              items.myVal = "";
             }
             return items;
           });
@@ -948,9 +1002,9 @@ export default {
   display: flex;
   flex-direction: row;
   margin-bottom: 10px;
-  margin-left: 30px;
+  // margin-left: 30px;
   p {
-    width: 80px;
+    width: 105px;
     font-size: 14px;
     color: #666;
   }

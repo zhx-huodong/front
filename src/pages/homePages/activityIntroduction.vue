@@ -333,6 +333,7 @@ export default {
       params.expand = "info,works,school,professional,award";
       await this.axiosGet(params)
         .then(res => {
+          console.log("优秀作品res===",res,"res.items==",res.items.length)
           if (res.items.length > 0) {
             that.workTotle = res.items.length;
 
@@ -340,12 +341,16 @@ export default {
               let author = []; //作者
               let mentor = []; //指导老师
               let award = []; //奖项 因为可能有多个
-              author = item.info.author.map(res => {
-                return res.name;
-              });
-              mentor = item.info.mentor.map(res => {
-                return res.name;
-              });
+              if(item.info.author.length>0){
+                author = item.info.author.map(res => {
+                  return res.name;
+                });
+              }
+              if(item.info.mentor!=undefined&&item.info.mentor.length>0){
+                  mentor = item.info.mentor.map(res => {
+                  return res.name;
+                });
+              }
               if (item.award.length > 0) {
                 award = item.award.map(res => {
                   return res.title;
@@ -363,7 +368,9 @@ export default {
                 award: award.join("、"),
                 school: item.school.title
               };
+              
             });
+            console.log("优秀作品===",that.activityList)
           } else {
             that.workTotle = 0;
             that.activityList = [];
@@ -696,7 +703,7 @@ export default {
   .activity-introduction-main {
     padding: 10px 30px;
     .activity-title {
-      font-size: 18px;
+      font-size: 14px;
       color: #333;
     }
     .activity-int-item {
@@ -704,7 +711,7 @@ export default {
       margin-top: 30px;
       .sub-title {
         p {
-          font-size: 16px;
+          font-size: 14px;
           color: #333;
         }
       }
@@ -724,7 +731,7 @@ export default {
     flex-direction: column;
     margin-top: 30px;
     p {
-      font-size: 16px;
+      font-size: 14px;
       color: #333;
     }
     .annex {
