@@ -22,7 +22,7 @@
             </div>
           </div>
           <div class="content-item">
-            <div class="sub-title">创作思想</div>
+            <div class="sub-title">作品介绍</div>
             <div class="content" v-html="activityDetail.works.content.content"></div>
           </div>
           <div class="content-item" v-if="activityDetail.works.content.production">

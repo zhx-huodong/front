@@ -14,7 +14,7 @@
       <el-col :span="12" :offset="2">
         <el-input-number v-model="val" controls-position="right" :min="dataObj.minNumber" :max="dataObj.maxNumber" size="medium" @change="myValChange"></el-input-number>
       </el-col>
-      <el-col :span="12" :offset="2" style="color:#7F7F7F;">备注：{{dataObj.description}}</el-col>
+      <el-col :span="12" :offset="2" style="color:#7F7F7F;" v-if="dataObj.description!=''">备注：{{dataObj.description}}</el-col>
     </el-row>
   </div>
 </template>

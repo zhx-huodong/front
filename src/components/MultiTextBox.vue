@@ -14,7 +14,7 @@
       <el-col :span="12" :offset="2">
         <el-input type="textarea" :rows="4" placeholder="请输入内容" style="width:600px;" v-model="val" @input="myValChange"></el-input>
       </el-col>
-      <el-col :span="12" :offset="2" style="color:#7F7F7F;">备注：{{dataObj.description}}</el-col>
+      <el-col :span="12" :offset="2" style="color:#7F7F7F;" v-if="dataObj.description!=''">备注：{{dataObj.description}}</el-col>
     </el-row>
   </div>
 </template>

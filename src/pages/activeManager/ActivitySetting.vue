@@ -880,7 +880,7 @@ export default {
   display: inline-block;
   border: 1px solid #409eff;
   border-radius: 3px;
-  margin-left: 64%;
+  // margin-left: 64%;
   cursor: pointer;
 }
 .myOut {

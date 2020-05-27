@@ -251,7 +251,7 @@ export default {
         type: 2,
         content: "", //内容
         author_limit: "1", //作者上限
-        mentor_limit: "1", //指导老师限制
+        mentor_limit: "0", //指导老师限制
         formats: [
           {
             type: 1,
@@ -387,7 +387,7 @@ export default {
       let enrollTemplateItem = {
         type: val,
         title: "请填写标题",
-        description: "请填写备注",
+        description: "",
         required: false,
         enable:1,
         visible:1,
@@ -544,13 +544,13 @@ export default {
         });
         return;
       }
-      if (this.form.mentor_limit == "") {
-        this.$message({
-          message: "指导老师未填写",
-          type: "error"
-        });
-        return;
-      }
+      // if (this.form.mentor_limit == "") {
+      //   this.$message({
+      //     message: "指导老师未填写",
+      //     type: "error"
+      //   });
+      //   return;
+      // }
       if (this.period.length == 0) {
         this.$message({
           message: "至少选择一个组",
@@ -679,7 +679,7 @@ export default {
   display: inline-block;
   border: 1px solid #409eff;
   border-radius: 3px;
-  margin-left: 67%;
+  // margin-left: 67%;
 }
 .myOut {
   width: 710px;
