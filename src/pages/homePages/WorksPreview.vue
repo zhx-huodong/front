@@ -63,7 +63,7 @@
             </div>
           </template>
 
-          <div class="content-item" style="width:50%">
+          <div class="content-item" style="width:80%">
             <div class="sub-title">作品:</div>
             <div class="content">
               <template v-for="item in activityDetail.works.attachment">

@@ -362,7 +362,7 @@
                 </div>
               </template>
 
-              <div class="content-item" style="width:50%">
+              <div class="content-item" style="width:80%">
                 <div class="sub-title">作品:</div>
                 <div class="content" v-for="(item,index) in detailObj.attachment" :key="index">
                   <template v-for="subItem in detailObj.attachment[index]">
@@ -829,9 +829,16 @@ export default {
         }
       }
       params.period = this.period;
-      params.attachment = this.attachment;
-      console.log("params===", params);
-      // return;
+      console.log("this.attachment===", this.attachment,"activityProjectDetail.formats===",this.activityProjectDetail.formats);
+      if(Object.keys(this.attachment).length>=this.activityProjectDetail.formats.length){
+        params.attachment = this.attachment;
+      }else{
+        this.$message({
+          message: "请按要求上传作品",
+          type: "warning"
+        });
+        return;
+      }
       if (this.operate == 0) {
         this.showPreview = true;
         this.detailObj = params;
