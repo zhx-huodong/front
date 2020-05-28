@@ -23,4 +23,7 @@
   .uni-layout-content{
     height:85%;
   }
+  .el-icon-arrow-down{
+    justify-content: center !important;
+  }
 </style>

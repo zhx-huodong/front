@@ -18,7 +18,7 @@
                   :description="formatDateChar(activityObject.node[1].stime*1000)+'--'+formatDateChar(activityObject.node[1].etime*1000)"
                 ></el-step>
                 <el-step
-                  title="市级审批"
+                  title="市级评审"
                   :description="formatDateChar(activityObject.node[2].stime*1000)+'--'+formatDateChar(activityObject.node[2].etime*1000)"
                 ></el-step>
                 <el-step
@@ -52,10 +52,9 @@
                 </div>
                 <div
                   class="list-item-content"
-                  v-for="(item,index) in targetList"
+                  v-for="(item,index) in activityObject.target"
                   :key="index"
-                  v-if="item.id==activityObject.target"
-                >【{{item.name}}】</div>
+                >【{{targetObj[item]}}】</div>
               </div>
               <div class="list-item">
                 <div class="list-item-title">
@@ -236,6 +235,7 @@ export default {
         { name: "中职组", id: 32 },
         { name: "高教组", id: 64 }
       ],
+      targetObj: { 1: "老师",  2: "学生", 4: "家长"},
       targetList: [
         { name: "老师", id: 1 },
         { name: "学生", id: 2 },
@@ -333,6 +333,7 @@ export default {
       params.expand = "info,works,school,professional,award";
       await this.axiosGet(params)
         .then(res => {
+          console.log("优秀作品res===",res,"res.items==",res.items.length)
           if (res.items.length > 0) {
             that.workTotle = res.items.length;
 
@@ -340,12 +341,16 @@ export default {
               let author = []; //作者
               let mentor = []; //指导老师
               let award = []; //奖项 因为可能有多个
-              author = item.info.author.map(res => {
-                return res.name;
-              });
-              mentor = item.info.mentor.map(res => {
-                return res.name;
-              });
+              if(item.info.author.length>0){
+                author = item.info.author.map(res => {
+                  return res.name;
+                });
+              }
+              if(item.info.mentor!=undefined&&item.info.mentor.length>0){
+                  mentor = item.info.mentor.map(res => {
+                  return res.name;
+                });
+              }
               if (item.award.length > 0) {
                 award = item.award.map(res => {
                   return res.title;
@@ -363,7 +368,9 @@ export default {
                 award: award.join("、"),
                 school: item.school.title
               };
+              
             });
+            console.log("优秀作品===",that.activityList)
           } else {
             that.workTotle = 0;
             that.activityList = [];
@@ -408,6 +415,7 @@ export default {
               );
             }
           }
+          this.activityObject.target=this.getSubSet(this.activityObject.target,[1,2]);
           let nowTime = Date.parse(new Date());
           if (res.node[0].stime * 1000 <= nowTime) {
             this.process = 1;
@@ -695,7 +703,7 @@ export default {
   .activity-introduction-main {
     padding: 10px 30px;
     .activity-title {
-      font-size: 18px;
+      font-size: 14px;
       color: #333;
     }
     .activity-int-item {
@@ -703,7 +711,7 @@ export default {
       margin-top: 30px;
       .sub-title {
         p {
-          font-size: 16px;
+          font-size: 14px;
           color: #333;
         }
       }
@@ -723,12 +731,12 @@ export default {
     flex-direction: column;
     margin-top: 30px;
     p {
-      font-size: 16px;
+      font-size: 14px;
       color: #333;
     }
     .annex {
       margin-left: 30px;
-      width: 50%;
+      width: 70%;
       display: flex;
       flex-direction: column;
       margin-top: 10px;

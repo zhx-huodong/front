@@ -51,7 +51,7 @@ export default {
     max: {
       type: Number,
       default() {
-        return 3;
+        return 100;
       }
     },
     name: {
@@ -118,7 +118,8 @@ export default {
 <style lang="less" >
 .operate-button {
   display: flex;
-  flex-direction: row;
+  // flex-direction: row;
+  flex-wrap: wrap;
   .my-button {
     cursor: pointer;
     display: flex;
@@ -143,12 +144,13 @@ export default {
   }
   .picture-list {
     display: flex;
-    flex-direction: row;
+    // flex-direction: row;
+    flex-wrap: wrap;
     .picture-list-items {
       position: relative;
       margin-right: 10px;
       border: 1px solid #198af3;
-
+      margin-bottom: 10px;
       border-radius: 8px;
       width: 160px;
       height: 100px;

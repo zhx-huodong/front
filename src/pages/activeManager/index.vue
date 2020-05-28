@@ -36,10 +36,15 @@
                     <img :src="item.cover" style="width:173px;height:127px;border-radius:8px;" />
                   </div>
                   <div class="activeclass">
-                    <p class="font1">{{item.title}}</p>
+                    <div class="active-title">
+                      <p class="font1">{{item.title}}</p>
+                      <P class="show-ell">{{item.title}}</P>
+                    </div>
                     <p>
                       活动对象：
-                      【{{targetObj[item.target]}}】
+                      <template v-for="subItem in item.target">
+                        【{{targetObj[subItem]}}】
+                      </template>
                     </p>
                     <p>活动范围：
                       <template v-if="item.region.length<12" v-for="(subItem,index1) in item.region">
@@ -195,17 +200,11 @@ export default {
       }
       let res = await this.axiosGet(params)
         .then(res => {
+          let arr=[1,2]
+          for(let i in res.items){
+            res.items[i].target=this.getSubSet(res.items[i].target,arr)
+          }
           this.activityList = res.items;
-          // console.log("我看看这里",this.form.time);
-          // 数据清除
-          // {
-            // this.time1 = "";
-            // this.time2 = "";
-            // this.form.time = "";
-            // this.form.acitvename = "";
-            //我屏蔽掉的原因是因为搜索框那边点击搜索之后就置空了
-          // }
-          // this.form.time =[];
         })
         .catch(err => err);
     },
@@ -314,15 +313,43 @@ export default {
     color: rgba(102, 102, 102, 1);
     line-height: 24px;
   }
-  .font1 {
-    margin: 7px 0 0 0;
-    float: left;
-    font-size: 20px;
-    font-family: Microsoft YaHei;
-    font-weight: 400;
-    color: rgba(51, 51, 51, 1);
-    line-height: 43px;
+  .active-title{
+    position: relative;
+    .font1 {
+      margin: 7px 0 0 0;
+      float: left;
+      font-size: 20px;
+      color: rgba(51, 51, 51, 1);
+      line-height: 43px;
+      width: 500px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .show-ell{
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      display: none;
+    }
   }
+  .active-title:hover{
+    .show-ell{
+      position: absolute;
+      top: 45px;
+      left: 60px;
+      margin: 0;
+      padding: 5px 10px;
+      display: flex;
+      background: black;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 20px;
+    }
+    
+  }
+  
+  
 }
 .clearfix:before,
 .clearfix:after {

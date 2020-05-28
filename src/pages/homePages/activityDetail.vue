@@ -31,7 +31,7 @@
             plain
             size="mini"
             @click="goToEdit"
-            v-if="look!=0&&process<=2"
+            v-if="look!=0&&process<=2&&!position&1"
           >修改</el-button>
         </div>
         <works-preview :id="id" @goback="goback" :rejectReason="activityDetail.status==0"></works-preview>
@@ -50,8 +50,12 @@ export default {
       id: this.$route.query.id, //获取详情id
       activityDetail: {}, //活动详情
       look: this.$route.query.look,
-      process: 1 //活动状态
+      process: 1, //活动状态
+      position:0,
     };
+  },
+  created(){
+    
   },
   mounted() {
     this.getActivityDetail();
@@ -69,6 +73,7 @@ export default {
       await this.axiosGet(params)
         .then(res => {
           this.activityDetail = res;
+          this.position=res.position
           let nowTime = Date.parse(new Date());
           if (res.info.nodes[0].stime * 1000 <=nowTime) {
             this.process = 1;

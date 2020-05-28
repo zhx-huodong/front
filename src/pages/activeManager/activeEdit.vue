@@ -1,5 +1,13 @@
 <template>
   <div class="create-activity-container">
+    <transition>
+      <right-edit-box
+        v-if="showEditBox"
+        @editConform="editConform"
+        :fields="form.fields"
+        :editIndex="editIndex"
+      ></right-edit-box>
+    </transition>
     <el-card style="min-height:650px">
       <el-page-header @back="back()" content="项目编辑"></el-page-header>
       <el-divider></el-divider>
@@ -46,7 +54,82 @@
               >{{item.name}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <template v-for="(item,index) in form.formats" >
+
+          <el-form-item label="报名内容格式 :" prop="content_type">
+            <el-select
+              v-model="enrollType"
+              placeholder="请选择报名内容格式"
+              size="small"
+              @change="enrollTypeChange"
+            >
+              <el-option
+                v-for="item in enrollTypeList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <div v-for="(item,index) in form.fields" :key="index">
+              <single-text-box
+                :dataObj="item"
+                :showOperation='true'
+                @delectItem="delectItem(index)"
+                @toUp="toUp(index)"
+                @toDown="toDown(index)"
+                @toEdit="toEdit(index)"
+                v-if="item.type==1"
+              ></single-text-box>
+              <multi-text-box
+                :dataObj="item"
+                :showOperation='true'
+                @delectItem="delectItem(index)"
+                @toUp="toUp(index)"
+                @toDown="toDown(index)"
+                @toEdit="toEdit(index)"
+                v-if="item.type==2"
+              ></multi-text-box>
+              <number-box
+                :dataObj="item"
+                :showOperation='true'
+                @delectItem="delectItem(index)"
+                @toUp="toUp(index)"
+                @toDown="toDown(index)"
+                @toEdit="toEdit(index)"
+                v-if="item.type==3"
+              ></number-box>
+              <select-box
+                :dataObj="item"
+                :showOperation='true'
+                @delectItem="delectItem(index)"
+                @toUp="toUp(index)"
+                @toDown="toDown(index)"
+                @toEdit="toEdit(index)"
+                v-if="item.type==9"
+              ></select-box>
+              <single-check-box
+                :dataObj="item"
+                :showOperation='true'
+                @delectItem="delectItem(index)"
+                @toUp="toUp(index)"
+                @toDown="toDown(index)"
+                @toEdit="toEdit(index)"
+                v-if="item.type==7"
+              ></single-check-box>
+              <multi-check-box
+                :dataObj="item"
+                :showOperation='true'
+                @delectItem="delectItem(index)"
+                @toUp="toUp(index)"
+                @toDown="toDown(index)"
+                @toEdit="toEdit(index)"
+                v-if="item.type==8"
+              ></multi-check-box>
+            </div>
+          </el-form-item>
+
+          <template v-for="(item,index) in form.formats">
             <el-form-item label="作品上传格式:" prop="formats">
               <el-select
                 v-model="item.type"
@@ -62,7 +145,7 @@
                   :value="subItem.value"
                 ></el-option>
               </el-select>
-              
+
               <span>大小限制：</span>
               <el-select
                 v-model="item.size"
@@ -78,7 +161,11 @@
                   :value="subItem.value"
                 ></el-option>
               </el-select>
-              <i class="el-icon-circle-close" style="font-size:25px;color:red;cursor:pointer;margin-left:10px" @click="deleteUploadType(index)"></i>
+              <i
+                class="el-icon-circle-close"
+                style="font-size:25px;color:red;cursor:pointer;margin-left:10px"
+                @click="deleteUploadType(index)"
+              ></i>
               <!-- <el-button size="small" @click="deleteUploadType(index)"  style="background-color:#FA3636;color:#fff;margin-left:170px">删除</el-button> -->
             </el-form-item>
             <el-form-item>
@@ -86,7 +173,7 @@
                 v-model="item.remark"
                 placeholder="输入备注"
                 @input="ChangeFormatsRemark(index)"
-                style="width:700px"
+                style="width:900px"
                 type="textarea"
                 :rows="2"
               ></el-input>
@@ -112,8 +199,24 @@
 </template>
 <script>
 import MyEditor from "../../components/MyEditor";
+import SingleTextBox from "../../components/SingleTextBox";
+import MultiTextBox from "../../components/MultiTextBox";
+import NumberBox from "../../components/NumberBox";
+import SelectBox from "../../components/SelectBox";
+import SingleCheckBox from "../../components/SingleCheckBox";
+import MultiCheckBox from "../../components/MultiCheckBox";
+import RightEditBox from "../../components/RightEditBox";
 export default {
-  components: { MyEditor },
+  components: {
+    MyEditor,
+    SingleTextBox,
+    NumberBox,
+    SelectBox,
+    RightEditBox,
+    MultiTextBox,
+    SingleCheckBox,
+    MultiCheckBox
+  },
   data() {
     return {
       rules: {
@@ -123,15 +226,14 @@ export default {
         author_limit: [
           { required: true, message: "学生上限必填", trigger: "blur" }
         ],
-        mentor_limit: [
-          { required: true, message: "指导老师上限必填", trigger: "blur" }
+        content_type: [
+          { required: true, message: "报名内容格式必选", trigger: "blur" }
         ],
-        formats:[
+        formats: [
           {
             type: "array",
             required: true,
-            message: "请选择作品格式",
-            
+            message: "请选择作品格式"
           }
         ]
       },
@@ -149,9 +251,18 @@ export default {
         type: 2,
         content: "", //内容
         author_limit: "1", //作者上限
-        mentor_limit: "1", //指导老师限制
-        formats: [{type:1,size:1,remark:'支持JPG、PNG等图片格式,大小不超过1MB',remark1:'支持JPG、PNG等图片格式',remark2:'大小不超过1MB'}],
-        period: "" //组别设置
+        mentor_limit: "0", //指导老师限制
+        formats: [
+          {
+            type: 1,
+            size: 1,
+            remark: "支持JPG、PNG等图片格式,大小不超过1MB",
+            remark1: "支持JPG、PNG等图片格式",
+            remark2: "大小不超过1MB"
+          }
+        ],
+        period: "", //组别设置
+        fields: [],//自定义内容列表
       },
       uploadFormatons: [
         {
@@ -207,8 +318,7 @@ export default {
         {
           value: 1024,
           label: "1GB"
-        }
-        ,
+        },
         {
           value: 2048,
           label: "2GB"
@@ -221,6 +331,17 @@ export default {
       size: "", //文件大小
       remark: "", //备注
       type: "", //文件类型
+      enrollTypeList: [
+        { value: 1, label: "单行文本框" },
+        { value: 2, label: "多行文本框" },
+        { value: 3, label: "数字输入框" },
+        { value: 7, label: "单选框" },
+        { value: 8, label: "多选框" },
+        { value: 9, label: "单选下拉框" },
+      ], //报名内容格式
+      enrollType: "", //内容格式
+      showEditBox: false,
+      editIndex: 0
     };
   },
   watch: {
@@ -229,8 +350,8 @@ export default {
   created() {
     if (this.$route.query.operate == 0) {
     } else {
-      this.index = this.$route.query.id;
-      this.subIndex = this.$route.query.subId;
+      this.index = parseInt(this.$route.query.id);
+      this.subIndex = parseInt(this.$route.query.subId);
       if (typeof this.subIndex != undefined) {
         var addActivityForm = JSON.parse(
           sessionStorage.getItem("addActivityForm")
@@ -242,16 +363,17 @@ export default {
         this.form.author_limit = list.author_limit;
         this.form.mentor_limit = list.mentor_limit;
         this.form.period = list.period;
-        let arr=[1,2,4,8,16,32,64]
-        let period=this.getSubSet(list.period,arr)
-         for (let i in this.periodList) {
+        this.form.fields=list.fields
+        let arr = [1, 2, 4, 8, 16, 32, 64];
+        let period = this.getSubSet(list.period, arr);
+        for (let i in this.periodList) {
           for (let j in period) {
             if (this.periodList[i].id == period[j]) {
               this.period.push(this.periodList[i]);
             }
           }
         }
-        console.log("this.period===",this.period)
+        console.log("this.period===", this.period);
         this.form.formats = list.formats;
       }
     }
@@ -259,36 +381,132 @@ export default {
   computed: {},
   mounted() {},
   methods: {
+    //内容格式改变
+    enrollTypeChange(val) {
+      this.enrollType = "";
+      let enrollTemplateItem = {
+        type: val,
+        title: "请填写标题",
+        description: "",
+        required: false,
+        enable:1,
+        visible:1,
+        isEdit: false,
+      };
+      if(val==7||val==8||val==9){
+        enrollTemplateItem.options=[
+          { text: "选项1", value: 1 },
+          { text: "选项2", value: 2 },
+          { text: "选项3", value: 3 }
+        ]
+      }
+      if(val==3){
+        enrollTemplateItem.maxNumber=10
+        enrollTemplateItem.minNumber=0
+        enrollTemplateItem.decimals=0
+      }
+      this.form.fields.push(enrollTemplateItem);
+    },
+    //删除
+    delectItem(val) {
+      console.log("删除==", val);
+      this.form.fields.splice(val, 1);
+      this.showEditBox = false;
+      this.editIndex = 0;
+      for (let i in this.form.fields) {
+        this.form.fields[i].isEdit = false;
+      }
+    },
+    //上移
+    toUp(val) {
+      if(val>0){
+        this.swapArray(this.form.fields, val-1, val);
+        this.editIndex = val-1;
+      }
+    },
+    //下移
+    toDown(val) {
+      if(val<this.form.fields.length-1){
+        this.swapArray(this.form.fields, val, val+1);
+        this.editIndex = val+1;
+      }
+    },
+    //数组元素互换位置
+    swapArray(arr, index1, index2) {
+      arr[index1] = arr.splice(index2, 1, arr[index1])[0];
+      return arr;
+    },
+    //编辑
+    toEdit(val) {
+      console.log("编辑==", val);
+      this.showEditBox = true;
+      for (let i in this.form.fields) {
+        this.form.fields[i].isEdit = false;
+      }
+      this.form.fields[val].isEdit = true;
+      this.editIndex = val;
+    },
+    editConform() {
+      this.showEditBox = false;
+      console.log("自定义内容列表===",this.form.fields)
+    },
     //增加文件上传入口
-    addUploadType(){
-      let item={type:1,size:1,remark:'支持JPG、PNG等图片格式,大小不超过1MB',remark1:'支持JPG、PNG等图片格式',remark2:'大小不超过1MB'}
-      this.form.formats.push(item)
+    addUploadType() {
+      let item = {
+        type: 1,
+        size: 1,
+        remark: "支持JPG、PNG等图片格式,大小不超过1MB",
+        remark1: "支持JPG、PNG等图片格式",
+        remark2: "大小不超过1MB"
+      };
+      this.form.formats.push(item);
     },
     //删除问卷上传入口
-    deleteUploadType(index){
-      console.log("index==",index)
-      this.form.formats.splice(index,1)
+    deleteUploadType(index) {
+      console.log("index==", index);
+      this.form.formats.splice(index, 1);
     },
     //文件上传格式
-    ChangeFormatsType(value,index) {
-      let remark=["支持JPG、PNG等图片格式","支持mp4,avi,mpg,mpeg,flv,mov等常用视频格式","支持word、pdf,excel等常用格式","支持zip,rar等常用格式"]
-      this.form.formats[index].remark1 = remark[value-1];
-      this.form.formats[index].remark=this.form.formats[index].remark1+","+this.form.formats[index].remark2;
-      console.log("index==",index,"value===",value)
-      this.form.formats[index].type=value
+    ChangeFormatsType(value, index) {
+      let remark = [
+        "支持JPG、PNG等图片格式",
+        "支持mp4,avi,mpg,mpeg,flv,mov等常用视频格式",
+        "支持word、pdf,excel等常用格式",
+        "支持zip,rar等常用格式"
+      ];
+      this.form.formats[index].remark1 = remark[value - 1];
+      this.form.formats[index].remark =
+        this.form.formats[index].remark1 +
+        "," +
+        this.form.formats[index].remark2;
+      console.log("index==", index, "value===", value);
+      this.form.formats[index].type = value;
     },
     //大小限制
-    ChangeFormatsSize(value,index) {
-      console.log(value,index);
-      let remark={'0':"大小不超过1MB",'5':"大小不超过5MB",'10':"大小不超过10MB",'20':"大小不超过50MB",'100':"大小不超过100MB",'500':"大小不超过500MB",'700':"大小不超过700MB",'800':"大小不超过800MB",'1024':"大小不超过1GB",'2048':"大小不超过2GB"};
+    ChangeFormatsSize(value, index) {
+      console.log(value, index);
+      let remark = {
+        "0": "大小不超过1MB",
+        "5": "大小不超过5MB",
+        "10": "大小不超过10MB",
+        "20": "大小不超过50MB",
+        "100": "大小不超过100MB",
+        "500": "大小不超过500MB",
+        "700": "大小不超过700MB",
+        "800": "大小不超过800MB",
+        "1024": "大小不超过1GB",
+        "2048": "大小不超过2GB"
+      };
       this.form.formats[index].remark2 = remark[value];
-      this.form.formats[index].remark=this.form.formats[index].remark1+","+this.form.formats[index].remark2;
-      console.log("index==",index,"value===",value)
+      this.form.formats[index].remark =
+        this.form.formats[index].remark1 +
+        "," +
+        this.form.formats[index].remark2;
+      console.log("index==", index, "value===", value);
       this.form.formats[index].size = value;
     },
     //备注
     ChangeFormatsRemark(index) {
-      
       // console.log("备注",index);
     },
 
@@ -301,7 +519,7 @@ export default {
 
     //组别选择
     periodChange(value) {
-      console.log("组别===",value)
+      console.log("组别===", value);
       this.form.period = "";
       this.period = value;
       let period = 0;
@@ -326,16 +544,23 @@ export default {
         });
         return;
       }
-      if (this.form.mentor_limit == "") {
+      // if (this.form.mentor_limit == "") {
+      //   this.$message({
+      //     message: "指导老师未填写",
+      //     type: "error"
+      //   });
+      //   return;
+      // }
+      if (this.period.length == 0) {
         this.$message({
-          message: "指导老师未填写",
+          message: "至少选择一个组",
           type: "error"
         });
         return;
       }
-      if (this.period.length == 0) {
+      if (this.form.fields.length == 0) {
         this.$message({
-          message: "至少选择一个组",
+          message: "报名内容格式必填",
           type: "error"
         });
         return;
@@ -350,12 +575,20 @@ export default {
       let addActivityForm = JSON.parse(
         sessionStorage.getItem("addActivityForm")
       );
-      let index = this.$route.query.id;
+      let index = parseInt(this.$route.query.id);
       if (this.$route.query.operate == 0) {
         addActivityForm.category[index].child.push(this.form);
       } else if (this.$route.query.operate == 1) {
-        let subIndex = this.$route.query.subId;
-        addActivityForm.category[index].child[subIndex] = this.form;
+        let subIndex = parseInt(this.$route.query.subId);
+        // addActivityForm.category[index].child[subIndex] = this.form;
+        addActivityForm.category[index].child[subIndex].title = this.form.title
+        addActivityForm.category[index].child[subIndex].type = this.form.type
+        addActivityForm.category[index].child[subIndex].content = this.form.content
+        addActivityForm.category[index].child[subIndex].author_limit = this.form.author_limit
+        addActivityForm.category[index].child[subIndex].mentor_limit = this.form.mentor_limit
+        addActivityForm.category[index].child[subIndex].formats = this.form.formats
+        addActivityForm.category[index].child[subIndex].period = this.form.period
+        addActivityForm.category[index].child[subIndex].fields = this.form.fields
       }
       sessionStorage.setItem(
         "addActivityForm",
@@ -368,12 +601,20 @@ export default {
       setTimeout(() => {
         this.back();
       }, 1000);
-    },
-    
+    }
   }
 };
 </script>
 <style lang="less" >
+.v-enter,
+.v-leave-to {
+  opacity: 0;
+  transform: translateX(100px);
+}
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.4s ease;
+}
 #mySelect {
   height: 25px;
   line-height: 25px;
@@ -438,7 +679,7 @@ export default {
   display: inline-block;
   border: 1px solid #409eff;
   border-radius: 3px;
-  margin-left: 67%;
+  // margin-left: 67%;
 }
 .myOut {
   width: 710px;
@@ -560,14 +801,14 @@ export default {
   display: flex;
   flex-direction: row;
   margin-bottom: 10px;
-  
+
   p {
     font-size: 14px;
     color: #666;
   }
 }
-.my-editer{
+.my-editer {
   max-width: 900px;
-  padding-left:4px;
+  padding-left: 4px;
 }
 </style>

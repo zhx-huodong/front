@@ -1,7 +1,7 @@
 <template>
   <div class="create-activity-container">
     <div class="create-activity-body">
-      <el-form ref="form" :model="addActivityForm" label-width="80px">
+      <el-form ref="form" :model="addActivityForm" label-width="100px" label-position="left">
         <el-form-item label="活动名称:">
           <el-col :span="9">
             <el-input
@@ -41,7 +41,7 @@
             <upload-file
               :uploadType="'all'"
               :myFileList="attachment"
-              :max="5"
+              :max="50"
               @uploadSuccess="attachmentSuccess"
               :name="'上传活动指南'"
             ></upload-file>
@@ -59,7 +59,8 @@
             <div class="myTitle">
               <span>{{item.title}}</span>
               <div class="myBtns">
-                <a href="javascript:void(0);" style="color:#198AF3" @click="edit_(index)">编辑</a>
+                <a href="javascript:void(0);" style="color:#198AF3" @click="toCopy(index)">复制</a>
+                <a href="javascript:void(0);" style="color:#198AF3" @click="toEdit(index)">编辑</a>
                 <a href="javascript:void(0);" style="color:#FE5426" @click="deleteTitle(index)">删除</a>
               </div>
             </div>
@@ -67,6 +68,11 @@
               <div class="content" v-for="(subItem,subIndex) in item.child" :key="subIndex">
                 <span>{{subItem.title}}</span>
                 <div class="myBtns">
+                  <a
+                    href="javascript:void(0);"
+                    style="color:#198AF3"
+                    @click="toCopyChild(index,subIndex)"
+                  >复制</a>
                   <a
                     href="javascript:void(0);"
                     style="color:#198AF3"
@@ -95,7 +101,7 @@
             <el-checkbox v-for="item in regionList" :label="item" :key="item.id">{{item.name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        
+
         <el-form-item label="作品上传 :">
           <el-date-picker
             v-model="upload"
@@ -162,11 +168,11 @@
     >
       <div style=":display: inline-block;">
         <span>类别名称：</span>
-        <el-input v-model="title" placeholder="请输出"></el-input>
+        <el-input v-model="title" placeholder="请输入类别名称"></el-input>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addclassFlag = false,edit_1=false">取 消</el-button>
-        <el-button type="primary" @click="addclassFlag = false,addCategory() ">确 定</el-button>
+        <el-button type="primary" @click="addCategory()">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -301,9 +307,13 @@ export default {
         this.checkAll = this.region.length == this.regionList.length;
         this.isIndeterminate = !(this.region.length == this.regionList.length);
         if (this.addActivityForm.target != "") {
-          for (let h in this.targetList) {
-            if (this.targetList[h].id == this.addActivityForm.target) {
-              this.target.push(this.targetList[h]);
+          let arr = [1, 2];
+          let newTargetList = this.getSubSet(this.addActivityForm.target, arr);
+          for (let g in newTargetList) {
+            for (let h in this.targetList) {
+              if (this.targetList[h].id == newTargetList[g]) {
+                this.target.push(this.targetList[h]);
+              }
             }
           }
         }
@@ -340,6 +350,17 @@ export default {
           this.addActivityForm.content = res.detail.content;
           this.addActivityForm.cover = res.cover;
           this.addActivityForm.target = res.target;
+          for (let i in res.categoryDetail) {
+            for (let j in res.categoryDetail[i].child) {
+              res.categoryDetail[i].child[j].fields = res.categoryDetail[
+                i
+              ].child[j].fields.map(items => {
+                items.isEdit = false;
+                items.required = items.required == 1 ? true : false;
+                return items;
+              });
+            }
+          }
           this.addActivityForm.category = res.categoryDetail;
           this.addActivityForm.region = [];
           res.region.forEach(items => {
@@ -402,6 +423,36 @@ export default {
         }
       });
     },
+    //复制活动项目
+    toCopyChild(index, subIndex) {
+      this.addActivityForm.category.forEach((items, index_) => {
+        if (index_ == index) {
+          items.child.forEach((item, subIndex_) => {
+            if (subIndex == subIndex_) {
+              let newItem = items.child[subIndex_];
+              delete newItem.activity_id;
+              delete newItem.id;
+              delete newItem.pid;
+              for (let i in newItem.fields) {
+                delete newItem.fields[i].id;
+              }
+              for (let j in newItem.formats) {
+                delete newItem.formats[j].category_id;
+                delete newItem.formats[j].created_at;
+                delete newItem.formats[j].created_by;
+                delete newItem.formats[j].updated_at;
+                delete newItem.formats[j].updated_by;
+              }
+              items.child.push(newItem);
+            }
+          });
+        }
+      });
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
+    },
     //添加类别
     addCategory() {
       if (this.edit_1 == false) {
@@ -416,6 +467,9 @@ export default {
           JSON.stringify(this.addActivityForm)
         );
       } else {
+        this.addActivityForm = JSON.parse(
+          sessionStorage.getItem("addActivityForm")
+        );
         this.addActivityForm.category[this.editIndex].title = this.title;
         sessionStorage.setItem(
           "addActivityForm",
@@ -423,11 +477,44 @@ export default {
         );
         this.edit_1 = false;
       }
+      this.addclassFlag = false;
+      this.title = "";
     },
-    edit_(index) {
+    toEdit(index) {
+      console.log("编辑===", index);
       this.edit_1 = true;
       this.addclassFlag = true;
       this.editIndex = index;
+      this.title = this.addActivityForm.category[index].title;
+    },
+    //复制活动
+    toCopy(index) {
+      let newCategory = this.addActivityForm.category[index];
+      delete newCategory.activity_id;
+      delete newCategory.id;
+      delete newCategory.pid;
+      delete newCategory.fields;
+      for (let k in newCategory.child) {
+        delete newCategory.child[k].activity_id;
+        delete newCategory.child[k].id;
+        delete newCategory.child[k].pid;
+        for (let i in newCategory.child[k].fields) {
+          delete newCategory.child[k].fields[i].id;
+        }
+        for (let j in newCategory.child[k].formats) {
+          delete newCategory.child[k].formats[j].category_id;
+          delete newCategory.child[k].formats[j].created_at;
+          delete newCategory.child[k].formats[j].created_by;
+          delete newCategory.child[k].formats[j].updated_at;
+          delete newCategory.child[k].formats[j].updated_by;
+        }
+      }
+      this.addActivityForm.category.push(newCategory);
+      sessionStorage.setItem(
+        "addActivityForm",
+        JSON.stringify(this.addActivityForm)
+      );
+      console.log("this.addActivityForm", this.addActivityForm.category);
     },
     //删除活动
     deleteTitle(index) {
@@ -529,11 +616,14 @@ export default {
     },
     //活动对象
     targetCheckedChange(val) {
-      this.target = [];
-      this.target.push(val[val.length - 1]);
+      this.target = val;
+      // this.target.push(val[val.length - 1]);
+      let targetNum = 0;
       for (let i in this.target) {
-        this.addActivityForm.target = this.target[i].id;
+        targetNum += parseInt(this.target[i].id);
       }
+      this.addActivityForm.target = targetNum;
+      console.log("val===", this.addActivityForm, "target====", this.target);
       sessionStorage.setItem(
         "addActivityForm",
         JSON.stringify(this.addActivityForm)
@@ -543,6 +633,19 @@ export default {
     //提交
     async onSubmit() {
       let params = JSON.parse(sessionStorage.getItem("addActivityForm"));
+      for (let i in params.category) {
+        for (let j in params.category[i].child) {
+          params.category[i].child[j].fields = params.category[i].child[
+            j
+          ].fields.map(items => {
+            delete items.isEdit;
+            items.required = items.required == true ? 1 : 0;
+            return items;
+          });
+        }
+      }
+      console.log("params===", params);
+      // return
       params.url = api.activity;
       if (params.title == "") {
         this.$message({
@@ -777,7 +880,7 @@ export default {
   display: inline-block;
   border: 1px solid #409eff;
   border-radius: 3px;
-  margin-left: 64%;
+  // margin-left: 64%;
   cursor: pointer;
 }
 .myOut {
@@ -801,6 +904,7 @@ export default {
     }
   }
   .addclass {
+    margin-bottom: 30px;
     padding-left: 50px;
     color: #198af3;
     cursor: pointer;
@@ -896,6 +1000,7 @@ export default {
   flex-direction: row;
   margin-bottom: 10px;
   p {
+    width: 90px;
     font-size: 14px;
     color: #666;
   }
