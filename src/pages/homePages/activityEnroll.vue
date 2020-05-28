@@ -50,38 +50,40 @@
               label="作者："
               :rules="{ required: true, message: '请填写作者', trigger: 'blur' }"
             >
-              <el-row>
-                <el-col>
-                  <el-row v-for="(item,index) in authorList" :key="index">
-                    <el-col :span="2" style="color:#999">姓名:</el-col>
-                    <el-col :span="9">
-                      <el-input
-                        style="width:330px"
-                        size="small"
-                        placeholder="请输入姓名"
-                        v-model="item.name"
-                      ></el-input>
-                    </el-col>
-                    <el-col :span="12" :offset="1">
-                      <i
-                        class="el-icon-circle-close"
-                        style="font-size:18px;color:red;cursor:pointer"
-                        @click="deleteAuthor(index)"
-                      ></i>
-                    </el-col>
-                    <el-col :span="2" style="color:#999;">电话:</el-col>
-                    <el-col :span="11">
-                      <el-input
-                        style="width:330px"
-                        placeholder="请输入手机号码"
-                        size="small"
-                        v-model="item.mobile"
-                        maxlength="11"
-                        @input="mobileChange(item.mobile)"
-                      ></el-input>
-                    </el-col>
-                  </el-row>
+              <!-- <el-row>
+              <el-col>-->
+              <el-row v-for="(item,index) in authorList" :key="index">
+                <el-col :span="2" style="color:#999">姓名:</el-col>
+                <el-col :span="10">
+                  <el-input
+                    style="width:330px"
+                    size="small"
+                    placeholder="请输入姓名"
+                    v-model="item.name"
+                  ></el-input>
                 </el-col>
+                <el-col :span="12">
+                  <i
+                    class="el-icon-circle-close"
+                    style="font-size:18px;color:red;cursor:pointer"
+                    @click="deleteAuthor(index)"
+                  ></i>
+                </el-col>
+                <el-col></el-col>
+                <el-col :span="2" style="color:#999;">电话:</el-col>
+                <el-col :span="18">
+                  <el-input
+                    style="width:330px"
+                    placeholder="请输入手机号码"
+                    size="small"
+                    v-model="item.mobile"
+                    maxlength="11"
+                    @input="mobileChange(item.mobile)"
+                  ></el-input>
+                </el-col>
+              </el-row>
+              <!-- </el-col> -->
+              <el-row>
                 <el-col>
                   <el-button size="small" type="primary" @click="addAuthor()">添加</el-button>
                   <span class="limit leftpad">限制{{author_limit}}人</span>
@@ -102,38 +104,42 @@
             </el-form-item>
 
             <el-form-item label="指导老师：" v-if="mentor_limit>0">
-              <el-row>
-                <el-col>
-                  <el-row v-for="(item,index) in teacherList" :key="index">
-                    <el-col :span="2" style="color:#999;">姓名:</el-col>
-                    <el-col :span="9">
-                      <el-input
-                        size="small"
-                        style="width:330px"
-                        placeholder="请输入姓名"
-                        v-model="item.name"
-                      ></el-input>
-                    </el-col>
-                    <el-col :span="12" :offset="1">
-                      <i
-                        class="el-icon-circle-close"
-                        style="font-size:18px;color:red;cursor:pointer"
-                        @click="deleteTeacher(index)"
-                      ></i>
-                    </el-col>
-                    <el-col :span="2" style="color:#999;">电话:</el-col>
-                    <el-col :span="11">
-                      <el-input
-                        size="small"
-                        style="width:330px"
-                        v-model="item.mobile"
-                        placeholder="请输入手机号"
-                        maxlength="11"
-                        @input="mobileChange(item.mobile)"
-                      ></el-input>
-                    </el-col>
-                  </el-row>
+              <!-- <el-row>
+              <el-col>-->
+              <el-row v-for="(item,index) in teacherList" :key="index">
+                <el-col :span="2" style="color:#999;">姓名:</el-col>
+                <el-col :span="10">
+                  <el-input
+                    size="small"
+                    style="width:330px"
+                    placeholder="请输入姓名"
+                    v-model="item.name"
+                  ></el-input>
                 </el-col>
+
+                <el-col :span="12">
+                  <i
+                    class="el-icon-circle-close"
+                    style="font-size:18px;color:red;cursor:pointer"
+                    @click="deleteTeacher(index)"
+                  ></i>
+                </el-col>
+                <el-col></el-col>
+                <el-col :span="2" style="color:#999;">电话:</el-col>
+                <el-col :span="18">
+                  <el-input
+                    size="small"
+                    style="width:330px"
+                    v-model="item.mobile"
+                    placeholder="请输入手机号"
+                    maxlength="11"
+                    @input="mobileChange(item.mobile)"
+                  ></el-input>
+                </el-col>
+
+              </el-row>
+              <!-- </el-col> -->
+              <el-row>
                 <el-col>
                   <el-button size="small" type="primary" @click="addTeacher()">添加</el-button>
                   <span class="limit leftpad">限制{{mentor_limit}}人</span>
@@ -153,7 +159,7 @@
               ></el-input>
             </el-form-item>
 
-            <div class="my-editerContain">
+            <div class="my-editerContain" v-if="inputtext!=''">
               <P>
                 <span style="color:red;font-size:14px;">*</span>作品介绍:
               </P>
@@ -314,7 +320,7 @@
                   <el-image :src="detailObj.cover" :fit="cover"></el-image>
                 </div>
               </div>
-              <div class="content-item">
+              <div class="content-item" v-if="detailObj.content!=''&&detailObj.content!=undefined">
                 <div class="sub-title">作品介绍</div>
                 <div class="content" v-html="detailObj.content"></div>
               </div>
@@ -344,67 +350,23 @@
                   <div class="sub-title">{{item.title}}</div>
                   <template v-for="subItem in item.options">
                     <div class="content" v-if="item.myVal==subItem.value">{{subItem.text}}</div>
-                  </template>  
+                  </template>
                 </div>
                 <div class="content-item" v-if="item.type==8">
                   <div class="sub-title">{{item.title}}</div>
                   <template v-for="myItem in item.myVal">
-                  <template v-for="subItem in item.options">
-                    <div class="content" v-if="myItem==subItem.value">{{subItem.text}}</div>
-                  </template>
+                    <template v-for="subItem in item.options">
+                      <div class="content" v-if="myItem==subItem.value">{{subItem.text}}</div>
+                    </template>
                   </template>
                 </div>
-
               </template>
-
-              <el-form>
-                <el-form-item label-width="0">
-                  <div v-for="(item,index) in fields" :key="index">
-                    <!-- <single-text-box
-                      :dataObj="item"
-                      :myVal="item.myVal"
-                      :canWrite="false"
-                      v-if="item.type==1&&item.myVal!=''"
-                    ></single-text-box>
-                    <multi-text-box
-                      :dataObj="item"
-                      :myVal="item.myVal"
-                      :canWrite="false"
-                      v-if="item.type==2&&item.myVal!=''"
-                    ></multi-text-box> -->
-                    <!-- <number-box
-                      :dataObj="item"
-                      :myVal="item.myVal"
-                      :canWrite="false"
-                      v-if="item.type==3&&item.myVal!=''"
-                    ></number-box>
-                    <select-box
-                      :dataObj="item"
-                      :myVal="item.myVal"
-                      :canWrite="false"
-                      v-if="item.type==9&&item.myVal!=''"
-                    ></select-box>
-                    <single-check-box
-                      :dataObj="item"
-                      :myVal="item.myVal"
-                      :canWrite="false"
-                      v-if="item.type==7&&item.myVal!=''"
-                    ></single-check-box>
-                    <multi-check-box
-                      :dataObj="item"
-                      :myVal="item.myVal"
-                      :canWrite="false"
-                      v-if="item.type==8&&item.myVal.length>0"
-                    ></multi-check-box> -->
-                  </div>
-                </el-form-item>
-              </el-form>
 
               <div class="content-item" style="width:50%">
                 <div class="sub-title">作品:</div>
                 <div class="content" v-for="(item,index) in detailObj.attachment" :key="index">
-                  <template v-for="subItm in detailObj.attachment[index]">
-                    <file-preview :fileObj="subItm"></file-preview>
+                  <template v-for="subItem in detailObj.attachment[index]">
+                    <file-preview :fileObj="subItem"></file-preview>
                   </template>
                 </div>
               </div>
@@ -412,7 +374,7 @@
                 <div class="sub-title">报名登记表:</div>
                 <div class="content" style="width:475px">
                   <template v-for="subItem in detailObj.registration">
-                    <file-preview :fileObj="subItem"></file-preview>
+                    <file-preview :fileObj="{url:subItem}"></file-preview>
                   </template>
                 </div>
               </div>
@@ -428,7 +390,7 @@
                 >作者：{{detailObj.author.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}</div>
                 <div
                   class="works-detail-item"
-                  v-if="detailObj.mentor!=undefined"
+                  v-if="detailObj.mentor!=undefined&&detailObj.mentor[0]!=undefined&&detailObj.mentor[0].name!=''"
                 >指导老师：{{detailObj.mentor.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}</div>
                 <div class="works-detail-item">邮箱：{{detailObj.email}}</div>
               </div>
@@ -559,20 +521,19 @@ export default {
     mobileChange(mobile) {
       var re = /^[0-9]+.?[0-9]*$/;
       var reg = /^1[3456789]\d{9}$/;
-      if(re.test(mobile)){
+      if (re.test(mobile)) {
         if (mobile.length >= 11 && !reg.test(mobile)) {
           this.$message({
             message: "请输入正确的手机号码格式",
             type: "warning"
           });
         }
-      }else{
+      } else {
         this.$message({
-            message: "请输入正确的手机号码格式",
-            type: "warning"
-          });
+          message: "请输入正确的手机号码格式",
+          type: "warning"
+        });
       }
-      
     },
     //自定义内容类型
     myValChange(val, item) {
@@ -614,11 +575,23 @@ export default {
         this.works_id = res.works.id;
         that.form.activityProject = res.info.project;
         that.form.title = res.works.title;
-        that.inputtext = res.works.content.content;
-        that.production = res.works.content.production; //创作过程
-        that.reference = res.works.content.reference; //参考资料
-        that.environment = res.works.content.environment; //制作软件及运行环境
-        that.remark = res.works.content.remark; //其他说明
+        if(res.works.content!=null){
+          if(res.works.content.content!=undefined){
+            that.inputtext = res.works.content.content;
+          }
+          if(res.works.content.production!=undefined){
+            that.production = res.works.content.production; //创作过程
+          }
+          if(res.works.content.reference!=undefined){
+            that.reference = res.works.content.reference; //参考资料
+          }
+          if(res.works.content.environment!=undefined){
+            that.environment = res.works.content.environment; //制作软件及运行环境
+          }
+          if(res.works.content.remark!=undefined){
+            that.remark = res.works.content.remark; //其他说明
+          } 
+        }
         that.form.email = res.works.email;
         that.form.school_id = res.school_id;
         that.authorList = res.works.member.author;
@@ -802,11 +775,11 @@ export default {
       if (this.content !== "") {
         params.content = this.content;
       } else {
-        this.$message({
-          message: "请添加活动介绍",
-          type: "warning"
-        });
-        return;
+        // this.$message({
+        //   message: "请添加活动介绍",
+        //   type: "warning"
+        // });
+        // return;
       }
 
       if (this.authorList.length > 0) {

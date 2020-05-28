@@ -15,65 +15,32 @@
             <div class="sub-title" style="color:red;font-weight:700">退回详情</div>
             <div class="content" v-html="activityDetail.comment" style="color:red;font-weight:700"></div>
           </div>
-          <div class="content-item" v-if="activityDetail.works.cover!=''">
+          <div class="content-item" v-if="activityDetail.works!=undefined&&activityDetail.works.cover!=undefined&&activityDetail.works.cover!=''">
             <div class="sub-title">作品封面</div>
             <div class="content">
               <el-image :src="activityDetail.works.cover" :fit="cover"></el-image>
             </div>
           </div>
-          <div class="content-item">
+          <div class="content-item" v-if="activityDetail.works.content!=null&&activityDetail.works.content.content!=''">
             <div class="sub-title">作品介绍</div>
             <div class="content" v-html="activityDetail.works.content.content"></div>
           </div>
-          <div class="content-item" v-if="activityDetail.works.content.production">
+          <div class="content-item" v-if="activityDetail.works.content!=null&&activityDetail.works.content.production!=''">
             <div class="sub-title">创作过程</div>
             <div class="content">{{activityDetail.works.content.production}}</div>
           </div>
-          <div class="content-item" v-if="activityDetail.works.content.reference!=''">
+          <div class="content-item" v-if="activityDetail.works.content!=null&&activityDetail.works.content.reference!=''">
             <div class="sub-title">参考资源</div>
             <div class="content">{{activityDetail.works.content.reference}}</div>
           </div>
-          <div class="content-item" v-if="activityDetail.works.content.environment!=''">
+          <div class="content-item" v-if="activityDetail.works.content!=null&&activityDetail.works.content.environment!=''">
             <div class="sub-title">制作用软件及运行环境</div>
             <div class="content">{{activityDetail.works.content.environment}}</div>
           </div>
-          <div class="content-item" v-if="activityDetail.works.content.remark!=''">
+          <div class="content-item" v-if="activityDetail.works.content!=null&&activityDetail.works.content.remark!=''">
             <div class="sub-title">其他说明</div>
             <div class="content">{{activityDetail.works.content.remark}}</div>
           </div>
-
-          <!-- <el-form>
-            <el-form-item label-width="0">
-              <div v-for="(item,index) in fields" :key="index">
-                <single-text-box
-                  :dataObj="item"
-                  :myVal="item.myVal"
-                  :canWrite="false"
-                  v-if="item.type==1&&item.myVal!=''"
-                ></single-text-box>
-                <multi-text-box
-                  :dataObj="item"
-                  :myVal="item.myVal"
-                  :canWrite="false"
-                  v-if="item.type==2&&item.myVal!=''"
-                ></multi-text-box>
-                <number-box :canWrite="false" :dataObj="item" :myVal="item.myVal" v-if="item.type==3&&item.myVal!=''"></number-box>
-                <select-box :canWrite="false" :dataObj="item" :myVal="item.myVal" v-if="item.type==9&&item.myVal!=''"></select-box>
-                <single-check-box
-                  :dataObj="item"
-                  :myVal="item.myVal"
-                  :canWrite="false"
-                  v-if="item.type==7&&item.myVal!=''"
-                ></single-check-box>
-                <multi-check-box
-                  :dataObj="item"
-                  :myVal="item.myVal"
-                  :canWrite="false"
-                  v-if="item.type==8&&item.myVal!=''"
-                ></multi-check-box>
-              </div>
-            </el-form-item>
-          </el-form>-->
 
           <template v-for="item in fields">
             <div class="content-item" v-if="item.type==1||item.type==2||item.type==3">
@@ -130,7 +97,7 @@
               >作者：{{activityDetail.works.member.author.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}</div>
               <div
                 class="works-detail-item"
-                v-if="activityDetail.works.member.mentor!=undefined"
+                v-if="activityDetail.works.member.mentor!=undefined&&activityDetail.works.member.mentor[0]!=undefined&&activityDetail.works.member.mentor[0].name!=''"
               >指导老师：{{activityDetail.works.member.mentor.map(item=>{return item.name+'('+item.mobile+')'}).join('、')}}</div>
             </template>
             <template v-if="award">
@@ -140,7 +107,7 @@
               >作者：{{activityDetail.works.member.author.map(item=>{return item.name}).join('、')}}</div>
               <div
                 class="works-detail-item"
-                v-if="activityDetail.works.member.mentor!=undefined"
+                v-if="activityDetail.works.member.mentor!=undefined&&activityDetail.works.member.mentor[0]!=undefined&&activityDetail.works.member.mentor[0].name!=''"
               >指导老师：{{activityDetail.works.member.mentor.map(item=>{return item.name}).join('、')}}</div>
             </template>
             <div class="works-detail-item" v-show="!award">邮箱：{{activityDetail.works.email}}</div>

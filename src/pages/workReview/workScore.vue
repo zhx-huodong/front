@@ -21,6 +21,8 @@
                     clearable
                     style="width:200px;"
                     size="small"
+                    maxlength="3"
+                    @input="checkScore(form2.score)"
                   ></el-input>
                   <span style="padding-left:10px;">分</span>
                   <span
@@ -91,6 +93,23 @@ export default {
     // that.getWorkDetail(that.queryId);
   },
   methods: {
+    // 验证手机
+    checkScore(score) {
+      var re = /^[0-9]+.?[0-9]*$/;
+      if (re.test(score)) {
+        if(score>100){
+          this.$message({
+            message: "请按照规则进行评分",
+            type: "warning"
+          });
+        }
+      } else {
+        this.$message({
+          message: "请按照规则进行评分",
+          type: "warning"
+        });
+      }
+    },
     async getWorkDetail(queryId) {
       let that = this;
       let params = {};
@@ -133,10 +152,20 @@ export default {
     //评分
     goToScore(queryId) {
       let that = this;
+      var re = /^[0-9]+.?[0-9]*$/;
       let item = {};
       item.ids = [];
       item.ids[0] = queryId;
-      item.score = parseInt(that.form2.score) * 10;
+      if(re.test(that.form2.score)&&parseInt(that.form2.score)<=100){
+        item.score = parseInt(that.form2.score) * 10;
+      }else{
+        this.$message({
+          message: "请按照规则进行评分",
+          type: "warning"
+        });
+        return
+      }
+      
       item.comment = that.form2.comment;
       let params = [];
       params.push(item);

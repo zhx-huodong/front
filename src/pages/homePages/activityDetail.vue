@@ -53,6 +53,9 @@ export default {
       process: 1 //活动状态
     };
   },
+  created(){
+    
+  },
   mounted() {
     this.getActivityDetail();
   },

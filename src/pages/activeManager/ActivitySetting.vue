@@ -1,7 +1,7 @@
 <template>
   <div class="create-activity-container">
     <div class="create-activity-body">
-      <el-form ref="form" :model="addActivityForm" label-width="80px">
+      <el-form ref="form" :model="addActivityForm" label-width="100px" label-position="left">
         <el-form-item label="活动名称:">
           <el-col :span="9">
             <el-input
@@ -1000,6 +1000,7 @@ export default {
   flex-direction: row;
   margin-bottom: 10px;
   p {
+    width: 90px;
     font-size: 14px;
     color: #666;
   }
