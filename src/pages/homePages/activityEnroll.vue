@@ -36,6 +36,7 @@
                 filterable
                 placeholder="请选择"
                 size="small"
+                style="width:400px"
                 @change="schoolChange"
               >
                 <el-option
@@ -53,10 +54,10 @@
               <!-- <el-row>
               <el-col>-->
               <el-row v-for="(item,index) in authorList" :key="index">
-                <el-col :span="2" style="color:#999">姓名:</el-col>
-                <el-col :span="10">
+                <!-- <el-col :span="2" style="color:#999">姓名:</el-col> -->
+                <el-col :span="12">
                   <el-input
-                    style="width:330px"
+                    style="width:400px"
                     size="small"
                     placeholder="请输入姓名"
                     v-model="item.name"
@@ -70,10 +71,10 @@
                   ></i>
                 </el-col>
                 <el-col></el-col>
-                <el-col :span="2" style="color:#999;">电话:</el-col>
+                <!-- <el-col :span="2" style="color:#999;">电话:</el-col> -->
                 <el-col :span="18">
                   <el-input
-                    style="width:330px"
+                    style="width:400px"
                     placeholder="请输入手机号码"
                     size="small"
                     v-model="item.mobile"
@@ -107,11 +108,11 @@
               <!-- <el-row>
               <el-col>-->
               <el-row v-for="(item,index) in teacherList" :key="index">
-                <el-col :span="2" style="color:#999;">姓名:</el-col>
-                <el-col :span="10">
+                <!-- <el-col :span="2" style="color:#999;">姓名:</el-col> -->
+                <el-col :span="12">
                   <el-input
                     size="small"
-                    style="width:330px"
+                    style="width:400px"
                     placeholder="请输入姓名"
                     v-model="item.name"
                   ></el-input>
@@ -125,11 +126,11 @@
                   ></i>
                 </el-col>
                 <el-col></el-col>
-                <el-col :span="2" style="color:#999;">电话:</el-col>
+                <!-- <el-col :span="2" style="color:#999;">电话:</el-col> -->
                 <el-col :span="18">
                   <el-input
                     size="small"
-                    style="width:330px"
+                    style="width:400px"
                     v-model="item.mobile"
                     placeholder="请输入手机号"
                     maxlength="11"
@@ -296,7 +297,7 @@
             </el-form-item>
           </el-form>
           <el-row>
-            <el-col :span="5" :offset="5">
+            <el-col :span="5" :offset="10">
               <el-button type="primary" @click="submitEnroll()" size="small">提交</el-button>
               <el-button type="default" @click="goback()" size="small">取消</el-button>
             </el-col>
@@ -396,7 +397,7 @@
               </div>
             </div>
             <el-row>
-              <el-col :span="4" :offset="10" style="margin-top:30px;">
+              <el-col :span="5" :offset="10" style="margin-top:30px;">
                 <el-button type="primary" @click="previewSubmitEnroll()" size="small">确认报名</el-button>
                 <el-button @click="closePreview()" size="small">返回</el-button>
               </el-col>

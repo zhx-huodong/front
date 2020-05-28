@@ -736,7 +736,7 @@ export default {
     }
     .annex {
       margin-left: 30px;
-      width: 50%;
+      width: 70%;
       display: flex;
       flex-direction: column;
       margin-top: 10px;
