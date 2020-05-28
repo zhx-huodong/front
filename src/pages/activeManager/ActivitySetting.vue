@@ -41,7 +41,7 @@
             <upload-file
               :uploadType="'all'"
               :myFileList="attachment"
-              :max="5"
+              :max="50"
               @uploadSuccess="attachmentSuccess"
               :name="'上传活动指南'"
             ></upload-file>

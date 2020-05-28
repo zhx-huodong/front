@@ -51,7 +51,7 @@ export default {
     max: {
       type: Number,
       default() {
-        return 10;
+        return 100;
       }
     },
     name: {

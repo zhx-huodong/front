@@ -4,9 +4,8 @@
       <div class="file-list-items" v-for="(item,index) in fileList" :key="index">
         <div class="name-img">
           <el-image :src="fileIconUrl" fit="cover"></el-image>
-          <div class="file-name">{{item.name||item.title}}</div>
+          <div class="file-name"><p>{{item.name||item.title}}</p></div>
         </div>
-
         <div class="file-operate">
           <p @click="goToPreview(item.url)">下载</p>
           <p @click="goToDelete(index)" style="color:red;">删除</p>
@@ -55,7 +54,7 @@ export default {
     max: {
       type: Number,
       default() {
-        return 10;
+        return 100;
       }
     },
     name: {
@@ -171,8 +170,15 @@ export default {
       display: flex;
       align-items: center;
       .file-name {
+        width: 500px;
         color: #198af3;
         margin-left: 20px;
+        P{
+          width: 500px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
       }
       .el-image {
         margin-left: 5px;
