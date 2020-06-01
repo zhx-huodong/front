@@ -1,7 +1,7 @@
 <template>
   <div class="work-score-container">
     <el-card style="min-height:600px;">
-      <works-preview :id="queryId" inscore="1" :workDetail="false"></works-preview>
+      <works-preview :id="queryId" inscore="1" :workDetail="false" ref="WorksPreview"></works-preview>
 
       <el-tabs v-model="activeDetail">
         <el-tab-pane label="评分信息" name="detail">
@@ -34,12 +34,7 @@
                   label="评语："
                   :rules="{required: true, message: '评语不能为空', trigger: 'blur'}"
                 >
-                  <el-input
-                    type="textarea"
-                    :rows="6"
-                    placeholder="请输入评语"
-                    v-model="form2.comment"
-                  ></el-input>
+                  <el-input type="textarea" :rows="6" placeholder="请输入评语" v-model="form2.comment"></el-input>
                 </el-form-item>
               </el-form>
             </el-row>
@@ -81,23 +76,60 @@ export default {
       },
       apiKey: getCookie("x-api-key"),
       queryId: parseInt(this.$route.query.id),
-      dialogVisible: false
+      dialogVisible: false,
+      tableData: []
     };
   },
   components: { WorksPreview },
   mounted() {
-    console.log("content===",this.$route.query.comment)
+    // this.tableData = JSON.parse(sessionStorage.getItem("tableData"));
+    this.getWorksList()
   },
   created() {
     let that = this;
-    // that.getWorkDetail(that.queryId);
   },
   methods: {
+    //获取所有的专家作品列表
+    async getWorksList() {
+      let that = this;
+      let params = {};
+      params.url = api.enroll;
+      params.inscore = 1;
+      params.scored=0
+      params.ball=1
+      params.expand = "info,works,professional";
+      await this.axiosGet(params)
+        .then(res => {
+          that.tableData = [];
+          let item = res.items;
+          that.tableData = item;
+          for (let i = 0; i < that.tableData.length; i++) {
+            that.tableData[i].score = that.tableData[i].professional.map(
+              res => {
+                if(res.score<0){
+                  return res.score=0
+                }else{
+                  return res.score / 10;
+                }
+              }
+            );
+            that.tableData[i].comment = that.tableData[i].professional.map(
+              res => {
+                return res.comment;
+              }
+            );
+          }
+    
+        })
+        .catch(err => {
+
+        });
+    },
     // 验证手机
     checkScore(score) {
       var re = /^[0-9]+.?[0-9]*$/;
       if (re.test(score)) {
-        if(score>100){
+        if (score > 100) {
           this.$message({
             message: "请按照规则进行评分",
             type: "warning"
@@ -110,45 +142,6 @@ export default {
         });
       }
     },
-    async getWorkDetail(queryId) {
-      let that = this;
-      let params = {};
-      params.url = api.enroll;
-      params.id = queryId;
-      params.inscore = 1;
-      params.expand = "works,info";
-      await this.axiosGet(params)
-        .then(res => {
-          that.workDetail = res;
-          that.author = res.info.author.map(res => {
-            return res.name;
-          });
-          that.teacher = res.info.mentor.map(res => {
-            return res.name;
-          });
-          if (res.works.attachment.length != 0) {
-            that.attachment.push(
-              res.attachment.map(res => {
-                return {
-                  title: res.title,
-                  url: res.url
-                };
-              })
-            );
-          }
-          that.dialogVisible = false;
-        })
-        .catch(err => {
-          if (err.status === 404) {
-            that.$message({
-              type: "error",
-              message: "已评完，没有下一份了"
-            });
-            that.queryId = that.queryId - 1;
-            that.dialogVisible = false;
-          }
-        });
-    },
     //评分
     goToScore(queryId) {
       let that = this;
@@ -156,16 +149,15 @@ export default {
       let item = {};
       item.ids = [];
       item.ids[0] = queryId;
-      if(re.test(that.form2.score)&&parseInt(that.form2.score)<=100){
+      if (re.test(that.form2.score) && parseInt(that.form2.score) <= 100) {
         item.score = parseInt(that.form2.score) * 10;
-      }else{
+      } else {
         this.$message({
           message: "请按照规则进行评分",
           type: "warning"
         });
-        return
+        return;
       }
-      
       item.comment = that.form2.comment;
       let params = [];
       params.push(item);
@@ -179,15 +171,29 @@ export default {
             });
           } else if (res.data.code == 0) {
             that.dialogVisible = true;
+            that.getWorksList()
           }
         });
     },
     //评论下一份
     open() {
       let that = this;
-      that.queryId = that.queryId - 1;
-      that.getWorkDetail(that.queryId);
+      let index=0
+      if (this.tableData.length>0) {
+        this.queryId = this.tableData[0].id;
+        console.log("queryId===",this.queryId)
+        this.$refs.WorksPreview.getActivityDetail(this.queryId)
+        this.form2.score=0 //评分
+        this.form2.comment=''
+        that.dialogVisible = false
+      } else {
+        that.$message({
+          type: "error",
+          message: "已评完，没有下一份了"
+        });
+      }
     },
+    //返回
     goback() {
       this.$router.push({ path: "/workReview" });
     }

@@ -595,12 +595,21 @@ export default {
         JSON.parse(localStorage.getItem("user")) != undefined &&
         JSON.parse(localStorage.getItem("user")) != null
       ) {
-        this.showEnrolment = true;
-        this.$nextTick(() => {
-          let enrolment = this.$refs["enrolment"];
-          document.documentElement.scrollTop = enrolment.scrollHeight;
-        });
+        if(this.process>1){
+          this.$message({
+            type:'warning',
+            message:'该活动的报名时间已经结束'
+          })
+        }else{
+          this.showEnrolment = true;
+          this.$nextTick(() => {
+            let enrolment = this.$refs["enrolment"];
+            document.documentElement.scrollTop = enrolment.scrollHeight;
+          });
+        }
+        
       }else{
+        this.$store.dispatch("INIT_SHOW", true);
         this.$message({
           type:'warning',
           message:'请登录后再进行操作'
@@ -716,6 +725,8 @@ export default {
         }
       }
       .activity-int-content {
+        line-height: 30px;
+        text-indent: 2em;
         p {
           margin-top: 10px;
           line-height: 30px;

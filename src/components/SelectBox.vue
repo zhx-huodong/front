@@ -21,7 +21,7 @@
         <i class="el-icon-edit" @click="toEdit"></i>
         <i class="el-icon-delete" @click="delectItem"></i>
       </el-col> 
-      <el-col :span="21" :offset="3" style="color:#7F7F7F;" v-if="dataObj.description!=''">备注：{{dataObj.description}}</el-col>
+      <el-col :span="21" :offset="3" style="color:#7F7F7F;line-height:25px;" v-if="dataObj.description!=''">备注：{{dataObj.description}}</el-col>
     </el-row>
   </div>
 </template>
@@ -130,6 +130,7 @@ export default {
 .title {
   color: #323232;
   font-family: 14px;
+  line-height: 25px;
   i {
     color: red;
     margin-right: 5px;

@@ -3,7 +3,7 @@
     <div class="uni-header">
       <a class="uni-title" href="/">
         <img class="logo" src="../public/images/logo.png" />
-        <span>中小学信息化活动平台</span>
+        <span>深圳市中小学科技创新应用平台</span>
       </a>
       <div class="header-menu">
         <div

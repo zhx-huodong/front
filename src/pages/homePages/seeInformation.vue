@@ -7,12 +7,23 @@
       </div>
       <el-divider></el-divider>
       <div class="content" v-html="form.content"></div>
+      <el-divider></el-divider>
+      <div class="attachment">
+        <p>公告附件</p>
+        <div class="attachment-item">
+          <template v-for="subItem in attachment">
+            <file-preview :fileObj="subItem"></file-preview>
+          </template>
+        </div>
+      </div>
     </el-card>
   </div>
 </template>
 <script>
 import api from "../../service/api";
+import FilePreview from "../../components/FilePreview";
 export default {
+  components: { FilePreview},
   data() {
     return {
       id: this.$route.query.id,
@@ -20,7 +31,8 @@ export default {
         title: "",
         content: "",
         time: ""
-      }
+      },
+      attachment:[],//附件
     };
   },
   mounted() {
@@ -32,12 +44,20 @@ export default {
       let params = {};
       params.url = api.activityNotice;
       params.id = this.id;
-      params.expand = "content,bcheck";
+      params.expand = "content,bcheck,attachment";
       await this.axiosGet(params)
         .then(res => {
           this.form.title = res.title;
           this.form.content = res.content;
           this.form.time=res.created_at
+          if(res.attachment.length>0){
+            this.attachment=res.attachment.map(item=>{
+              return {
+                title:item.title,
+                url:item.url
+              }
+            })
+          }
         })
         .catch(err => err);
     }
@@ -45,6 +65,9 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+body{
+  line-height: 30px;
+}
 .see-information-container {
   width: 1180px;
   margin: auto;
@@ -56,17 +79,19 @@ export default {
     justify-content: center;
     flex-direction: column;
     p {
-      font-weight:700;
       font-size: 20px;
       color: #333;
     }
   }
   .content {
     margin: auto;
-    width: 600px;
+    width: 80%;
+    line-height: 30px;
+    text-indent: 2em;
     p {
       line-height: 30px;
       font-size: 14px;
+      text-indent: 2em;
     }
   }
   .activity-img {
@@ -77,6 +102,17 @@ export default {
       width: 600px;
       height: 360px;
     }
+  }
+}
+.attachment{
+  width: 80%;
+  margin-left: 120px;
+  p{
+    font-size: 16px;
+    color: #333;
+  }
+  .attachment-item{
+    margin-top: 20px;
   }
 }
 </style>

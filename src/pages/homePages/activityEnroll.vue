@@ -373,7 +373,7 @@
               </div>
               <div class="content-item">
                 <div class="sub-title">报名登记表:</div>
-                <div class="content" style="width:475px">
+                <div class="content file-preview" style="width:475px">
                   <template v-for="subItem in detailObj.registration">
                     <file-preview :fileObj="{url:subItem}"></file-preview>
                   </template>
@@ -1001,6 +1001,7 @@ export default {
 .limit {
   color: red;
   font-size: 14px;
+  line-height: 25px;
 }
 .leftpad {
   padding-left: 20px;
@@ -1045,5 +1046,10 @@ export default {
       margin-bottom: 10px;
     }
   }
+}
+.file-preview{
+  display: flex;
+  flex-wrap: wrap;
+  width: 80% !important;
 }
 </style>

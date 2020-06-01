@@ -194,16 +194,16 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.getActivityDetail();
+      this.getActivityDetail(this.id);
     });
   },
   methods: {
     //获取报名活动详情
-    async getActivityDetail() {
+    async getActivityDetail(id) {
       console.log("进来");
       let params = {};
       params.url = api.enroll;
-      params.id = this.id;
+      params.id = id;
       if (this.inscore != "") {
         params.inscore = this.inscore;
       }

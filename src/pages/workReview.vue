@@ -278,7 +278,11 @@ export default {
           for (let i = 0; i < that.tableData.length; i++) {
             that.tableData[i].score = that.tableData[i].professional.map(
               res => {
-                return res.score / 10;
+                if(res.score<0){
+                  return res.score=0
+                }else{
+                  return res.score / 10;
+                } 
               }
             );
             that.tableData[i].comment = that.tableData[i].professional.map(
@@ -386,6 +390,10 @@ export default {
     //查看
     goToLook(row) {
       console.log("row====", row);
+      sessionStorage.setItem(
+        "tableData",
+        JSON.stringify(this.tableData)
+      );
       let query;
       this.$router.push({
         path: "/workScore",
