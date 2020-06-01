@@ -748,6 +748,11 @@ export default {
                 type: "success",
                 message: "修改成功！！"
               });
+              setTimeout(()=>{
+                this.$router.push({
+                  "path":'/activeManager'
+                  });
+              },500)
             } else if (res.code == -1) {
               this.$message({
                 type: "warning",

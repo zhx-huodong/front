@@ -149,6 +149,11 @@
               </template>
             </template>
           </el-table-column>
+          <el-table-column label="操作" v-if="$store.state.account.nowRole.type==0">
+            <template slot-scope="scope">
+              <el-button type="text" style="color:red;" @click="goToDelete(scope.row.id)">删除</el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </template>
     </div>
@@ -608,6 +613,54 @@ export default {
         })
         .catch(err => err);
     },
+    //删除
+    goToDelete(id) {
+      this.open(id);
+    },
+    //提示框
+    open(id) {
+      this.$confirm(`此操作将永久删除该报名记录, 是否继续?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let params = {};
+          params.id = id;
+          this.deleteConfirm(params);
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消！"
+          });
+        });
+    },
+    //删除确认
+    async deleteConfirm(params) {
+      params.url = api.enroll;
+      params.status = -1;
+      await this.axiosPut(params)
+        .then(res => {
+          if (res.id != undefined) {
+            this.$message({
+              type: "success",
+              message: "删除成功"
+            });
+            let params = {
+              "per-page": this.perPage
+            };
+            params.page = this.currentPage;
+            this.getEnrollList(params);
+          } else {
+            this.$message({
+              type: "warning",
+              message: "删除失败"
+            });
+          }
+        })
+        .catch(err => err);
+    },
     //获取作品
     async getEnrollList(params) {
       if (this.form.school != "") {
@@ -667,33 +720,6 @@ export default {
             this.tableData[i].author_ = author_.join("、");
             this.tableData[i].mentor_ = mentor_.join("、");
           }
-
-          // this.tableData.forEach(ite => {
-          //   var title = "";
-          //   var areaName = "";
-          //   var author_ = "";
-          //   var mentor_ = "";
-          //   ite.school.forEach(item => {
-          //     title == ""
-          //       ? (title = item.title)
-          //       : (title = title + "," + item.title);
-          //     areaName = item.areaInfo.areaName;
-          //   });
-          //   ite.works.member.author.forEach(item => {
-          //     author_ == ""
-          //       ? (author_ = item.name)
-          //       : (author_ = author_ + "," + item.name);
-          //   });
-          //   ite.works.member.mentor.forEach(item => {
-          //     mentor_ == ""
-          //       ? (mentor_ = item.name)
-          //       : (mentor = mentor_ + "," + item.name);
-          //   });
-          //   ite.mentor_ = mentor_;
-          //   ite.author_ = author_;
-          //   ite.areaName = areaName;
-          //   ite.title_ = title;
-          // });
           this.totalCount = res._meta.totalCount;
         })
         .catch(err => err);

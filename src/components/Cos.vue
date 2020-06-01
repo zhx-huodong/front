@@ -1,6 +1,17 @@
 <template>
   <div class="cos">
     <input ref="fileEle" type="file" style="display: none" />
+    <div class="progress-show">
+      <el-dialog
+      :visible.sync="dialogVisible"
+      width="600px"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false">
+        <el-progress :text-inside="true" :stroke-width="20" :percentage="percentVal"></el-progress>
+      </el-dialog>
+    </div>
+    
   </div>
 </template>
 <script>
@@ -21,7 +32,9 @@ export default {
       dialog: "", // 上传中...提示Dialog
       myFile: "",
       cosConfig: config.cosConfig,
-      fileList: []
+      fileList: [],
+      dialogVisible:false,
+      percentVal:0,
     };
   },
   watch: {
@@ -64,6 +77,7 @@ export default {
     };
   },
   methods: {
+    //上传
     async upload() {
       let self = this;
       let file = this.myFile;
@@ -71,10 +85,8 @@ export default {
       self.$emit("start");
       this.$refs.fileEle.value = "";
       let filename = file.name;
-
       let names = filename.split(".");
       let type = names[names.length - 1]; // 获取复杂版本的文件类型
-
       var md = new Date();
       var y = md.getFullYear();
       var m = md.getMonth() + 1;
@@ -101,26 +113,43 @@ export default {
         });
         return this.$emit("fail");
       }
-      this.dialog = this.$message({
-        type: "warning",
-        showClose: true,
-        message: "上传中...",
-        duration: 0
-      });
-
+      // this.dialog = this.$message({
+      //   type: "warning",
+      //   showClose: true,
+      //   message: "上传中。。。",
+      //   duration: 0
+      // });
+      self.dialogVisible=true
       // Cos分块上传API，适用于大文件上传。
       this.cos.sliceUploadFile(
         {
           Bucket: self.cosConfig.bucket,
           Region: self.cosConfig.region,
           Key: key, // 对象键（Object 的名称），对象在存储桶中的唯一标识
-          Body: file
+          Body: file,
+          onProgress: function(e) {
+            console.log('上传进度 ' + Math.round(e.loaded / e.total * 10000)/100 );
+            self.percentVal=Math.round(e.loaded / e.total * 10000)/100
+          }
         },
         (err, data) => {
           data.filename = filename;
-          if (!err) self.$emit("success", data);
-          else self.$emit("fail");
-          if (self.dialog) self.dialog.close(); // 关闭上传中的提示...
+          if (!err) {
+            self.$emit("success", data);
+          } else {
+            self.$emit("fail");
+          }
+          // if (self.dialog) {
+          //   self.dialog.close(); // 关闭上传中的提示...
+          // }
+          if (self.dialogVisible) {
+            self.dialogVisible=false; // 关闭上传中的提示...
+            setTimeout(()=>{
+              self.percentVal=0
+            },1000)
+            
+          }
+          
         }
       );
     }
@@ -131,9 +160,15 @@ export default {
 .cos {
   width: 138px;
   height: 40px;
+  position: relative;
 }
 .work-input {
   z-index: 9999;
   position: absolute;
+}
+.progress-show{
+  .el-dialog__header{
+    padding: 0;
+  }
 }
 </style>
