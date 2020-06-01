@@ -1,6 +1,17 @@
 <template>
   <div class="cos">
     <input ref="fileEle" type="file" style="display: none" />
+    <div class="progress-show">
+      <el-dialog
+      :visible.sync="dialogVisible"
+      width="600px"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false">
+        <el-progress :text-inside="true" :stroke-width="20" :percentage="percentVal"></el-progress>
+      </el-dialog>
+    </div>
+    
   </div>
 </template>
 <script>
@@ -21,7 +32,9 @@ export default {
       dialog: "", // 上传中...提示Dialog
       myFile: "",
       cosConfig: config.cosConfig,
-      fileList: []
+      fileList: [],
+      dialogVisible:false,
+      percentVal:0,
     };
   },
   watch: {
@@ -100,13 +113,13 @@ export default {
         });
         return this.$emit("fail");
       }
-      this.dialog = this.$message({
-        type: "warning",
-        showClose: true,
-        message: "上传中。。。",
-        duration: 0
-      });
-
+      // this.dialog = this.$message({
+      //   type: "warning",
+      //   showClose: true,
+      //   message: "上传中。。。",
+      //   duration: 0
+      // });
+      self.dialogVisible=true
       // Cos分块上传API，适用于大文件上传。
       this.cos.sliceUploadFile(
         {
@@ -115,12 +128,8 @@ export default {
           Key: key, // 对象键（Object 的名称），对象在存储桶中的唯一标识
           Body: file,
           onProgress: function(e) {
-            // if (fileObj.onProgress) {
-            //   fileObj.onProgress(progressData);
-            // }
-            console.log('上传进度 ' + (Math.round(e.loaded / e.total * 10000) / 100) + '%');
-
-            console.log("progressData===",e)
+            console.log('上传进度 ' + Math.round(e.loaded / e.total * 10000)/100 );
+            self.percentVal=Math.round(e.loaded / e.total * 10000)/100
           }
         },
         (err, data) => {
@@ -130,9 +139,17 @@ export default {
           } else {
             self.$emit("fail");
           }
-          if (self.dialog) {
-            self.dialog.close(); // 关闭上传中的提示...
+          // if (self.dialog) {
+          //   self.dialog.close(); // 关闭上传中的提示...
+          // }
+          if (self.dialogVisible) {
+            self.dialogVisible=false; // 关闭上传中的提示...
+            setTimeout(()=>{
+              self.percentVal=0
+            },1000)
+            
           }
+          
         }
       );
     }
@@ -143,9 +160,15 @@ export default {
 .cos {
   width: 138px;
   height: 40px;
+  position: relative;
 }
 .work-input {
   z-index: 9999;
   position: absolute;
+}
+.progress-show{
+  .el-dialog__header{
+    padding: 0;
+  }
 }
 </style>
