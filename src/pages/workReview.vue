@@ -435,28 +435,42 @@ export default {
     },
     //活动名称
     async activityNameObject(value) {
+      console.log("value====",value)
       let that = this;
       // that.gradeSelectID=0
       that.activityNameSelectID = value;
       for (let i in that.activityNameList) {
         if (that.activityNameList[i].id == value) {
+          console.log("that.activityNameList[i]==",that.activityNameList[i])
           that.gradeList = that.activityNameList[i].gradeList;
-          that.gradeSelectID = that.activityNameList[i].gradeList[0].id;
+          if(that.activityNameList[i].gradeList!=undefined&&that.activityNameList[i].gradeList.length>0){
+            that.gradeSelectID = that.activityNameList[i].gradeList[0].id;
+          }else{
+            that.gradeSelectID=''
+          }
           that.activityTypleList = that.activityNameList[i].activityTypleList;
-          that.activityTypleSelectID =
-            that.activityNameList[i].activityTypleList[0].id;
-          that.activityProjectList =
-            that.activityNameList[i].activityTypleList[0].activityProjectList;
-          that.activityProjectSelectID =
-            that.activityNameList[
-              i
-            ].activityTypleList[0].activityProjectList[0].id;
+          if(that.activityNameList[i].activityTypleList!=undefined&&that.activityNameList[i].activityTypleList.length>0){
+            that.activityTypleSelectID =that.activityNameList[i].activityTypleList[0].id;
+          }else{
+            that.activityTypleSelectID=''
+          }
+          if(that.activityNameList[i].activityTypleList.length>0&&that.activityNameList[i].activityTypleList[0].activityProjectList!=undefined){
+            that.activityProjectList =that.activityNameList[i].activityTypleList[0].activityProjectList;
+          }
+          
+          if(that.activityNameList[i].activityTypleList!=undefined&&that.activityNameList[i].activityTypleList.length>0){
+            that.activityProjectSelectID =that.activityNameList[i].activityTypleList[0].activityProjectList[0].id;
+          }else{
+            that.activityProjectSelectID=''
+          }
+          
         }
       }
       that.getWorksList();
     },
     //活动分类
     async activityTypleObject(value) {
+      console.log("value===",value)
       let that = this;
       that.activityTypleSelectID = value;
       for (let i in that.activityNameList) {
