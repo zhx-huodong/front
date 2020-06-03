@@ -109,7 +109,9 @@ export default {
     }
   },
   created() {
-    this.getRemindCount()
+    // if (getCookie("x-api-key")!=undefined&&getCookie("x-api-key")) {
+    //   this.getRemindCount()
+    // }
   },
   mounted() {
     if (getCookie("x-api-key")!=undefined&&getCookie("x-api-key")) {
@@ -126,6 +128,7 @@ export default {
         JSON.parse(localStorage.getItem("nowRole"))
       );
       this.checkRole();
+      this.getRemindCount()
     } else {
       this.tabs = this.normalTabs;
       this.$router.push("/home");
@@ -156,6 +159,7 @@ export default {
             JSON.parse(localStorage.getItem("nowRole"))
           );
           this.checkRole();
+          this.getRemindCount()
         } else {
           this.tabs = this.normalTabs;
           this.$router.push("/home");
