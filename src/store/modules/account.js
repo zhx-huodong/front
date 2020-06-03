@@ -4,7 +4,8 @@ export default {
 	state: {
 		user: '',
 		roles:[],
-		nowRole:{}
+		nowRole:{},
+		remindCount:0,
 	},
 	mutations: {
 		SET_USER(state, val) {
@@ -15,6 +16,9 @@ export default {
 		},
 		SET_NOWROLE(state,val){
 			state.nowRole=val
+		},
+		SET_REMINDCOUNT(state,val){
+			state.remindCount=val
 		}
 	},
 	actions: {
@@ -26,6 +30,10 @@ export default {
 		},
 		INIT_NOWROLE({commit},val){
 			commit('SET_NOWROLE',val)
+		},
+		INIT_REMINDCOUNT({commit},val){
+			commit('SET_REMINDCOUNT',val)
 		}
+
 	}
 };

@@ -726,11 +726,11 @@ export default {
       }
       .activity-int-content {
         line-height: 30px;
-        text-indent: 2em;
+        // text-indent: 2em;
         p {
           margin-top: 10px;
           line-height: 30px;
-          text-indent: 2em;
+          // text-indent: 2em;
           font-size: 14px;
         }
       }

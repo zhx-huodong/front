@@ -398,7 +398,10 @@ export default {
     },
     //删除活动项目
     childDelete(index, subIndex) {
-      this.addActivityForm.category.forEach((items, index_) => {
+      let addActivityForm = JSON.parse(
+        sessionStorage.getItem("addActivityForm")
+      );
+      addActivityForm.category.forEach((items, index_) => {
         if (index_ == index) {
           items.child.forEach((item, subIndex_) => {
             if (subIndex == subIndex_) {
@@ -407,6 +410,7 @@ export default {
           });
         }
       });
+      this.addActivityForm=addActivityForm
       sessionStorage.setItem(
         "addActivityForm",
         JSON.stringify(this.addActivityForm)
@@ -425,7 +429,10 @@ export default {
     },
     //复制活动项目
     toCopyChild(index, subIndex) {
-      this.addActivityForm.category.forEach((items, index_) => {
+      let addActivityForm = JSON.parse(
+        sessionStorage.getItem("addActivityForm")
+      );
+      addActivityForm.category.forEach((items, index_) => {
         if (index_ == index) {
           items.child.forEach((item, subIndex_) => {
             if (subIndex == subIndex_) {
@@ -448,6 +455,7 @@ export default {
           });
         }
       });
+      this.addActivityForm=addActivityForm
       sessionStorage.setItem(
         "addActivityForm",
         JSON.stringify(this.addActivityForm)
