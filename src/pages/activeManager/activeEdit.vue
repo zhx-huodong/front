@@ -161,7 +161,7 @@
                   :value="subItem.value"
                 ></el-option>
               </el-select>
-              <i
+              <i v-if="index!=0"
                 class="el-icon-circle-close"
                 style="font-size:25px;color:red;cursor:pointer;margin-left:10px"
                 @click="deleteUploadType(index)"

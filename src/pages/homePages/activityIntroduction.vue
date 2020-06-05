@@ -248,7 +248,7 @@ export default {
       apiKey: getCookie("x-api-key"),
       process: 1, //进度
       workTotle: "", //优秀作品数量
-      showEnrolment: false //展示报名区域
+      showEnrolment: false, //展示报名区域
     };
   },
   created() {
@@ -266,6 +266,21 @@ export default {
     if(this.$route.query.activeName!=undefined){
       this.activeName=this.$route.query.activeName
     }
+  },
+  watch:{
+    getNowRole(newval, oldval) {
+      console.log("登录newval===",newval,"登录oldval===",oldval)
+      this.showEnrolment = true;
+      setTimeout(() => {
+        let enrolment = this.$refs["enrolment"];
+        document.documentElement.scrollTop = enrolment.scrollHeight;
+      },3000);
+    }
+  },
+  computed:{
+    getNowRole() {
+      return this.$store.state.account.nowRole;
+    },
   },
   methods: {
     //切换

@@ -444,6 +444,7 @@ export default {
                 delete newItem.fields[i].id;
               }
               for (let j in newItem.formats) {
+                delete newItem.formats[j].id;
                 delete newItem.formats[j].category_id;
                 delete newItem.formats[j].created_at;
                 delete newItem.formats[j].created_by;
@@ -510,6 +511,7 @@ export default {
           delete newCategory.child[k].fields[i].id;
         }
         for (let j in newCategory.child[k].formats) {
+          delete newCategory.child[k].formats[j].id;
           delete newCategory.child[k].formats[j].category_id;
           delete newCategory.child[k].formats[j].created_at;
           delete newCategory.child[k].formats[j].created_by;

@@ -109,9 +109,7 @@ export default {
     }
   },
   created() {
-    // if (getCookie("x-api-key")!=undefined&&getCookie("x-api-key")) {
-    //   this.getRemindCount()
-    // }
+   
   },
   mounted() {
     if (getCookie("x-api-key")!=undefined&&getCookie("x-api-key")) {
@@ -127,7 +125,8 @@ export default {
         "INIT_NOWROLE",
         JSON.parse(localStorage.getItem("nowRole"))
       );
-      this.checkRole();
+      let val=1
+      this.checkRole(val);
       this.getRemindCount()
     } else {
       this.tabs = this.normalTabs;
@@ -158,7 +157,13 @@ export default {
             "INIT_NOWROLE",
             JSON.parse(localStorage.getItem("nowRole"))
           );
-          this.checkRole();
+          let val=0
+          if(oldval.type==undefined){
+            val=0
+          }else{
+            val=1
+          }
+          this.checkRole(val);
           this.getRemindCount()
         } else {
           this.tabs = this.normalTabs;
@@ -195,7 +200,7 @@ export default {
       location.href = "/";
     },
     //检查角色类型
-    checkRole() {
+    checkRole(val) {
       if (this.$store.state.account.nowRole.type != undefined&&this.$store.state.account.nowRole.type!=null) {
         console.log("this.$store.state.account.nowRole===",this.$store.state.account.nowRole)
         if (this.$store.state.account.nowRole.type == 0) {
@@ -249,8 +254,10 @@ export default {
             }
           }
           this.tabs = this.normalTabs;
-          this.$router.push("/home");
-          this.activeTab = "home";
+          if(val==1){
+            this.$router.push("/home");
+            this.activeTab = "home";
+          }
           this.levelList = [
             { path: "/home", name: "首页", meta: { title: "首页" } }
           ];
