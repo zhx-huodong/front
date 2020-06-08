@@ -150,7 +150,7 @@ export default {
             for (let i in this.tableData) {
               if (this.tableData[i].award.length > 0) {
                 this.tableData[i].process = "已获奖";
-              } else if (this.tableData[i].score != 0) {
+              } else if (this.tableData[i].score >0) {
                 this.tableData[i].process = "已评分";
               } else if (this.tableData[i].status == 0) {
                 this.tableData[i].process = "已退回";
