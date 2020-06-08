@@ -8,7 +8,7 @@
       <el-divider></el-divider>
       <el-row>
         <el-col :span="18" :offset="3">
-          <div class="content" v-html="objectDetail.content"></div>
+          <div class="content ql-snow ql-editor" v-html="objectDetail.content"></div>
           <el-row>
             <el-col :span="3" :offset="11" style="margin-top:20px;">
               <el-button type="primary" size="small" @click="goToActivityEnroll">下一步</el-button>

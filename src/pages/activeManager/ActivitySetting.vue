@@ -33,7 +33,7 @@
         </el-form-item>
 
         <div class="my-editer">
-          <P>活动介绍 ：</P>
+          <P>活动介绍：</P>
           <my-editor @editorChange="editorChange" :inputtext="inputtext"></my-editor>
         </div>
         <el-form-item label="活动指南:">
@@ -1015,7 +1015,7 @@ export default {
   flex-direction: row;
   margin-bottom: 10px;
   p {
-    width: 90px;
+    width: 75px;
     font-size: 14px;
     color: #666;
   }

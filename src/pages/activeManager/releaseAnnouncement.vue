@@ -12,8 +12,8 @@
             </el-col>
           </el-form-item>
 
-          <div class="my-editer" style="margin-left: 50px;">
-            <P style="width:45px;margin-left:25px">内容:</P>
+          <div class="my-editer" style="margin-left: 15px;">
+            <P style="width:45px;margin-left:60px">内容:</P>
             <my-editor @editorChange="editorChange" :inputtext="form.content"></my-editor>
           </div>
           <el-form-item label="公告附件:">
@@ -30,7 +30,7 @@
         </el-form>
         <el-row>
           <el-col :offset="10">
-            <el-button type="primary" size="small" @click="goToPreview()">确定</el-button>
+            <el-button type="primary" size="small" @click="goToPreview()">预览</el-button>
             <el-button size="small" @click="goToCancel()">取消</el-button>
           </el-col>
         </el-row>
@@ -44,7 +44,7 @@
         <!-- <p style="margin-top:10px;">{{formatDateChar(form.time*1000)}}</p> -->
       </div>
       <el-divider></el-divider>
-      <div class="content" v-html="form.content"></div>
+      <div class="content ql-snow ql-editor" v-html="form.content"></div>
       <el-divider></el-divider>
       <div class="attachment">
         <p>公告附件</p>

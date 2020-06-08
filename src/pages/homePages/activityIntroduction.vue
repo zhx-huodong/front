@@ -29,7 +29,10 @@
             </el-card>
             <div class="my-card card-body">
               <div class="title">
-                <p>{{activityObject.title}}</p>
+                <p v-if="activityObject.title.length<=75">{{activityObject.title}}</p>
+                <el-tooltip :content="activityObject.title" placement="top" effect="dark" v-else>
+                  <p>{{activityObject.title}}</p>
+                </el-tooltip>
               </div>
               <el-divider></el-divider>
               <div class="activity-introduction-main">
@@ -37,7 +40,10 @@
                   <p>活动介绍：</p>
                 </div>
                 <div class="activity-int-item">
-                  <div class="activity-int-content" v-html="activityObject.detail.content"></div>
+                  <div
+                    class="activity-int-content ql-snow ql-editor"
+                    v-html="activityObject.detail.content"
+                  ></div>
                 </div>
               </div>
               <div class="activity-annex">
@@ -206,7 +212,7 @@ import TypeSelect from "../../components/TypeSelect";
 import CardList from "../../components/CardList";
 import { getTimestamp } from "../../tools/tools";
 import { getCookie, axiosGet, axiosPost } from "../../tools/tools";
-import merge from 'webpack-merge';
+import merge from "webpack-merge";
 export default {
   components: { FilePreview, TypeSelect, CardList },
   data() {
@@ -235,7 +241,7 @@ export default {
         { name: "中职组", id: 32 },
         { name: "高教组", id: 64 }
       ],
-      targetObj: { 1: "老师",  2: "学生", 4: "家长"},
+      targetObj: { 1: "老师", 2: "学生", 4: "家长" },
       targetList: [
         { name: "老师", id: 1 },
         { name: "学生", id: 2 },
@@ -248,7 +254,7 @@ export default {
       apiKey: getCookie("x-api-key"),
       process: 1, //进度
       workTotle: "", //优秀作品数量
-      showEnrolment: false, //展示报名区域
+      showEnrolment: false //展示报名区域
     };
   },
   created() {
@@ -263,32 +269,32 @@ export default {
   },
   mounted() {
     this.getActivityInfo();
-    if(this.$route.query.activeName!=undefined){
-      this.activeName=this.$route.query.activeName
+    if (this.$route.query.activeName != undefined) {
+      this.activeName = this.$route.query.activeName;
     }
   },
-  watch:{
+  watch: {
     getNowRole(newval, oldval) {
-      console.log("登录newval===",newval,"登录oldval===",oldval)
+      console.log("登录newval===", newval, "登录oldval===", oldval);
       this.showEnrolment = true;
       setTimeout(() => {
         let enrolment = this.$refs["enrolment"];
         document.documentElement.scrollTop = enrolment.scrollHeight;
-      },3000);
+      }, 3000);
     }
   },
-  computed:{
+  computed: {
     getNowRole() {
       return this.$store.state.account.nowRole;
-    },
+    }
   },
   methods: {
     //切换
     handleClick(tab) {
-      this.activeName=tab.name
+      this.activeName = tab.name;
       this.$router.push({
-        query:merge(this.$route.query,{'activeName':tab.name})
-    })
+        query: merge(this.$route.query, { activeName: tab.name })
+      });
     },
     //获取所有的活动列表 主要是用做筛选
     async getActivityList() {
@@ -348,7 +354,7 @@ export default {
       params.expand = "info,works,school,professional,award";
       await this.axiosGet(params)
         .then(res => {
-          console.log("优秀作品res===",res,"res.items==",res.items.length)
+          console.log("优秀作品res===", res, "res.items==", res.items.length);
           if (res.items.length > 0) {
             that.workTotle = res.items.length;
 
@@ -356,13 +362,16 @@ export default {
               let author = []; //作者
               let mentor = []; //指导老师
               let award = []; //奖项 因为可能有多个
-              if(item.info.author.length>0){
+              if (item.info.author.length > 0) {
                 author = item.info.author.map(res => {
                   return res.name;
                 });
               }
-              if(item.info.mentor!=undefined&&item.info.mentor.length>0){
-                  mentor = item.info.mentor.map(res => {
+              if (
+                item.info.mentor != undefined &&
+                item.info.mentor.length > 0
+              ) {
+                mentor = item.info.mentor.map(res => {
                   return res.name;
                 });
               }
@@ -383,9 +392,8 @@ export default {
                 award: award.join("、"),
                 school: item.school.title
               };
-              
             });
-            console.log("优秀作品===",that.activityList)
+            console.log("优秀作品===", that.activityList);
           } else {
             that.workTotle = 0;
             that.activityList = [];
@@ -430,7 +438,10 @@ export default {
               );
             }
           }
-          this.activityObject.target=this.getSubSet(this.activityObject.target,[1,2]);
+          this.activityObject.target = this.getSubSet(
+            this.activityObject.target,
+            [1, 2]
+          );
           let nowTime = Date.parse(new Date());
           if (res.node[0].stime * 1000 <= nowTime) {
             this.process = 1;
@@ -507,7 +518,7 @@ export default {
           period: this.PeriodGradeObjectid,
           id: id,
           activityName: this.activityObject.title,
-          activeName:this.activeName
+          activeName: this.activeName
         }
       });
     },
@@ -539,7 +550,7 @@ export default {
       let that = this;
       that.$router.push({
         path: "/goodWorks",
-        query: { id: id, activity_id: activity_id,activeName:this.activeName}
+        query: { id: id, activity_id: activity_id, activeName: this.activeName }
       });
     },
     //查看
@@ -548,7 +559,7 @@ export default {
         path: "/home/seeInformation",
         query: {
           id: id,
-          activityName:this.activeName
+          activityName: this.activeName
         }
       });
     },
@@ -610,25 +621,24 @@ export default {
         JSON.parse(localStorage.getItem("user")) != undefined &&
         JSON.parse(localStorage.getItem("user")) != null
       ) {
-        if(this.process>1){
+        if (this.process > 1) {
           this.$message({
-            type:'warning',
-            message:'该活动的报名时间已经结束'
-          })
-        }else{
+            type: "warning",
+            message: "该活动的报名时间已经结束"
+          });
+        } else {
           this.showEnrolment = true;
           this.$nextTick(() => {
             let enrolment = this.$refs["enrolment"];
             document.documentElement.scrollTop = enrolment.scrollHeight;
           });
         }
-        
-      }else{
+      } else {
         this.$store.dispatch("INIT_SHOW", true);
         this.$message({
-          type:'warning',
-          message:'请登录后再进行操作'
-        })
+          type: "warning",
+          message: "请登录后再进行操作"
+        });
       }
     }
   }
@@ -696,6 +706,12 @@ export default {
         p {
           color: #333333;
           font-size: 18px;
+
+          width: 50%;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
         }
       }
       .workTotle {

@@ -56,7 +56,11 @@ export default {
         .then(res => {
           this.tableData = res.professional;
           this.tableData.forEach(ite=>{
-            ite.score=ite.score/10;//把分数除10
+            if(ite.score<0){
+              ite.score=0
+            }else{
+              ite.score=ite.score/10;//把分数除10
+            } 
           })
           if (res.professional.length > 0) {
             let totalScore = 0;
