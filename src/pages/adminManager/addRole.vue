@@ -258,15 +258,16 @@ export default {
             type: "warning",
             message: err[0].message
           });
-          setTimeout(() => {
-            this.$router.go(-1);
-          }, 1000);
+          
         });
         if (res.name != "" && res.name != undefined) {
           this.$message({
             type: "success",
             message: "添加成功！"
           });
+          setTimeout(() => {
+            this.$router.go(-1);
+          }, 1000);
         } else {
           this.$message({
             type: "warning",
