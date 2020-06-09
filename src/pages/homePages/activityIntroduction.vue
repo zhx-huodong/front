@@ -254,7 +254,8 @@ export default {
       apiKey: getCookie("x-api-key"),
       process: 1, //进度
       workTotle: "", //优秀作品数量
-      showEnrolment: false //展示报名区域
+      showEnrolment: false, //展示报名区域
+      showProcess:1,
     };
   },
   created() {
@@ -413,6 +414,7 @@ export default {
           if (res.banner[0] != undefined) {
             this.bannerUrl = res.banner[0].url;
           }
+          this.showProcess=res.process
           this.activityObject = res;
           this.activityObject.periodList = [];
           let arr = [1, 2, 4, 8, 16, 32, 64];
@@ -621,7 +623,7 @@ export default {
         JSON.parse(localStorage.getItem("user")) != undefined &&
         JSON.parse(localStorage.getItem("user")) != null
       ) {
-        if (this.process > 1) {
+        if (this.showProcess > 1) {
           this.$message({
             type: "warning",
             message: "该活动的报名时间已经结束"
