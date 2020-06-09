@@ -109,6 +109,7 @@ export default {
       let parmas = {};
       parmas.url = api.user;
       parmas.role_id = 5;
+      parmas.ball=1
       let res = await axiosGet(parmas).catch(err => err);
       if (res.items.length != 0) {
         this.userList = res.items;

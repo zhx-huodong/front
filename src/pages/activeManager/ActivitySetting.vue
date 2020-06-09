@@ -111,6 +111,7 @@
             end-placeholder="结束日期"
             @change="uploadChange"
             value-format="timestamp"
+            :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="区域推荐 :">
@@ -122,6 +123,7 @@
             end-placeholder="结束日期"
             @change="recommendChange"
             value-format="timestamp"
+            :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="市级评审 :">
@@ -133,6 +135,7 @@
             end-placeholder="结束日期"
             @change="reviewChange"
             value-format="timestamp"
+            :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
         </el-form-item>
 
@@ -145,6 +148,7 @@
             end-placeholder="结束日期"
             @change="exhibitChange"
             value-format="timestamp"
+            :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
         </el-form-item>
 
@@ -793,6 +797,7 @@ export default {
     },
     //上传时间
     uploadChange(val) {
+      console.log("上传时间===",val)
       this.addActivityForm.upload.stime = val[0] / 1000;
       this.addActivityForm.upload.etime = val[1] / 1000;
       sessionStorage.setItem(
