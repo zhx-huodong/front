@@ -138,6 +138,7 @@ export default {
 <style lang='less'>
 .ql-container {
   height: 80%;
+  margin-top: -25px;
 }
 
 </style>
