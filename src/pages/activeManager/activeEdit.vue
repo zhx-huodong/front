@@ -20,8 +20,8 @@
             </el-col>
           </el-form-item>
 
-          <div class="my-editerContain" style="margin-left: 23px;">
-            <P style="width:70px;margin-left:25px">项目介绍:</P>
+          <div class="my-editerContain" style="margin-left: 15px;">
+            <P style="width:60px;margin-left:25px">项目介绍:</P>
             <my-editor @editorChange="editorChange" :inputtext="this.form.content"></my-editor>
           </div>
           <el-form-item label="作者人数上限:" prop="author_limit">
@@ -161,7 +161,7 @@
                   :value="subItem.value"
                 ></el-option>
               </el-select>
-              <i
+              <i v-if="index!=0"
                 class="el-icon-circle-close"
                 style="font-size:25px;color:red;cursor:pointer;margin-left:10px"
                 @click="deleteUploadType(index)"

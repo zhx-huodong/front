@@ -3,7 +3,7 @@
     <div class="uni-header">
       <a class="uni-title" href="/">
         <img class="logo" src="../public/images/logo.png" />
-        <span>深圳市中小学科技创新应用平台</span>
+        <span>深圳市中小学科技创新活动平台</span>
       </a>
       <div class="header-menu">
         <div
@@ -12,7 +12,7 @@
           @click="switchPage(item.key)"
           v-if="!item.hide"
           :class="'menu-item ' + (activeTab === item.key ? 'active' : '')"
-        >{{item.name}}</div>
+        >{{item.name}}<p v-if="item.name=='个人中心'&&$store.state.account.remindCount>0" class="el-icon-message-solid"></p></div>
       </div>
       <div class="header-user">
         <template v-if="$store.state.account.roles.length>0">
@@ -43,9 +43,9 @@
       </div>
       <login ref="allLogin"></login>
     </div>
-    <div class="my-bread">
+    <div class="my-bread" v-if="levelList.length>1">
       <div class="my-bread-main">
-        <my-bread-crumb :levelList="levelList"></my-bread-crumb>
+        <my-bread-crumb :levelList="levelList" ></my-bread-crumb>
       </div>
     </div>
   </div>
@@ -88,7 +88,7 @@ export default {
         11: "老师",
         12: "学生",
         13: "家长"
-      }
+      },
     };
   },
   computed: {
@@ -103,9 +103,14 @@ export default {
     },
     show() {
       return this.$store.state.login.show;
+    },
+    remindCount(){
+      return this.$store.state.account.remindCount;
     }
   },
-  created() {},
+  created() {
+   
+  },
   mounted() {
     if (getCookie("x-api-key")!=undefined&&getCookie("x-api-key")) {
       this.$store.dispatch(
@@ -120,7 +125,9 @@ export default {
         "INIT_NOWROLE",
         JSON.parse(localStorage.getItem("nowRole"))
       );
-      this.checkRole();
+      let val=1
+      this.checkRole(val);
+      this.getRemindCount()
     } else {
       this.tabs = this.normalTabs;
       this.$router.push("/home");
@@ -150,7 +157,14 @@ export default {
             "INIT_NOWROLE",
             JSON.parse(localStorage.getItem("nowRole"))
           );
-          this.checkRole();
+          let val=0
+          if(oldval.type==undefined){
+            val=0
+          }else{
+            val=1
+          }
+          this.checkRole(val);
+          this.getRemindCount()
         } else {
           this.tabs = this.normalTabs;
           this.$router.push("/home");
@@ -186,7 +200,7 @@ export default {
       location.href = "/";
     },
     //检查角色类型
-    checkRole() {
+    checkRole(val) {
       if (this.$store.state.account.nowRole.type != undefined&&this.$store.state.account.nowRole.type!=null) {
         console.log("this.$store.state.account.nowRole===",this.$store.state.account.nowRole)
         if (this.$store.state.account.nowRole.type == 0) {
@@ -240,8 +254,10 @@ export default {
             }
           }
           this.tabs = this.normalTabs;
-          this.$router.push("/home");
-          this.activeTab = "home";
+          if(val==1){
+            this.$router.push("/home");
+            this.activeTab = "home";
+          }
           this.levelList = [
             { path: "/home", name: "首页", meta: { title: "首页" } }
           ];
@@ -341,6 +357,20 @@ export default {
         }
         this.levelList = matched;
       }
+    },
+    //提醒用户记录数
+    async getRemindCount(){
+      let params = {};
+      params.url = api.remindCount;
+      await this.axiosGet(params)
+        .then(res => {
+          if(res.code==0){
+            this.$store.dispatch(
+              "INIT_REMINDCOUNT",res.count);
+          }
+        }).catch(err=>{
+
+        })
     }
   }
 };
@@ -383,12 +413,26 @@ export default {
     color: #ffffff;
     font-size: 16px;
     .menu-item {
-      opacity: 0.5;
+      // opacity: 0.5;
+      color: rgb(226, 215, 215);
       display: inline-block;
       margin-right: 45px;
+      position: relative;
+      p{
+        position: absolute;
+        line-height: 20px;
+        top: 10px;
+        right: -20px;
+        font-size: 16px;
+        padding: 0 5px;
+        color: red;
+        opacity:1;
+      }
     }
     .active {
       opacity: 1;
+      // font-weight: bold;
+      color: #fff;
     }
     .menu-item:hover {
       cursor: pointer;

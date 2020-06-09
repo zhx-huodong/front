@@ -33,7 +33,7 @@
         </el-form-item>
 
         <div class="my-editer">
-          <P>活动介绍 ：</P>
+          <P>活动介绍：</P>
           <my-editor @editorChange="editorChange" :inputtext="inputtext"></my-editor>
         </div>
         <el-form-item label="活动指南:">
@@ -111,6 +111,7 @@
             end-placeholder="结束日期"
             @change="uploadChange"
             value-format="timestamp"
+            :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="区域推荐 :">
@@ -122,6 +123,7 @@
             end-placeholder="结束日期"
             @change="recommendChange"
             value-format="timestamp"
+            :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="市级评审 :">
@@ -133,6 +135,7 @@
             end-placeholder="结束日期"
             @change="reviewChange"
             value-format="timestamp"
+            :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
         </el-form-item>
 
@@ -145,6 +148,7 @@
             end-placeholder="结束日期"
             @change="exhibitChange"
             value-format="timestamp"
+            :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
         </el-form-item>
 
@@ -398,7 +402,10 @@ export default {
     },
     //删除活动项目
     childDelete(index, subIndex) {
-      this.addActivityForm.category.forEach((items, index_) => {
+      let addActivityForm = JSON.parse(
+        sessionStorage.getItem("addActivityForm")
+      );
+      addActivityForm.category.forEach((items, index_) => {
         if (index_ == index) {
           items.child.forEach((item, subIndex_) => {
             if (subIndex == subIndex_) {
@@ -407,6 +414,7 @@ export default {
           });
         }
       });
+      this.addActivityForm=addActivityForm
       sessionStorage.setItem(
         "addActivityForm",
         JSON.stringify(this.addActivityForm)
@@ -425,7 +433,10 @@ export default {
     },
     //复制活动项目
     toCopyChild(index, subIndex) {
-      this.addActivityForm.category.forEach((items, index_) => {
+      let addActivityForm = JSON.parse(
+        sessionStorage.getItem("addActivityForm")
+      );
+      addActivityForm.category.forEach((items, index_) => {
         if (index_ == index) {
           items.child.forEach((item, subIndex_) => {
             if (subIndex == subIndex_) {
@@ -437,6 +448,7 @@ export default {
                 delete newItem.fields[i].id;
               }
               for (let j in newItem.formats) {
+                delete newItem.formats[j].id;
                 delete newItem.formats[j].category_id;
                 delete newItem.formats[j].created_at;
                 delete newItem.formats[j].created_by;
@@ -448,6 +460,7 @@ export default {
           });
         }
       });
+      this.addActivityForm=addActivityForm
       sessionStorage.setItem(
         "addActivityForm",
         JSON.stringify(this.addActivityForm)
@@ -502,6 +515,7 @@ export default {
           delete newCategory.child[k].fields[i].id;
         }
         for (let j in newCategory.child[k].formats) {
+          delete newCategory.child[k].formats[j].id;
           delete newCategory.child[k].formats[j].category_id;
           delete newCategory.child[k].formats[j].created_at;
           delete newCategory.child[k].formats[j].created_by;
@@ -783,6 +797,7 @@ export default {
     },
     //上传时间
     uploadChange(val) {
+      console.log("上传时间===",val)
       this.addActivityForm.upload.stime = val[0] / 1000;
       this.addActivityForm.upload.etime = val[1] / 1000;
       sessionStorage.setItem(
@@ -1005,7 +1020,7 @@ export default {
   flex-direction: row;
   margin-bottom: 10px;
   p {
-    width: 90px;
+    width: 75px;
     font-size: 14px;
     color: #666;
   }

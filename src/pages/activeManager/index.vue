@@ -37,8 +37,11 @@
                   </div>
                   <div class="activeclass">
                     <div class="active-title">
-                      <p class="font1">{{item.title}}</p>
-                      <P class="show-ell">{{item.title}}</P>
+                      <p class="font1" v-if="item.title.length<=20">{{item.title}}</p>
+                      <el-tooltip :content="item.title" placement="top" effect="dark" v-else>
+                        <p class="font1">{{item.title}}</p>
+                      </el-tooltip>
+                      <!-- <P class="show-ell">{{item.title}}</P> -->
                     </div>
                     <p>
                       活动对象：

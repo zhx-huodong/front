@@ -3,7 +3,10 @@
       <div class="card-item" v-for="(item,index) in cardList" :key="index" @click="toNext(item.id,item.activity_id)">
           <img :src="item.cover" />
           <div class="card-name" v-if="!isExcellent">
-            <p>{{item.title}}</p>
+            <p v-if="item.title.length<=15">{{item.title}}</p>
+            <el-tooltip :content="item.title" placement="top" effect="dark" v-else>
+              <p >{{item.title}}</p>
+            </el-tooltip>
           </div>
           <div class="excellent-tag" v-if="isExcellent">
               <div class="title">
@@ -84,6 +87,9 @@
           padding:0;
           font-size:16px;
           color:#333;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
       }
       

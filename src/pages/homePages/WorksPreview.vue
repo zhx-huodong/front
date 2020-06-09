@@ -3,6 +3,7 @@
     <div class="title">
       <el-button type="defualt" size="mini" @click="goback" style="position:absolute;left:0">返回</el-button>
       <p>{{activityDetail.works.title}}</p>
+      
       <span
         style="position:absolute;right:50px;color:#999999;font-size:12px"
       >作品编号:{{activityDetail.serial_id}}</span>
@@ -13,7 +14,7 @@
         <div class="content-main">
           <div class="content-item" v-if="rejectReason">
             <div class="sub-title" style="color:red;font-weight:700">退回详情</div>
-            <div class="content" v-html="activityDetail.comment" style="color:red;font-weight:700"></div>
+            <div class="content ql-snow ql-editor" v-html="activityDetail.comment" style="color:red;font-weight:700"></div>
           </div>
           <div class="content-item" v-if="activityDetail.works!=undefined&&activityDetail.works.cover!=undefined&&activityDetail.works.cover!=''">
             <div class="sub-title">作品封面</div>
@@ -23,7 +24,7 @@
           </div>
           <div class="content-item" v-if="activityDetail.works.content!=null&&activityDetail.works.content.content!=''">
             <div class="sub-title">作品介绍</div>
-            <div class="content" v-html="activityDetail.works.content.content"></div>
+            <div class="content ql-snow ql-editor" v-html="activityDetail.works.content.content"></div>
           </div>
           <div class="content-item" v-if="activityDetail.works.content!=null&&activityDetail.works.content.production!=''">
             <div class="sub-title">创作过程</div>

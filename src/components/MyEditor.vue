@@ -4,13 +4,13 @@
     <quill-editor
       v-model="content"
       ref="myQuillEditor"
-      style="height:250px;width:800px"
+      style="height:350px;width:800px"
+      class="ql-editor"
       @change="editorChange"
       :options="editorOption"
     >
       <!-- 自定义toolar -->
       <div id="toolbar" slot="toolbar">
-        <!-- Add a bold button -->
         <button class="ql-bold" title="加粗">Bold</button>
         <button class="ql-italic" title="斜体">Italic</button>
         <button class="ql-underline" title="下划线">underline</button>
@@ -19,10 +19,10 @@
         <button class="ql-code-block" title="代码"></button>
         <button class="ql-header" value="1" title="标题1"></button>
         <button class="ql-header" value="2" title="标题2"></button>
-        <!--Add list -->
+
         <button class="ql-list" value="ordered" title="有序列表"></button>
         <button class="ql-list" value="bullet" title="无序列表"></button>
-        <!-- Add font size dropdown -->
+
         <select class="ql-header" title="段落格式">
           <option selected>段落</option>
           <option value="1">标题1</option>
@@ -48,12 +48,11 @@
           <option value="FangSong">仿宋</option>
           <option value="Arial">Arial</option>
         </select>
-        <!-- Add subscript and superscript buttons -->
+
         <select class="ql-color" value="color" title="字体颜色"></select>
         <select class="ql-background" value="background" title="背景颜色"></select>
         <select class="ql-align" value="align" title="对齐"></select>
         <button class="ql-clean" title="还原"></button>
-        <!-- You can also add your own -->
       </div>
     </quill-editor>
     <!-- </el-card> -->
@@ -124,7 +123,7 @@ export default {
       this.content = this.inputtext;
     });
     setTimeout(() => {
-        this.content = this.inputtext;
+      this.content = this.inputtext;
     }, 3000);
   },
   methods: {
@@ -139,6 +138,8 @@ export default {
 <style lang='less'>
 .ql-container {
   height: 80%;
+  margin-top: -25px;
 }
+
 </style>
 

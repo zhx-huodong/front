@@ -30,6 +30,7 @@ const awards=`${base}/works-admin/awards`;//颁奖
 const like=`${base}/works-admin/like`;//点赞
 const switchToken=`${base}/user-admin/switch-token`;//切换角色
 const getCosKeys=`${base}/upload/get-cos-keys`;//获取腾讯云cos签名 
+const remindCount=`${base}/user-admin/remind-count`;//用户提醒记录数 
 
 let uploadPic=``;//图片上传
 let uploadKey=``;//文件上传
@@ -70,6 +71,7 @@ let api={
     awards,
     getCosKeys,
     like,
-    switchToken
+    switchToken,
+    remindCount
 }
 export default api

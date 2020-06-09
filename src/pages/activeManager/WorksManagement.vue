@@ -35,7 +35,7 @@
         <el-col :span="8">
           <el-form-item label="作品名称：">
             <el-input
-              v-model="form.work_title"
+              v-model="form.works_title"
               placeholder="请输入作品名称"
               size="small"
               style="width:260px;"
@@ -208,7 +208,7 @@ export default {
       multipleSelection: [], //选择列表
       form: {
         school: "",
-        work_title: "",
+        works_title: "",
         mentor: "",
         author: "",
         work_id: "" //作品编号
@@ -666,8 +666,8 @@ export default {
       if (this.form.school != "") {
         params.school = this.form.school;
       }
-      if (this.form.work_title != "") {
-        params.work_title = this.form.work_title;
+      if (this.form.works_title != "") {
+        params.works_title = this.form.works_title;
       }
       if (this.form.mentor != "") {
         params.mentor = this.form.mentor;

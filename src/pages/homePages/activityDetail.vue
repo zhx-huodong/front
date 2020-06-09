@@ -2,7 +2,11 @@
   <div class="activity-container">
     <el-card>
       <div class="title">
-        <p>{{activityDetail.info.activity}}</p>
+        <p v-if="activityDetail.info.activity.length<=75">{{activityDetail.info.activity}}</p>
+        <el-tooltip :content="activityDetail.info.activity" placement="top" effect="dark" v-else>
+          <p>{{activityDetail.info.activity}}</p>
+        </el-tooltip>
+        
       </div>
       <el-divider></el-divider>
       <el-steps :active="process" align-center>
@@ -132,6 +136,13 @@ export default {
     justify-content: center;
     text-align: center;
     align-items: center;
+    p{
+      width: 50%;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
   }
 }
 </style>

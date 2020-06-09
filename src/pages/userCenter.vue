@@ -7,6 +7,11 @@
             <div class="block">
               <div class="user-text">我参加的活动</div>
               <el-table :data="tableData" style="width: 100%;font-size:12px" height="460px">
+                <el-table-column width="40px">
+                  <template slot-scope="scope">
+                  <p v-if="scope.row.remind_counts>0" class="el-icon-message-solid" style="color:red;font-size:16px"></p>
+                  </template>
+                </el-table-column>
                 <el-table-column label="活动名称" show-overflow-tooltip>
                   <template slot-scope="scope">{{scope.row.info.activity}}</template>
                 </el-table-column>
@@ -112,8 +117,11 @@ export default {
       return this.$store.state.account.user;
     }
   },
-  created() {},
+  created() {
+    
+  },
   mounted() {
+    this.$store.dispatch("INIT_REMINDCOUNT",0);
     let list = [
       { Name: "沟通能力", Value: 0 },
       { Name: "逻辑思维", Value: 0 },
@@ -142,7 +150,7 @@ export default {
             for (let i in this.tableData) {
               if (this.tableData[i].award.length > 0) {
                 this.tableData[i].process = "已获奖";
-              } else if (this.tableData[i].score != 0) {
+              } else if (this.tableData[i].score >0) {
                 this.tableData[i].process = "已评分";
               } else if (this.tableData[i].status == 0) {
                 this.tableData[i].process = "已退回";

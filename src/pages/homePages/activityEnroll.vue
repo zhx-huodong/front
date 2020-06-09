@@ -298,7 +298,8 @@
           </el-form>
           <el-row>
             <el-col :span="5" :offset="10">
-              <el-button type="primary" @click="submitEnroll()" size="small">提交</el-button>
+              <el-button type="primary" @click="submitEnroll()" size="small" v-if="operate==0">预览</el-button>
+              <el-button type="primary" @click="submitEnroll()" size="small" v-else>确认提交</el-button>
               <el-button type="default" @click="goback()" size="small">取消</el-button>
             </el-col>
           </el-row>
@@ -323,7 +324,7 @@
               </div>
               <div class="content-item" v-if="detailObj.content!=''&&detailObj.content!=undefined">
                 <div class="sub-title">作品介绍</div>
-                <div class="content" v-html="detailObj.content"></div>
+                <div class="content ql-snow ql-editor" v-html="detailObj.content"></div>
               </div>
 
               <div class="content-item" v-if="detailObj.production!=''">

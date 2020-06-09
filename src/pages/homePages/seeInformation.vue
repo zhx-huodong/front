@@ -6,7 +6,7 @@
         <p style="margin-top:10px;">{{formatDateChar(form.time*1000)}}</p>
       </div>
       <el-divider></el-divider>
-      <div class="content" v-html="form.content"></div>
+      <div class="content ql-snow ql-editor" v-html="form.content"></div>
       <el-divider></el-divider>
       <div class="attachment">
         <p>公告附件</p>
@@ -87,11 +87,11 @@ body{
     margin: auto;
     width: 80%;
     line-height: 30px;
-    text-indent: 2em;
+    // text-indent: 2em;
     p {
       line-height: 30px;
       font-size: 14px;
-      text-indent: 2em;
+      // text-indent: 2em;
     }
   }
   .activity-img {
