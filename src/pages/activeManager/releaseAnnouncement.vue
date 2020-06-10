@@ -15,6 +15,7 @@
           <div class="my-editer" style="margin-left: 15px;">
             <P style="width:45px;margin-left:60px">内容:</P>
             <my-editor @editorChange="editorChange" :inputtext="form.content"></my-editor>
+            <!-- <ueditor :value="ueditor.value" :config="ueditor.config" ref="editor"></ueditor> -->
           </div>
           <el-form-item label="公告附件:">
             <div style="width:710px">
@@ -69,8 +70,9 @@ import MyEditor from "../../components/MyEditor";
 import api from "../../service/api";
 import UploadFile from "../../components/UploadFile";
 import FilePreview from "../../components/FilePreview";
+import Ueditor from "../../components/Ueditor";
 export default {
-  components: { MyEditor, UploadFile,FilePreview },
+  components: { MyEditor, UploadFile,FilePreview,Ueditor },
   data() {
     return {
       edit: this.$route.query.edit,
@@ -86,6 +88,13 @@ export default {
       },
       attachment:[],//附件
       showPreview:false,
+      ueditor: {
+          value: '',
+          config: {
+              initialFrameWidth: 800,
+              initialFrameHeight: 280
+          }
+      }
     };
   },
   watch: {},
