@@ -31,6 +31,7 @@ export default {
   justify-content: center !important;
 }
 .footer{
+  z-index: 1000;
   width: 100%;
   position: fixed;
   bottom: 0;
