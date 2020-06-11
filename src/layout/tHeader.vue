@@ -109,7 +109,7 @@ export default {
     }
   },
   created() {
-   
+    console.log("getCookie===",getCookie("x-api-key"))
   },
   mounted() {
     if (getCookie("x-api-key")!=undefined&&getCookie("x-api-key")) {
@@ -135,6 +135,9 @@ export default {
       this.levelList = [
         { path: "/home", name: "首页", meta: { title: "首页" } }
       ];
+      localStorage.removeItem("user");
+      localStorage.removeItem("roles");
+      localStorage.removeItem("nowRole");
     }
   },
   watch: {

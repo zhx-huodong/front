@@ -1,7 +1,7 @@
 <template>
   <div class="activity-introduction-container" ref="enrolment">
     <div class="banner-container" v-if="bannerUrl!=''">
-      <el-image :src="bannerUrl" fit="cover"></el-image>
+      <el-image :src="bannerUrl" fit="cover" @click="cancelStyle()"></el-image>
     </div>
     <div class="sub-nav">
       <div class="sub-nav-main">
@@ -255,7 +255,7 @@ export default {
       process: 1, //进度
       workTotle: "", //优秀作品数量
       showEnrolment: false, //展示报名区域
-      showProcess:1,
+      showProcess: 1
     };
   },
   created() {
@@ -290,6 +290,9 @@ export default {
     }
   },
   methods: {
+    cancelStyle() {
+      document.body.style = null;
+    },
     //切换
     handleClick(tab) {
       this.activeName = tab.name;
@@ -414,7 +417,7 @@ export default {
           if (res.banner[0] != undefined) {
             this.bannerUrl = res.banner[0].url;
           }
-          this.showProcess=res.process
+          this.showProcess = res.process;
           this.activityObject = res;
           this.activityObject.periodList = [];
           let arr = [1, 2, 4, 8, 16, 32, 64];

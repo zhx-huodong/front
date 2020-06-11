@@ -319,7 +319,7 @@
               <div class="content-item">
                 <div class="sub-title">作品封面</div>
                 <div class="content">
-                  <el-image :src="detailObj.cover" :fit="cover"></el-image>
+                  <el-image :src="detailObj.cover" :fit="cover" @click="cancelStyle()"></el-image>
                 </div>
               </div>
               <div class="content-item" v-if="detailObj.content!=''&&detailObj.content!=undefined">
@@ -519,6 +519,9 @@ export default {
   },
   watch: {},
   methods: {
+    cancelStyle() {
+      document.body.style = null;
+    },
     // 验证手机
     mobileChange(mobile) {
       var re = /^[0-9]+.?[0-9]*$/;
