@@ -48,7 +48,7 @@
       </el-tab-pane>-->
       <el-tab-pane label="账号注册" name="register">
             <div class="register">
-                <el-image :src="codeUrl"></el-image>
+                <el-image :src="codeUrl" @click="cancelStyle()"></el-image>
                 <p>请使用微信【扫一扫】扫码注册</p>
             </div>
       </el-tab-pane>
@@ -77,6 +77,9 @@ export default {
   },
   computed: {},
   methods: {
+    cancelStyle() {
+      document.body.style = null;
+    },
     showDialog() {
       this.show = true;
     },

@@ -11,8 +11,8 @@
             <el-form-item label="头像：">
               <template>
                 <div class="user-icom">
-                  <el-image :src="form.userIcon" fit="cover" v-if="form.userIcon!=''"></el-image>
-                  <el-image :src="userIcon" fit="cover" v-else></el-image>
+                  <el-image :src="form.userIcon" fit="cover" v-if="form.userIcon!=''" @click="cancelStyle()"></el-image>
+                  <el-image :src="userIcon" fit="cover" v-else @click="cancelStyle()"></el-image>
                 </div>
               </template>
             </el-form-item>
@@ -248,6 +248,9 @@ export default {
     this.gitUserInfo();
   },
   methods: {
+    cancelStyle() {
+      document.body.style = null;
+    },
     //获取用户详情信息
     async gitUserInfo() {
       let that = this;

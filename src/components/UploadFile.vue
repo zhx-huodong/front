@@ -3,7 +3,7 @@
     <div class="file-list">
       <div class="file-list-items" v-for="(item,index) in fileList" :key="index">
         <div class="name-img">
-          <el-image :src="fileIconUrl" fit="cover"></el-image>
+          <el-image :src="fileIconUrl" fit="cover" @click="cancelStyle()"></el-image>
           <div class="file-name"><p>{{item.name||item.title}}</p></div>
         </div>
         <div class="file-operate">
@@ -98,6 +98,9 @@ export default {
     }
   },
   methods: {
+    cancelStyle() {
+      document.body.style = null;
+    },
     //触发文件选择
     uploadFile() {
       this.$refs.cos.$refs.fileEle.dispatchEvent(new MouseEvent("click"));

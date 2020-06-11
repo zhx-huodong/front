@@ -19,7 +19,7 @@
           <div class="content-item" v-if="activityDetail.works!=undefined&&activityDetail.works.cover!=undefined&&activityDetail.works.cover!=''">
             <div class="sub-title">作品封面</div>
             <div class="content">
-              <el-image :src="activityDetail.works.cover" :fit="cover"></el-image>
+              <el-image :src="activityDetail.works.cover" :fit="cover" @click="cancelStyle()"></el-image>
             </div>
           </div>
           <div class="content-item" v-if="activityDetail.works.content!=null&&activityDetail.works.content.content!=''">
@@ -199,6 +199,9 @@ export default {
     });
   },
   methods: {
+    cancelStyle() {
+      document.body.style = null;
+    },
     //获取报名活动详情
     async getActivityDetail(id) {
       console.log("进来");

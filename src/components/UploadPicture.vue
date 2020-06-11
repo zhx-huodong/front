@@ -3,7 +3,7 @@
     <div class="operate-button">
       <div class="picture-list">
         <div class="picture-list-items" v-for="(item,index) in pictureList" :key="index">
-          <el-image :src="item.url" fit="contain"></el-image>
+          <el-image :src="item.url" fit="contain" @click="cancelStyle()"></el-image>
           <div class="operate">
             <p class="el-icon-zoom-in" @click="goToPreview(item.url)"></p>
             <p class="el-icon-delete" @click="goToDelete(index)"></p>
@@ -87,6 +87,9 @@ export default {
     }
   },
   methods: {
+    cancelStyle() {
+      document.body.style = null;
+    },
     //触发文件选择
     uploadFile() {
       this.$refs.cos.$refs.fileEle.dispatchEvent(new MouseEvent("click"));

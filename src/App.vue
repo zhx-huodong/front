@@ -15,7 +15,7 @@ import tHeader from "./layout/tHeader.vue";
 
 export default {
   name: "uni-app",
-  components: { tHeader }
+  components: { tHeader },
 };
 </script>
 <style lang="less">

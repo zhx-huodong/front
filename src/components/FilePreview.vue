@@ -2,7 +2,7 @@
   <div class="container">
     <!-- 图片 -->
     <div class="picture-items" v-if="type==1">
-      <el-image :src="fileObj.url" fit="contain"></el-image>
+      <el-image :src="fileObj.url" fit="contain" @click="cancelStyle()"></el-image>
       <div class="operate">
         <p class="el-icon-zoom-in" @click="goToPreview(fileObj.url)"></p>
       </div>
@@ -39,7 +39,7 @@
       :show-close="false"
     >
       <div class="dialog-main">
-        <el-image :src="showUrl" v-if="type==1"></el-image>
+        <el-image :src="showUrl" v-if="type==1" @click="cancelStyle()"></el-image>
         <my-video-player :videoSrc="showUrl" ref="MyVideoPlayer" v-if="type==2"></my-video-player>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -94,6 +94,9 @@ export default {
     }
   },
   methods: {
+    cancelStyle() {
+      document.body.style = null;
+    },
     //图片预览
     goToPreview(url) {
       this.dialogVisible = true;
