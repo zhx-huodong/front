@@ -651,9 +651,9 @@ export default {
 </script>
 <style lang="less">
 .banner-container {
-  height: 600px;
+  // height: 600px;
   .el-image {
-    height: 600px;
+    // height: 600px;
     width: 100%;
   }
 }
