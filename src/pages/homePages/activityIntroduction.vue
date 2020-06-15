@@ -454,7 +454,6 @@ export default {
           }else if(res.node[0].etime * 1000 < nowTime){
             this.showProcess = 2;
           }
-          console.log("showProcess====",this.showProcess)
           if (res.node[0].stime * 1000 > nowTime) {
             this.process = 0;
           }else{
