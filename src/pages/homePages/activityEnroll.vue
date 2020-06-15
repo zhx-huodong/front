@@ -835,7 +835,6 @@ export default {
         }
       }
       params.period = this.period;
-      console.log("this.attachment===", this.attachment,"activityProjectDetail.formats===",this.activityProjectDetail.formats);
       if(Object.keys(this.attachment).length>=this.activityProjectDetail.formats.length){
         params.attachment = this.attachment;
       }else{
