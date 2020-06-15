@@ -23,7 +23,7 @@ import api from "../service/api";
 export default {
   props: {
     validList: { type: Array },
-    limit: { type: Number, default: 200 }, // 默认200M
+    limit: { type: Number, default: 500 }, // 默认200M
     page: { type: String }
   },
   data() {
@@ -105,7 +105,8 @@ export default {
 
       //文件大小校验
       let size = parseInt(file.size / (1014 * 1024), 10); // 单位M
-      if (size >= this.limit) {
+      console.log("文件大小===",size,"限制大小===",this.limit)
+      if (size > this.limit) {
         this.$message({
           type: "error",
           duration: 2000,

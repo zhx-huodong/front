@@ -626,6 +626,7 @@ export default {
             item.id = res.works.attachment[i].category_file_id;
             item.type = res.works.attachment[i].type;
             item.remark = res.works.attachment[i].remark;
+            item.size = parseInt(res.works.attachment[i].size);
             item.fileList = [
               {
                 title: res.works.attachment[i].title,

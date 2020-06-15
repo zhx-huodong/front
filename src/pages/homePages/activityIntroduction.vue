@@ -417,7 +417,6 @@ export default {
           if (res.banner[0] != undefined) {
             this.bannerUrl = res.banner[0].url;
           }
-          this.showProcess = res.process;
           this.activityObject = res;
           this.activityObject.periodList = [];
           let arr = [1, 2, 4, 8, 16, 32, 64];
@@ -448,8 +447,18 @@ export default {
             [1, 2]
           );
           let nowTime = Date.parse(new Date());
-          if (res.node[0].stime * 1000 <= nowTime) {
-            this.process = 1;
+          if(res.node[0].stime * 1000 > nowTime){
+            this.showProcess=0
+          }else if(res.node[0].stime * 1000 <=nowTime&&res.node[0].etime * 1000 >= nowTime){
+            this.showProcess=1
+          }else if(res.node[0].etime * 1000 < nowTime){
+            this.showProcess = 2;
+          }
+          console.log("showProcess====",this.showProcess)
+          if (res.node[0].stime * 1000 > nowTime) {
+            this.process = 0;
+          }else{
+            this.process=1
           }
           if (res.node[1].stime * 1000 <= nowTime) {
             this.process = 2;
@@ -631,7 +640,12 @@ export default {
             type: "warning",
             message: "该活动的报名时间已经结束"
           });
-        } else {
+        }else if(this.showProcess==0){
+          this.$message({
+            type: "warning",
+            message: "还没到报名时间"
+          });
+        } else if(this.showProcess!=0) {
           this.showEnrolment = true;
           this.$nextTick(() => {
             let enrolment = this.$refs["enrolment"];
