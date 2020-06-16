@@ -18,7 +18,7 @@
 import COS from "cos-js-sdk-v5";
 import axios from "axios";
 import config from "../tools/config";
-import { getCookie } from "../tools/tools";
+import { getCookie,extname } from "../tools/tools";
 import api from "../service/api";
 export default {
   props: {
@@ -92,8 +92,8 @@ export default {
       var m = md.getMonth() + 1;
       var d = md.getDate();
       var md5FileName=file.name+new Date().getTime()+JSON.parse(localStorage.getItem("user")).name
-      var key = "file/" + y + m + d + "/" + this.$md5(md5FileName);
-      console.log("上传的时间戳文件名==",key,"md5FileName===",md5FileName,"md5FileName===",this.$md5(md5FileName))
+      var key = "file/" + y + m + d + "/" + this.$md5(md5FileName)+'.'+extname(file.name);
+      console.log("上传的时间戳文件名==",key,"md5FileName===",md5FileName,"extname===",extname(file.name))
       // 文件类型校验
       if (this.validList.indexOf(type.toLowerCase()) == -1) {
         let validStr = this.validList.join("，");
