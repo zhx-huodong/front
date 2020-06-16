@@ -16,6 +16,9 @@ import '../static/UE/ueditor.all.min.js'
 import '../static/UE/lang/zh-cn/zh-cn.js'
 import '../static/UE/ueditor.parse.min.js'
 
+import md5 from 'js-md5';
+Vue.prototype.$md5 = md5;
+
 Vue.config.productiontip = true;
 
 Vue.use(VueRouter);

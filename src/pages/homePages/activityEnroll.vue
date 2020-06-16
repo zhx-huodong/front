@@ -721,7 +721,7 @@ export default {
 
     //作品上传
     upsuccess(data, id, type) {
-      console.log("data==", data, "id==", id, "type==", type);
+      console.log("作品上传==", data, "id==", id, "type==", type);
       let key = id;
       this.attachment[id] = [];
       data.forEach(item => {
