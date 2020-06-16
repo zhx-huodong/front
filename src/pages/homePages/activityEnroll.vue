@@ -626,6 +626,7 @@ export default {
             item.id = res.works.attachment[i].category_file_id;
             item.type = res.works.attachment[i].type;
             item.remark = res.works.attachment[i].remark;
+            item.size = parseInt(res.works.attachment[i].size);
             item.fileList = [
               {
                 title: res.works.attachment[i].title,
@@ -834,7 +835,6 @@ export default {
         }
       }
       params.period = this.period;
-      console.log("this.attachment===", this.attachment,"activityProjectDetail.formats===",this.activityProjectDetail.formats);
       if(Object.keys(this.attachment).length>=this.activityProjectDetail.formats.length){
         params.attachment = this.attachment;
       }else{

@@ -48,7 +48,7 @@ export default {
     fileLimit: {
       type: Number,
       default() {
-        return 20;
+        return 500;
       }
     },
     max: {

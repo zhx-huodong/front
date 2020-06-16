@@ -31,6 +31,7 @@ export default {
   justify-content: center !important;
 }
 .footer{
+  z-index: 1000;
   width: 100%;
   position: fixed;
   bottom: 0;
@@ -39,7 +40,6 @@ export default {
   color: #ffffff;
   text-align: center;
   p{
-    // padding: 20px;
     line-height: 50px;
   }
 }

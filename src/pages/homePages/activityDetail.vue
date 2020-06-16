@@ -54,7 +54,7 @@ export default {
       id: this.$route.query.id, //获取详情id
       activityDetail: {}, //活动详情
       look: this.$route.query.look,
-      process: 1, //活动状态
+      process: 0, //活动状态
       position:0,
     };
   },
@@ -79,7 +79,9 @@ export default {
           this.activityDetail = res;
           this.position=res.position
           let nowTime = Date.parse(new Date());
-          if (res.info.nodes[0].stime * 1000 <=nowTime) {
+          if (res.info.nodes[0].stime * 1000 >nowTime) {
+            this.process = 0;
+          }else{
             this.process = 1;
           }
           if ( res.info.nodes[1].stime * 1000 <=nowTime) {
