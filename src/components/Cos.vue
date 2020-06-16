@@ -91,7 +91,9 @@ export default {
       var y = md.getFullYear();
       var m = md.getMonth() + 1;
       var d = md.getDate();
-      var key = "file/" + y + m + d + "/" + file.name;
+      var md5FileName=file.name+new Date().getTime()+JSON.parse(localStorage.getItem("user")).name
+      var key = "file/" + y + m + d + "/" + this.$md5(md5FileName);
+      console.log("上传的时间戳文件名==",key,"md5FileName===",md5FileName,"md5FileName===",this.$md5(md5FileName))
       // 文件类型校验
       if (this.validList.indexOf(type.toLowerCase()) == -1) {
         let validStr = this.validList.join("，");

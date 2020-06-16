@@ -35,7 +35,7 @@
             plain
             size="mini"
             @click="goToEdit"
-            v-if="look!=0&&process<=2&&!position&1"
+            v-if="look!=0&&canEdit<=1&&!position&1"
           >修改</el-button>
         </div>
         <works-preview :id="id" @goback="goback" :rejectReason="activityDetail.status==0"></works-preview>
@@ -56,6 +56,7 @@ export default {
       look: this.$route.query.look,
       process: 0, //活动状态
       position:0,
+      canEdit:0,
     };
   },
   created(){
@@ -81,8 +82,12 @@ export default {
           let nowTime = Date.parse(new Date());
           if (res.info.nodes[0].stime * 1000 >nowTime) {
             this.process = 0;
-          }else{
+            this.canEdit=0
+          }else if(res.info.nodes[0].stime * 1000 <=nowTime&&res.info.nodes[0].etime * 1000 >= nowTime){
             this.process = 1;
+            this.canEdit=1
+          }else if(res.info.nodes[0].etime * 1000 < nowTime){
+            this.canEdit=2
           }
           if ( res.info.nodes[1].stime * 1000 <=nowTime) {
             this.process = 2;
