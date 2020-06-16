@@ -40,7 +40,6 @@ export default {
   color: #ffffff;
   text-align: center;
   p{
-    // padding: 20px;
     line-height: 50px;
   }
 }
